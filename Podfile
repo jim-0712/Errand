@@ -13,6 +13,7 @@ target 'Errand' do
   pod "JGProgressHUD"
   pod 'SwiftLint'
   pod 'Firebase/Database'
+  pod 'Firebase/Storage'
   pod 'Firebase/Firestore'
   pod 'Firebase/Core'
   pod 'Firebase/Auth'
