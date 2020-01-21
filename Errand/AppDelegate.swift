@@ -75,6 +75,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
     firstVC = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? UITabBarController
     
+    UserManager.shared.isTourist = false
+    
     window?.rootViewController = firstVC
     
     window?.makeKeyAndVisible()

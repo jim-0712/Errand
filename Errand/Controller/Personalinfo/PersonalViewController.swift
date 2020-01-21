@@ -19,12 +19,19 @@ class PersonalViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    setUpView()
-    // 委任代理
-    imagePickerController.delegate = self
-    
-    imagePickerController.allowsEditing = true
-    // Do any additional setup after loading the view.
+    if UserManager.shared.isTourist {
+      
+      UserManager.shared.goToSign(viewController: self)
+      
+    } else {
+      
+      setUpView()
+      // 委任代理
+      imagePickerController.delegate = self
+      
+      imagePickerController.allowsEditing = true
+      // Do any additional setup after loading the view.
+    }
   }
   @IBOutlet weak var upLoadBtn: UIButton!
   
@@ -42,7 +49,7 @@ class PersonalViewController: UIViewController {
   }
   
   @IBAction func upLoadAct(_ sender: Any) {
-  
+    
     // 建立一個 UIAlertController 的實體
     // 設定 UIAlertController 的標題與樣式為 動作清單 (actionSheet)
     let imagePickerAlertController = UIAlertController(title: "上傳圖片", message: "請選擇要上傳的圖片", preferredStyle: .actionSheet)
@@ -150,7 +157,7 @@ extension PersonalViewController: UIImagePickerControllerDelegate, UINavigationC
                 
                 LKProgressHUD.dismiss()
                 
-                 print("3")
+                print("3")
                 
                 LKProgressHUD.showFailure(text: error.localizedDescription, controller: self)
               }
@@ -160,7 +167,7 @@ extension PersonalViewController: UIImagePickerControllerDelegate, UINavigationC
         })
       }
     }
-  
+    
     dismiss(animated: true, completion: nil)
   }
   

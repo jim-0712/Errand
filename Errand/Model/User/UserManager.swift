@@ -171,4 +171,34 @@ class UserManager {
       completion(.success("Update Success"))
     }
   }
+
+  func goToSign(viewController: UIViewController) {
+    
+    let alert = UIAlertController(title: "注意", message: "請先登入享有功能", preferredStyle: UIAlertController.Style.alert)
+
+    let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
+    
+    let testCancel = UIAlertAction(title: "取消", style: .cancel) { (_) in
+      
+      let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
+      
+      viewController.view.window?.rootViewController = mapView
+    }
+    
+    let action = UIAlertAction(title: "OK", style: .default) { (_) in
+      
+      let storyboard = UIStoryboard(name: "Main", bundle: nil)
+      
+      let goViewController = storyboard.instantiateViewController(withIdentifier: "main")
+      
+      viewController.view.window?.rootViewController = goViewController
+    }
+    
+    alert.addAction(action)
+    
+    alert.addAction(testCancel)
+    
+    viewController.present(alert, animated: true, completion: nil)
+  }
+  
 }
