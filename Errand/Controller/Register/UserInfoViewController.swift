@@ -63,9 +63,9 @@ class UserInfoViewController: UIViewController {
         
         LKProgressHUD.showSuccess(text: success, controller: self)
         
-        guard let userInfoVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? UITabBarController else { return }
+        guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? UITabBarController else { return }
         
-        self.present(userInfoVc, animated: true, completion: nil)
+        self.present(mapVc, animated: true, completion: nil)
         
       case .failure(let error):
         

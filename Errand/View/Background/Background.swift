@@ -23,7 +23,7 @@ class BackgroundManager {
        
       //定义每种颜色所在的位置
       let gradientLocations: [NSNumber] = [0.0, 1.0]
-       
+
       //创建CAGradientLayer对象并设置参数
       let gradientLayer = CAGradientLayer()
     

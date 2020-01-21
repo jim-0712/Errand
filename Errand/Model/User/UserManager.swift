@@ -17,6 +17,8 @@ class UserManager {
   
   let dbF = Firestore.firestore()
   
+  var isTourist = false
+  
   var FBData: FbData?
   
   private init() { }
@@ -33,8 +35,12 @@ class UserManager {
       completion(.success("ok"))
     }
   }
+  
+  func createDataBase(classification: String, gender: Int, nickName: String, email: String, photo: String, completion: @escaping (Result<String, Error>) -> Void) {
     
- func createDataBase(classification: String, gender: Int, nickName: String, email: String, photo: String, completion: @escaping (Result<String, Error>) -> Void) {
+    let report = 0
+    
+    let blacklist: [String] = []
     
     let friends: [String] = []
     
@@ -42,7 +48,7 @@ class UserManager {
     
     let userId = Auth.auth().currentUser?.uid
     
-    let info = AccountInfo(email: email, nickname: nickName, gender: gender, task: task, friends: friends, photo: photo)
+    let info = AccountInfo(email: email, nickname: nickName, gender: gender, task: task, friends: friends, photo: photo, report: report, blacklist: blacklist)
     
     self.dbF.collection(classification).document(email).setData(info.toDict) { error in
       
@@ -125,7 +131,7 @@ class UserManager {
     
     let credit = FacebookAuthProvider.credential(withAccessToken: accesstoken)
     
-    Auth.auth().signIn(with: credit) { (user, error) in
+    Auth.auth().signIn(with: credit) { (_, error) in
       
       if error != nil {
         
@@ -156,10 +162,10 @@ class UserManager {
       guard let document = querySnapshot?.documents.first else { return }
       
       document.reference.updateData(["photo": transferPhoto]) { error in
-          
+        
         guard let error = error else { return }
         
-         completion(.failure(FireBaseUpdateError.updateError))
+        completion(.failure(FireBaseUpdateError.updateError))
       }
       
       completion(.success("Update Success"))

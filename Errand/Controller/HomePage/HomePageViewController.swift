@@ -35,6 +35,8 @@ class ViewController: UIViewController {
   
   @IBOutlet weak var googleLoginBtn: UIButton!
   
+  @IBOutlet weak var visitorBtn: UIButton!
+    
   @IBOutlet weak var appleLogo: UIImageView!
   
   @IBOutlet weak var appleLoginBtn: UIButton!
@@ -45,6 +47,15 @@ class ViewController: UIViewController {
   
   @IBAction func appleLoginAct(_ sender: Any) {
     
+  }
+  
+  @IBAction func visitorAct(_ sender: Any) {
+    
+    UserManager.shared.isTourist = true
+    
+    guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? UITabBarController else { return }
+           
+           self.present(mapVc, animated: true, completion: nil)
   }
   
   @IBAction func googleLoginAct(_ sender: Any) {
@@ -182,6 +193,8 @@ class ViewController: UIViewController {
     googleLoginBtn.layer.cornerRadius = 20
     
     appleLoginBtn.layer.cornerRadius = 20
+    
+    visitorBtn.layer.cornerRadius = 20
     
     appleLoginBtn.layer.borderWidth = 1.0
     

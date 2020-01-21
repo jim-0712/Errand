@@ -15,6 +15,15 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    if UserManager.shared.isTourist {
+      
+      refreshBtn.isEnabled = false
+      
+    } else {
+      
+      refreshBtn.isEnabled = true
+    }
+    
     setUpLocation()
     
     checkLocationAuth()

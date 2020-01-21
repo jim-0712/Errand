@@ -144,6 +144,21 @@
                                     <constraint firstAttribute="height" constant="1" id="evj-EU-RD7"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ijz-ko-HvP">
+                                <rect key="frame" x="107" y="799" width="200" height="40"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="1ue-ms-9Jh"/>
+                                    <constraint firstAttribute="width" constant="200" id="kEB-dU-w7q"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="MarkerFelt-Wide" family="Marker Felt" pointSize="24"/>
+                                <state key="normal" title="Visitors">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="visitorAct:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ea1-kB-GLh"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
@@ -172,11 +187,13 @@
                             <constraint firstItem="yge-lS-ZTg" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="bdh-Ua-98s"/>
                             <constraint firstItem="qOB-qd-TeP" firstAttribute="leading" secondItem="Isd-mL-QVy" secondAttribute="leading" constant="25" id="bsa-e8-vw4"/>
                             <constraint firstItem="vG2-Id-JBA" firstAttribute="top" secondItem="5tp-Px-cBs" secondAttribute="bottom" id="cPZ-ZC-uYv"/>
+                            <constraint firstItem="ijz-ko-HvP" firstAttribute="top" secondItem="Isd-mL-QVy" secondAttribute="bottom" constant="30" id="drU-hQ-Aoz"/>
                             <constraint firstAttribute="trailing" secondItem="xj9-f6-h07" secondAttribute="trailing" constant="70" id="jfp-dO-rzi"/>
                             <constraint firstItem="hnW-f8-Tg7" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="30" id="nKd-cf-aRz"/>
                             <constraint firstItem="qOB-qd-TeP" firstAttribute="top" secondItem="Isd-mL-QVy" secondAttribute="top" constant="3" id="o4q-Lz-Z7j"/>
                             <constraint firstItem="bRb-zP-cpn" firstAttribute="centerX" secondItem="hnW-f8-Tg7" secondAttribute="centerX" id="vS7-0b-9Iz"/>
                             <constraint firstItem="Da5-hx-ZEv" firstAttribute="top" secondItem="5tp-Px-cBs" secondAttribute="bottom" constant="40" id="vog-CE-iZJ"/>
+                            <constraint firstItem="ijz-ko-HvP" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="zLM-0W-eh6"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -188,6 +205,7 @@
                         <outlet property="googleLoginBtn" destination="4aw-tP-mdE" id="3Ap-Fy-DqS"/>
                         <outlet property="logoLabel" destination="CiG-ri-uZW" id="eKW-xO-6eG"/>
                         <outlet property="passwordText" destination="Da5-hx-ZEv" id="cdx-gq-uhU"/>
+                        <outlet property="visitorBtn" destination="ijz-ko-HvP" id="8EB-Zv-q8i"/>
                         <outlet property="visitorRegisterBtn" destination="ZzG-5v-Qhd" id="TJ7-KX-UFC"/>
                     </connections>
                 </viewController>

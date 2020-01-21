@@ -59,6 +59,10 @@ struct AccountInfo {
   
   let photo: String
   
+  let report: Int
+
+  let blacklist: [String]
+  
   var toDict: [String: Any] {
     
     return [  "email": email,
@@ -71,7 +75,11 @@ struct AccountInfo {
               
               "friends": friends,
               
-              "photo": photo
+              "photo": photo,
+              
+              "blacklist": blacklist,
+              
+              "report": report
           ]
   }
 }
