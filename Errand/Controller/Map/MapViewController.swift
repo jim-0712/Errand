@@ -60,12 +60,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
   
   func addAnnotationOnMap() {
     
-//    let annotation = MKPointAnnotation()
-//    annotation.title = "London"
-//    annotation.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(25.033671), longitude: CLLocationDegrees(121.564427))
-    
-//    realTimeMap.addAnnotation(annotation)
-    
     let cor = CLLocationCoordinate2D(latitude: CLLocationDegrees(25.033671), longitude: CLLocationDegrees(121.564427))
     
     let test = CustomPin(pinTitle: "Jim", pinSubTitle: "is", location: cor)

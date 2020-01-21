@@ -34,7 +34,7 @@ class UserManager {
     }
   }
     
-  func createDataBase(classification: String, gender: Int, nickName: String, email: String, completion: @escaping (Result<String, Error>) -> Void) {
+ func createDataBase(classification: String, gender: Int, nickName: String, email: String, photo: String, completion: @escaping (Result<String, Error>) -> Void) {
     
     let friends: [String] = []
     
@@ -42,7 +42,7 @@ class UserManager {
     
     let userId = Auth.auth().currentUser?.uid
     
-    let info = AccountInfo(email: email, nickname: nickName, gender: gender, task: task, friends: friends)
+    let info = AccountInfo(email: email, nickname: nickName, gender: gender, task: task, friends: friends, photo: photo)
     
     self.dbF.collection(classification).document(email).setData(info.toDict) { error in
       
@@ -133,11 +133,36 @@ class UserManager {
         
       } else {
         
-        guard let _ = user else { return }
-        
         completion(Result.success("Success"))
         
       }
+    }
+  }
+  
+  func updatePhotoData(photo: URL, completion: @escaping (Result<String, Error>) -> Void) {
+    
+    let transferPhoto = photo.absoluteString
+    
+    guard let email = Auth.auth().currentUser?.email else { return }
+    
+    dbF.collection("Users").whereField("email", isEqualTo: email).getDocuments { (querySnapshot, error) in
+      
+      if error != nil {
+        
+        completion(.failure(FireBaseUpdateError.updateError))
+        
+      }
+      
+      guard let document = querySnapshot?.documents.first else { return }
+      
+      document.reference.updateData(["photo": transferPhoto]) { error in
+          
+        guard let error = error else { return }
+        
+         completion(.failure(FireBaseUpdateError.updateError))
+      }
+      
+      completion(.success("Update Success"))
     }
   }
 }

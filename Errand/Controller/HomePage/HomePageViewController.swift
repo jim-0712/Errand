@@ -13,10 +13,14 @@ import FBSDKLoginKit
 
 class ViewController: UIViewController {
   
+  var isEmail = false
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
     setUpBtn()
+    
+    visitorRegisterBtn.isEnabled = false
     
     NotificationCenter.default.addObserver(self, selector: #selector(goToUserInfo), name: Notification.Name("userInfo"), object: nil)
   }
@@ -71,6 +75,8 @@ class ViewController: UIViewController {
                 
                 guard let userInfoVc = self.storyboard?.instantiateViewController(identifier: "userinfo") as? UserInfoViewController else { return }
                 
+                userInfoVc.isSocial = true
+                
                 self.present(userInfoVc, animated: true, completion: nil)
                 
               case .failure(let error):
@@ -83,7 +89,7 @@ class ViewController: UIViewController {
             
           case .failure(let error):
             
-             LKProgressHUD.showFailure(text: error.localizedDescription, controller: self)
+            LKProgressHUD.showFailure(text: error.localizedDescription, controller: self)
             
           }
         }
@@ -99,21 +105,23 @@ class ViewController: UIViewController {
   
   @IBAction func visitorRegisterAct(_ sender: Any) {
     
-    guard let account = accountText.text,
+    if isEmail {
       
-      accountText.text != "" else {
+      guard let account = accountText.text,
         
-        LKProgressHUD.showFailure(text: RegistMessage.emptyAccount.rawValue, controller: self)
-        
-        return }
-    
-    guard let password = passwordText.text,
+        accountText.text != "" else {
+          
+          LKProgressHUD.showFailure(text: RegistMessage.emptyAccount.rawValue, controller: self)
+          
+          return }
       
-      passwordText.text != "" else {
+      guard let password = passwordText.text,
         
-        LKProgressHUD.showFailure(text: RegistMessage.emptyPassword.rawValue, controller: self)
-        
-        return }
+        passwordText.text != "" else {
+          
+          LKProgressHUD.showFailure(text: RegistMessage.emptyPassword.rawValue, controller: self)
+          
+          return }
       
       LKProgressHUD.show(controller: self)
       
@@ -123,27 +131,56 @@ class ViewController: UIViewController {
           
         case .success:
           
-           LKProgressHUD.dismiss()
+          LKProgressHUD.dismiss()
           
           guard let userInfoVc = self.storyboard?.instantiateViewController(identifier: "userinfo") as? UserInfoViewController else { return }
           
+          userInfoVc.isSocial = false
+          
           self.present(userInfoVc, animated: true, completion: nil)
-
+          
         case .failure(let error):
           
           LKProgressHUD.showFailure(text: error.localizedDescription, controller: self)
         }
+      }
+    } else {
+      
+      LKProgressHUD.showFailure(text: "Error Email", controller: self)
+    }
+  }
+  
+  func checkMail(email: String) -> Bool {
+    
+    let emailPattern = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+    
+    do {
+      let regEx = try NSRegularExpression(pattern: emailPattern, options: .caseInsensitive)
+      
+      let matches = regEx.matches(in: email, options: [], range: NSRange(location: 0, length: email.count))
+      
+      if matches.count > 0 {
+        
+        return true
+      } else {
+        
+        return false
+      }
+      
+    } catch {
+      
+      fatalError("Wrong email pattern")
     }
   }
   
   func setUpBtn() {
     
     fbLoginBtn.layer.cornerRadius = 20
- 
+    
     visitorRegisterBtn.layer.cornerRadius = 20
-  
+    
     googleLoginBtn.layer.cornerRadius = 20
-
+    
     appleLoginBtn.layer.cornerRadius = 20
     
     appleLoginBtn.layer.borderWidth = 1.0
@@ -151,6 +188,10 @@ class ViewController: UIViewController {
     appleLoginBtn.layer.borderColor = UIColor.black.cgColor
     
     GIDSignIn.sharedInstance()?.presentingViewController = self
+    
+    accountText.delegate = self
+    
+    passwordText.delegate = self
     
     logoLabel.transform = CGAffineTransform(a: 1.0, b: -0.15, c: 0, d: 0.7, tx: 0, ty: 10)
     
@@ -163,6 +204,36 @@ class ViewController: UIViewController {
     
     guard let userInfoVc = self.storyboard?.instantiateViewController(identifier: "userinfo") as? UserInfoViewController else { return }
     
+    userInfoVc.isSocial = true
+    
     self.present(userInfoVc, animated: true, completion: nil)
+  }
+}
+
+extension ViewController: UITextFieldDelegate {
+  
+  func textFieldDidEndEditing(_ textField: UITextField) {
+    
+    guard let account = accountText.text,
+      
+      accountText.text != "" else {
+        
+        return }
+    
+    guard let password = passwordText.text,
+      
+      passwordText.text != "" else {
+        
+        return }
+    
+    isEmail = checkMail(email: account)
+    
+    if isEmail && password.count > 5 {
+      
+      visitorRegisterBtn.isEnabled = true
+    } else {
+      
+      visitorRegisterBtn.isEnabled = false
+    }
   }
 }

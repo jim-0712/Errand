@@ -13,6 +13,10 @@ class UserInfoViewController: UIViewController {
   
   lazy var gender = 1
   
+  var isSocial = false
+  
+  var photo = ""
+  
   @IBOutlet weak var cheatView: UIView!
   
   @IBOutlet weak var nickNameLabel: UILabel!
@@ -43,8 +47,15 @@ class UserInfoViewController: UIViewController {
     guard let email = Auth.auth().currentUser?.email else { return }
     
     guard let nickName = nickNameText.text else { return }
-    
-    UserManager.shared.createDataBase(classification: "Users", gender: gender, nickName: nickName, email: email) { result in
+      
+    if isSocial {
+      
+      guard let photoBack = Auth.auth().currentUser?.photoURL?.absoluteString else { return }
+      
+      photo = photoBack
+    }
+
+    UserManager.shared.createDataBase(classification: "Users", gender: gender, nickName: nickName, email: email, photo: photo) { result in
       
       switch result {
         
