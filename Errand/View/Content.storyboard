@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="gTU-NR-nwi">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--地圖-->
+        <scene sceneID="XEz-vF-JO8">
+            <objects>
+                <viewController storyboardIdentifier="map" modalPresentationStyle="fullScreen" id="3hd-SR-2Wa" customClass="MapViewController" customModule="Errand" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="wkb-cs-1NC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="1200"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TeR-Ik-nMZ">
+                                <rect key="frame" x="0.0" y="44" width="414" height="1052"/>
+                            </mapView>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="SXA-Ex-xEM">
+                                <rect key="frame" x="0.0" y="1104" width="414" height="62"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="InA-Ze-sUb">
+                                    <size key="itemSize" width="185" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="5oX-It-FPZ">
+                                        <rect key="frame" x="0.0" y="0.0" width="185" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="HO8-xk-ocl">
+                                            <rect key="frame" x="0.0" y="0.0" width="185" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </collectionViewCellContentView>
+                                        <size key="customSize" width="185" height="50"/>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Q1y-fb-dCw" firstAttribute="trailing" secondItem="SXA-Ex-xEM" secondAttribute="trailing" id="Iv2-uY-Rvg"/>
+                            <constraint firstItem="TeR-Ik-nMZ" firstAttribute="top" secondItem="Q1y-fb-dCw" secondAttribute="top" id="Qad-fZ-I12"/>
+                            <constraint firstItem="Q1y-fb-dCw" firstAttribute="bottom" secondItem="TeR-Ik-nMZ" secondAttribute="bottom" constant="70" id="X2C-hj-Lh6"/>
+                            <constraint firstItem="SXA-Ex-xEM" firstAttribute="leading" secondItem="Q1y-fb-dCw" secondAttribute="leading" id="bqF-O0-twj"/>
+                            <constraint firstItem="Q1y-fb-dCw" firstAttribute="trailing" secondItem="TeR-Ik-nMZ" secondAttribute="trailing" id="cVB-Hi-RGx"/>
+                            <constraint firstItem="TeR-Ik-nMZ" firstAttribute="leading" secondItem="Q1y-fb-dCw" secondAttribute="leading" id="kdM-n1-ypj"/>
+                            <constraint firstItem="Q1y-fb-dCw" firstAttribute="bottom" secondItem="SXA-Ex-xEM" secondAttribute="bottom" id="pMp-H1-YyM"/>
+                            <constraint firstItem="SXA-Ex-xEM" firstAttribute="top" secondItem="TeR-Ik-nMZ" secondAttribute="bottom" constant="8" symbolic="YES" id="vwY-Ow-nvZ"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Q1y-fb-dCw"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="地圖" image="mappin.and.ellipse" catalog="system" id="CVr-mX-Rh4"/>
+                    <navigationItem key="navigationItem" id="leA-I1-oGz"/>
+                    <size key="freeformSize" width="414" height="1200"/>
+                    <connections>
+                        <outlet property="chooseKind" destination="SXA-Ex-xEM" id="LAk-Zj-sUE"/>
+                        <outlet property="realTimeMap" destination="TeR-Ik-nMZ" id="A2p-kG-9YT"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rhs-Qn-h0N" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1920.289855072464" y="101.78571428571428"/>
+        </scene>
+        <!--地圖-->
+        <scene sceneID="SeB-zz-dn4">
+            <objects>
+                <viewController storyboardIdentifier="googleMap" id="Lwa-2F-1Km" customClass="GoogleMapViewController" customModule="Errand" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="M2v-kO-urR">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c6Y-Tz-S30" customClass="GMSMapView">
+                                <rect key="frame" x="0.0" y="44" width="414" height="699"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </view>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="AF1-sS-Eva">
+                                <rect key="frame" x="0.0" y="751" width="414" height="62"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="X0O-Rr-LEv">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="h3r-6y-T5t">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="yvb-oS-rhs">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </collectionViewCellContentView>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q9i-bH-NoB">
+                                <rect key="frame" x="367" y="706" width="42" height="42"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="42" id="2Rd-PV-8oN"/>
+                                    <constraint firstAttribute="height" constant="42" id="N6h-Wc-9a6"/>
+                                </constraints>
+                                <state key="normal" image="compass"/>
+                                <connections>
+                                    <action selector="refreshPathAct:" destination="Lwa-2F-1Km" eventType="touchUpInside" id="e2X-fR-LpV"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xCH-LF-jXX">
+                                <rect key="frame" x="0.0" y="703" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="BXl-42-oVQ"/>
+                                    <constraint firstAttribute="height" constant="40" id="l9C-Zs-imw"/>
+                                </constraints>
+                                <state key="normal" image="search"/>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="xCH-LF-jXX" firstAttribute="leading" secondItem="lR9-e6-IDw" secondAttribute="leading" id="3co-qb-vIh"/>
+                            <constraint firstItem="lR9-e6-IDw" firstAttribute="bottom" secondItem="AF1-sS-Eva" secondAttribute="bottom" id="Bet-Bk-rK7"/>
+                            <constraint firstItem="AF1-sS-Eva" firstAttribute="top" secondItem="c6Y-Tz-S30" secondAttribute="bottom" constant="8" symbolic="YES" id="Cvf-J8-6XR"/>
+                            <constraint firstItem="AF1-sS-Eva" firstAttribute="leading" secondItem="lR9-e6-IDw" secondAttribute="leading" id="Fib-u5-ALw"/>
+                            <constraint firstItem="lR9-e6-IDw" firstAttribute="trailing" secondItem="c6Y-Tz-S30" secondAttribute="trailing" id="La5-HJ-MR2"/>
+                            <constraint firstItem="lR9-e6-IDw" firstAttribute="trailing" secondItem="AF1-sS-Eva" secondAttribute="trailing" id="PbD-54-gvH"/>
+                            <constraint firstItem="c6Y-Tz-S30" firstAttribute="leading" secondItem="lR9-e6-IDw" secondAttribute="leading" id="Qcu-mw-y3e"/>
+                            <constraint firstItem="AF1-sS-Eva" firstAttribute="top" secondItem="xCH-LF-jXX" secondAttribute="bottom" constant="8" symbolic="YES" id="UJg-8f-vYG"/>
+                            <constraint firstItem="c6Y-Tz-S30" firstAttribute="top" secondItem="lR9-e6-IDw" secondAttribute="top" id="obl-v2-6lY"/>
+                            <constraint firstItem="AF1-sS-Eva" firstAttribute="top" secondItem="q9i-bH-NoB" secondAttribute="bottom" constant="3" id="sme-gz-zIx"/>
+                            <constraint firstItem="lR9-e6-IDw" firstAttribute="trailing" secondItem="q9i-bH-NoB" secondAttribute="trailing" constant="5" id="wLy-kN-s5U"/>
+                            <constraint firstItem="lR9-e6-IDw" firstAttribute="bottom" secondItem="c6Y-Tz-S30" secondAttribute="bottom" constant="70" id="xYl-Ef-MLB"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="lR9-e6-IDw"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="地圖" image="map" catalog="system" id="KBp-7e-gQC"/>
+                    <connections>
+                        <outlet property="categoryCollection" destination="AF1-sS-Eva" id="yab-X9-fTZ"/>
+                        <outlet property="googleMapView" destination="c6Y-Tz-S30" id="hac-HU-E0g"/>
+                        <outlet property="refreshBtn" destination="q9i-bH-NoB" id="cOP-hQ-2j8"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pZ9-w1-uuK" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="11.594202898550726" y="870.53571428571422"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="KTU-3Q-Mbb">
+            <objects>
+                <tabBarController storyboardIdentifier="tab" automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="gTU-NR-nwi" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="I6y-vH-of8"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" barStyle="black" id="C7h-WW-BU3">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" red="0.13333333333333333" green="0.13333333333333333" blue="0.32549019607843138" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="barTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="Lwa-2F-1Km" kind="relationship" relationship="viewControllers" id="3BU-8M-i1u"/>
+                        <segue destination="WLw-Gq-EIX" kind="relationship" relationship="viewControllers" id="X4x-qv-cSI"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6cT-MU-oDd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="980" y="0.0"/>
+        </scene>
+        <!--發任務-->
+        <scene sceneID="fHA-HI-7W8">
+            <objects>
+                <viewController id="WLw-Gq-EIX" customClass="PostTaskViewController" customModule="Errand" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8un-hN-VIm">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="0.84074313112448529" green="0.92122562698560406" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <viewLayoutGuide key="safeArea" id="x5l-YM-aTQ"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="發任務" image="pencil.and.ellipsis.rectangle" catalog="system" id="f7R-eO-fYV"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cV8-xq-grr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="980" y="871"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="compass" width="512" height="512"/>
+        <image name="map" catalog="system" width="64" height="56"/>
+        <image name="mappin.and.ellipse" catalog="system" width="58" height="64"/>
+        <image name="pencil.and.ellipsis.rectangle" catalog="system" width="64" height="40"/>
+        <image name="search" width="512" height="512"/>
+    </resources>
+</document>
