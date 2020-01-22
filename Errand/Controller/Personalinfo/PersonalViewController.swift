@@ -32,9 +32,9 @@ class PersonalViewController: UIViewController {
 
       imagePickerController.allowsEditing = true
       
-      imagePickerController.mediaTypes = [kUTTypeMovie as String, kUTTypePNG as String]
+      imagePickerController.mediaTypes = [kUTTypeMovie as String, kUTTypeImage as String]
       // Do any additional setup after loading the view.
-//      imagePickerController.showsCameraControls = false
+
     }
   }
   @IBOutlet weak var upLoadBtn: UIButton!
@@ -42,16 +42,9 @@ class PersonalViewController: UIViewController {
   @IBOutlet weak var personPhoto: UIImageView!
   
   func setUpView() {
-    
-    print(UserDefaults.standard.value(forKey: "personPhoto"))
-    
-    guard let personImage = UserDefaults.standard.value(forKey: "personPhoto") as? URL else {
       
       personPhoto.image = UIImage(named: "user-2")
-      
-      return }
-    
-    personPhoto.kf.setImage(with: personImage)
+
   }
   
   @IBAction func upLoadAct(_ sender: Any) {
@@ -104,14 +97,13 @@ extension PersonalViewController: UIImagePickerControllerDelegate, UINavigationC
     
     LKProgressHUD.show(controller: self)
     
+    guard let userName = Auth.auth().currentUser?.email else { return }
+    
     var selectedImageFromPicker: UIImage?
     
     if let pickedImage = info[.originalImage ] as? UIImage {
       
       selectedImageFromPicker = pickedImage
-    }
-    
-    guard let userName = Auth.auth().currentUser?.email else { return }
     
     if let selectedImage = selectedImageFromPicker {
       
@@ -135,8 +127,6 @@ extension PersonalViewController: UIImagePickerControllerDelegate, UINavigationC
               
               LKProgressHUD.dismiss()
               
-              print("1")
-              
               LKProgressHUD.showFailure(text: "Error", controller: self)
               
               return }
@@ -144,13 +134,6 @@ extension PersonalViewController: UIImagePickerControllerDelegate, UINavigationC
             self.personPhoto.image = selectedImage
             
             guard let urlBack = url else { return }
-            
-            UserDefaults.standard.set(urlBack, forKey: "personPhoto")
-            
-            
-            print("++++++++++++++++++++++++++++++++")
-            print(urlBack)
-            print("++++++++++++++++++++++++++++++++")
             
             UserManager.shared.updatePhotoData(photo: urlBack) { result in
               
@@ -160,15 +143,11 @@ extension PersonalViewController: UIImagePickerControllerDelegate, UINavigationC
                 
                 LKProgressHUD.dismiss()
                 
-                print("2")
-                
                 LKProgressHUD.showSuccess(text: "Success", controller: self)
                 
               case .failure(let error):
                 
                 LKProgressHUD.dismiss()
-                
-                print("3")
                 
                 LKProgressHUD.showFailure(text: error.localizedDescription, controller: self)
               }
@@ -177,6 +156,69 @@ extension PersonalViewController: UIImagePickerControllerDelegate, UINavigationC
           }
         })
       }
+    }
+      
+    } else {
+      
+      if let videoURL = info[.mediaURL ] as? NSURL {
+        
+        let id = UUID().uuidString
+        
+        let storageRef = Storage.storage().reference().child("TaskVideo").child("\(id).mov")
+        
+//        putDAta
+        var movieData: Data?
+        do {
+          movieData = try Data(contentsOf: videoURL as URL, options: .alwaysMapped)
+        } catch {
+            print(error)
+            movieData = nil
+            return
+        }
+        
+        storageRef.putData(movieData!, metadata: nil ) { (_, error) in
+          
+          if error != nil {
+            
+            LKProgressHUD.dismiss()
+            
+            return
+          }
+          
+          storageRef.downloadURL { (url, error) in
+            
+            if error != nil {
+              
+              LKProgressHUD.dismiss()
+              
+              LKProgressHUD.showFailure(text: "Error", controller: self)
+              
+              return }
+            
+//            guard let urlBack = url else { return }
+//
+//            UserManager.shared.updatePhotoData(photo: urlBack) { result in
+//
+//              switch result {
+//
+//              case .success:
+//
+//                LKProgressHUD.dismiss()
+//
+//                LKProgressHUD.showSuccess(text: "Success", controller: self)
+//
+//              case .failure(let error):
+//
+//                LKProgressHUD.dismiss()
+//
+//                LKProgressHUD.showFailure(text: error.localizedDescription, controller: self)
+//              }
+//            }
+            
+          }
+        }
+      }
+      
     }
     
     dismiss(animated: true, completion: nil)

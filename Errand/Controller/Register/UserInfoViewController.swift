@@ -61,6 +61,8 @@ class UserInfoViewController: UIViewController {
         
       case .success(let success):
         
+        UserManager.shared.isTourist = false
+        
         LKProgressHUD.showSuccess(text: success, controller: self)
         
         guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? UITabBarController else { return }
