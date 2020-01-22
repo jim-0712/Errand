@@ -84,6 +84,8 @@ class ViewController: UIViewController {
                 
               case .success:
                 
+                UserManager.shared.isTourist = false
+                
                 guard let userInfoVc = self.storyboard?.instantiateViewController(identifier: "userinfo") as? UserInfoViewController else { return }
                 
                 userInfoVc.isSocial = true
@@ -214,6 +216,8 @@ class ViewController: UIViewController {
   }
   
   @objc func goToUserInfo () {
+    
+    UserManager.shared.isTourist = false
     
     guard let userInfoVc = self.storyboard?.instantiateViewController(identifier: "userinfo") as? UserInfoViewController else { return }
     

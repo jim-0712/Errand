@@ -8,6 +8,7 @@
 
 import UIKit
 import Kingfisher
+import MobileCoreServices
 import FirebaseAuth
 import FirebaseDatabase
 import FirebaseStorage
@@ -15,7 +16,7 @@ import FirebaseStorage
 class PersonalViewController: UIViewController {
   
   let imagePickerController = UIImagePickerController()
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -28,9 +29,12 @@ class PersonalViewController: UIViewController {
       setUpView()
       // 委任代理
       imagePickerController.delegate = self
-      
+
       imagePickerController.allowsEditing = true
+      
+      imagePickerController.mediaTypes = [kUTTypeMovie as String, kUTTypePNG as String]
       // Do any additional setup after loading the view.
+//      imagePickerController.showsCameraControls = false
     }
   }
   @IBOutlet weak var upLoadBtn: UIButton!
@@ -38,6 +42,8 @@ class PersonalViewController: UIViewController {
   @IBOutlet weak var personPhoto: UIImageView!
   
   func setUpView() {
+    
+    print(UserDefaults.standard.value(forKey: "personPhoto"))
     
     guard let personImage = UserDefaults.standard.value(forKey: "personPhoto") as? URL else {
       
@@ -100,7 +106,7 @@ extension PersonalViewController: UIImagePickerControllerDelegate, UINavigationC
     
     var selectedImageFromPicker: UIImage?
     
-    if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+    if let pickedImage = info[.originalImage ] as? UIImage {
       
       selectedImageFromPicker = pickedImage
     }
@@ -135,11 +141,16 @@ extension PersonalViewController: UIImagePickerControllerDelegate, UINavigationC
               
               return }
             
-            UserDefaults.standard.set(url, forKey: "personPhoto")
-            
             self.personPhoto.image = selectedImage
             
             guard let urlBack = url else { return }
+            
+            UserDefaults.standard.set(urlBack, forKey: "personPhoto")
+            
+            
+            print("++++++++++++++++++++++++++++++++")
+            print(urlBack)
+            print("++++++++++++++++++++++++++++++++")
             
             UserManager.shared.updatePhotoData(photo: urlBack) { result in
               

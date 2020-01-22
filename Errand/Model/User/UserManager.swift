@@ -17,7 +17,7 @@ class UserManager {
   
   let dbF = Firestore.firestore()
   
-  var isTourist = false
+  var isTourist = true
   
   var FBData: FbData?
   
