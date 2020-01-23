@@ -113,18 +113,108 @@
         <!--發任務-->
         <scene sceneID="fHA-HI-7W8">
             <objects>
-                <viewController id="WLw-Gq-EIX" customClass="PostTaskViewController" customModule="Errand" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="WLw-Gq-EIX" customClass="MissionListViewController" customModule="Errand" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8un-hN-VIm">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G1J-NF-Qhl">
+                                <rect key="frame" x="354" y="753" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="EY7-bc-sef"/>
+                                    <constraint firstAttribute="height" constant="40" id="f0J-YN-csf"/>
+                                </constraints>
+                                <state key="normal" title="post"/>
+                                <connections>
+                                    <action selector="postMissionBtn:" destination="WLw-Gq-EIX" eventType="touchUpInside" id="9el-Fg-lc3"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" red="0.84074313112448529" green="0.92122562698560406" blue="1" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstItem="x5l-YM-aTQ" firstAttribute="bottom" secondItem="G1J-NF-Qhl" secondAttribute="bottom" constant="20" id="FXL-Xu-LRM"/>
+                            <constraint firstItem="x5l-YM-aTQ" firstAttribute="trailing" secondItem="G1J-NF-Qhl" secondAttribute="trailing" constant="20" id="Vlz-pB-NG7"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="x5l-YM-aTQ"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="發任務" image="pencil.and.ellipsis.rectangle" catalog="system" id="f7R-eO-fYV"/>
+                    <connections>
+                        <outlet property="postMissionBtn" destination="G1J-NF-Qhl" id="Hj6-7X-RhH"/>
+                        <segue destination="dbe-Mp-aD4" kind="presentation" identifier="post" id="Uib-eb-URq"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cV8-xq-grr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="980" y="871"/>
+        </scene>
+        <!--Post Mission View Controller-->
+        <scene sceneID="VBW-K3-g0A">
+            <objects>
+                <viewController modalPresentationStyle="fullScreen" id="dbe-Mp-aD4" customClass="PostMissionViewController" customModule="Errand" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="S1K-om-MFo">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="PYS-iW-TaD">
+                                <rect key="frame" x="0.0" y="44" width="414" height="60"/>
+                                <color key="backgroundColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="jqX-1R-0sx"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="2ph-Cc-njZ">
+                                    <size key="itemSize" width="157" height="137"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="group" id="CQY-JW-fPT" customClass="MissionGroupCollectionViewCell" customModule="Errand" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="-38.5" width="157" height="137"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="jnX-dE-oFW">
+                                            <rect key="frame" x="0.0" y="0.0" width="157" height="137"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zFU-MP-hf8">
+                                                    <rect key="frame" x="30" y="10" width="97" height="117"/>
+                                                    <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="zFU-MP-hf8" firstAttribute="centerY" secondItem="jnX-dE-oFW" secondAttribute="centerY" id="47R-w5-fdh"/>
+                                                <constraint firstItem="zFU-MP-hf8" firstAttribute="top" secondItem="jnX-dE-oFW" secondAttribute="top" constant="10" id="7J8-Ab-5o1"/>
+                                                <constraint firstAttribute="trailing" secondItem="zFU-MP-hf8" secondAttribute="trailing" constant="30" id="EmW-w8-AKn"/>
+                                                <constraint firstItem="zFU-MP-hf8" firstAttribute="centerX" secondItem="jnX-dE-oFW" secondAttribute="centerX" id="Lb2-Co-Fhl"/>
+                                                <constraint firstItem="zFU-MP-hf8" firstAttribute="leading" secondItem="jnX-dE-oFW" secondAttribute="leading" constant="30" id="PbS-Hj-x3W"/>
+                                                <constraint firstAttribute="bottom" secondItem="zFU-MP-hf8" secondAttribute="bottom" constant="10" id="SgJ-y3-YZj"/>
+                                            </constraints>
+                                        </collectionViewCellContentView>
+                                        <color key="backgroundColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <outlet property="groupLabel" destination="zFU-MP-hf8" id="cm6-7t-yw2"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="PYS-iW-TaD" secondAttribute="trailing" id="5eK-Zu-kDW"/>
+                            <constraint firstItem="PYS-iW-TaD" firstAttribute="leading" secondItem="S1K-om-MFo" secondAttribute="leading" id="XYB-TM-xxK"/>
+                            <constraint firstItem="PYS-iW-TaD" firstAttribute="top" secondItem="Rfg-m4-m3R" secondAttribute="top" id="xUh-X8-nEq"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Rfg-m4-m3R"/>
+                    </view>
+                    <connections>
+                        <outlet property="missionGroupCollectionView" destination="PYS-iW-TaD" id="Cg9-ic-xZE"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bNF-Sz-erZ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="979.71014492753636" y="1632.5892857142856"/>
         </scene>
         <!--Item-->
         <scene sceneID="yw8-YE-V1n">

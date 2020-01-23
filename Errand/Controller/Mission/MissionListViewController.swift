@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PostTaskViewController: UIViewController {
+class MissionListViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,4 +16,12 @@ class PostTaskViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
 
+  @IBOutlet weak var postMissionBtn: UIButton!
+  
+  @IBAction func postMissionBtn(_ sender: Any) {
+    
+    performSegue(withIdentifier: "post", sender: nil)
+    
+  }
+  
 }

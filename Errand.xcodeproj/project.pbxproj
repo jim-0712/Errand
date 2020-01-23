@@ -10,6 +10,8 @@
 		35D6F10C7FD31F054E953DEB /* Pods_Errand.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE91492BEFF455014401A8A6 /* Pods_Errand.framework */; };
 		40EA5FF204EA3BECE8D92AF4 /* Pods_Errand_ErrandUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A85AAEF02EB4115272C07D69 /* Pods_Errand_ErrandUITests.framework */; };
 		CBC2C481F6F57033AC62AEB1 /* Pods_ErrandTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 608A5BF50BFFACEF7C1D807F /* Pods_ErrandTests.framework */; };
+		FB24EC0F23D96B8500FA3F02 /* PostMissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24EC0E23D96B8500FA3F02 /* PostMissionViewController.swift */; };
+		FB24EC1223D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24EC1123D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift */; };
 		FB387C1023CEEF0E00B6D8C4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB387C0F23CEEF0E00B6D8C4 /* AppDelegate.swift */; };
 		FB387C1423CEEF0E00B6D8C4 /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB387C1323CEEF0E00B6D8C4 /* HomePageViewController.swift */; };
 		FB387C1723CEEF0E00B6D8C4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB387C1523CEEF0E00B6D8C4 /* Main.storyboard */; };
@@ -28,7 +30,7 @@
 		FB4A50E323D6D19A0028BC82 /* UserDataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A50E223D6D19A0028BC82 /* UserDataItem.swift */; };
 		FB752ABB23D5DFB200BF3852 /* PermanentMarker.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */; };
 		FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB752ABD23D5E57900BF3852 /* Background.swift */; };
-		FB9A2BFE23D068FF00553D97 /* PostTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9A2BFD23D068FF00553D97 /* PostTaskViewController.swift */; };
+		FB9A2BFE23D068FF00553D97 /* MissionListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */; };
 		FB9A2C0023D0729400553D97 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB9A2BFF23D0729400553D97 /* MapKit.framework */; };
 		FBF7AB5623D52EEF004B521A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FBF7AB5523D52EEF004B521A /* GoogleService-Info.plist */; };
 		FBF7AB5823D56F5D004B521A /* GoogleMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF7AB5723D56F5D004B521A /* GoogleMapViewController.swift */; };
@@ -63,6 +65,8 @@
 		BE91492BEFF455014401A8A6 /* Pods_Errand.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Errand.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F10FE434B9C4A84CFF81C162 /* Pods-Errand.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Errand.debug.xcconfig"; path = "Target Support Files/Pods-Errand/Pods-Errand.debug.xcconfig"; sourceTree = "<group>"; };
 		F997A91DF0A4410BFFBEDA80 /* Pods-Errand-ErrandUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Errand-ErrandUITests.debug.xcconfig"; path = "Target Support Files/Pods-Errand-ErrandUITests/Pods-Errand-ErrandUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		FB24EC0E23D96B8500FA3F02 /* PostMissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostMissionViewController.swift; sourceTree = "<group>"; };
+		FB24EC1123D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionGroupCollectionViewCell.swift; sourceTree = "<group>"; };
 		FB387C0C23CEEF0E00B6D8C4 /* Errand.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Errand.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB387C0F23CEEF0E00B6D8C4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FB387C1323CEEF0E00B6D8C4 /* HomePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageViewController.swift; sourceTree = "<group>"; };
@@ -87,7 +91,7 @@
 		FB4A50E223D6D19A0028BC82 /* UserDataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataItem.swift; sourceTree = "<group>"; };
 		FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PermanentMarker.ttf; sourceTree = "<group>"; };
 		FB752ABD23D5E57900BF3852 /* Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
-		FB9A2BFD23D068FF00553D97 /* PostTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTaskViewController.swift; sourceTree = "<group>"; };
+		FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionListViewController.swift; sourceTree = "<group>"; };
 		FB9A2BFF23D0729400553D97 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		FBF7AB5523D52EEF004B521A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FBF7AB5723D56F5D004B521A /* GoogleMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleMapViewController.swift; sourceTree = "<group>"; };
@@ -146,6 +150,21 @@
 				608A5BF50BFFACEF7C1D807F /* Pods_ErrandTests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FB24EC0D23D96A0400FA3F02 /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "New Group";
+			sourceTree = "<group>";
+		};
+		FB24EC1023D96CED00FA3F02 /* PostMission */ = {
+			isa = PBXGroup;
+			children = (
+				FB24EC1123D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift */,
+			);
+			path = PostMission;
 			sourceTree = "<group>";
 		};
 		FB387C0323CEEF0E00B6D8C4 = {
@@ -209,8 +228,9 @@
 		FB387C4423CEF5A900B6D8C4 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				FB24EC0D23D96A0400FA3F02 /* New Group */,
 				FB4A50DF23D6A8C90028BC82 /* Personalinfo */,
-				FB9A2BFC23D068E200553D97 /* PostTask */,
+				FB9A2BFC23D068E200553D97 /* Mission */,
 				FB387C5923CF552A00B6D8C4 /* Map */,
 				FB387C4723CEFCA900B6D8C4 /* Register */,
 				FB387C4623CEF5C600B6D8C4 /* HomePage */,
@@ -221,6 +241,7 @@
 		FB387C4523CEF5BB00B6D8C4 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				FB24EC1023D96CED00FA3F02 /* PostMission */,
 				FB752ABC23D5E55600BF3852 /* Background */,
 				FB387C1523CEEF0E00B6D8C4 /* Main.storyboard */,
 				FB387C5723CF551A00B6D8C4 /* Content.storyboard */,
@@ -304,12 +325,13 @@
 			path = Background;
 			sourceTree = "<group>";
 		};
-		FB9A2BFC23D068E200553D97 /* PostTask */ = {
+		FB9A2BFC23D068E200553D97 /* Mission */ = {
 			isa = PBXGroup;
 			children = (
-				FB9A2BFD23D068FF00553D97 /* PostTaskViewController.swift */,
+				FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */,
+				FB24EC0E23D96B8500FA3F02 /* PostMissionViewController.swift */,
 			);
-			path = PostTask;
+			path = Mission;
 			sourceTree = "<group>";
 		};
 		FBF7AB5923D58AB4004B521A /* Map */ = {
@@ -617,7 +639,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB24EC1223D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift in Sources */,
 				FB387C5623CF521D00B6D8C4 /* UserManager.swift in Sources */,
+				FB24EC0F23D96B8500FA3F02 /* PostMissionViewController.swift in Sources */,
 				FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */,
 				FB387C5323CF323600B6D8C4 /* UserInfoViewController.swift in Sources */,
 				FB387C5B23CF554300B6D8C4 /* MapViewController.swift in Sources */,
@@ -625,7 +649,7 @@
 				FB387C1023CEEF0E00B6D8C4 /* AppDelegate.swift in Sources */,
 				FB4A50E123D6A8E60028BC82 /* PersonalViewController.swift in Sources */,
 				FB387C5023CF0E8E00B6D8C4 /* RegisterItem.swift in Sources */,
-				FB9A2BFE23D068FF00553D97 /* PostTaskViewController.swift in Sources */,
+				FB9A2BFE23D068FF00553D97 /* MissionListViewController.swift in Sources */,
 				FB387C1A23CEEF0E00B6D8C4 /* Errand.xcdatamodeld in Sources */,
 				FB4A50E323D6D19A0028BC82 /* UserDataItem.swift in Sources */,
 				FBF7AB5823D56F5D004B521A /* GoogleMapViewController.swift in Sources */,
