@@ -165,8 +165,7 @@ extension PersonalViewController: UIImagePickerControllerDelegate, UINavigationC
         let id = UUID().uuidString
         
         let storageRef = Storage.storage().reference().child("TaskVideo").child("\(id).mov")
-        
-//        putDAta
+
         var movieData: Data?
         do {
           movieData = try Data(contentsOf: videoURL as URL, options: .alwaysMapped)

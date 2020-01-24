@@ -63,6 +63,8 @@ struct AccountInfo {
 
   let blacklist: [String]
   
+  let onTask: Bool
+  
   var toDict: [String: Any] {
     
     return [  "email": email,
@@ -79,7 +81,9 @@ struct AccountInfo {
               
               "blacklist": blacklist,
               
-              "report": report
+              "report": report,
+              
+              "onTask": onTask
           ]
   }
 }

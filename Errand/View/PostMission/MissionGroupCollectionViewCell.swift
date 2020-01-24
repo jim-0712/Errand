@@ -11,15 +11,25 @@ import UIKit
 class MissionGroupCollectionViewCell: UICollectionViewCell {
   
   @IBOutlet weak var groupLabel: UILabel!
-  
-  override init(frame: CGRect) {
     
-    super.init(frame: frame)
+  @IBOutlet weak var groupColorBlock: UIView!
+  
+  override var isSelected: Bool {
+      didSet {
+        layer.borderColor = isSelected ? UIColor.black.cgColor : UIColor.white.cgColor
+        layer.borderWidth = isSelected ? 1.0 : 0.0
+      }
   }
   
-  required init?(coder: NSCoder) {
+  func setUpContent(label: String, color: UIColor) {
     
-    super.init(coder: coder)
+    self.layer.cornerRadius = UIScreen.main.bounds.width / 40
+    
+    groupLabel.text = label
+    
+    groupColorBlock.backgroundColor = color
+    
+    groupColorBlock.layer.cornerRadius = UIScreen.main.bounds.width / 40
   }
 
 }

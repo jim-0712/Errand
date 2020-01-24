@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 import GoogleMaps
 import CoreLocation
 
@@ -15,15 +16,32 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-//    if UserManager.shared.isTourist {
-//      
-//      refreshBtn.isEnabled = false
-//      
-//    } else {
-//      
-//      refreshBtn.isEnabled = true
-//    }
-//    
+    if UserManager.shared.isTourist {
+      
+      refreshBtn.isEnabled = false
+      
+    } else {
+      
+      refreshBtn.isEnabled = true
+      
+      if let account = Auth.auth().currentUser?.email {
+        
+        UserManager.shared.readData(account: account) { result in
+          
+          switch result {
+            
+          case .success(let onTask):
+            
+            UserManager.shared.isPostTask = onTask
+            
+          case .failure:
+            
+            return
+          }
+        }
+      }
+    }
+    
     setUpLocation()
     
     checkLocationAuth()

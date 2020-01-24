@@ -19,6 +19,8 @@ class UserManager {
   
   var isTourist = true
   
+  var isPostTask = false
+  
   var FBData: FbData?
   
   private init() { }
@@ -48,7 +50,7 @@ class UserManager {
     
     let userId = Auth.auth().currentUser?.uid
     
-    let info = AccountInfo(email: email, nickname: nickName, gender: gender, task: task, friends: friends, photo: photo, report: report, blacklist: blacklist)
+    let info = AccountInfo(email: email, nickname: nickName, gender: gender, task: task, friends: friends, photo: photo, report: report, blacklist: blacklist, onTask: false)
     
     self.dbF.collection(classification).document(email).setData(info.toDict) { error in
       
@@ -163,7 +165,7 @@ class UserManager {
       
       document.reference.updateData(["photo": transferPhoto]) { error in
         
-        guard let error = error else { return }
+        guard let _ = error else { return }
         
         completion(.failure(FireBaseUpdateError.updateError))
       }
@@ -175,10 +177,8 @@ class UserManager {
   func goToSign(viewController: UIViewController) {
     
     let alert = UIAlertController(title: "注意", message: "請先登入享有功能", preferredStyle: UIAlertController.Style.alert)
-
-    let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
     
-    let testCancel = UIAlertAction(title: "取消", style: .cancel) { (_) in
+    let cancelAction = UIAlertAction(title: "取消", style: .cancel) { (_) in
       
       let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
       
@@ -196,9 +196,28 @@ class UserManager {
     
     alert.addAction(action)
     
-    alert.addAction(testCancel)
+    alert.addAction(cancelAction)
     
     viewController.present(alert, animated: true, completion: nil)
+  }
+  
+  func readData(account: String, completion: @escaping ((Result<Bool, Error>) -> Void)) {
+    
+    dbF.collection("Users").whereField("email", isEqualTo: account).getDocuments { (querySnapshot, err) in
+      if err != nil {
+        
+        completion(.failure(RegiError.registFailed))
+        
+      } else {
+        guard let quary = querySnapshot else {return }
+        
+        guard let onTask = quary.documents.first?.data()["onTask"] as? Bool else { return }
+        
+        print(onTask)
+        
+        completion(.success(onTask))
+      }
+    }
   }
   
 }

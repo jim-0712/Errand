@@ -12,6 +12,7 @@
 		CBC2C481F6F57033AC62AEB1 /* Pods_ErrandTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 608A5BF50BFFACEF7C1D807F /* Pods_ErrandTests.framework */; };
 		FB24EC0F23D96B8500FA3F02 /* PostMissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24EC0E23D96B8500FA3F02 /* PostMissionViewController.swift */; };
 		FB24EC1223D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24EC1123D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift */; };
+		FB24EC1423D9B19300FA3F02 /* CustomeColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24EC1323D9B19300FA3F02 /* CustomeColor.swift */; };
 		FB387C1023CEEF0E00B6D8C4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB387C0F23CEEF0E00B6D8C4 /* AppDelegate.swift */; };
 		FB387C1423CEEF0E00B6D8C4 /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB387C1323CEEF0E00B6D8C4 /* HomePageViewController.swift */; };
 		FB387C1723CEEF0E00B6D8C4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB387C1523CEEF0E00B6D8C4 /* Main.storyboard */; };
@@ -67,6 +68,7 @@
 		F997A91DF0A4410BFFBEDA80 /* Pods-Errand-ErrandUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Errand-ErrandUITests.debug.xcconfig"; path = "Target Support Files/Pods-Errand-ErrandUITests/Pods-Errand-ErrandUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		FB24EC0E23D96B8500FA3F02 /* PostMissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostMissionViewController.swift; sourceTree = "<group>"; };
 		FB24EC1123D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionGroupCollectionViewCell.swift; sourceTree = "<group>"; };
+		FB24EC1323D9B19300FA3F02 /* CustomeColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomeColor.swift; sourceTree = "<group>"; };
 		FB387C0C23CEEF0E00B6D8C4 /* Errand.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Errand.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB387C0F23CEEF0E00B6D8C4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FB387C1323CEEF0E00B6D8C4 /* HomePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageViewController.swift; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 				FB387C4523CEF5BB00B6D8C4 /* View */,
 				FB387C4423CEF5A900B6D8C4 /* Controller */,
 				FB387C0F23CEEF0E00B6D8C4 /* AppDelegate.swift */,
+				FB24EC1323D9B19300FA3F02 /* CustomeColor.swift */,
 				FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */,
 				FB387C1B23CEEF0F00B6D8C4 /* Assets.xcassets */,
 				FB387C1D23CEEF0F00B6D8C4 /* LaunchScreen.storyboard */,
@@ -647,6 +650,7 @@
 				FB387C5B23CF554300B6D8C4 /* MapViewController.swift in Sources */,
 				FB387C1423CEEF0E00B6D8C4 /* HomePageViewController.swift in Sources */,
 				FB387C1023CEEF0E00B6D8C4 /* AppDelegate.swift in Sources */,
+				FB24EC1423D9B19300FA3F02 /* CustomeColor.swift in Sources */,
 				FB4A50E123D6A8E60028BC82 /* PersonalViewController.swift in Sources */,
 				FB387C5023CF0E8E00B6D8C4 /* RegisterItem.swift in Sources */,
 				FB9A2BFE23D068FF00553D97 /* MissionListViewController.swift in Sources */,
