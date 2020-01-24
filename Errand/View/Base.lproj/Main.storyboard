@@ -6,6 +6,11 @@
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="setofont.ttf">
+            <string>SetoFont</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -22,9 +27,9 @@
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="WND-Ps-keZ"/>
                                     <constraint firstAttribute="height" constant="40" id="Yrn-Gv-50r"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="MarkerFelt-Wide" family="Marker Felt" pointSize="24"/>
+                                <fontDescription key="fontDescription" name="SetoFont" family="SetoFont" pointSize="24"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="      f  Facebook"/>
+                                <state key="normal" title="  f  Facebook"/>
                                 <connections>
                                     <action selector="fbLoginAct:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ctc-Fy-38b"/>
                                 </connections>
@@ -36,7 +41,7 @@
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="1zA-gk-J9K"/>
                                     <constraint firstAttribute="height" constant="40" id="Tsb-Lv-whb"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="MarkerFelt-Wide" family="Marker Felt" pointSize="24"/>
+                                <fontDescription key="fontDescription" name="SetoFont" family="SetoFont" pointSize="24"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Sign up"/>
                                 <connections>
@@ -50,9 +55,9 @@
                                     <constraint firstAttribute="height" constant="40" id="4t4-kc-Vrh"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="Dbl-r4-3z2"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="MarkerFelt-Wide" family="Marker Felt" pointSize="24"/>
+                                <fontDescription key="fontDescription" name="SetoFont" family="SetoFont" pointSize="24"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="      G  Google">
+                                <state key="normal" title="  G  Google">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
@@ -66,9 +71,9 @@
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="GEP-VC-ROH"/>
                                     <constraint firstAttribute="height" constant="40" id="xRe-lb-vFQ"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="MarkerFelt-Wide" family="Marker Felt" pointSize="24"/>
+                                <fontDescription key="fontDescription" name="SetoFont" family="SetoFont" pointSize="24"/>
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="   Apple ID">
+                                <state key="normal" title="  Apple ID">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
@@ -76,7 +81,7 @@
                                 </connections>
                             </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="brand" translatesAutoresizingMaskIntoConstraints="NO" id="qOB-qd-TeP">
-                                <rect key="frame" x="132" y="732" width="30" height="30"/>
+                                <rect key="frame" x="127" y="732" width="30" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="2Sb-t9-1s3"/>
                                     <constraint firstAttribute="width" constant="30" id="XhC-cD-OdA"/>
@@ -89,12 +94,12 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ERRAND" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CiG-ri-uZW">
-                                <rect key="frame" x="125" y="64" width="164" height="50"/>
+                                <rect key="frame" x="132" y="64" width="150" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="2Oy-No-CcP"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="150" id="mbm-nW-Q9i"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="MarkerFelt-Wide" family="Marker Felt" pointSize="45"/>
+                                <fontDescription key="fontDescription" name="SetoFont" family="SetoFont" pointSize="45"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -151,7 +156,7 @@
                                     <constraint firstAttribute="height" constant="40" id="1ue-ms-9Jh"/>
                                     <constraint firstAttribute="width" constant="200" id="kEB-dU-w7q"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="MarkerFelt-Wide" family="Marker Felt" pointSize="24"/>
+                                <fontDescription key="fontDescription" name="SetoFont" family="SetoFont" pointSize="24"/>
                                 <state key="normal" title="Visitors">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -185,7 +190,7 @@
                             <constraint firstItem="xj9-f6-h07" firstAttribute="leading" secondItem="bRb-zP-cpn" secondAttribute="trailing" constant="15" id="aRW-zl-F8L"/>
                             <constraint firstItem="vG2-Id-JBA" firstAttribute="leading" secondItem="hnW-f8-Tg7" secondAttribute="trailing" constant="15" id="ba7-PC-DiO"/>
                             <constraint firstItem="yge-lS-ZTg" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="bdh-Ua-98s"/>
-                            <constraint firstItem="qOB-qd-TeP" firstAttribute="leading" secondItem="Isd-mL-QVy" secondAttribute="leading" constant="25" id="bsa-e8-vw4"/>
+                            <constraint firstItem="qOB-qd-TeP" firstAttribute="leading" secondItem="Isd-mL-QVy" secondAttribute="leading" constant="20" id="bsa-e8-vw4"/>
                             <constraint firstItem="vG2-Id-JBA" firstAttribute="top" secondItem="5tp-Px-cBs" secondAttribute="bottom" id="cPZ-ZC-uYv"/>
                             <constraint firstItem="ijz-ko-HvP" firstAttribute="top" secondItem="Isd-mL-QVy" secondAttribute="bottom" constant="30" id="drU-hQ-Aoz"/>
                             <constraint firstAttribute="trailing" secondItem="xj9-f6-h07" secondAttribute="trailing" constant="70" id="jfp-dO-rzi"/>

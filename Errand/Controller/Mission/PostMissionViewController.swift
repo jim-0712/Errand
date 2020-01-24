@@ -13,11 +13,16 @@ import MobileCoreServices
 import FirebaseAuth
 import FirebaseDatabase
 import FirebaseStorage
+//import IQKeyboardManager
 
 class PostMissionViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "SeToFont", size: 20)]
+    
+//    IQKeyboardManager.shared().isEnabled = true
     
     setUp()
     
@@ -37,13 +42,21 @@ class PostMissionViewController: UIViewController {
   
   @IBOutlet var videoView: [UIView]!
   
+  @IBOutlet weak var priceLabel: UILabel!
+  
+  @IBOutlet weak var priceTextField: UITextField!
+  
+  @IBOutlet weak var missionLabel: UILabel!
+  
+  @IBOutlet weak var missionContentTextView: UITextView!
+  
+  @IBOutlet weak var postBtn: UIButton!
+  
   let imagePickerController = UIImagePickerController()
   
   let backgroundManager = BackgroundManager.shared
   
   var fileURL: [URL] = []
-  
-  var startToUpload = 0
   
   var selectIndex: Int?
   
@@ -54,6 +67,9 @@ class PostMissionViewController: UIViewController {
   let screenwidth = UIScreen.main.bounds.width
   
   let screenheight = UIScreen.main.bounds.height
+  
+  @IBAction func postAct(_ sender: Any) {
+  }
   
   @IBAction func uploadAction(_ sender: Any) {
     
@@ -81,7 +97,6 @@ class PostMissionViewController: UIViewController {
         }
       }
       
-      // 新增一個取消動作，讓使用者可以跳出 UIAlertController
       let cancelAction = UIAlertAction(title: "取消", style: .cancel) { (_) in
         
         imagePickerAlertController.dismiss(animated: true, completion: nil)
@@ -102,6 +117,10 @@ class PostMissionViewController: UIViewController {
     
     self.view.layer.insertSublayer(backView, at: 0)
     
+    missionContentTextView.delegate = self
+    
+    priceTextField.delegate = self
+    
     missionGroupCollectionView.delegate = self
     
     missionGroupCollectionView.dataSource = self
@@ -109,6 +128,14 @@ class PostMissionViewController: UIViewController {
     imagePickerController.delegate = self
     
     imagePickerController.allowsEditing = true
+    
+    priceTextField.layer.cornerRadius = screenwidth / 50
+    
+    missionContentTextView.layer.cornerRadius = screenwidth / 30
+    
+    postBtn.layer.cornerRadius = screenwidth / 30
+    
+    postBtn.isEnabled = false
     
     imagePickerController.mediaTypes = [kUTTypeMovie as String, kUTTypeImage as String]
     
@@ -127,6 +154,12 @@ class PostMissionViewController: UIViewController {
     //    ])
     
   }
+  
+  @IBAction func addLocationAct(_ sender: Any) {
+    
+    performSegue(withIdentifier: "addlocation", sender: nil)
+  }
+  
 }
 
 extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -289,11 +322,36 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
 
           }
         }
-      }
-      
+      }      
     }
     
     dismiss(animated: true, completion: nil)
   }
-  
 }
+
+extension PostMissionViewController: UITextFieldDelegate, UITextViewDelegate {
+  
+  func textFieldDidEndEditing(_ textField: UITextField) {
+    
+    if priceTextField.text != nil && missionContentTextView.text != nil && fileURL.count > 0 {
+      
+      postBtn.isEnabled = true
+    } else {
+      
+      postBtn.isEnabled = false
+    }
+  }
+  
+  func textViewDidEndEditing(_ textView: UITextView) {
+    
+    if priceTextField.text != nil && missionContentTextView.text != nil && fileURL.count > 0 {
+      
+      postBtn.isEnabled = true
+    } else {
+      
+      postBtn.isEnabled = false
+    }
+  }
+}
+//  let now = NSDate()
+//  let currentTimeS = now.timeIntervalSince1970

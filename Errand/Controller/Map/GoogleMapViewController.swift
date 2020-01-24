@@ -16,13 +16,15 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "SeToFont", size: 17)]
+    
     if UserManager.shared.isTourist {
       
-      refreshBtn.isEnabled = false
+//      refreshBtn.isEnabled = false
       
     } else {
       
-      refreshBtn.isEnabled = true
+//      refreshBtn.isEnabled = true
       
       if let account = Auth.auth().currentUser?.email {
         
@@ -30,9 +32,13 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
           
           switch result {
             
-          case .success(let onTask):
+          case .success(let dataReturn):
             
-            UserManager.shared.isPostTask = onTask
+            print(dataReturn)
+            
+            UserManager.shared.isPostTask = dataReturn.onTask
+            
+            UserManager.shared.currentUserInfo = dataReturn
             
           case .failure:
             
@@ -56,8 +62,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   @IBOutlet weak var googleMapView: GMSMapView!
   
   @IBOutlet weak var categoryCollection: UICollectionView!
-  
-  @IBOutlet weak var refreshBtn: UIButton!
   
   let myLocationManager = CLLocationManager()
   
@@ -91,8 +95,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   func centerViewOnUserLocation() {
     
     guard let center = myLocationManager.location?.coordinate else { return }
-    
-    print(center)
     
     let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 15)
     
@@ -202,9 +204,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
       }
       
     }
-  }
-  
-  @IBAction func refreshPathAct(_ sender: Any) {
   }
   
 }

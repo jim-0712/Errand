@@ -13,6 +13,8 @@
 		FB24EC0F23D96B8500FA3F02 /* PostMissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24EC0E23D96B8500FA3F02 /* PostMissionViewController.swift */; };
 		FB24EC1223D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24EC1123D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift */; };
 		FB24EC1423D9B19300FA3F02 /* CustomeColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24EC1323D9B19300FA3F02 /* CustomeColor.swift */; };
+		FB24EC1723DAB00F00FA3F02 /* TaskDataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24EC1623DAB00F00FA3F02 /* TaskDataItem.swift */; };
+		FB24EC1923DAB72500FA3F02 /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24EC1823DAB72500FA3F02 /* TaskManager.swift */; };
 		FB387C1023CEEF0E00B6D8C4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB387C0F23CEEF0E00B6D8C4 /* AppDelegate.swift */; };
 		FB387C1423CEEF0E00B6D8C4 /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB387C1323CEEF0E00B6D8C4 /* HomePageViewController.swift */; };
 		FB387C1723CEEF0E00B6D8C4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB387C1523CEEF0E00B6D8C4 /* Main.storyboard */; };
@@ -26,9 +28,10 @@
 		FB387C5323CF323600B6D8C4 /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB387C5223CF323600B6D8C4 /* UserInfoViewController.swift */; };
 		FB387C5623CF521D00B6D8C4 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB387C5523CF521D00B6D8C4 /* UserManager.swift */; };
 		FB387C5823CF551A00B6D8C4 /* Content.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB387C5723CF551A00B6D8C4 /* Content.storyboard */; };
-		FB387C5B23CF554300B6D8C4 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB387C5A23CF554300B6D8C4 /* MapViewController.swift */; };
 		FB4A50E123D6A8E60028BC82 /* PersonalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A50E023D6A8E60028BC82 /* PersonalViewController.swift */; };
 		FB4A50E323D6D19A0028BC82 /* UserDataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A50E223D6D19A0028BC82 /* UserDataItem.swift */; };
+		FB5F5BCE23DB2639003B9ABC /* AddLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F5BCD23DB2639003B9ABC /* AddLocationViewController.swift */; };
+		FB5F5BD023DB2847003B9ABC /* setofont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB5F5BCF23DB2847003B9ABC /* setofont.ttf */; };
 		FB752ABB23D5DFB200BF3852 /* PermanentMarker.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */; };
 		FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB752ABD23D5E57900BF3852 /* Background.swift */; };
 		FB9A2BFE23D068FF00553D97 /* MissionListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */; };
@@ -69,6 +72,8 @@
 		FB24EC0E23D96B8500FA3F02 /* PostMissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostMissionViewController.swift; sourceTree = "<group>"; };
 		FB24EC1123D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionGroupCollectionViewCell.swift; sourceTree = "<group>"; };
 		FB24EC1323D9B19300FA3F02 /* CustomeColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomeColor.swift; sourceTree = "<group>"; };
+		FB24EC1623DAB00F00FA3F02 /* TaskDataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDataItem.swift; sourceTree = "<group>"; };
+		FB24EC1823DAB72500FA3F02 /* TaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManager.swift; sourceTree = "<group>"; };
 		FB387C0C23CEEF0E00B6D8C4 /* Errand.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Errand.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB387C0F23CEEF0E00B6D8C4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FB387C1323CEEF0E00B6D8C4 /* HomePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageViewController.swift; sourceTree = "<group>"; };
@@ -88,9 +93,10 @@
 		FB387C5223CF323600B6D8C4 /* UserInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoViewController.swift; sourceTree = "<group>"; };
 		FB387C5523CF521D00B6D8C4 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		FB387C5723CF551A00B6D8C4 /* Content.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Content.storyboard; sourceTree = "<group>"; };
-		FB387C5A23CF554300B6D8C4 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		FB4A50E023D6A8E60028BC82 /* PersonalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalViewController.swift; sourceTree = "<group>"; };
 		FB4A50E223D6D19A0028BC82 /* UserDataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataItem.swift; sourceTree = "<group>"; };
+		FB5F5BCD23DB2639003B9ABC /* AddLocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLocationViewController.swift; sourceTree = "<group>"; };
+		FB5F5BCF23DB2847003B9ABC /* setofont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = setofont.ttf; sourceTree = "<group>"; };
 		FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PermanentMarker.ttf; sourceTree = "<group>"; };
 		FB752ABD23D5E57900BF3852 /* Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionListViewController.swift; sourceTree = "<group>"; };
@@ -169,6 +175,15 @@
 			path = PostMission;
 			sourceTree = "<group>";
 		};
+		FB24EC1523DAAFDB00FA3F02 /* Mission */ = {
+			isa = PBXGroup;
+			children = (
+				FB24EC1623DAB00F00FA3F02 /* TaskDataItem.swift */,
+				FB24EC1823DAB72500FA3F02 /* TaskManager.swift */,
+			);
+			path = Mission;
+			sourceTree = "<group>";
+		};
 		FB387C0323CEEF0E00B6D8C4 = {
 			isa = PBXGroup;
 			children = (
@@ -201,6 +216,7 @@
 				FB387C0F23CEEF0E00B6D8C4 /* AppDelegate.swift */,
 				FB24EC1323D9B19300FA3F02 /* CustomeColor.swift */,
 				FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */,
+				FB5F5BCF23DB2847003B9ABC /* setofont.ttf */,
 				FB387C1B23CEEF0F00B6D8C4 /* Assets.xcassets */,
 				FB387C1D23CEEF0F00B6D8C4 /* LaunchScreen.storyboard */,
 				FB387C2023CEEF0F00B6D8C4 /* Info.plist */,
@@ -271,6 +287,7 @@
 		FB387C4A23CF05FD00B6D8C4 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				FB24EC1523DAAFDB00FA3F02 /* Mission */,
 				FBF7AB5923D58AB4004B521A /* Map */,
 				FB387C5423CF520100B6D8C4 /* User */,
 				FB387C4E23CF0E4B00B6D8C4 /* Register */,
@@ -306,8 +323,8 @@
 		FB387C5923CF552A00B6D8C4 /* Map */ = {
 			isa = PBXGroup;
 			children = (
-				FB387C5A23CF554300B6D8C4 /* MapViewController.swift */,
 				FBF7AB5723D56F5D004B521A /* GoogleMapViewController.swift */,
+				FB5F5BCD23DB2639003B9ABC /* AddLocationViewController.swift */,
 			);
 			path = Map;
 			sourceTree = "<group>";
@@ -461,6 +478,7 @@
 				FB387C1F23CEEF0F00B6D8C4 /* LaunchScreen.storyboard in Resources */,
 				FB752ABB23D5DFB200BF3852 /* PermanentMarker.ttf in Resources */,
 				FB387C1C23CEEF0F00B6D8C4 /* Assets.xcassets in Resources */,
+				FB5F5BD023DB2847003B9ABC /* setofont.ttf in Resources */,
 				FBF7AB5623D52EEF004B521A /* GoogleService-Info.plist in Resources */,
 				FB387C1723CEEF0E00B6D8C4 /* Main.storyboard in Resources */,
 				FB387C5823CF551A00B6D8C4 /* Content.storyboard in Resources */,
@@ -644,11 +662,13 @@
 			files = (
 				FB24EC1223D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift in Sources */,
 				FB387C5623CF521D00B6D8C4 /* UserManager.swift in Sources */,
+				FB24EC1923DAB72500FA3F02 /* TaskManager.swift in Sources */,
 				FB24EC0F23D96B8500FA3F02 /* PostMissionViewController.swift in Sources */,
 				FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */,
 				FB387C5323CF323600B6D8C4 /* UserInfoViewController.swift in Sources */,
-				FB387C5B23CF554300B6D8C4 /* MapViewController.swift in Sources */,
 				FB387C1423CEEF0E00B6D8C4 /* HomePageViewController.swift in Sources */,
+				FB5F5BCE23DB2639003B9ABC /* AddLocationViewController.swift in Sources */,
+				FB24EC1723DAB00F00FA3F02 /* TaskDataItem.swift in Sources */,
 				FB387C1023CEEF0E00B6D8C4 /* AppDelegate.swift in Sources */,
 				FB24EC1423D9B19300FA3F02 /* CustomeColor.swift in Sources */,
 				FB4A50E123D6A8E60028BC82 /* PersonalViewController.swift in Sources */,

@@ -17,6 +17,8 @@ class UserManager {
   
   let dbF = Firestore.firestore()
   
+  var currentUserInfo: AccountInfo?
+  
   var isTourist = true
   
   var isPostTask = false
@@ -173,7 +175,7 @@ class UserManager {
       completion(.success("Update Success"))
     }
   }
-
+  
   func goToSign(viewController: UIViewController) {
     
     let alert = UIAlertController(title: "注意", message: "請先登入享有功能", preferredStyle: UIAlertController.Style.alert)
@@ -201,7 +203,7 @@ class UserManager {
     viewController.present(alert, animated: true, completion: nil)
   }
   
-  func readData(account: String, completion: @escaping ((Result<Bool, Error>) -> Void)) {
+  func readData(account: String, completion: @escaping ((Result<AccountInfo, Error>) -> Void)) {
     
     dbF.collection("Users").whereField("email", isEqualTo: account).getDocuments { (querySnapshot, err) in
       if err != nil {
@@ -211,13 +213,21 @@ class UserManager {
       } else {
         guard let quary = querySnapshot else {return }
         
-        guard let onTask = quary.documents.first?.data()["onTask"] as? Bool else { return }
+        guard let onTask = quary.documents.first?.data()["onTask"] as? Bool,
+          let email = quary.documents.first?.data()["email"] as? String,
+          let nickname = quary.documents.first?.data()["nickname"] as? String,
+          let gender = quary.documents.first?.data()["gender"] as? Int,
+          let task = quary.documents.first?.data()["task"] as? [String],
+          let friends = quary.documents.first?.data()["friends"] as? [String],
+          let photo = quary.documents.first?.data()["photo"] as? String,
+          let blacklist = quary.documents.first?.data()["blacklist"] as? [String],
+          let report = quary.documents.first?.data()["report"] as? Int else { return }
         
-        print(onTask)
+        let dataReturn = AccountInfo(email: email, nickname: nickname, gender: gender, task: task, friends: friends, photo: photo, report: report, blacklist: blacklist, onTask: onTask)
         
-        completion(.success(onTask))
+        completion(.success(dataReturn))
       }
     }
   }
-  
+
 }

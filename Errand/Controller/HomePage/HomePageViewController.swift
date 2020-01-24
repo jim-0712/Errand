@@ -10,6 +10,7 @@ import UIKit
 import GoogleSignIn
 import FirebaseAuth
 import FBSDKLoginKit
+import IQKeyboardManager
 
 class ViewController: UIViewController {
   
@@ -21,6 +22,8 @@ class ViewController: UIViewController {
     setUpBtn()
     
     visitorRegisterBtn.isEnabled = false
+    
+    IQKeyboardManager.shared().isEnabled = true
     
     NotificationCenter.default.addObserver(self, selector: #selector(goToUserInfo), name: Notification.Name("userInfo"), object: nil)
   }
