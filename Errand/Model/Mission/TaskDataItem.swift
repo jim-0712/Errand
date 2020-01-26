@@ -17,13 +17,19 @@ struct TaskInfo {
   
   let gender: Int
   
-  let taskPhoto: [String]
+  let taskPhoto: [URL]
   
   let time: Int
   
   let detail: String
   
-  let coordinate: CLLocationCoordinate2D
+  let lat: Double
+  
+  let long: Double
+  
+  let money: Int
+  
+  let classfied: Int
   
   var toDict: [String: Any] {
     
@@ -39,7 +45,13 @@ struct TaskInfo {
               
               "detail": detail,
               
-              "coordinate": coordinate
+              "money": money,
+              
+              "classfied": classfied,
+              
+              "lat": lat,
+              
+              "long": long,
     
           ]
   }

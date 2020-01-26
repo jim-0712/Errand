@@ -10,19 +10,22 @@ import UIKit
 import AVKit
 import Kingfisher
 import MobileCoreServices
+import CoreLocation
 import FirebaseAuth
 import FirebaseDatabase
 import FirebaseStorage
 //import IQKeyboardManager
 
-class PostMissionViewController: UIViewController {
+class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
+  
+  let myLocationManager = CLLocationManager()
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "SeToFont", size: 20)]
+    self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "SeToFont", size: 20) as Any]
     
-//    IQKeyboardManager.shared().isEnabled = true
+    //    IQKeyboardManager.shared().isEnabled = true
     
     setUp()
     
@@ -52,6 +55,7 @@ class PostMissionViewController: UIViewController {
   
   @IBOutlet weak var postBtn: UIButton!
   
+  @IBOutlet weak var stackNTDView: UIStackView!
   let imagePickerController = UIImagePickerController()
   
   let backgroundManager = BackgroundManager.shared
@@ -62,13 +66,40 @@ class PostMissionViewController: UIViewController {
   
   let missionGroup = ["搬運物品", "清潔打掃", "水電維修", "科技維修", "驅趕害蟲", "一日陪伴", "交通接送", "其他種類"]
   
-  let missionColor: [UIColor] = [.red, .orange, .themeColor, .yellow, .pink, .lightPurple, .lightBlue, .gray]
+  let missionColor: [UIColor] = [.red, .yellow, .blue, .lightGray, .pink, .lightPurple, .orange, .green]
   
   let screenwidth = UIScreen.main.bounds.width
   
   let screenheight = UIScreen.main.bounds.height
   
   @IBAction func postAct(_ sender: Any) {
+    
+    guard let money = priceTextField.text,
+      let content = missionContentTextView.text,
+      let indexfinal = selectIndex else { return }
+    
+      let intMoney = Int(money) ?? 0
+    
+      let now = NSDate()
+    
+      let currentTimeS = Int(now.timeIntervalSince1970)
+    
+      let apple = CLLocationCoordinate2DMake(25.033671, 121.564427)
+      
+    TaskManager.shared.createMission(taskPhoto: fileURL, time: currentTimeS, detail: content, coordinate: apple, money: intMoney, classified: indexfinal) { (result) in
+      
+      switch result {
+        
+      case .success(let good):
+        
+        print(good)
+        
+      case .failure:
+        
+        print("fail")
+      }
+    }
+    
   }
   
   @IBAction func uploadAction(_ sender: Any) {
@@ -113,13 +144,11 @@ class PostMissionViewController: UIViewController {
   
   func setUp() {
     
-    let backView = backgroundManager.setUpView(view: self.view)
-    
-    self.view.layer.insertSublayer(backView, at: 0)
-    
     missionContentTextView.delegate = self
     
     priceTextField.delegate = self
+    
+    myLocationManager.delegate = self
     
     missionGroupCollectionView.delegate = self
     
@@ -148,10 +177,6 @@ class PostMissionViewController: UIViewController {
       
       videoView[count].isHidden = true
     }
-    
-    //    NSLayoutConstraint.activate([
-    //      missionGroupCollectionView.heightAnchor.constraint(equalToConstant: screenheight/15)
-    //    ])
     
   }
   
@@ -319,7 +344,7 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
             guard let urlBack = url else { return }
             
             strongSelf.fileURL.append(urlBack)
-
+            
           }
         }
       }      
@@ -333,7 +358,7 @@ extension PostMissionViewController: UITextFieldDelegate, UITextViewDelegate {
   
   func textFieldDidEndEditing(_ textField: UITextField) {
     
-    if priceTextField.text != nil && missionContentTextView.text != nil && fileURL.count > 0 {
+    if priceTextField.text != nil && missionContentTextView.text != nil && fileURL.count > 0 && selectIndex != nil {
       
       postBtn.isEnabled = true
     } else {
@@ -344,7 +369,7 @@ extension PostMissionViewController: UITextFieldDelegate, UITextViewDelegate {
   
   func textViewDidEndEditing(_ textView: UITextView) {
     
-    if priceTextField.text != nil && missionContentTextView.text != nil && fileURL.count > 0 {
+    if priceTextField.text != nil && missionContentTextView.text != nil && fileURL.count > 0 && selectIndex != nil {
       
       postBtn.isEnabled = true
     } else {
@@ -353,5 +378,3 @@ extension PostMissionViewController: UITextFieldDelegate, UITextViewDelegate {
     }
   }
 }
-//  let now = NSDate()
-//  let currentTimeS = now.timeIntervalSince1970

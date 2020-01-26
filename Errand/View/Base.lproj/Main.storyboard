@@ -154,7 +154,7 @@
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="1ue-ms-9Jh"/>
-                                    <constraint firstAttribute="width" constant="200" id="kEB-dU-w7q"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="kEB-dU-w7q"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="SetoFont" family="SetoFont" pointSize="24"/>
                                 <state key="normal" title="Visitors">

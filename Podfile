@@ -21,6 +21,7 @@ target 'Errand' do
   pod 'GoogleSignIn'
   pod ‘GoogleMaps’
   pod ‘GooglePlaces’
+  pod "Alamofire"
 
   target 'ErrandTests' do
     inherit! :search_paths

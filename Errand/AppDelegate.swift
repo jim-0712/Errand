@@ -53,7 +53,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
     FirebaseApp.configure()
     
-    GMSServices.provideAPIKey("AIzaSyB_voEc15Sn0T_O9C2O-6dWz7c_ju42jXs")
+//    GMSServices.provideAPIKey("AIzaSyB_voEc15Sn0T_O9C2O-6dWz7c_ju42jXs")
+    
+    GMSServices.provideAPIKey("AIzaSyBbTnBn0MHPMnioaL4y68Da3d41JlaSY-g")
     
     GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
     

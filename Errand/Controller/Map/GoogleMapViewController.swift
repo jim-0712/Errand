@@ -16,7 +16,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "SeToFont", size: 17)]
+    self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "SeToFont", size: 17) as Any]
     
     if UserManager.shared.isTourist {
       
@@ -186,7 +186,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
         
         let points = routeOverviewPolyline.points
         DispatchQueue.main.async {
-          // 這裡的points就是那條encoded string
+          
           let path = GMSPath.init(fromEncodedPath: points)
           
           self.polyline.path = path
@@ -218,25 +218,10 @@ extension GoogleMapViewController: GMSMapViewDelegate {
     return true
   }
   
-//  func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-//
-//    self.polyline.path = nil
-//
-//    let marker = GMSMarker()
-//
-//    marker.position = CLLocationCoordinate2D(latitude: CLLocationDegrees(25.033671), longitude: CLLocationDegrees(121.564427))
-//
-//    marker.title = "101"
-//
-//    marker.snippet = "Taipei"
-//
-//    marker.icon = UIImage(named: "Icons_24px_Close")
-//
-//    marker.icon = GMSMarker.markerImage(with: .blue)
-//
-//    marker.map = googleMapView
-//
-//    getDirectionBack(origin: myLocationManager.location!.coordinate, destination: marker.position)
+//  func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
+//  
+//    print(position)
+//    
 //  }
   
 }
