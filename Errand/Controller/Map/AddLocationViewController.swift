@@ -16,7 +16,7 @@ protocol LocationManager: AnyObject {
   func locationReturn(viewController: AddLocationViewController, lat: Double, long: Double)
 }
 
-class AddLocationViewController: UIViewController, GMSMapViewDelegate, CLLocationManagerDelegate {
+class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -28,6 +28,10 @@ class AddLocationViewController: UIViewController, GMSMapViewDelegate, CLLocatio
   
   var addressFinal: String = ""
   
+  var finalLat: Double = 0.0
+  
+  var finalLong: Double = 0.0
+  
   @IBOutlet weak var pinImage: UIImageView!
   
   weak var delegate: LocationManager?
@@ -38,13 +42,11 @@ class AddLocationViewController: UIViewController, GMSMapViewDelegate, CLLocatio
   
   @IBAction func checkThePosition(_ sender: Any) {
     
-    guard let center = myLocationManager.location?.coordinate else { return }
+    let lat = "\(finalLat)"
     
-    let latitude = "\(center.latitude)"
-       
-    let longitude = "\(center.longitude)"
+    let long = "\(finalLong)"
     
-    MapManager.shared.getLocation(latitude: latitude, longitude: longitude) { [weak self](result) in
+    MapManager.shared.getLocation(latitude: lat, longitude: long) { [weak self](result) in
       
       guard let strongSelf = self else { return }
       
@@ -56,7 +58,7 @@ class AddLocationViewController: UIViewController, GMSMapViewDelegate, CLLocatio
         
         DispatchQueue.main.async {
           
-          strongSelf.alertCome(lat: center.latitude, long: center.longitude)
+          strongSelf.alertCome(lat: strongSelf.finalLat, long: strongSelf.finalLong)
         }
         
       case .failure:
@@ -79,6 +81,9 @@ class AddLocationViewController: UIViewController, GMSMapViewDelegate, CLLocatio
     
     addLocationMap.camera = myArrange
     
+    finalLat = center.latitude
+    
+    finalLong = center.longitude
   }
   
   func alertCome(lat: Double, long: Double) {
@@ -101,5 +106,15 @@ class AddLocationViewController: UIViewController, GMSMapViewDelegate, CLLocatio
     controller.addAction(cancelAction)
     
     present(controller, animated: true, completion: nil)
+  }
+}
+
+extension AddLocationViewController: GMSMapViewDelegate {
+  
+  func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
+    
+    finalLat = position.target.latitude
+    
+    finalLong = position.target.longitude
   }
 }
