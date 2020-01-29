@@ -11,7 +11,12 @@ import GoogleMaps
 import CoreLocation
 import Alamofire
 
-class AddLocationViewController: UIViewController {
+protocol LocationManager: AnyObject {
+  
+  func locationReturn(viewController: AddLocationViewController, lat: Double, long: Double)
+}
+
+class AddLocationViewController: UIViewController, GMSMapViewDelegate, CLLocationManagerDelegate {
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -28,18 +33,42 @@ class AddLocationViewController: UIViewController {
     }
   }
   
+  weak var delegate: LocationManager?
+  
   @IBOutlet weak var confirmLocation: UIButton!
   
   @IBOutlet weak var addLocationMap: GMSMapView!
   
   @IBAction func checkThePosition(_ sender: Any) {
-    print("456")
     
-    let latitude = "25.033671"
+    guard let center = myLocationManager.location?.coordinate else { return }
+    
+    let latitude = "\(center.latitude)"
        
-    let longitude = "121.564427"
+    let longitude = "\(center.longitude)"
     
-    getAddressFromLatLong(latitude: latitude, longitude: longitude)
+    MapManager.shared.getLocation(latitude: latitude, longitude: longitude) { [weak self](result) in
+      
+      guard let strongSelf = self else { return }
+      
+      switch result {
+        
+      case .success(let address):
+        
+        print(address)
+        
+        strongSelf.addressFinal = address.results[0].formattedAddress
+        
+        DispatchQueue.main.async {
+          
+          strongSelf.alertCome(lat: center.latitude, long: center.longitude)
+        }
+        
+      case .failure:
+        
+        print("No")
+      }
+    }
     
   }
   
@@ -57,81 +86,25 @@ class AddLocationViewController: UIViewController {
     
   }
   
-  func getAddressFromLatLong(latitude: String, longitude: String) {
+  func alertCome(lat: Double, long: Double) {
     
-    let decoder = JSONDecoder()
+    let controller = UIAlertController(title: "是否用以下地址", message: "\(addressFinal)", preferredStyle: .alert)
     
-    let locationSession = URLSession(configuration: URLSessionConfiguration.default)
-    
-    let key = "AIzaSyBbTnBn0MHPMnioaL4y68Da3d41JlaSY-g"
-     
-    let url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=\(latitude),\(longitude)&key=\(key)&language=zh-TW"
-    
-//     let url = "https://maps.googleapis.com/maps/api/geocode/json"
-    
-//     let bodyString = "latlng=25.033671,121.564427&key=AIzaSyBbTnBn0MHPMnioaL4y68Da3d41JlaSY-g&language=zh-TW"
-     
-     guard let locationURL = URL(string: url) else { return }
-     
-     var request = URLRequest(url: locationURL)
-     
-      request.httpMethod = "GET"
-    
-      request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-     
-     locationSession.dataTask(with: request) { (data, response, error) in
+    let okAction = UIAlertAction(title: "好的", style: .default) { [weak self] (_) in
        
-       guard let response = response as? HTTPURLResponse, response.statusCode == 200 else { return }
-       
-       guard let _ = error else {
-         
-         print("wtf")
-         
-         return }
-       
-       guard let data = data else { return }
-       do {
-         
-         let result = try decoder.decode(Address.self, from: data)
-         
-        print(result)
-         
-       } catch {
-         
-       }
-     }.resume()
-   }
-  
-}
-
-extension AddLocationViewController: GMSMapViewDelegate, CLLocationManagerDelegate {
-  
-  func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
+      guard let strongSelf = self else { return }
+      
+      strongSelf.delegate?.locationReturn(viewController: strongSelf, lat: lat, long: long)
+      
+      strongSelf.dismiss(animated: true, completion: nil)
+    }
     
-    print("123")
+    controller.addAction(okAction)
     
-//    let latitude = "\(position.target.latitude)"
-//    
-//    let longitude = "\(position.target.longitude)"
-//  
-    //
-    //    MapManager.shared.getLocation(latitude: latitude, longitude: longitude) { [weak self]result in
-    //
-    //      guard let strongSelf = self else { return }
-    //
-    //      switch result {
-    //
-    //      case .success(let address):
-    //
-    //        strongSelf.addressFinal = address.results[0].formattedAddress
-    //
-    //        print(strongSelf.addressFinal)
-    //
-    //      case .failure:
-    //
-    //        LKProgressHUD.showFailure(text: "Connection Fail", controller: strongSelf)
-    //      }
-    //    }
+    let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
     
+    controller.addAction(cancelAction)
+    
+    present(controller, animated: true, completion: nil)
   }
 }

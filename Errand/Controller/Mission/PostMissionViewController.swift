@@ -22,9 +22,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "SeToFont", size: 20) as Any]
-    
+
     //    IQKeyboardManager.shared().isEnabled = true
     
     setUp()
@@ -63,6 +61,10 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   var fileURL: [URL] = []
   
   var selectIndex: Int?
+  
+  var lat: Double?
+  
+  var long: Double?
   
   let missionGroup = ["搬運物品", "清潔打掃", "水電維修", "科技維修", "驅趕害蟲", "一日陪伴", "交通接送", "其他種類"]
   
@@ -185,6 +187,16 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
     performSegue(withIdentifier: "addlocation", sender: nil)
   }
   
+  
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    
+    if segue.identifier == "addlocation" {
+        
+        guard let locationVC = segue.destination as? AddLocationViewController else { return }
+
+        locationVC.delegate = self
+    }
+  }
 }
 
 extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -376,5 +388,15 @@ extension PostMissionViewController: UITextFieldDelegate, UITextViewDelegate {
       
       postBtn.isEnabled = false
     }
+  }
+}
+
+extension PostMissionViewController: LocationManager {
+  
+  func locationReturn(viewController: AddLocationViewController, lat: Double, long: Double) {
+    
+    self.lat = lat
+    
+    self.long = long
   }
 }
