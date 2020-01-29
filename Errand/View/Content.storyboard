@@ -520,12 +520,21 @@
                                     <action selector="checkThePosition:" destination="ZHk-wA-Wqr" eventType="touchUpInside" id="VHp-Is-NiH"/>
                                 </connections>
                             </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="marker" translatesAutoresizingMaskIntoConstraints="NO" id="BxI-0g-Niq">
+                                <rect key="frame" x="187" y="384" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="3zI-U4-DFy"/>
+                                    <constraint firstAttribute="height" constant="40" id="i6I-o0-ErY"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="BxI-0g-Niq" firstAttribute="centerX" secondItem="8iJ-BL-h53" secondAttribute="centerX" id="3QB-bg-oBB"/>
                             <constraint firstAttribute="bottom" secondItem="8Yl-KN-fYs" secondAttribute="bottom" constant="20" id="3t2-27-5D1"/>
                             <constraint firstItem="Cqu-oh-ujT" firstAttribute="leading" secondItem="8iJ-BL-h53" secondAttribute="leading" id="GrX-06-8F7"/>
                             <constraint firstItem="Cqu-oh-ujT" firstAttribute="top" secondItem="8iJ-BL-h53" secondAttribute="top" id="Qeb-CS-Mvy"/>
+                            <constraint firstItem="BxI-0g-Niq" firstAttribute="centerY" secondItem="8iJ-BL-h53" secondAttribute="centerY" id="RoB-d9-QeD"/>
                             <constraint firstItem="8iJ-BL-h53" firstAttribute="trailing" secondItem="Cqu-oh-ujT" secondAttribute="trailing" id="W3r-ak-zox"/>
                             <constraint firstAttribute="bottom" secondItem="Cqu-oh-ujT" secondAttribute="bottom" id="jiz-KE-gfC"/>
                             <constraint firstItem="8Yl-KN-fYs" firstAttribute="centerX" secondItem="8iJ-BL-h53" secondAttribute="centerX" id="yjH-0g-Vps"/>
@@ -536,6 +545,7 @@
                     <connections>
                         <outlet property="addLocationMap" destination="Cqu-oh-ujT" id="pmo-3k-EFt"/>
                         <outlet property="confirmLocation" destination="8Yl-KN-fYs" id="n8G-Kd-v4P"/>
+                        <outlet property="pinImage" destination="BxI-0g-Niq" id="Uzd-1i-zb0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7bh-NV-124" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -646,6 +656,7 @@
     </scenes>
     <resources>
         <image name="map" catalog="system" width="64" height="56"/>
+        <image name="marker" width="512" height="512"/>
         <image name="pencil.and.ellipsis.rectangle" catalog="system" width="64" height="40"/>
         <image name="pin" width="512" height="512"/>
         <image name="right" width="512" height="512"/>

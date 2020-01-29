@@ -58,7 +58,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   
   let backgroundManager = BackgroundManager.shared
   
-  var fileURL: [URL] = []
+  var fileURL: [String] = []
   
   var selectIndex: Int?
   
@@ -76,9 +76,13 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   
   @IBAction func postAct(_ sender: Any) {
     
+    print("123")
+    
     guard let money = priceTextField.text,
       let content = missionContentTextView.text,
-      let indexfinal = selectIndex else { return }
+      let indexfinal = selectIndex,
+      let lat = lat,
+      let long = long else { return }
     
       let intMoney = Int(money) ?? 0
     
@@ -86,9 +90,9 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
     
       let currentTimeS = Int(now.timeIntervalSince1970)
     
-      let apple = CLLocationCoordinate2DMake(25.033671, 121.564427)
+      let location = CLLocationCoordinate2DMake(lat, long)
       
-    TaskManager.shared.createMission(taskPhoto: fileURL, time: currentTimeS, detail: content, coordinate: apple, money: intMoney, classified: indexfinal) { (result) in
+    TaskManager.shared.createMission(taskPhoto: fileURL, time: currentTimeS, detail: content, coordinate: location, money: intMoney, classified: indexfinal) { (result) in
       
       switch result {
         
@@ -186,7 +190,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
     
     performSegue(withIdentifier: "addlocation", sender: nil)
   }
-  
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     
@@ -286,7 +289,9 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
               
               guard let urlBack = url else { return }
               
-              strongSelf.fileURL.append(urlBack)
+              let stringUrl = "\(urlBack)"
+              
+              strongSelf.fileURL.append(stringUrl)
               
             }
           })
@@ -355,7 +360,9 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
             
             guard let urlBack = url else { return }
             
-            strongSelf.fileURL.append(urlBack)
+            let stringUrl = "\(urlBack)"
+            
+            strongSelf.fileURL.append(stringUrl)
             
           }
         }

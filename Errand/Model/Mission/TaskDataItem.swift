@@ -17,7 +17,7 @@ struct TaskInfo {
   
   let gender: Int
   
-  let taskPhoto: [URL]
+  let taskPhoto: [String]
   
   let time: Int
   

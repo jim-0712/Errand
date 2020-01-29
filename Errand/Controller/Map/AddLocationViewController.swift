@@ -26,12 +26,9 @@ class AddLocationViewController: UIViewController, GMSMapViewDelegate, CLLocatio
   
   let myLocationManager = CLLocationManager()
   
-  var addressFinal: String = "" {
-    
-    didSet {
-      
-    }
-  }
+  var addressFinal: String = ""
+  
+  @IBOutlet weak var pinImage: UIImageView!
   
   weak var delegate: LocationManager?
   
@@ -54,8 +51,6 @@ class AddLocationViewController: UIViewController, GMSMapViewDelegate, CLLocatio
       switch result {
         
       case .success(let address):
-        
-        print(address)
         
         strongSelf.addressFinal = address.results[0].formattedAddress
         
