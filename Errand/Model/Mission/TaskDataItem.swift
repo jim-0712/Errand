@@ -9,6 +9,11 @@
 import Foundation
 import CoreLocation
 
+enum ReadDataError: Error {
+  
+  case readDataError
+}
+
 struct TaskInfo {
   
   let email: String
@@ -51,7 +56,7 @@ struct TaskInfo {
               
               "lat": lat,
               
-              "long": long,
+              "long": long
     
           ]
   }

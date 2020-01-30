@@ -23,9 +23,13 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    //    IQKeyboardManager.shared().isEnabled = true
-    
     setUp()
+    
+    setUpBtn()
+    
+    setUpTextView()
+    
+    setUpCollectionView()
     
   }
   
@@ -75,8 +79,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   let screenheight = UIScreen.main.bounds.height
     
   @IBAction func postAct(_ sender: Any) {
-    
-    print("123")
     
     guard let money = priceTextField.text,
       let content = missionContentTextView.text,
@@ -148,13 +150,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
     }
   }
   
-  func setUp() {
-    
-    missionContentTextView.delegate = self
-    
-    priceTextField.delegate = self
-    
-    myLocationManager.delegate = self
+  func setUpCollectionView() {
     
     missionGroupCollectionView.delegate = self
     
@@ -162,11 +158,12 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
     
     missionGroupCollectionView.layer.shadowOpacity = 0.2
     
-    imagePickerController.delegate = self
+    missionGroupCollectionView.layer.shadowOffset = CGSize(width: 3, height: 3)
+  }
+  
+  func setUpTextView() {
     
-    imagePickerController.allowsEditing = true
-    
-    priceTextField.layer.cornerRadius = screenwidth / 50
+    missionContentTextView.delegate = self
     
     missionContentTextView.layer.cornerRadius = screenwidth / 40
     
@@ -176,13 +173,31 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
     
     missionContentTextView.clipsToBounds = false
     
-    missionContentTextView.layer.shadowOffset = CGSize(width: 0, height: 0)
+    missionContentTextView.layer.shadowOffset = CGSize(width: 3, height: 3)
+  }
+  
+  func setUpBtn() {
     
     postBtn.layer.shadowOpacity = 0.5
     
     postBtn.layer.cornerRadius = screenwidth / 40
     
     postBtn.isEnabled = false
+      
+    postBtn.layer.shadowOffset = CGSize(width: 3, height: 3)
+  }
+  
+  func setUp() {
+    
+    myLocationManager.delegate = self
+    
+    imagePickerController.delegate = self
+    
+    imagePickerController.allowsEditing = true
+    
+    priceTextField.delegate = self
+    
+    priceTextField.layer.cornerRadius = screenwidth / 50
     
     imagePickerController.mediaTypes = [kUTTypeMovie as String, kUTTypeImage as String]
     
@@ -199,6 +214,8 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
     for count in 0 ..< videoView.count {
       
       backgroundVisibleView[count].layer.shadowOpacity = 0.2
+      
+      backgroundVisibleView[count].layer.shadowOffset = CGSize(width: 3, height: 3)
     }
     
   }
