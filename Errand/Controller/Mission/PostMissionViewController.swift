@@ -73,7 +73,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   let screenwidth = UIScreen.main.bounds.width
   
   let screenheight = UIScreen.main.bounds.height
-  
+    
   @IBAction func postAct(_ sender: Any) {
     
     print("123")

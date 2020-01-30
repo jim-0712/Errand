@@ -40,6 +40,11 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
   
   @IBOutlet weak var addLocationMap: GMSMapView!
   
+  @IBAction func cancelAct(_ sender: Any) {
+    
+    self.dismiss(animated: true, completion: nil)
+  }
+  
   @IBAction func checkThePosition(_ sender: Any) {
     
     let lat = "\(finalLat)"
@@ -77,7 +82,7 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
     
     guard let center = myLocationManager.location?.coordinate else { return }
     
-    let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 15)
+    let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 18)
     
     addLocationMap.camera = myArrange
     
