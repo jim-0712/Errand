@@ -160,15 +160,27 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
     
     missionGroupCollectionView.dataSource = self
     
+    missionGroupCollectionView.layer.shadowOpacity = 0.2
+    
     imagePickerController.delegate = self
     
     imagePickerController.allowsEditing = true
     
     priceTextField.layer.cornerRadius = screenwidth / 50
     
-    missionContentTextView.layer.cornerRadius = screenwidth / 30
+    missionContentTextView.layer.cornerRadius = screenwidth / 40
     
-    postBtn.layer.cornerRadius = screenwidth / 30
+    missionContentTextView.layer.shadowOpacity = 0.4
+    
+    missionContentTextView.layer.shadowColor = UIColor.black.cgColor
+    
+    missionContentTextView.clipsToBounds = false
+    
+    missionContentTextView.layer.shadowOffset = CGSize(width: 0, height: 0)
+    
+    postBtn.layer.shadowOpacity = 0.5
+    
+    postBtn.layer.cornerRadius = screenwidth / 40
     
     postBtn.isEnabled = false
     
@@ -182,6 +194,11 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
     for count in 0 ..< videoView.count {
       
       videoView[count].isHidden = true
+    }
+    
+    for count in 0 ..< videoView.count {
+      
+      backgroundVisibleView[count].layer.shadowOpacity = 0.2
     }
     
   }

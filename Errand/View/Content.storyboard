@@ -169,7 +169,7 @@
                                                     </constraints>
                                                 </view>
                                             </subviews>
-                                            <color key="backgroundColor" white="0.90000000000000002" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstItem="zFU-MP-hf8" firstAttribute="centerY" secondItem="jnX-dE-oFW" secondAttribute="centerY" id="47R-w5-fdh"/>
                                                 <constraint firstItem="zFU-MP-hf8" firstAttribute="top" secondItem="jnX-dE-oFW" secondAttribute="top" constant="10" id="7J8-Ab-5o1"/>
@@ -216,16 +216,17 @@
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KI6-py-6Tq">
                                         <rect key="frame" x="35" y="29.5" width="30" height="41"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                         <state key="normal" title="+">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
                                             <action selector="uploadAction:" destination="dbe-Mp-aD4" eventType="touchUpInside" id="FIY-Td-CBG"/>
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="0.89105308219178081" alpha="0.39370184075342468" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="2Ew-hZ-Xc6"/>
                                     <constraint firstAttribute="width" constant="100" id="8CK-uW-1BZ"/>
@@ -250,14 +251,14 @@
                                         <rect key="frame" x="35" y="29.5" width="30" height="41"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                         <state key="normal" title="+">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
                                             <action selector="uploadAction:" destination="dbe-Mp-aD4" eventType="touchUpInside" id="PCD-PH-XOr"/>
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="0.89105308220000001" alpha="0.39370184079999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="Lmy-Wy-P2u"/>
                                     <constraint firstItem="6Ox-OC-Ztf" firstAttribute="centerX" secondItem="gJ6-HL-qoX" secondAttribute="centerX" id="Tcb-Ph-hYM"/>
@@ -273,14 +274,14 @@
                                         <rect key="frame" x="35" y="29.5" width="30" height="41"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                         <state key="normal" title="+">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
                                             <action selector="uploadAction:" destination="dbe-Mp-aD4" eventType="touchUpInside" id="AWe-hy-KvM"/>
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="0.89105308220000001" alpha="0.39370184079999998" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="5EP-sO-sGK"/>
                                     <constraint firstItem="8YN-47-e4D" firstAttribute="centerY" secondItem="PhE-a3-rop" secondAttribute="centerY" id="N9d-yR-nKX"/>
@@ -382,17 +383,17 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="QsX-gg-Q2J">
-                                <rect key="frame" x="15" y="456" width="384" height="287"/>
-                                <color key="backgroundColor" white="0.84623822773972601" alpha="0.44549978595890399" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <rect key="frame" x="15" y="456" width="384" height="267"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WRv-A3-Uwa">
-                                <rect key="frame" x="120" y="763" width="174" height="30"/>
-                                <color key="backgroundColor" white="1" alpha="0.2381207191780822" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <rect key="frame" x="80" y="743" width="254" height="50"/>
+                                <color key="backgroundColor" red="0.96438604589999999" green="0.8303309083" blue="0.37239539620000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="pfi-y0-cDI"/>
+                                    <constraint firstAttribute="height" constant="50" id="pfi-y0-cDI"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="20"/>
                                 <state key="normal" title="發布"/>
@@ -420,12 +421,12 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" red="0.921875" green="0.921875" blue="0.921875" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstItem="V6K-iy-RnX" firstAttribute="top" secondItem="IrK-82-kmQ" secondAttribute="bottom" constant="15" id="1lI-kI-wX5"/>
                             <constraint firstItem="MmE-1B-UDM" firstAttribute="top" secondItem="IrK-82-kmQ" secondAttribute="bottom" constant="15" id="2Ff-9X-MTf"/>
                             <constraint firstItem="y6D-5M-dfI" firstAttribute="leading" secondItem="Jaf-a4-WD0" secondAttribute="trailing" constant="-10" id="2vK-0T-Q2k"/>
-                            <constraint firstItem="WRv-A3-Uwa" firstAttribute="leading" secondItem="Rfg-m4-m3R" secondAttribute="leading" constant="120" id="3KM-P5-KwB"/>
+                            <constraint firstItem="WRv-A3-Uwa" firstAttribute="leading" secondItem="Rfg-m4-m3R" secondAttribute="leading" constant="80" id="3KM-P5-KwB"/>
                             <constraint firstItem="ieZ-ED-VQq" firstAttribute="leading" secondItem="gJ6-HL-qoX" secondAttribute="trailing" constant="15" id="3dq-sL-Olw"/>
                             <constraint firstItem="QsX-gg-Q2J" firstAttribute="top" secondItem="4V0-2Z-Upg" secondAttribute="bottom" constant="20" id="3ga-81-i8I"/>
                             <constraint firstAttribute="trailing" secondItem="PYS-iW-TaD" secondAttribute="trailing" id="5eK-Zu-kDW"/>
@@ -446,7 +447,7 @@
                             <constraint firstItem="QsX-gg-Q2J" firstAttribute="leading" secondItem="Rfg-m4-m3R" secondAttribute="leading" constant="15" id="Wun-08-Sk5"/>
                             <constraint firstItem="PYS-iW-TaD" firstAttribute="leading" secondItem="S1K-om-MFo" secondAttribute="leading" id="XYB-TM-xxK"/>
                             <constraint firstItem="MmE-1B-UDM" firstAttribute="leading" secondItem="Rfg-m4-m3R" secondAttribute="leading" constant="15" id="ZQf-Co-jTx"/>
-                            <constraint firstItem="Rfg-m4-m3R" firstAttribute="trailing" secondItem="WRv-A3-Uwa" secondAttribute="trailing" constant="120" id="ciL-3a-3pO"/>
+                            <constraint firstItem="Rfg-m4-m3R" firstAttribute="trailing" secondItem="WRv-A3-Uwa" secondAttribute="trailing" constant="80" id="ciL-3a-3pO"/>
                             <constraint firstItem="Rfg-m4-m3R" firstAttribute="trailing" secondItem="1fd-6j-MpF" secondAttribute="trailing" id="gOO-GH-xpL"/>
                             <constraint firstItem="sQa-Dx-iuJ" firstAttribute="leading" secondItem="IZd-fw-Y3k" secondAttribute="trailing" constant="16" id="h4s-Gg-sih"/>
                             <constraint firstItem="IrK-82-kmQ" firstAttribute="leading" secondItem="Rfg-m4-m3R" secondAttribute="leading" constant="15" id="hnm-iQ-OSK"/>
@@ -593,11 +594,11 @@
             </objects>
             <point key="canvasLocation" x="2029" y="1613"/>
         </scene>
-        <!--發任務-->
+        <!--任務清單-->
         <scene sceneID="ETh-JL-9wK">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="7k4-vR-I2w" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="發任務" image="pencil.and.ellipsis.rectangle" catalog="system" id="f7R-eO-fYV"/>
+                    <tabBarItem key="tabBarItem" title="任務清單" image="pencil.and.ellipsis.rectangle" catalog="system" id="f7R-eO-fYV"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="abq-2E-r7L">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
