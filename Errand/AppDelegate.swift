@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
          }
          guard let authentication = user.authentication else {return}
          let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken, accessToken: authentication.accessToken)
-         Auth.auth().signIn(with: credential) { (user, error) in
+         Auth.auth().signIn(with: credential) { (_, error) in
              if let error = error {
                  print(error)
                  return
@@ -53,7 +53,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
     FirebaseApp.configure()
     
-    GMSServices.provideAPIKey("AIzaSyB_voEc15Sn0T_O9C2O-6dWz7c_ju42jXs")
+//    GMSServices.provideAPIKey("AIzaSyB_voEc15Sn0T_O9C2O-6dWz7c_ju42jXs")
+    
+    GMSServices.provideAPIKey("AIzaSyBbTnBn0MHPMnioaL4y68Da3d41JlaSY-g")
     
     GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
     
@@ -63,23 +65,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
     window = UIWindow(frame: UIScreen.main.bounds)
     
-    guard let _ = UserDefaults.standard.value(forKey: "login") as? Bool else {
+    if UserDefaults.standard.value(forKey: "login") as? Bool != nil {
+      
+       firstVC = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? UITabBarController
+      
+          UserManager.shared.isTourist = false
+      
+          window?.rootViewController = firstVC
+      
+          window?.makeKeyAndVisible()
+          
+          return true
+    } else {
       
       firstVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "main") as? ViewController
       
-      window?.rootViewController = firstVC
-
-      window?.makeKeyAndVisible()
-
-      return true }
-    
-    firstVC = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? UITabBarController
-    
-    window?.rootViewController = firstVC
-    
-    window?.makeKeyAndVisible()
-    
-    return true
+            window?.rootViewController = firstVC
+      
+            window?.makeKeyAndVisible()
+      
+          return true
+    }
   }
   
   lazy var persistentContainer: NSPersistentContainer = {
