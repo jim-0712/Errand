@@ -36,6 +36,7 @@
 		FB6365FE23E2B975008555BC /* MissionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6365FD23E2B975008555BC /* MissionDetailViewController.swift */; };
 		FB63660123E2CF6E008555BC /* MissionDetailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB63660023E2CF6E008555BC /* MissionDetailCollectionViewCell.swift */; };
 		FB63660323E31E67008555BC /* KingFisherWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB63660223E31E67008555BC /* KingFisherWrapper.swift */; };
+		FB63664823E3CF15008555BC /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB63664723E3CF15008555BC /* TabBarViewController.swift */; };
 		FB752ABB23D5DFB200BF3852 /* PermanentMarker.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */; };
 		FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB752ABD23D5E57900BF3852 /* Background.swift */; };
 		FB9A2BFE23D068FF00553D97 /* MissionListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */; };
@@ -105,6 +106,7 @@
 		FB6365FD23E2B975008555BC /* MissionDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionDetailViewController.swift; sourceTree = "<group>"; };
 		FB63660023E2CF6E008555BC /* MissionDetailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionDetailCollectionViewCell.swift; sourceTree = "<group>"; };
 		FB63660223E31E67008555BC /* KingFisherWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KingFisherWrapper.swift; sourceTree = "<group>"; };
+		FB63664723E3CF15008555BC /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PermanentMarker.ttf; sourceTree = "<group>"; };
 		FB752ABD23D5E57900BF3852 /* Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionListViewController.swift; sourceTree = "<group>"; };
@@ -168,11 +170,12 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		FB24EC0D23D96A0400FA3F02 /* New Group */ = {
+		FB24EC0D23D96A0400FA3F02 /* TabBar */ = {
 			isa = PBXGroup;
 			children = (
+				FB63664723E3CF15008555BC /* TabBarViewController.swift */,
 			);
-			path = "New Group";
+			path = TabBar;
 			sourceTree = "<group>";
 		};
 		FB24EC1023D96CED00FA3F02 /* PostMission */ = {
@@ -255,7 +258,7 @@
 		FB387C4423CEF5A900B6D8C4 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				FB24EC0D23D96A0400FA3F02 /* New Group */,
+				FB24EC0D23D96A0400FA3F02 /* TabBar */,
 				FB4A50DF23D6A8C90028BC82 /* Personalinfo */,
 				FB9A2BFC23D068E200553D97 /* Mission */,
 				FB387C5923CF552A00B6D8C4 /* Map */,
@@ -701,6 +704,7 @@
 				FB387C1023CEEF0E00B6D8C4 /* AppDelegate.swift in Sources */,
 				FB24EC1423D9B19300FA3F02 /* CustomeColor.swift in Sources */,
 				FB4A50E123D6A8E60028BC82 /* PersonalViewController.swift in Sources */,
+				FB63664823E3CF15008555BC /* TabBarViewController.swift in Sources */,
 				FB387C5023CF0E8E00B6D8C4 /* RegisterItem.swift in Sources */,
 				FB9A2BFE23D068FF00553D97 /* MissionListViewController.swift in Sources */,
 				FB6365FE23E2B975008555BC /* MissionDetailViewController.swift in Sources */,

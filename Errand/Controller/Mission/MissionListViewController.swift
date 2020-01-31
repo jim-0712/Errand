@@ -13,9 +13,18 @@ class MissionListViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("postMission"), object: nil)
+    
     setUp()
     getTaskData()
     
+  }
+  
+  @objc func reloadTable() {
+    
+    TaskManager.shared.taskData = []
+    taskDataReturn = []
+    getTaskData()
   }
   
   var detailData: TaskInfo?
@@ -56,17 +65,23 @@ class MissionListViewController: UIViewController {
   
   func getTaskData() {
     
-    TaskManager.shared.readData { result in
+    TaskManager.shared.readData { [weak self] result in
+      
+      guard let strongSelf = self else { return }
       
       switch result {
         
       case .success(let taskData):
         
-        self.taskDataReturn = taskData
+        strongSelf.taskDataReturn = taskData
+        
+        strongSelf.postMissionBtn.isHidden = false
+        
+        LKProgressHUD.dismiss()
         
       case .failure(let error):
         
-        LKProgressHUD.showFailure(text: error.localizedDescription, controller: self)
+        LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
       }
     }
   }

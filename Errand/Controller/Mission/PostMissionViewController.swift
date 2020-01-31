@@ -64,6 +64,8 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   
   var fileURL: [String] = []
   
+  var fileType: [Int] = []
+  
   var selectIndex: Int?
   
   var lat: Double?
@@ -93,14 +95,22 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
       let currentTimeS = Int(now.timeIntervalSince1970)
     
       let location = CLLocationCoordinate2DMake(lat, long)
+    
+      let taskData: [Int] = [currentTimeS, intMoney, indexfinal, 0]
       
-    TaskManager.shared.createMission(taskPhoto: fileURL, time: currentTimeS, detail: content, coordinate: location, money: intMoney, classified: indexfinal) { (result) in
+    TaskManager.shared.createMission(taskPhoto: fileURL, coordinate: location, taskData: taskData, detail: content, fileType: self.fileType) { [weak self](result) in
+      
+      guard let strongSelf = self else { return }
       
       switch result {
         
       case .success(let good):
         
         print(good)
+        
+        NotificationCenter.default.post(name: Notification.Name("postMission"), object: nil)
+        
+        strongSelf.navigationController?.popViewController(animated: true)
         
       case .failure:
         
@@ -313,6 +323,8 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
                 
                 return }
               
+              strongSelf.fileType.append(0)
+              
               strongSelf.uploadImageVisibleView[strongSelf.fileURL.count].isHidden = false
               
               strongSelf.uploadImageVisibleView[strongSelf.fileURL.count].image = selectedImage
@@ -372,6 +384,8 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
               LKProgressHUD.showFailure(text: "Error", controller: strongSelf)
               
               return }
+            
+            strongSelf.fileType.append(1)
             
             strongSelf.uploadImageVisibleView[strongSelf.fileURL.count].backgroundColor = .clear
             

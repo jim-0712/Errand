@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVKit
 import Kingfisher
 
 class MissionDetailViewController: UIViewController {
@@ -14,13 +15,19 @@ class MissionDetailViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    URLSessionConfiguration.default.multipathServiceType = .handover
+    
     setUp()
     
-//    setUpImageView()
+    setUpImageView()
     // Do any additional setup after loading the view.
   }
   
   var detailData: TaskInfo?
+  
+  var arrangementPhoto: [String] = []
+  
+  var arrangementVideo: [String] = []
   
   let fullSize = UIScreen.main.bounds.size
   
@@ -53,11 +60,25 @@ class MissionDetailViewController: UIViewController {
     
     guard let data = detailData else { return }
     
+    for count in 0 ..< data.fileType.count {
+      
+      if data.fileType[count] == 0 {
+
+        self.arrangementPhoto.append(data.taskPhoto[count])
+        
+      } else {
+        
+        self.arrangementVideo.append(data.taskPhoto[count])
+      }
+    }
+    
     var taskImage = UIImageView()
     
-    for count in 0 ..< data.taskPhoto.count {
+    var taskVideoView = UIView()
+    
+    for count in 0 ..< arrangementPhoto.count {
       
-      guard let url = URL(string: data.taskPhoto[count]) else { return }
+      guard let url = URL(string: arrangementPhoto[count]) else { return }
       
       taskImage = UIImageView(frame: CGRect(x: 0, y: 0, width: fullSize.width, height: 400))
       
@@ -72,7 +93,41 @@ class MissionDetailViewController: UIViewController {
       taskImage.kf.setImage(with: url)
       
     }
+    
+    for count in 0 ..< arrangementVideo.count {
+      
+      guard let url = URL(string: arrangementVideo[count]) else { return }
+      
+      taskVideoView = UIView(frame: CGRect(x: 0, y: 0, width: fullSize.width, height: 400))
+      
+      taskVideoView.contentMode = .scaleAspectFill
+      
+      taskVideoView.clipsToBounds = true
+      
+      taskVideoView.center = CGPoint(x: fullSize.width * (0.5 + CGFloat(arrangementPhoto.count + count)), y: 200)
+      
+      let player = AVPlayer(url: url)
+      
+      let playerLayer = AVPlayerLayer(player: player)
+      
+      playerLayer.frame = taskVideoView.bounds
+      
+      taskVideoView.layer.addSublayer(playerLayer)
+      
+      player.play()
+      
+    }
   }
+  
+//  let player = AVPlayer(url: videoTransferUrl)
+//
+//  let playerLayer = AVPlayerLayer(player: player)
+//
+//  playerLayer.frame = strongSelf.videoView[strongSelf.fileURL.count].bounds
+//
+//  strongSelf.videoView[strongSelf.fileURL.count].layer.addSublayer(playerLayer)
+//
+//  player.play()
 }
 
 extension MissionDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource {

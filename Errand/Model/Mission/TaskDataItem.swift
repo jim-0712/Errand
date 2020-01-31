@@ -36,6 +36,10 @@ struct TaskInfo {
   
   let classfied: Int
   
+  let status: Int
+  
+  let fileType: [Int]
+  
   var toDict: [String: Any] {
     
     return [   "email": email,
@@ -56,7 +60,11 @@ struct TaskInfo {
               
               "lat": lat,
               
-              "long": long
+              "long": long,
+              
+              "status": status,
+              
+              "fileType": fileType
     
           ]
   }

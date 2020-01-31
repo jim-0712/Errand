@@ -19,7 +19,7 @@ class TaskManager {
   
   var taskData = [TaskInfo]()
   
-  func createMission(taskPhoto: [String], time: Int, detail: String, coordinate: CLLocationCoordinate2D, money: Int, classified: Int, completion: @escaping (Result<String, Error>) -> Void) {
+  func createMission(taskPhoto: [String], coordinate: CLLocationCoordinate2D, taskData: [Int], detail: String, fileType: [Int], completion: @escaping (Result<String, Error>) -> Void) {
     
     guard let email = UserManager.shared.currentUserInfo?.email,
       let nickname = UserManager.shared.currentUserInfo?.nickname,
@@ -27,7 +27,7 @@ class TaskManager {
     let lat = coordinate.latitude as Double
     let long = coordinate.longitude as Double
     
-    let info = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classified)
+    let info = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: taskData[0], detail: detail, lat: lat, long: long, money: taskData[1], classfied: taskData[2], status: taskData[3], fileType: fileType)
     
     self.dbF.collection("Tasks").document(email).setData(info.toDict) { error in
       
@@ -68,9 +68,11 @@ class TaskManager {
             let lat = info.data()["lat"] as? Double,
             let long = info.data()["long"] as? Double,
             let money = info.data()["money"] as? Int,
+            let status = info.data()["status"] as? Int,
+            let fileType = info.data()["fileType"] as? [Int],
             let classfied = info.data()["classfied"] as? Int else { return }
           
-          let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied)
+          let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, fileType: fileType)
           
           strongSelf.taskData.append(dataReturn)
         }
