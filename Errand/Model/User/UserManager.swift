@@ -10,6 +10,7 @@ import Foundation
 import FBSDKLoginKit
 import Firebase
 import FirebaseAuth
+import FirebaseFirestore
 
 class UserManager {
   

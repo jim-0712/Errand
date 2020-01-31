@@ -288,7 +288,7 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
     
     LKProgressHUD.show(controller: self)
     
-    guard let userName = Auth.auth().currentUser?.email else { return }
+    let id = UUID().uuidString
     
     var selectedImageFromPicker: UIImage?
     
@@ -298,7 +298,7 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
       
       if let selectedImage = selectedImageFromPicker {
         
-        let storageRef = Storage.storage().reference().child("TaskFinder").child("\(userName).png")
+        let storageRef = Storage.storage().reference().child("TaskFinder").child("\(id).png")
         
         if let uploadData = selectedImage.pngData() {
           
@@ -347,8 +347,6 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
     } else {
       
       if let videoURL = info[.mediaURL ] as? NSURL {
-        
-        let id = UUID().uuidString
         
         let storageRef = Storage.storage().reference().child("TaskVideo").child("\(id).mov")
         
@@ -411,6 +409,8 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
             let stringUrl = "\(urlBack)"
             
             strongSelf.fileURL.append(stringUrl)
+            
+//            strongSelf.fileURL.append(id)
             
           }
         }

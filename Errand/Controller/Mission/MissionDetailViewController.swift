@@ -8,6 +8,7 @@
 
 import UIKit
 import AVKit
+import AVFoundation
 import Kingfisher
 
 class MissionDetailViewController: UIViewController {
@@ -130,20 +131,20 @@ class MissionDetailViewController: UIViewController {
       
       taskVideoView = UIView(frame: CGRect(x: 0, y: 0, width: fullSize.width, height: 400))
       
-      taskVideoView.contentMode = .scaleAspectFill
-      
-      taskVideoView.clipsToBounds = true
+      taskVideoView.contentMode = .center
       
       taskVideoView.center = CGPoint(x: fullSize.width * (0.5 + CGFloat(arrangementPhoto.count + count)), y: 200)
       
+      taskViewCollectionView.addSubview(taskVideoView)
+      
       let player = AVPlayer(url: url)
-      
+
       let playerLayer = AVPlayerLayer(player: player)
-      
+
       playerLayer.frame = taskVideoView.bounds
-      
+
       taskVideoView.layer.addSublayer(playerLayer)
-      
+
       player.play()
       
     }
