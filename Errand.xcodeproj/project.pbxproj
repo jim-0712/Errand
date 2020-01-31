@@ -37,6 +37,8 @@
 		FB63660123E2CF6E008555BC /* MissionDetailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB63660023E2CF6E008555BC /* MissionDetailCollectionViewCell.swift */; };
 		FB63660323E31E67008555BC /* KingFisherWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB63660223E31E67008555BC /* KingFisherWrapper.swift */; };
 		FB63664823E3CF15008555BC /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB63664723E3CF15008555BC /* TabBarViewController.swift */; };
+		FB63664B23E3ED77008555BC /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB63664A23E3ED77008555BC /* NetworkExtension.framework */; };
+		FB63664F23E3FC1B008555BC /* MissionDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB63664E23E3FC1B008555BC /* MissionDetailTableViewCell.swift */; };
 		FB752ABB23D5DFB200BF3852 /* PermanentMarker.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */; };
 		FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB752ABD23D5E57900BF3852 /* Background.swift */; };
 		FB9A2BFE23D068FF00553D97 /* MissionListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */; };
@@ -107,6 +109,9 @@
 		FB63660023E2CF6E008555BC /* MissionDetailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionDetailCollectionViewCell.swift; sourceTree = "<group>"; };
 		FB63660223E31E67008555BC /* KingFisherWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KingFisherWrapper.swift; sourceTree = "<group>"; };
 		FB63664723E3CF15008555BC /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		FB63664923E3ED77008555BC /* Errand.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Errand.entitlements; sourceTree = "<group>"; };
+		FB63664A23E3ED77008555BC /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
+		FB63664E23E3FC1B008555BC /* MissionDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionDetailTableViewCell.swift; sourceTree = "<group>"; };
 		FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PermanentMarker.ttf; sourceTree = "<group>"; };
 		FB752ABD23D5E57900BF3852 /* Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionListViewController.swift; sourceTree = "<group>"; };
@@ -123,6 +128,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB9A2C0023D0729400553D97 /* MapKit.framework in Frameworks */,
+				FB63664B23E3ED77008555BC /* NetworkExtension.framework in Frameworks */,
 				35D6F10C7FD31F054E953DEB /* Pods_Errand.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -162,6 +168,7 @@
 		D6CA3CD977931CCA5629628A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FB63664A23E3ED77008555BC /* NetworkExtension.framework */,
 				FB9A2BFF23D0729400553D97 /* MapKit.framework */,
 				BE91492BEFF455014401A8A6 /* Pods_Errand.framework */,
 				A85AAEF02EB4115272C07D69 /* Pods_Errand_ErrandUITests.framework */,
@@ -220,6 +227,7 @@
 		FB387C0E23CEEF0E00B6D8C4 /* Errand */ = {
 			isa = PBXGroup;
 			children = (
+				FB63664923E3ED77008555BC /* Errand.entitlements */,
 				FB387C4B23CF065100B6D8C4 /* Third Pary Wrapper */,
 				FB387C4A23CF05FD00B6D8C4 /* Model */,
 				FB387C4523CEF5BB00B6D8C4 /* View */,
@@ -271,7 +279,7 @@
 		FB387C4523CEF5BB00B6D8C4 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				FB6365FF23E2CF45008555BC /* MissionView */,
+				FB6365FF23E2CF45008555BC /* MissionDetail */,
 				FB4BF7B223E286FD00C4C05A /* MissionList */,
 				FB24EC1023D96CED00FA3F02 /* PostMission */,
 				FB752ABC23D5E55600BF3852 /* Background */,
@@ -359,12 +367,13 @@
 			path = MissionList;
 			sourceTree = "<group>";
 		};
-		FB6365FF23E2CF45008555BC /* MissionView */ = {
+		FB6365FF23E2CF45008555BC /* MissionDetail */ = {
 			isa = PBXGroup;
 			children = (
 				FB63660023E2CF6E008555BC /* MissionDetailCollectionViewCell.swift */,
+				FB63664E23E3FC1B008555BC /* MissionDetailTableViewCell.swift */,
 			);
-			path = MissionView;
+			path = MissionDetail;
 			sourceTree = "<group>";
 		};
 		FB752ABC23D5E55600BF3852 /* Background */ = {
@@ -709,6 +718,7 @@
 				FB9A2BFE23D068FF00553D97 /* MissionListViewController.swift in Sources */,
 				FB6365FE23E2B975008555BC /* MissionDetailViewController.swift in Sources */,
 				FB4BF7B423E288D600C4C05A /* ListTableViewCell.swift in Sources */,
+				FB63664F23E3FC1B008555BC /* MissionDetailTableViewCell.swift in Sources */,
 				FB387C1A23CEEF0E00B6D8C4 /* Errand.xcdatamodeld in Sources */,
 				FB4A50E323D6D19A0028BC82 /* UserDataItem.swift in Sources */,
 				FBF7AB5823D56F5D004B521A /* GoogleMapViewController.swift in Sources */,
@@ -889,6 +899,7 @@
 			baseConfigurationReference = F10FE434B9C4A84CFF81C162 /* Pods-Errand.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Errand/Errand.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6V9XMJR84F;
 				INFOPLIST_FILE = Errand/Info.plist;
@@ -908,6 +919,7 @@
 			baseConfigurationReference = 9EBB17268953F51CE7F8DE54 /* Pods-Errand.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Errand/Errand.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6V9XMJR84F;
 				INFOPLIST_FILE = Errand/Info.plist;

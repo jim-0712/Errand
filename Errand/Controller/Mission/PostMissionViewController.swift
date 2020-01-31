@@ -302,7 +302,7 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
         
         if let uploadData = selectedImage.pngData() {
           
-          storageRef.putData(uploadData, metadata: nil, completion: { [weak self](_, error) in
+          storageRef.putData(uploadData, metadata: nil, completion: { [weak self] (metadata, error) in
             
             guard let strongSelf = self else { return }
             

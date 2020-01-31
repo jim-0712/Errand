@@ -46,7 +46,7 @@ class TabBarViewController: UITabBarController {
 //        tabBar.tintColor = .systemTeal
 //        setupViewController()
 //    }
-//    //MARK:- Setup Functions
+
 //    func setupViewController() {
 //        viewControllers = [
 //            generateNavigationController(for: HomeViewController(), title: "Home", image: #imageLiteral(resourceName: "home")),
@@ -55,7 +55,7 @@ class TabBarViewController: UITabBarController {
 //            generateNavigationController(for: ViewController(), title: "Profile", image: #imageLiteral(resourceName: "musician"))
 //        ]
 //    }
-//    //MARK:- Helper Functions
+
 //    fileprivate func generateNavigationController(for rootViewConroller: UIViewController, title: String, image: UIImage) -> UIViewController {
 //        let navController = UINavigationController(rootViewController: rootViewConroller)
 //        //        navController.navigationBar.prefersLargeTitles = true

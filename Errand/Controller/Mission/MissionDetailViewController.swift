@@ -19,8 +19,23 @@ class MissionDetailViewController: UIViewController {
     
     setUp()
     
+    setUpBtn()
+    
+    setUppageControll()
+    
     setUpImageView()
     // Do any additional setup after loading the view.
+  }
+  
+  @IBOutlet weak var takeMissionBtn: UIButton!
+  
+  @IBOutlet weak var pageControl: UIPageControl!
+  
+  @IBOutlet weak var detailTableView: UITableView!
+  
+  @IBOutlet weak var taskViewCollectionView: UICollectionView!
+  
+  @IBAction func takeMissionAct(_ sender: Any) {
   }
   
   var detailData: TaskInfo?
@@ -29,19 +44,34 @@ class MissionDetailViewController: UIViewController {
   
   var arrangementVideo: [String] = []
   
+  let missionGroup = ["搬運物品", "清潔打掃", "水電維修", "科技維修", "驅趕害蟲", "一日陪伴", "交通接送", "其他種類"]
+  
   let fullSize = UIScreen.main.bounds.size
   
-  @IBOutlet weak var pageControl: UIPageControl!
-  
-  @IBOutlet weak var taskViewCollectionView: UICollectionView!
-  
   func setUp() {
-    
-    guard let data = detailData else { return }
     
     taskViewCollectionView.delegate = self
     
     taskViewCollectionView.dataSource = self
+    
+    detailTableView.delegate = self
+    
+    detailTableView.dataSource = self
+    
+  }
+  
+  func setUpBtn() {
+    
+    takeMissionBtn.layer.cornerRadius = 20
+    
+    takeMissionBtn.layer.shadowOpacity = 0.5
+    
+    takeMissionBtn.layer.shadowOffset = CGSize(width: 3, height: 3)
+  }
+  
+  func setUppageControll() {
+    
+    guard let data = detailData else { return }
     
     pageControl.currentPage = 0
     
@@ -63,7 +93,7 @@ class MissionDetailViewController: UIViewController {
     for count in 0 ..< data.fileType.count {
       
       if data.fileType[count] == 0 {
-
+        
         self.arrangementPhoto.append(data.taskPhoto[count])
         
       } else {
@@ -118,16 +148,6 @@ class MissionDetailViewController: UIViewController {
       
     }
   }
-  
-//  let player = AVPlayer(url: videoTransferUrl)
-//
-//  let playerLayer = AVPlayerLayer(player: player)
-//
-//  playerLayer.frame = strongSelf.videoView[strongSelf.fileURL.count].bounds
-//
-//  strongSelf.videoView[strongSelf.fileURL.count].layer.addSublayer(playerLayer)
-//
-//  player.play()
 }
 
 extension MissionDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -168,6 +188,62 @@ extension MissionDetailViewController: UICollectionViewDelegateFlowLayout {
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     
     return CGSize(width: UIScreen.main.bounds.width, height: 400)
+  }
+}
+
+extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSource {
+  
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+    return 1
+  }
+  
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    
+    guard let cell = tableView.dequeueReusableCell(withIdentifier: "missionDetail", for: indexPath) as? MissionDetailTableViewCell else { return UITableViewCell() }
+    
+    guard let data = detailData else { return UITableViewCell() }
+    
+    switch indexPath.row {
+      
+    case 0 :
+      switch data.classfied {
+        
+      case 0 :
+        
+        cell.contentLabel.text = missionGroup[0]
+        
+      case 1 :
+        
+        cell.contentLabel.text = missionGroup[1]
+        
+      case 2 :
+        
+        cell.contentLabel.text = missionGroup[2]
+      case 3 :
+        
+        cell.contentLabel.text = missionGroup[3]
+      case 4 :
+        
+        cell.contentLabel.text = missionGroup[4]
+      case 5 :
+        
+        cell.contentLabel.text = missionGroup[5]
+      case 6 :
+        
+        cell.contentLabel.text = missionGroup[6]
+      default:
+        
+        cell.contentLabel.text = missionGroup[7]
+      }
+      cell.detailLabel.text = "任務內容"
+      
+    default:
+      
+      return UITableViewCell()
+    }
+    
+    return cell
   }
   
 }
