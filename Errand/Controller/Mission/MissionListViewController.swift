@@ -35,6 +35,8 @@ class MissionListViewController: UIViewController {
   
   var detailData: TaskInfo?
   
+  var data: TaskInfo?
+  
   var timeString: String?
   
   var shouldShowSearchResults = false {
@@ -45,7 +47,7 @@ class MissionListViewController: UIViewController {
     }
   }
   
-   let searchCustom = UISearchController(searchResultsController: nil)
+  let searchCustom = UISearchController(searchResultsController: nil)
   
   let missionGroup = ["搬運物品", "清潔打掃", "水電維修", "科技維修", "驅趕害蟲", "一日陪伴", "交通接送", "其他種類"]
   
@@ -72,26 +74,26 @@ class MissionListViewController: UIViewController {
   }
   
   var filteredArray = [TaskInfo]() {
-     
-     didSet {
-       if taskDataReturn.isEmpty {
-         
-         self.postMissionBtn.isHidden = true
-         
-         LKProgressHUD.show(controller: self)
-         
-       } else {
-         DispatchQueue.main.async {
-           
-           self.postMissionBtn.isHidden = false
-           
-           self.taskListTable.reloadData()
-           
-           LKProgressHUD.dismiss()
-         }
-       }
-     }
-   }
+    
+    didSet {
+      if taskDataReturn.isEmpty {
+        
+        self.postMissionBtn.isHidden = true
+        
+        LKProgressHUD.show(controller: self)
+        
+      } else {
+        DispatchQueue.main.async {
+          
+          self.postMissionBtn.isHidden = false
+          
+          self.taskListTable.reloadData()
+          
+          LKProgressHUD.dismiss()
+        }
+      }
+    }
+  }
   
   @IBOutlet weak var taskListTable: UITableView!
   
@@ -160,122 +162,82 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     
     if shouldShowSearchResults {
-           return filteredArray.count
-      } else {
-           return taskDataReturn.count
-       }
+      return filteredArray.count
+      
+    } else {
+      return taskDataReturn.count
+    }
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     guard let cell = tableView.dequeueReusableCell(withIdentifier: "list", for: indexPath) as? ListTableViewCell else { return UITableViewCell() }
-         
-         cell.delegate = self
+    
+    cell.delegate = self
     
     if shouldShowSearchResults {
       
-      let data = filteredArray[indexPath.row]
-      
-      let time = Date.init(timeIntervalSince1970: TimeInterval((data.time)))
-      
-      let dateFormatter = DateFormatter()
-      
-      dateFormatter.dateFormat = "yyyy-MM-dd hh:mm"
-      
-      let timeConvert = dateFormatter.string(from: time)
-      
-      self.timeString = timeConvert
-      
-      switch data.classfied {
-        
-      case 0 :
-        
-        cell.setUp(missionImage: "trucks", author: data.nickname, missionLabel: missionGroup[0], price: data.money, time: timeConvert, timeInt: data.time)
-        
-      case 1 :
-        
-        cell.setUp(missionImage: "broom", author: data.nickname, missionLabel: missionGroup[1], price: data.money, time: timeConvert, timeInt: data.time)
-        
-      case 2 :
-        
-        cell.setUp(missionImage: "fix", author: data.nickname, missionLabel: missionGroup[2], price: data.money, time: timeConvert, timeInt: data.time)
-      case 3 :
-        
-        cell.setUp(missionImage: "tools", author: data.nickname, missionLabel: missionGroup[3], price: data.money, time: timeConvert, timeInt: data.time)
-      case 4 :
-        
-        cell.setUp(missionImage: "bug", author: data.nickname, missionLabel: missionGroup[4], price: data.money, time: timeConvert, timeInt: data.time)
-      case 5 :
-        
-        cell.setUp(missionImage: "develop", author: data.nickname, missionLabel: missionGroup[5], price: data.money, time: timeConvert, timeInt: data.time)
-      case 6 :
-        
-        cell.setUp(missionImage: "drive", author: data.nickname, missionLabel: missionGroup[6], price: data.money, time: timeConvert, timeInt: data.time)
-      default:
-        
-        cell.setUp(missionImage: "questions", author: data.nickname, missionLabel: missionGroup[7], price: data.money, time: timeConvert, timeInt: data.time)
-      }
-      
-      return cell
+      self.data = filteredArray[indexPath.row]
       
     } else {
       
-      let data = taskDataReturn[indexPath.row]
-      
-      let time = Date.init(timeIntervalSince1970: TimeInterval((data.time)))
-      
-      let dateFormatter = DateFormatter()
-      
-      dateFormatter.dateFormat = "yyyy-MM-dd hh:mm"
-      
-      let timeConvert = dateFormatter.string(from: time)
-      
-      self.timeString = timeConvert
-      
-      switch data.classfied {
-        
-      case 0 :
-        
-        cell.setUp(missionImage: "trucks", author: data.nickname, missionLabel: missionGroup[0], price: data.money, time: timeConvert, timeInt: data.time)
-        
-      case 1 :
-        
-        cell.setUp(missionImage: "broom", author: data.nickname, missionLabel: missionGroup[1], price: data.money, time: timeConvert, timeInt: data.time)
-        
-      case 2 :
-        
-        cell.setUp(missionImage: "fix", author: data.nickname, missionLabel: missionGroup[2], price: data.money, time: timeConvert, timeInt: data.time)
-      case 3 :
-        
-        cell.setUp(missionImage: "tools", author: data.nickname, missionLabel: missionGroup[3], price: data.money, time: timeConvert, timeInt: data.time)
-      case 4 :
-        
-        cell.setUp(missionImage: "bug", author: data.nickname, missionLabel: missionGroup[4], price: data.money, time: timeConvert, timeInt: data.time)
-      case 5 :
-        
-        cell.setUp(missionImage: "develop", author: data.nickname, missionLabel: missionGroup[5], price: data.money, time: timeConvert, timeInt: data.time)
-      case 6 :
-        
-        cell.setUp(missionImage: "drive", author: data.nickname, missionLabel: missionGroup[6], price: data.money, time: timeConvert, timeInt: data.time)
-      default:
-        
-        cell.setUp(missionImage: "questions", author: data.nickname, missionLabel: missionGroup[7], price: data.money, time: timeConvert, timeInt: data.time)
-      }
-      
-      return cell
+      self.data = taskDataReturn[indexPath.row]
     }
+    
+    guard let data = self.data else { return UITableViewCell() }
+    
+    let time = Date.init(timeIntervalSince1970: TimeInterval((data.time)))
+    
+    let dateFormatter = DateFormatter()
+    
+    dateFormatter.dateFormat = "yyyy-MM-dd hh:mm"
+    
+    let timeConvert = dateFormatter.string(from: time)
+    
+    self.timeString = timeConvert
+    
+    switch data.classfied {
+      
+    case 0 :
+      
+      cell.setUp(missionImage: "trucks", author: data.nickname, missionLabel: missionGroup[0], price: data.money, time: timeConvert, timeInt: data.time)
+      
+    case 1 :
+      
+      cell.setUp(missionImage: "broom", author: data.nickname, missionLabel: missionGroup[1], price: data.money, time: timeConvert, timeInt: data.time)
+      
+    case 2 :
+      
+      cell.setUp(missionImage: "fix", author: data.nickname, missionLabel: missionGroup[2], price: data.money, time: timeConvert, timeInt: data.time)
+    case 3 :
+      
+      cell.setUp(missionImage: "tools", author: data.nickname, missionLabel: missionGroup[3], price: data.money, time: timeConvert, timeInt: data.time)
+    case 4 :
+      
+      cell.setUp(missionImage: "bug", author: data.nickname, missionLabel: missionGroup[4], price: data.money, time: timeConvert, timeInt: data.time)
+    case 5 :
+      
+      cell.setUp(missionImage: "develop", author: data.nickname, missionLabel: missionGroup[5], price: data.money, time: timeConvert, timeInt: data.time)
+    case 6 :
+      
+      cell.setUp(missionImage: "drive", author: data.nickname, missionLabel: missionGroup[6], price: data.money, time: timeConvert, timeInt: data.time)
+    default:
+      
+      cell.setUp(missionImage: "questions", author: data.nickname, missionLabel: missionGroup[7], price: data.money, time: timeConvert, timeInt: data.time)
+    }
+    return cell
   }
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     
     if segue.identifier == "detail" {
-        
-        guard let detailVC = segue.destination as? MissionDetailViewController,
-             let time = self.timeString else { return }
-
-        detailVC.detailData = detailData
       
-        detailVC.receiveTime = time
+      guard let detailVC = segue.destination as? MissionDetailViewController,
+        let time = self.timeString else { return }
+      
+      detailVC.detailData = detailData
+      
+      detailVC.receiveTime = time
     }
   }
 }
@@ -300,32 +262,22 @@ extension MissionListViewController: UISearchBarDelegate {
   
   func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
     
-     shouldShowSearchResults = true
+    shouldShowSearchResults = true
   }
-
+  
   func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
     
-     shouldShowSearchResults = false
+    shouldShowSearchResults = false
   }
   
   func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
     
     if !shouldShowSearchResults {
       shouldShowSearchResults = true
-
+      
     }
     searchCustom.searchBar.resignFirstResponder()
   }
-  
-  func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-
-    if searchCustom.searchBar.text != "" {
-      shouldShowSearchResults = true
-    } else {
-      shouldShowSearchResults = false
-    }
-  }
-  
 }
 
 extension MissionListViewController: UISearchResultsUpdating {
@@ -335,7 +287,7 @@ extension MissionListViewController: UISearchResultsUpdating {
     
     self.filteredArray = taskDataReturn.filter({ (country) -> Bool in
       let countryText: NSString = country.nickname as NSString
-        
+      
       return (countryText.range(of: searchString, options: NSString.CompareOptions.caseInsensitive).location) != NSNotFound
     })
     taskListTable.reloadData()
