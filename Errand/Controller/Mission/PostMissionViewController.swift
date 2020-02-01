@@ -188,11 +188,11 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   
   func setUpBtn() {
     
-    postBtn.layer.shadowOpacity = 0.5
-    
     postBtn.layer.cornerRadius = screenwidth / 40
     
     postBtn.isEnabled = false
+    
+    postBtn.layer.shadowOpacity = 0.5
       
     postBtn.layer.shadowOffset = CGSize(width: 3, height: 3)
   }

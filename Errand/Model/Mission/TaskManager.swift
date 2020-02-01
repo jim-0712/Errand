@@ -23,11 +23,13 @@ class TaskManager {
     
     guard let email = UserManager.shared.currentUserInfo?.email,
       let nickname = UserManager.shared.currentUserInfo?.nickname,
-      let gender = UserManager.shared.currentUserInfo?.gender else {return }
-    let lat = coordinate.latitude as Double
-    let long = coordinate.longitude as Double
+      let gender = UserManager.shared.currentUserInfo?.gender,
+      let photo = Auth.auth().currentUser?.photoURL else {return }
+      let lat = coordinate.latitude as Double
+      let long = coordinate.longitude as Double
+      let personPhoto = "\(photo)"
     
-    let info = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: taskData[0], detail: detail, lat: lat, long: long, money: taskData[1], classfied: taskData[2], status: taskData[3], fileType: fileType)
+    let info = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: taskData[0], detail: detail, lat: lat, long: long, money: taskData[1], classfied: taskData[2], status: taskData[3], fileType: fileType, personPhoto: personPhoto)
     
     self.dbF.collection("Tasks").document(email).setData(info.toDict) { error in
       
@@ -70,9 +72,10 @@ class TaskManager {
             let money = info.data()["money"] as? Int,
             let status = info.data()["status"] as? Int,
             let fileType = info.data()["fileType"] as? [Int],
-            let classfied = info.data()["classfied"] as? Int else { return }
+            let classfied = info.data()["classfied"] as? Int,
+            let personPhoto = info.data()["personPhoto"] as? String else { return }
           
-          let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, fileType: fileType)
+          let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, fileType: fileType, personPhoto: personPhoto)
           
           strongSelf.taskData.append(dataReturn)
         }

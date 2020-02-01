@@ -28,6 +28,12 @@ class MissionDetailViewController: UIViewController {
     // Do any additional setup after loading the view.
   }
   
+  override func viewDidLayoutSubviews() {
+    
+    super.viewDidLayoutSubviews()
+    pageControl.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+  }
+  
   @IBOutlet weak var takeMissionBtn: UIButton!
   
   @IBOutlet weak var pageControl: UIPageControl!
@@ -45,6 +51,10 @@ class MissionDetailViewController: UIViewController {
   
   var arrangementVideo: [String] = []
   
+  var receiveTime: String?
+  
+  let missionDetail = ["任務內容", "懸賞價格", "發布時間", "任務細節"]
+  
   let missionGroup = ["搬運物品", "清潔打掃", "水電維修", "科技維修", "驅趕害蟲", "一日陪伴", "交通接送", "其他種類"]
   
   let fullSize = UIScreen.main.bounds.size
@@ -58,6 +68,8 @@ class MissionDetailViewController: UIViewController {
     detailTableView.delegate = self
     
     detailTableView.dataSource = self
+    
+    detailTableView.rowHeight = UITableView.automaticDimension
     
   }
   
@@ -85,6 +97,7 @@ class MissionDetailViewController: UIViewController {
     pageControl.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
     
     pageControl.numberOfPages = data.taskPhoto.count
+    
   }
   
   func setUpImageView() {
@@ -109,8 +122,6 @@ class MissionDetailViewController: UIViewController {
     
     for count in 0 ..< arrangementPhoto.count {
       
-      guard let url = URL(string: arrangementPhoto[count]) else { return }
-      
       taskImage = UIImageView(frame: CGRect(x: 0, y: 0, width: fullSize.width, height: 400))
       
       taskImage.contentMode = .scaleAspectFill
@@ -121,7 +132,7 @@ class MissionDetailViewController: UIViewController {
       
       taskViewCollectionView.addSubview(taskImage)
       
-      taskImage.kf.setImage(with: url)
+      taskImage.loadImage(arrangementPhoto[count])
       
     }
     
@@ -138,14 +149,14 @@ class MissionDetailViewController: UIViewController {
       taskViewCollectionView.addSubview(taskVideoView)
       
       let player = AVPlayer(url: url)
-
+      
       let playerLayer = AVPlayerLayer(player: player)
-
+      
       playerLayer.frame = taskVideoView.bounds
-
+      
       taskVideoView.layer.addSublayer(playerLayer)
-
-      player.play()
+      
+            player.play()
       
     }
   }
@@ -196,14 +207,25 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     
-    return 1
+    return 4
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
-    guard let cell = tableView.dequeueReusableCell(withIdentifier: "missionDetail", for: indexPath) as? MissionDetailTableViewCell else { return UITableViewCell() }
+    guard let data = detailData,
+      let time = self.receiveTime else { return UITableViewCell() }
     
-    guard let data = detailData else { return UITableViewCell() }
+    if indexPath.row == 0 {
+      
+      guard let cell = tableView.dequeueReusableCell(withIdentifier: "person", for: indexPath) as? MissionPersonTableViewCell else { return UITableViewCell() }
+      
+      cell.setUp(personURL: data.personPhoto, name: data.nickname)
+      
+      return cell
+      
+    } else if indexPath.row != 3 {
+    
+    guard let cell = tableView.dequeueReusableCell(withIdentifier: "missionDetail", for: indexPath) as? MissionDetailTableViewCell else { return UITableViewCell() }
     
     switch indexPath.row {
       
@@ -212,39 +234,56 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
         
       case 0 :
         
-        cell.contentLabel.text = missionGroup[0]
+        cell.setUp(content: missionGroup[0])
         
       case 1 :
         
-        cell.contentLabel.text = missionGroup[1]
+        cell.setUp(content: missionGroup[1])
         
       case 2 :
         
-        cell.contentLabel.text = missionGroup[2]
+        cell.setUp(content: missionGroup[2])
       case 3 :
         
-        cell.contentLabel.text = missionGroup[3]
+        cell.setUp(content: missionGroup[3])
       case 4 :
         
-        cell.contentLabel.text = missionGroup[4]
+        cell.setUp(content: missionGroup[4])
       case 5 :
         
-        cell.contentLabel.text = missionGroup[5]
+        cell.setUp(content: missionGroup[5])
       case 6 :
         
-        cell.contentLabel.text = missionGroup[6]
+        cell.setUp(content: missionGroup[6])
       default:
         
-        cell.contentLabel.text = missionGroup[7]
+        cell.setUp(content: missionGroup[7])
       }
-      cell.detailLabel.text = "任務內容"
       
+      cell.setUp(title: missionDetail[0])
+      
+    case 1:
+      
+      cell.setUp(title: missionDetail[1], content: "\(String(data.money)) 元")
+      
+    case 2:
+      
+      cell.setUp(title: missionDetail[2], content: time)
+
     default:
       
       return UITableViewCell()
     }
     
     return cell
+    
+  } else {
+      
+      guard let cell = tableView.dequeueReusableCell(withIdentifier: "content", for: indexPath) as? MissionContentTableViewCell else { return UITableViewCell() }
+      
+      cell.setUp(title: missionDetail[3], content: data.detail)
+      
+      return cell
+    }
   }
-  
 }

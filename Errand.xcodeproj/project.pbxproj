@@ -39,6 +39,10 @@
 		FB63664823E3CF15008555BC /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB63664723E3CF15008555BC /* TabBarViewController.swift */; };
 		FB63664B23E3ED77008555BC /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB63664A23E3ED77008555BC /* NetworkExtension.framework */; };
 		FB63664F23E3FC1B008555BC /* MissionDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB63664E23E3FC1B008555BC /* MissionDetailTableViewCell.swift */; };
+		FB638D7923E53FE900030CB2 /* MissionContentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB638D7823E53FE900030CB2 /* MissionContentTableViewCell.swift */; };
+		FB638D7B23E5557B00030CB2 /* MissionPersonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB638D7A23E5557B00030CB2 /* MissionPersonTableViewCell.swift */; };
+		FB638D7F23E56FC000030CB2 /* CategoryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB638D7D23E56FC000030CB2 /* CategoryCollectionViewCell.swift */; };
+		FB638D8023E56FC000030CB2 /* CategoryCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB638D7E23E56FC000030CB2 /* CategoryCollectionViewCell.xib */; };
 		FB752ABB23D5DFB200BF3852 /* PermanentMarker.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */; };
 		FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB752ABD23D5E57900BF3852 /* Background.swift */; };
 		FB9A2BFE23D068FF00553D97 /* MissionListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */; };
@@ -112,6 +116,10 @@
 		FB63664923E3ED77008555BC /* Errand.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Errand.entitlements; sourceTree = "<group>"; };
 		FB63664A23E3ED77008555BC /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 		FB63664E23E3FC1B008555BC /* MissionDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionDetailTableViewCell.swift; sourceTree = "<group>"; };
+		FB638D7823E53FE900030CB2 /* MissionContentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionContentTableViewCell.swift; sourceTree = "<group>"; };
+		FB638D7A23E5557B00030CB2 /* MissionPersonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionPersonTableViewCell.swift; sourceTree = "<group>"; };
+		FB638D7D23E56FC000030CB2 /* CategoryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCollectionViewCell.swift; sourceTree = "<group>"; };
+		FB638D7E23E56FC000030CB2 /* CategoryCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CategoryCollectionViewCell.xib; sourceTree = "<group>"; };
 		FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PermanentMarker.ttf; sourceTree = "<group>"; };
 		FB752ABD23D5E57900BF3852 /* Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionListViewController.swift; sourceTree = "<group>"; };
@@ -279,6 +287,7 @@
 		FB387C4523CEF5BB00B6D8C4 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				FB638D7C23E56F6900030CB2 /* Map */,
 				FB6365FF23E2CF45008555BC /* MissionDetail */,
 				FB4BF7B223E286FD00C4C05A /* MissionList */,
 				FB24EC1023D96CED00FA3F02 /* PostMission */,
@@ -372,8 +381,19 @@
 			children = (
 				FB63660023E2CF6E008555BC /* MissionDetailCollectionViewCell.swift */,
 				FB63664E23E3FC1B008555BC /* MissionDetailTableViewCell.swift */,
+				FB638D7823E53FE900030CB2 /* MissionContentTableViewCell.swift */,
+				FB638D7A23E5557B00030CB2 /* MissionPersonTableViewCell.swift */,
 			);
 			path = MissionDetail;
+			sourceTree = "<group>";
+		};
+		FB638D7C23E56F6900030CB2 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				FB638D7D23E56FC000030CB2 /* CategoryCollectionViewCell.swift */,
+				FB638D7E23E56FC000030CB2 /* CategoryCollectionViewCell.xib */,
+			);
+			path = Map;
 			sourceTree = "<group>";
 		};
 		FB752ABC23D5E55600BF3852 /* Background */ = {
@@ -519,6 +539,7 @@
 				FB752ABB23D5DFB200BF3852 /* PermanentMarker.ttf in Resources */,
 				FB387C1C23CEEF0F00B6D8C4 /* Assets.xcassets in Resources */,
 				FB5F5BD023DB2847003B9ABC /* setofont.ttf in Resources */,
+				FB638D8023E56FC000030CB2 /* CategoryCollectionViewCell.xib in Resources */,
 				FBF7AB5623D52EEF004B521A /* GoogleService-Info.plist in Resources */,
 				FB387C1723CEEF0E00B6D8C4 /* Main.storyboard in Resources */,
 				FB387C5823CF551A00B6D8C4 /* Content.storyboard in Resources */,
@@ -705,16 +726,19 @@
 				FB24EC1923DAB72500FA3F02 /* TaskManager.swift in Sources */,
 				FB24EC0F23D96B8500FA3F02 /* PostMissionViewController.swift in Sources */,
 				FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */,
+				FB638D7F23E56FC000030CB2 /* CategoryCollectionViewCell.swift in Sources */,
 				FB387C5323CF323600B6D8C4 /* UserInfoViewController.swift in Sources */,
 				FB387C1423CEEF0E00B6D8C4 /* HomePageViewController.swift in Sources */,
 				FB63660123E2CF6E008555BC /* MissionDetailCollectionViewCell.swift in Sources */,
 				FB5F5BCE23DB2639003B9ABC /* AddLocationViewController.swift in Sources */,
 				FB24EC1723DAB00F00FA3F02 /* TaskDataItem.swift in Sources */,
+				FB638D7B23E5557B00030CB2 /* MissionPersonTableViewCell.swift in Sources */,
 				FB387C1023CEEF0E00B6D8C4 /* AppDelegate.swift in Sources */,
 				FB24EC1423D9B19300FA3F02 /* CustomeColor.swift in Sources */,
 				FB4A50E123D6A8E60028BC82 /* PersonalViewController.swift in Sources */,
 				FB63664823E3CF15008555BC /* TabBarViewController.swift in Sources */,
 				FB387C5023CF0E8E00B6D8C4 /* RegisterItem.swift in Sources */,
+				FB638D7923E53FE900030CB2 /* MissionContentTableViewCell.swift in Sources */,
 				FB9A2BFE23D068FF00553D97 /* MissionListViewController.swift in Sources */,
 				FB6365FE23E2B975008555BC /* MissionDetailViewController.swift in Sources */,
 				FB4BF7B423E288D600C4C05A /* ListTableViewCell.swift in Sources */,

@@ -13,17 +13,34 @@ class MissionDetailTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+      
+      botLine.layer.shadowOpacity = 0.5
+        
+      botLine.layer.shadowOffset = CGSize(width: 3, height: 3)
+      
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
-        // Configure the view for the selected state
+        botLine.layer.shadowOpacity = 0.5
+          
+        botLine.layer.shadowOffset = CGSize(width: 3, height: 3)
     }
   
-  @IBOutlet weak var detailLabel: UILabel!
+  @IBOutlet weak var botLine: UIView!
+  
+  @IBOutlet weak var titleLabel: UILabel!
   
   @IBOutlet weak var lineView: UIView!
   
   @IBOutlet weak var contentLabel: UILabel!
+  
+  func setUp(title: String? = "", content: String? = "") {
+    
+    titleLabel.text = title
+    
+    contentLabel.text = content
+    
+  }
 }

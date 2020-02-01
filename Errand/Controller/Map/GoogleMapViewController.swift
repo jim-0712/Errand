@@ -13,6 +13,14 @@ import CoreLocation
 
 class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   
+  let missionGroup = ["搬運物品", "清潔打掃", "水電維修", "科技維修", "驅趕害蟲", "一日陪伴", "交通接送", "其他種類"]
+  
+  let missionColor: [UIColor] = [.red, .yellow, .blue, .lightGray, .pink, .lightPurple, .orange, .green]
+  
+  let screenwidth = UIScreen.main.bounds.width
+  
+  let screenheight = UIScreen.main.bounds.height
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -53,6 +61,8 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     checkLocationAuth()
     
     addAnnotation()
+    
+    setupCollectin()
   }
   
   var path: GMSMutablePath!
@@ -68,6 +78,17 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   let directionManager = MapManager.shared
   
   let polyline = GMSPolyline()
+  
+  func setupCollectin() {
+    
+    let nibCell = UINib(nibName: "CategoryCollectionViewCell", bundle: nil)
+    
+    categoryCollection.register(nibCell, forCellWithReuseIdentifier: "category")
+    
+    categoryCollection.delegate = self
+    
+    categoryCollection.dataSource = self
+  }
   
   func setUpLocation() {
     
@@ -217,11 +238,35 @@ extension GoogleMapViewController: GMSMapViewDelegate {
   func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
     return true
   }
+}
+
+extension GoogleMapViewController: UICollectionViewDelegate, UICollectionViewDataSource {
   
-//  func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
-//  
-//    print(position)
-//    
-//  }
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    
+    return missionGroup.count
+  }
   
+  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    
+    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "category", for: indexPath) as? CategoryCollectionViewCell else { return UICollectionViewCell() }
+    
+    cell.setUpContent(label: missionGroup[indexPath.row], color: missionColor[indexPath.row])
+    
+    return cell
+  }
+  
+}
+
+extension GoogleMapViewController: UICollectionViewDelegateFlowLayout {
+  
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    
+    return CGSize(width: screenwidth / 2.5, height: screenheight / 20)
+  }
+  
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+    
+    return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+  }
 }
