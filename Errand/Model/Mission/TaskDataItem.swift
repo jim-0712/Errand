@@ -5,7 +5,7 @@
 //  Created by Jim on 2020/1/24.
 //  Copyright © 2020 Jim. All rights reserved.
 //
-
+import UIKit
 import Foundation
 import CoreLocation
 
@@ -72,4 +72,13 @@ struct TaskInfo {
     
           ]
   }
+}
+
+struct TaskGroup {
+
+    let color: UIColor
+
+    let title: String
+  
+    let image: String
 }

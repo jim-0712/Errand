@@ -407,8 +407,8 @@
 		FB9A2BFC23D068E200553D97 /* Mission */ = {
 			isa = PBXGroup;
 			children = (
-				FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */,
 				FB24EC0E23D96B8500FA3F02 /* PostMissionViewController.swift */,
+				FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */,
 				FB6365FD23E2B975008555BC /* MissionDetailViewController.swift */,
 			);
 			path = Mission;

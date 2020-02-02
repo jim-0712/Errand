@@ -72,10 +72,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   
   var long: Double?
   
-  let missionGroup = ["搬運物品", "清潔打掃", "水電維修", "科技維修", "驅趕害蟲", "一日陪伴", "交通接送", "其他種類"]
-  
-  let missionColor: [UIColor] = [.red, .yellow, .blue, .lightGray, .pink, .lightPurple, .orange, .green]
-  
   let screenwidth = UIScreen.main.bounds.width
   
   let screenheight = UIScreen.main.bounds.height
@@ -104,14 +100,23 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
       
       switch result {
         
-      case .success(let good):
+      case .success:
         
-        print(good)
-        
-        NotificationCenter.default.post(name: Notification.Name("postMission"), object: nil)
-        
-        strongSelf.navigationController?.popViewController(animated: true)
-        
+        UserManager.shared.updateData { result in
+          
+          switch result {
+            
+          case .success:
+            
+            NotificationCenter.default.post(name: Notification.Name("postMission"), object: nil)
+            
+            strongSelf.showAlert(viewController: strongSelf)
+            
+          case .failure(let error):
+            
+            LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
+          }
+        }
       case .failure:
         
         print("fail")
@@ -244,20 +249,31 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
         locationVC.delegate = self
     }
   }
+  
+  func showAlert(viewController: UIViewController) {
+    
+    let controller = UIAlertController(title: "任務上傳成功", message: "返回任務頁面", preferredStyle: .alert)
+    let okAction = UIAlertAction(title: "好的", style: .default) { (_) in
+       
+       viewController.navigationController?.popViewController(animated: true)
+    }
+    controller.addAction(okAction)
+    present(controller, animated: true, completion: nil)
+  }
 }
 
 extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewDataSource {
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     
-    return 8
+    return TaskManager.shared.taskClassified.count - 1
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "group", for: indexPath) as? MissionGroupCollectionViewCell else { return UICollectionViewCell() }
     
-    cell.setUpContent(label: missionGroup[indexPath.row], color: missionColor[indexPath.row])
+    cell.setUpContent(label: TaskManager.shared.taskClassified[indexPath.row + 1].title, color: TaskManager.shared.taskClassified[indexPath.row + 1].color)
     
     return cell
   }
@@ -302,7 +318,7 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
         
         if let uploadData = selectedImage.pngData() {
           
-          storageRef.putData(uploadData, metadata: nil, completion: { [weak self] (metadata, error) in
+          storageRef.putData(uploadData, metadata: nil, completion: { [weak self] (_, error) in
             
             guard let strongSelf = self else { return }
             
@@ -388,10 +404,9 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
             strongSelf.uploadImageVisibleView[strongSelf.fileURL.count].backgroundColor = .clear
             
             strongSelf.backgroundVisibleView[strongSelf.fileURL.count].backgroundColor = .clear
-            //            strongSelf.photoVisibleView.backgroundColor = .clear
-            strongSelf.videoView[strongSelf.fileURL.count].isHidden = false
-            //            strongSelf.videoView.isHidden = false
             
+            strongSelf.videoView[strongSelf.fileURL.count].isHidden = false
+           
             LKProgressHUD.dismiss()
             
             let player = AVPlayer(url: videoTransferUrl)
@@ -409,8 +424,6 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
             let stringUrl = "\(urlBack)"
             
             strongSelf.fileURL.append(stringUrl)
-            
-//            strongSelf.fileURL.append(id)
             
           }
         }

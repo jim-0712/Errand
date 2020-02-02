@@ -140,7 +140,6 @@ class ViewController: UIViewController {
         
       }
     }
-    
   }
   
   @IBAction func visitorRegisterAct(_ sender: Any) {

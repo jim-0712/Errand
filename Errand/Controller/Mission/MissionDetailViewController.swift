@@ -42,7 +42,15 @@ class MissionDetailViewController: UIViewController {
   
   @IBOutlet weak var taskViewCollectionView: UICollectionView!
   
+  @IBOutlet weak var backBtn: UIButton!
+  
+  @IBAction func backAct(_ sender: Any) {
+    
+    self.dismiss(animated: true, completion: nil)
+    
+  }
   @IBAction func takeMissionAct(_ sender: Any) {
+    
   }
   
   var detailData: TaskInfo?
@@ -54,8 +62,6 @@ class MissionDetailViewController: UIViewController {
   var receiveTime: String?
   
   let missionDetail = ["任務內容", "懸賞價格", "發布時間", "任務細節"]
-  
-  let missionGroup = ["搬運物品", "清潔打掃", "水電維修", "科技維修", "驅趕害蟲", "一日陪伴", "交通接送", "其他種類"]
   
   let fullSize = UIScreen.main.bounds.size
   
@@ -74,6 +80,8 @@ class MissionDetailViewController: UIViewController {
   }
   
   func setUpBtn() {
+    
+    backBtn.layer.cornerRadius = backBtn.bounds.width / 2
     
     takeMissionBtn.layer.cornerRadius = 20
     
@@ -122,13 +130,13 @@ class MissionDetailViewController: UIViewController {
     
     for count in 0 ..< arrangementPhoto.count {
       
-      taskImage = UIImageView(frame: CGRect(x: 0, y: 0, width: fullSize.width, height: 400))
+      taskImage = UIImageView(frame: CGRect(x: 0, y: 0, width: fullSize.width, height: 350))
       
       taskImage.contentMode = .scaleAspectFill
       
       taskImage.clipsToBounds = true
       
-      taskImage.center = CGPoint(x: fullSize.width * (0.5 + CGFloat(count)), y: 200)
+      taskImage.center = CGPoint(x: fullSize.width * (0.5 + CGFloat(count)), y: 175)
       
       taskViewCollectionView.addSubview(taskImage)
       
@@ -140,11 +148,11 @@ class MissionDetailViewController: UIViewController {
       
       guard let url = URL(string: arrangementVideo[count]) else { return }
       
-      taskVideoView = UIView(frame: CGRect(x: 0, y: 0, width: fullSize.width, height: 400))
+      taskVideoView = UIView(frame: CGRect(x: 0, y: 0, width: fullSize.width, height: 350))
       
       taskVideoView.contentMode = .center
       
-      taskVideoView.center = CGPoint(x: fullSize.width * (0.5 + CGFloat(arrangementPhoto.count + count)), y: 200)
+      taskVideoView.center = CGPoint(x: fullSize.width * (0.5 + CGFloat(arrangementPhoto.count + count)), y: 175)
       
       taskViewCollectionView.addSubview(taskVideoView)
       
@@ -213,7 +221,7 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     guard let data = detailData,
-      let time = self.receiveTime else { return UITableViewCell() }
+         let time = self.receiveTime else { return UITableViewCell() }
     
     if indexPath.row == 0 {
       
@@ -226,55 +234,18 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
     } else if indexPath.row != 3 {
     
     guard let cell = tableView.dequeueReusableCell(withIdentifier: "missionDetail", for: indexPath) as? MissionDetailTableViewCell else { return UITableViewCell() }
-    
-    switch indexPath.row {
       
-    case 0 :
-      switch data.classfied {
+      switch indexPath.row {
         
-      case 0 :
+      case 1:
         
-        cell.setUp(content: missionGroup[0])
+        cell.setUp(title: missionDetail[indexPath.row], content: "\(data.money)")
         
-      case 1 :
-        
-        cell.setUp(content: missionGroup[1])
-        
-      case 2 :
-        
-        cell.setUp(content: missionGroup[2])
-      case 3 :
-        
-        cell.setUp(content: missionGroup[3])
-      case 4 :
-        
-        cell.setUp(content: missionGroup[4])
-      case 5 :
-        
-        cell.setUp(content: missionGroup[5])
-      case 6 :
-        
-        cell.setUp(content: missionGroup[6])
       default:
         
-        cell.setUp(content: missionGroup[7])
+        cell.setUp(title: missionDetail[indexPath.row], content: time)
       }
-      
-      cell.setUp(title: missionDetail[0])
-      
-    case 1:
-      
-      cell.setUp(title: missionDetail[1], content: "\(String(data.money)) 元")
-      
-    case 2:
-      
-      cell.setUp(title: missionDetail[2], content: time)
 
-    default:
-      
-      return UITableViewCell()
-    }
-    
     return cell
     
   } else {

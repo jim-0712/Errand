@@ -20,16 +20,11 @@ class MissionListViewController: UIViewController {
     setUpSearch()
     
   }
-  
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    shouldShowSearchResults = false
-  }
-  
+
   @objc func reloadTable() {
     
     TaskManager.shared.taskData = []
-    taskDataReturn = []
+
     getTaskData()
   }
   
@@ -48,8 +43,6 @@ class MissionListViewController: UIViewController {
   }
   
   let searchCustom = UISearchController(searchResultsController: nil)
-  
-  let missionGroup = ["搬運物品", "清潔打掃", "水電維修", "科技維修", "驅趕害蟲", "一日陪伴", "交通接送", "其他種類"]
   
   var taskDataReturn = [TaskInfo]() {
     
@@ -118,6 +111,8 @@ class MissionListViewController: UIViewController {
   }
   
   func getTaskData() {
+    
+    TaskManager.shared.taskData = []
     
     TaskManager.shared.readData { [weak self] result in
       
@@ -196,35 +191,10 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
     
     self.timeString = timeConvert
     
-    switch data.classfied {
-      
-    case 0 :
-      
-      cell.setUp(missionImage: "trucks", author: data.nickname, missionLabel: missionGroup[0], price: data.money, time: timeConvert, timeInt: data.time)
-      
-    case 1 :
-      
-      cell.setUp(missionImage: "broom", author: data.nickname, missionLabel: missionGroup[1], price: data.money, time: timeConvert, timeInt: data.time)
-      
-    case 2 :
-      
-      cell.setUp(missionImage: "fix", author: data.nickname, missionLabel: missionGroup[2], price: data.money, time: timeConvert, timeInt: data.time)
-    case 3 :
-      
-      cell.setUp(missionImage: "tools", author: data.nickname, missionLabel: missionGroup[3], price: data.money, time: timeConvert, timeInt: data.time)
-    case 4 :
-      
-      cell.setUp(missionImage: "bug", author: data.nickname, missionLabel: missionGroup[4], price: data.money, time: timeConvert, timeInt: data.time)
-    case 5 :
-      
-      cell.setUp(missionImage: "develop", author: data.nickname, missionLabel: missionGroup[5], price: data.money, time: timeConvert, timeInt: data.time)
-    case 6 :
-      
-      cell.setUp(missionImage: "drive", author: data.nickname, missionLabel: missionGroup[6], price: data.money, time: timeConvert, timeInt: data.time)
-    default:
-      
-      cell.setUp(missionImage: "questions", author: data.nickname, missionLabel: missionGroup[7], price: data.money, time: timeConvert, timeInt: data.time)
-    }
+    let missionText = TaskManager.shared.filterClassified(classified: data.classfied + 1)
+    
+    cell.setUp(missionImage: missionText[1], author: data.nickname, missionLabel: missionText[0], price: data.money, time: timeConvert, timeInt: data.time)
+  
     return cell
   }
   
