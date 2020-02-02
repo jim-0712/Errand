@@ -22,15 +22,13 @@ class MissionContentTableViewCell: UITableViewCell {
     }
   @IBOutlet weak var titleLabel: UILabel!
   
-  @IBOutlet weak var contentTextField: UITextField!
-  
   @IBOutlet weak var contentTextView: UITextView!
   
   func setUp(title: String, content: String) {
     
     titleLabel.text = title
     
-    contentTextView.text = "asjsdhaglkadjfgkjd;fkgjd;skjgdlskjfgkdjfslgsdjgkdsj;gkljdklgjdksj"
+    contentTextView.text = content
     
     contentTextView.isEditable = false
   }

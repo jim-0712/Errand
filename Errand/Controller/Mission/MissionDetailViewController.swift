@@ -243,7 +243,7 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
         
       default:
         
-        cell.setUp(title: missionDetail[indexPath.row], content: time)
+        cell.setUp(title: "\(missionDetail[indexPath.row])元", content: time)
       }
 
     return cell

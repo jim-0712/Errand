@@ -103,7 +103,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
         
         strongSelf.taskDataReturn = taskData
         
-        print(strongSelf.taskDataReturn)
+         TaskManager.shared.taskData = []
         
         LKProgressHUD.dismiss()
         

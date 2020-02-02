@@ -8,60 +8,89 @@
 
 import UIKit
 
-class TabBarViewController: UITabBarController {
+private enum Tab {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    case map
 
-      setupViewController()
-        // Do any additional setup after loading the view.
+    case missionList
+
+    case profile
+
+    func controller() -> UIViewController {
+
+        var controller: UIViewController
+
+        switch self {
+
+        case .map: controller = UIStoryboard.map.instantiateInitialViewController()!
+
+        case .missionList: controller = UIStoryboard.missionList.instantiateInitialViewController()!
+
+        case .profile: controller = UIStoryboard.profile.instantiateInitialViewController()!
+
+        }
+
+        controller.tabBarItem = tabBarItem()
+
+        controller.tabBarItem.imageInsets = UIEdgeInsets(top: 8.0, left: 0.0, bottom: -10.0, right: 0.0)
+
+        return controller
     }
-  
-  func setupViewController() {
-          viewControllers = [
-            
-            GoogleMapViewController(), MissionListViewController(), PersonalViewController()
-//              generateNavigationController(for: GoogleMapViewController(), title: "Home", image: #imageLiteral(resourceName: "develop")),
-//              generateNavigationController(for: MissionListViewController(), title: "Search", image: #imageLiteral(resourceName: "compass")),
-//              generateNavigationController(for: PersonalViewController(), title: "Library", image: #imageLiteral(resourceName: "broom"))
-          ]
-      }
-  
-  fileprivate func generateNavigationController(for rootViewConroller: UIViewController, title: String, image: UIImage) -> UIViewController {
-          let navController = UINavigationController(rootViewController: rootViewConroller)
-          //        navController.navigationBar.prefersLargeTitles = true
-          rootViewConroller.navigationItem.title = title
-          navController.tabBarItem.title = title
-          navController.tabBarItem.image = image
-          return navController
-      }
 
+    func tabBarItem() -> UITabBarItem {
+
+        switch self {
+
+        case .map:
+            return UITabBarItem(
+                title: nil,
+                image: UIImage.init(named: "map"),
+                selectedImage: UIImage.init(named: "map-2")
+            )
+
+        case .missionList:
+            return UITabBarItem(
+                title: nil,
+                image: UIImage.init(named: "mission"),
+                selectedImage: UIImage.init(named: "mission2")
+            )
+        case .profile:
+            return UITabBarItem(
+                title: nil,
+                image: UIImage.init(named: "mission"),
+                selectedImage: UIImage.init(named: "mission2")
+            )
+        }
+    }
 }
 
-//import UIKit
-//class  MainTabBarController: UITabBarController {
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        UINavigationBar.appearance().prefersLargeTitles = true
-//        tabBar.tintColor = .systemTeal
-//        setupViewController()
-//    }
+class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
 
-//    func setupViewController() {
-//        viewControllers = [
-//            generateNavigationController(for: HomeViewController(), title: "Home", image: #imageLiteral(resourceName: "home")),
-//            generateNavigationController(for: SearchController(), title: "Search", image: #imageLiteral(resourceName: "search-2")),
-//            generateNavigationController(for: ViewController(), title: "Library", image: #imageLiteral(resourceName: "playlist-3")),
-//            generateNavigationController(for: ViewController(), title: "Profile", image: #imageLiteral(resourceName: "musician"))
-//        ]
-//    }
+  private let tabs: [Tab] = [.map, .missionList, .profile]
+        
+        var trolleyTabBarItem: UITabBarItem!
+        
+        var orderObserver: NSKeyValueObservation!
 
-//    fileprivate func generateNavigationController(for rootViewConroller: UIViewController, title: String, image: UIImage) -> UIViewController {
-//        let navController = UINavigationController(rootViewController: rootViewConroller)
-//        //        navController.navigationBar.prefersLargeTitles = true
-//        rootViewConroller.navigationItem.title = title
-//        navController.tabBarItem.title = title
-//        navController.tabBarItem.image = image
-//        return navController
-//    }
-//}
+        override func viewDidLoad() {
+            super.viewDidLoad()
+
+            viewControllers = tabs.map({ $0.controller() })
+            
+            delegate = self
+        }
+
+        // MARK: - UITabBarControllerDelegate
+
+        func tabBarController(
+            _ tabBarController: UITabBarController,
+            shouldSelect viewController: UIViewController
+        ) -> Bool {
+
+            guard let navVC = viewController as? UINavigationController,
+                  navVC.viewControllers.first is GoogleMapViewController
+            else { return true }
+
+            return true
+        }
+    }

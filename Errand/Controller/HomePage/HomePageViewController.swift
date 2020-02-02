@@ -278,7 +278,7 @@ class ViewController: UIViewController {
         
         LKProgressHUD.showSuccess(text: success, controller: strongSelf)
         
-        guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? UITabBarController else { return }
+        guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? TabBarViewController else { return }
         
         strongSelf.present(mapVc, animated: true, completion: nil)
         

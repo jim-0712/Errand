@@ -22,8 +22,6 @@ class MissionListViewController: UIViewController {
   }
 
   @objc func reloadTable() {
-    
-    TaskManager.shared.taskData = []
 
     getTaskData()
   }
@@ -112,8 +110,6 @@ class MissionListViewController: UIViewController {
   
   func getTaskData() {
     
-    TaskManager.shared.taskData = []
-    
     TaskManager.shared.readData { [weak self] result in
       
       guard let strongSelf = self else { return }
@@ -125,6 +121,8 @@ class MissionListViewController: UIViewController {
         strongSelf.taskDataReturn = taskData
         
         strongSelf.postMissionBtn.isHidden = false
+        
+        TaskManager.shared.taskData = []
         
         LKProgressHUD.dismiss()
         

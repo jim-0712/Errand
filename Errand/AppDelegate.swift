@@ -67,7 +67,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
     if UserDefaults.standard.value(forKey: "login") as? Bool != nil {
       
-       firstVC = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? UITabBarController
+       firstVC = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? TabBarViewController
       
           UserManager.shared.isTourist = false
       
