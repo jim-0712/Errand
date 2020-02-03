@@ -33,9 +33,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
           switch result {
             
           case .success(let dataReturn):
-            
-            print(dataReturn)
-            
+
             UserManager.shared.isPostTask = dataReturn.onTask
             
             UserManager.shared.currentUserInfo = dataReturn
@@ -48,6 +46,8 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
       }
     }
     
+    setUpView()
+    
     changeConstraints()
     
     setUpLocation()
@@ -55,13 +55,16 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     checkLocationAuth()
     
     setupCollectin()
+    
+    self.navigationController?.navigationBar.isHidden = true
+    
   }
   
   override func viewWillAppear(_ animated: Bool) {
     
     super.viewWillAppear(animated)
     
-     getTaskData()
+    getTaskData()
   }
   
   @IBOutlet weak var googleMapView: GMSMapView!
@@ -71,6 +74,113 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   @IBOutlet weak var invisibleView: UIView!
   
   @IBOutlet weak var invisibleBottomCons: NSLayoutConstraint!
+  
+  @IBOutlet weak var taskPersonPhoto: UIImageView!
+  
+  @IBOutlet weak var authorLabel: UILabel!
+  
+  @IBOutlet weak var taskClassifiedLabel: UILabel!
+  
+  @IBOutlet weak var priceLabel: UILabel!
+  
+  @IBOutlet weak var distanceLabel: UILabel!
+  
+  @IBOutlet weak var pageView: UIView!
+  
+  @IBOutlet weak var checkDetailBtn: UIButton!
+  
+  @IBOutlet weak var backBtn: UIButton!
+  
+  @IBOutlet weak var searchView: UIView!
+  
+  @IBOutlet weak var arrangeLabel: UILabel!
+  
+  @IBOutlet weak var arrangeTextField: UITextField!
+  
+  @IBOutlet weak var searchBtn: UIButton!
+  
+  @IBAction func radarAct(_ sender: Any) {
+    
+    isSearch = !isSearch
+    
+    searchView.isHidden = isSearch
+  }
+  @IBAction func dismissSearchAct(_ sender: Any) {
+    
+    isSearch = !isSearch
+    
+    searchView.isHidden = isSearch
+  }
+  
+  @IBAction func searchAct(_ sender: Any) {
+    
+    guard let kilo = arrangeTextField.text,
+      let kiloDouble = Double(kilo) else { return }
+    
+    googleMapView.clear()
+    
+    TaskManager.shared.readData { [weak self] result in
+      
+      guard let strongSelf = self else { return }
+      
+      switch result {
+        
+      case .success(let taskData):
+        
+        TaskManager.shared.taskData = []
+        
+        strongSelf.taskDataReturn = taskData.filter({ info in
+          
+          let distance = MapManager.shared.getDistance(lat1: info.lat, lng1: info.long, lat2: strongSelf.finalLat, lng2: strongSelf.finalLong)
+          
+          if distance <= kiloDouble {
+            
+            return true
+          } else {
+            
+            return false
+          }
+        })
+        
+      case .failure(let error):
+        
+        LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
+      }
+    }
+    
+    addAnnotation()
+    
+    isSearch = !isSearch
+    
+    searchView.isHidden = isSearch
+    
+  }
+  
+  @IBAction func reLocation(_ sender: Any) {
+    
+    guard let center = myLocationManager.location?.coordinate else { return }
+    
+    let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 17)
+    
+    googleMapView.camera = myArrange
+  }
+  
+  @IBAction func backAct(_ sender: Any) {
+    
+    isTapOnContent = !isTapOnContent
+    
+    changeConstraints()
+  }
+  
+  @IBAction func checkDetailAct(_ sender: Any) {
+    
+  }
+  
+  var finalLat: Double = 0.0
+  
+  var finalLong: Double = 0.0
+  
+  var isSearch: Bool = false
   
   var path: GMSMutablePath!
   
@@ -89,12 +199,13 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   var taskDataReturn = [TaskInfo]() {
     
     didSet {
+      
       addAnnotation()
       
     }
   }
   
-  let polyline = GMSPolyline()
+  //  let polyline = GMSPolyline()
   
   var isTapOnContent: Bool = false
   
@@ -102,19 +213,17 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     
     if isTapOnContent {
       
-      let move = UIViewPropertyAnimator(duration: 0.5, curve: .easeInOut) {
-
+      let move = UIViewPropertyAnimator(duration: 1.0, curve: .easeInOut) {
+        
         self.invisibleBottomCons.constant = 0
-        self.invisibleView.layoutIfNeeded()
       }
       
       move.startAnimation()
     } else {
       
-      let move = UIViewPropertyAnimator(duration: 0.5, curve: .easeInOut) {
+      let move = UIViewPropertyAnimator(duration: 1.0, curve: .easeInOut) {
         
-        self.invisibleBottomCons.constant = 150
-        self.invisibleView.layoutIfNeeded()
+        self.invisibleBottomCons.constant = 170
       }
       
       move.startAnimation()
@@ -122,9 +231,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   }
   
   func getTaskData() {
-    
-    TaskManager.shared.taskData = []
-    
+
     TaskManager.shared.readData { [weak self] result in
       
       guard let strongSelf = self else { return }
@@ -135,9 +242,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
         
         strongSelf.taskDataReturn = taskData
         
-         TaskManager.shared.taskData = []
-        
-        LKProgressHUD.dismiss()
+        TaskManager.shared.taskData = []
         
       case .failure(let error):
         
@@ -157,6 +262,45 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     categoryCollection.dataSource = self
   }
   
+  func setUpView() {
+    
+    taskPersonPhoto.layer.cornerRadius = taskPersonPhoto.bounds.width / 2
+    
+    pageView.layer.cornerRadius = pageView.bounds.height / 10
+    
+    pageView.layer.shadowOpacity = 0.2
+    
+    pageView.layer.shadowOffset = CGSize(width: 3, height: 3)
+    
+    checkDetailBtn.layer.borderWidth = 1.0
+    
+    checkDetailBtn.layer.borderColor = UIColor(red: 110.0/255.0, green: 181.0/255.0, blue: 188.0/255.0, alpha: 1.0).cgColor
+    
+    checkDetailBtn.layer.cornerRadius = checkDetailBtn.bounds.height / 4
+    
+    backBtn.layer.cornerRadius = backBtn.bounds.height / 2
+    
+    isSearch = true
+    
+    searchView.isHidden = isSearch
+    
+    searchView.layer.shadowOpacity = 0.5
+    
+    searchView.layer.shadowOffset = CGSize(width: 3, height: 3)
+    
+    searchView.layer.cornerRadius = searchView.bounds.height / 10
+    
+    searchBtn.layer.cornerRadius = searchBtn.bounds.height / 10
+    
+    searchBtn.layer.shadowOpacity = 0.5
+    
+    searchBtn.layer.shadowOffset = CGSize(width: 3, height: 3)
+    
+    arrangeTextField.layer.shadowOpacity = 0.5
+    
+    arrangeTextField.layer.shadowOffset = CGSize(width: 3, height: 3)
+  }
+  
   func setUpLocation() {
     
     myLocationManager.delegate = self
@@ -166,6 +310,13 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     myLocationManager.distanceFilter = kCLLocationAccuracyNearestTenMeters
     
     myLocationManager.desiredAccuracy = kCLLocationAccuracyBest
+    
+    guard let lat = myLocationManager.location?.coordinate.latitude,
+         let long = myLocationManager.location?.coordinate.longitude else { return }
+    
+    finalLong = long
+    
+    finalLat = lat
   }
   
   func checkLocationService() {
@@ -184,7 +335,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     
     guard let center = myLocationManager.location?.coordinate else { return }
     
-    let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 17)
+    let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 16)
     
     googleMapView.camera = myArrange
     
@@ -241,13 +392,13 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   
   func addAnnotation() {
     
-      taskDataReturn.map { info in
+    taskDataReturn.map { info in
       
       let marker = GMSMarker()
       
       marker.position = CLLocationCoordinate2D(latitude: info.lat, longitude: info.long)
       
-      let markerTitle = TaskManager.shared.filterClassified(classified: info.classfied)
+      let markerTitle = TaskManager.shared.filterClassified(classified: info.classfied + 1)
       
       marker.title =  markerTitle[0]
       
@@ -258,69 +409,17 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     }
   }
   
-  func getDirectionBack(origin: CLLocationCoordinate2D, destination: CLLocationCoordinate2D) {
-    
-    directionManager.getDirection(origin: origin, destination: destination) { result in
-      
-      switch result {
-        
-      case .success(let result):
-        
-        for count in 0 ..< result.routes[0].legs[0].steps.count {
-          
-          let seperateDis = result.routes[0].legs[0].steps[count].duration.text.components(separatedBy: " 分鐘")
-          
-          guard let baseIntMIn = Int(seperateDis[0]) else { return }
-          
-          self.directionManager.totalMin += baseIntMIn
-          
-        }
-        
-        let routes = result.routes
-        
-        let routeOverviewPolyline = routes[0].overviewPolyline
-        
-        let points = routeOverviewPolyline.points
-        DispatchQueue.main.async {
-          
-          let path = GMSPath.init(fromEncodedPath: points)
-          
-          self.polyline.path = path
-          
-          self.polyline.strokeWidth = 3
-          
-          self.polyline.strokeColor = UIColor.blue
-          
-          self.polyline.map = self.googleMapView
-        }
-        
-      case .failure(let error):
-        
-        print(error.localizedDescription)
-      }
-      
-    }
-  }
-  
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     
     if segue.identifier == "taskDetail" {
       
       guard let detailVC = segue.destination as? MissionDetailViewController else { return }
       
-      let time = Date.init(timeIntervalSince1970: TimeInterval((specificData[0].time)))
-      
-      let dateFormatter = DateFormatter()
-      
-      dateFormatter.dateFormat = "yyyy-MM-dd hh:mm"
-      
-      let timeConvert = dateFormatter.string(from: time)
-      
       detailVC.modalPresentationStyle = .fullScreen
       
       detailVC.detailData = specificData[0]
       
-      detailVC.receiveTime = timeConvert
+      detailVC.receiveTime =  TaskManager.shared.timeConverter(time: specificData[0].time)
     }
   }
 }
@@ -328,41 +427,45 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
 extension GoogleMapViewController: GMSMapViewDelegate {
   
   func mapView(_ mapView: GMSMapView, didTapInfoWindowOf marker: GMSMarker) {
-  
-    isTapOnContent = !isTapOnContent
-
-    changeConstraints()
     
+    isTapOnContent = !isTapOnContent
+    
+    guard let snippet = marker.snippet,
+      let classified = marker.title,
+      let lat = myLocationManager.location?.coordinate.latitude,
+      let long = myLocationManager.location?.coordinate.longitude else { return }
+    
+    for count in 0 ..< taskDataReturn.count {
+      
+      let info = taskDataReturn[count]
+      
+      if info.nickname == snippet {
+        
+        let distance = MapManager.shared.getDistance(lat1: info.lat, lng1: info.long, lat2: lat, lng2: long)
+        
+        let returnString = String(format: "%.2f", distance)
+        
+        taskPersonPhoto.loadImage(info.personPhoto)
+        
+        authorLabel.text = info.nickname
+        
+        taskClassifiedLabel.text = classified
+        
+        priceLabel.text = "\(info.money)元"
+        
+        distanceLabel.text = "\(returnString) km"
+      }
+    }
+    
+    changeConstraints()
   }
   
-//  func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
-//    
-//    guard let nickName = marker.snippet,
-//      let classified = marker.title else { return true }
-//      var counter = 0
-//    
-//    for count in 0 ..< TaskManager.shared.taskClassified.count {
-//      
-//      if TaskManager.shared.taskClassified[count].title == classified {
-//        
-//        counter = count
-//        
-//        break
-//      } else {
-//        continue
-//      }
-//    }
-//    
-//    specificData = taskDataReturn.filter { (info) -> Bool in
-//      
-//      return info.nickname == nickName && info.classfied == counter
-//  
-//    }
-//    
-//    self.performSegue(withIdentifier: "taskDetail", sender: nil)
-//  
-//    return true
-//  }
+  func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
+    
+    finalLat = position.target.latitude
+    
+    finalLong = position.target.longitude
+  }
 }
 
 extension GoogleMapViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -383,6 +486,8 @@ extension GoogleMapViewController: UICollectionViewDelegate, UICollectionViewDat
   
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     
+    googleMapView.clear()
+    
     if indexPath.row == 0 {
       
       self.getTaskData()
@@ -398,11 +503,7 @@ extension GoogleMapViewController: UICollectionViewDelegate, UICollectionViewDat
           
         case .success(let taskData):
           
-          print(taskData.count)
-          
           strongSelf.taskDataReturn = taskData
-          
-          LKProgressHUD.dismiss()
           
         case .failure(let error):
           

@@ -179,19 +179,13 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
     
     guard let data = self.data else { return UITableViewCell() }
     
-    let time = Date.init(timeIntervalSince1970: TimeInterval((data.time)))
+    self.timeString = TaskManager.shared.timeConverter(time: data.time)
     
-    let dateFormatter = DateFormatter()
-    
-    dateFormatter.dateFormat = "yyyy-MM-dd hh:mm"
-    
-    let timeConvert = dateFormatter.string(from: time)
-    
-    self.timeString = timeConvert
+    guard let time = timeString else { return UITableViewCell() }
     
     let missionText = TaskManager.shared.filterClassified(classified: data.classfied + 1)
     
-    cell.setUp(missionImage: missionText[1], author: data.nickname, missionLabel: missionText[0], price: data.money, time: timeConvert, timeInt: data.time)
+    cell.setUp(missionImage: missionText[1], author: data.nickname, missionLabel: missionText[0], price: data.money, time: time, timeInt: data.time)
   
     return cell
   }

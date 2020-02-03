@@ -148,5 +148,27 @@ class MapManager {
       }
     }.resume()
   }
+  
+  func radian(inputDouble: Double) -> Double {
+       return inputDouble * Double.pi/180.0
+  }
 
+  func getDistance(lat1: Double, lng1: Double, lat2: Double, lng2: Double) -> Double {
+      let earthRadius: Double = 6378137.0
+      
+      let radLat1: Double = self.radian(inputDouble: lat1)
+      let radLat2: Double = self.radian(inputDouble: lat2)
+      
+      let radLng1: Double = self.radian(inputDouble: lng1)
+      let radLng2: Double = self.radian(inputDouble: lng2)
+      
+      let latDifference: Double = radLat1 - radLat2
+      let longDifference: Double = radLng1 - radLng2
+      
+      var distance: Double = 2 * asin(sqrt(pow(sin(latDifference/2), 2) + cos(radLat1) * cos(radLat2) * pow(sin(longDifference/2), 2)))
+    
+      distance = (distance * earthRadius) / 1000
+
+     return distance
+  }
 }

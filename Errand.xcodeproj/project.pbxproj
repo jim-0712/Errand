@@ -47,6 +47,7 @@
 		FB638DCA23E71D0C00030CB2 /* Map.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB638DC923E71D0C00030CB2 /* Map.storyboard */; };
 		FB638DCC23E71D2800030CB2 /* Mission.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB638DCB23E71D2800030CB2 /* Mission.storyboard */; };
 		FB638DCE23E71D3500030CB2 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB638DCD23E71D3500030CB2 /* Profile.storyboard */; };
+		FB638DD023E7ECA400030CB2 /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB638DCF23E7ECA400030CB2 /* DoubleExtension.swift */; };
 		FB752ABB23D5DFB200BF3852 /* PermanentMarker.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */; };
 		FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB752ABD23D5E57900BF3852 /* Background.swift */; };
 		FB9A2BFE23D068FF00553D97 /* MissionListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */; };
@@ -128,6 +129,7 @@
 		FB638DC923E71D0C00030CB2 /* Map.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Map.storyboard; sourceTree = "<group>"; };
 		FB638DCB23E71D2800030CB2 /* Mission.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Mission.storyboard; sourceTree = "<group>"; };
 		FB638DCD23E71D3500030CB2 /* Profile.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
+		FB638DCF23E7ECA400030CB2 /* DoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
 		FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PermanentMarker.ttf; sourceTree = "<group>"; };
 		FB752ABD23D5E57900BF3852 /* Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionListViewController.swift; sourceTree = "<group>"; };
@@ -412,6 +414,7 @@
 			isa = PBXGroup;
 			children = (
 				FB638DC723E71AED00030CB2 /* UIStoryboard+Extension.swift */,
+				FB638DCF23E7ECA400030CB2 /* DoubleExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -765,6 +768,7 @@
 				FB638D7923E53FE900030CB2 /* MissionContentTableViewCell.swift in Sources */,
 				FB9A2BFE23D068FF00553D97 /* MissionListViewController.swift in Sources */,
 				FB6365FE23E2B975008555BC /* MissionDetailViewController.swift in Sources */,
+				FB638DD023E7ECA400030CB2 /* DoubleExtension.swift in Sources */,
 				FB4BF7B423E288D600C4C05A /* ListTableViewCell.swift in Sources */,
 				FB63664F23E3FC1B008555BC /* MissionDetailTableViewCell.swift in Sources */,
 				FB387C1A23CEEF0E00B6D8C4 /* Errand.xcdatamodeld in Sources */,

@@ -33,6 +33,8 @@ private enum Tab {
         controller.tabBarItem = tabBarItem()
 
         controller.tabBarItem.imageInsets = UIEdgeInsets(top: 8.0, left: 0.0, bottom: -10.0, right: 0.0)
+      
+//       controller.tabBarItem.titlePositionAdjustment = UIOffset(horizontal: <#T##CGFloat#>, vertical: <#T##CGFloat#>)
 
         return controller
     }

@@ -13,11 +13,12 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+  
     }
   
   override var isSelected: Bool {
       didSet {
-        layer.borderColor = isSelected ? UIColor.clear.cgColor : UIColor.white.cgColor
+        layer.borderColor = isSelected ? UIColor.black.cgColor : UIColor.white.cgColor
         
         self.contentView.backgroundColor = isSelected ? UIColor(red: 246.9/255.0, green: 212.0/255.0, blue: 95.0/255.0, alpha: 1.0) : UIColor.white
       
@@ -38,6 +39,8 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     colorBlock.backgroundColor = color
     
     colorBlock.layer.cornerRadius = UIScreen.main.bounds.width / 40
+  
+    self.contentView.backgroundColor = UIColor(red: 230.0/255.0, green: 230.0/255.0, blue: 230.0/255.0, alpha: 1.0)
   }
   
 }

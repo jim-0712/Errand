@@ -171,4 +171,17 @@ class TaskManager {
     }
   }
   
+  
+  func timeConverter(time: Int) -> String {
+    
+    let time = Date.init(timeIntervalSince1970: TimeInterval((time)))
+    
+    let dateFormatter = DateFormatter()
+    
+    dateFormatter.dateFormat = "yyyy-MM-dd hh:mm"
+    
+    let timeConvert = dateFormatter.string(from: time)
+    
+    return timeConvert
+  }
 }

@@ -396,16 +396,15 @@
                                     <action selector="takeMissionAct:" destination="gg9-hF-MfY" eventType="touchUpInside" id="jQZ-bl-oPr"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hEK-bo-55A">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hEK-bo-55A">
                                 <rect key="frame" x="20" y="20" width="30" height="30"/>
                                 <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" id="5kQ-lH-IzM"/>
                                     <constraint firstAttribute="height" constant="30" id="wqM-HG-XQY"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="23"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="&lt;"/>
+                                <state key="normal" image="Icons_24px_Back02"/>
                                 <connections>
                                     <action selector="backAct:" destination="gg9-hF-MfY" eventType="touchUpInside" id="AJc-cA-x7A"/>
                                 </connections>
@@ -918,6 +917,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Icons_24px_Back02" width="24" height="24"/>
         <image name="close" width="512" height="512"/>
         <image name="marker" width="512" height="512"/>
         <image name="pin" width="512" height="512"/>
