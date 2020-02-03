@@ -146,6 +146,15 @@ class MissionDetailViewController: UIViewController {
     
     for count in 0 ..< arrangementVideo.count {
       
+      let playButton: UIButton = {
+        
+        let button = UIButton()
+        
+        button.setImage(UIImage(named: "play-button"), for: .normal)
+        
+        return button
+      }()
+      
       guard let url = URL(string: arrangementVideo[count]) else { return }
       
       taskVideoView = UIView(frame: CGRect(x: 0, y: 0, width: fullSize.width, height: 350))

@@ -243,8 +243,8 @@
 		FB387C0E23CEEF0E00B6D8C4 /* Errand */ = {
 			isa = PBXGroup;
 			children = (
-				FB638DC623E71AC300030CB2 /* Extension */,
 				FB63664923E3ED77008555BC /* Errand.entitlements */,
+				FB638DC623E71AC300030CB2 /* Extension */,
 				FB387C4B23CF065100B6D8C4 /* Third Pary Wrapper */,
 				FB387C4A23CF05FD00B6D8C4 /* Model */,
 				FB387C4523CEF5BB00B6D8C4 /* View */,

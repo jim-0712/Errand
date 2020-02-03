@@ -47,6 +47,9 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
         }
       }
     }
+    
+    changeConstraints()
+    
     setUpLocation()
     
     checkLocationAuth()
@@ -64,6 +67,10 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   @IBOutlet weak var googleMapView: GMSMapView!
   
   @IBOutlet weak var categoryCollection: UICollectionView!
+  
+  @IBOutlet weak var invisibleView: UIView!
+  
+  @IBOutlet weak var invisibleBottomCons: NSLayoutConstraint!
   
   var path: GMSMutablePath!
   
@@ -88,6 +95,31 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   }
   
   let polyline = GMSPolyline()
+  
+  var isTapOnContent: Bool = false
+  
+  func changeConstraints() {
+    
+    if isTapOnContent {
+      
+      let move = UIViewPropertyAnimator(duration: 0.5, curve: .easeInOut) {
+
+        self.invisibleBottomCons.constant = 0
+        self.invisibleView.layoutIfNeeded()
+      }
+      
+      move.startAnimation()
+    } else {
+      
+      let move = UIViewPropertyAnimator(duration: 0.5, curve: .easeInOut) {
+        
+        self.invisibleBottomCons.constant = 150
+        self.invisibleView.layoutIfNeeded()
+      }
+      
+      move.startAnimation()
+    }
+  }
   
   func getTaskData() {
     
@@ -296,9 +328,11 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
 extension GoogleMapViewController: GMSMapViewDelegate {
   
   func mapView(_ mapView: GMSMapView, didTapInfoWindowOf marker: GMSMarker) {
+  
+    isTapOnContent = !isTapOnContent
 
-    print(marker.title)
-    print("Ninn")
+    changeConstraints()
+    
   }
   
 //  func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {

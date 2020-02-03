@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ndZ-ac-h8M" customClass="GMSMapView">
-                                <rect key="frame" x="0.0" y="102" width="414" height="760"/>
+                                <rect key="frame" x="0.0" y="102" width="414" height="610"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Zga-Kp-aCC">
@@ -45,15 +45,25 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yhu-3k-KT3">
+                                <rect key="frame" x="0.0" y="712" width="414" height="150"/>
+                                <color key="backgroundColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="150" id="L5h-n7-kW0"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.92156231399999999" green="0.92156261210000001" blue="0.92156094310000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstItem="Zga-Kp-aCC" firstAttribute="top" secondItem="Oie-lJ-Dco" secondAttribute="top" id="7Mi-ow-JIs"/>
-                            <constraint firstItem="ndZ-ac-h8M" firstAttribute="bottom" secondItem="Oie-lJ-Dco" secondAttribute="bottom" id="8sx-ex-wRk"/>
                             <constraint firstItem="Zga-Kp-aCC" firstAttribute="leading" secondItem="Oie-lJ-Dco" secondAttribute="leading" id="CCf-X7-cOS"/>
                             <constraint firstItem="Oie-lJ-Dco" firstAttribute="trailing" secondItem="ndZ-ac-h8M" secondAttribute="trailing" id="Gt9-M6-Xt1"/>
+                            <constraint firstItem="Yhu-3k-KT3" firstAttribute="leading" secondItem="Oie-lJ-Dco" secondAttribute="leading" id="SlR-av-pSN"/>
+                            <constraint firstItem="Yhu-3k-KT3" firstAttribute="bottom" secondItem="Oie-lJ-Dco" secondAttribute="bottom" id="bT4-fC-3qL"/>
                             <constraint firstItem="Zga-Kp-aCC" firstAttribute="trailing" secondItem="Oie-lJ-Dco" secondAttribute="trailing" id="cge-Cf-G9V"/>
                             <constraint firstItem="ndZ-ac-h8M" firstAttribute="leading" secondItem="Oie-lJ-Dco" secondAttribute="leading" id="fgZ-ua-4xp"/>
+                            <constraint firstItem="Yhu-3k-KT3" firstAttribute="top" secondItem="ndZ-ac-h8M" secondAttribute="bottom" id="pmW-Ns-5ym"/>
+                            <constraint firstItem="Oie-lJ-Dco" firstAttribute="trailing" secondItem="Yhu-3k-KT3" secondAttribute="trailing" id="sDS-zm-DQl"/>
                             <constraint firstItem="ndZ-ac-h8M" firstAttribute="top" secondItem="Zga-Kp-aCC" secondAttribute="bottom" constant="8" symbolic="YES" id="sgA-4X-IZZ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Oie-lJ-Dco"/>
@@ -62,6 +72,8 @@
                     <connections>
                         <outlet property="categoryCollection" destination="Zga-Kp-aCC" id="WEZ-TJ-BFQ"/>
                         <outlet property="googleMapView" destination="ndZ-ac-h8M" id="Iuf-nA-Ga2"/>
+                        <outlet property="invisibleBottomCons" destination="bT4-fC-3qL" id="EPs-B2-TiB"/>
+                        <outlet property="invisibleView" destination="Yhu-3k-KT3" id="15h-2c-Sjt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="80R-U5-d7l" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
