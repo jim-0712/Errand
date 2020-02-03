@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="6gx-gd-c6b">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Google Map View Controller-->
+        <scene sceneID="3kQ-3K-BXi">
+            <objects>
+                <viewController storyboardIdentifier="googleMap" id="6gx-gd-c6b" customClass="GoogleMapViewController" customModule="Errand" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Isc-Z9-B4b">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ndZ-ac-h8M" customClass="GMSMapView">
+                                <rect key="frame" x="0.0" y="102" width="414" height="610"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </view>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Zga-Kp-aCC">
+                                <rect key="frame" x="0.0" y="44" width="414" height="50"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="56f-9G-S8B"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="zYK-fG-DGZ">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="test" id="hmO-o8-Hec">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="JdQ-dL-w5a">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </collectionViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yhu-3k-KT3">
+                                <rect key="frame" x="0.0" y="712" width="414" height="150"/>
+                                <color key="backgroundColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="150" id="L5h-n7-kW0"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.92156231399999999" green="0.92156261210000001" blue="0.92156094310000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstItem="Zga-Kp-aCC" firstAttribute="top" secondItem="Oie-lJ-Dco" secondAttribute="top" id="7Mi-ow-JIs"/>
+                            <constraint firstItem="Zga-Kp-aCC" firstAttribute="leading" secondItem="Oie-lJ-Dco" secondAttribute="leading" id="CCf-X7-cOS"/>
+                            <constraint firstItem="Oie-lJ-Dco" firstAttribute="trailing" secondItem="ndZ-ac-h8M" secondAttribute="trailing" id="Gt9-M6-Xt1"/>
+                            <constraint firstItem="Yhu-3k-KT3" firstAttribute="leading" secondItem="Oie-lJ-Dco" secondAttribute="leading" id="SlR-av-pSN"/>
+                            <constraint firstItem="Yhu-3k-KT3" firstAttribute="bottom" secondItem="Oie-lJ-Dco" secondAttribute="bottom" id="bT4-fC-3qL"/>
+                            <constraint firstItem="Zga-Kp-aCC" firstAttribute="trailing" secondItem="Oie-lJ-Dco" secondAttribute="trailing" id="cge-Cf-G9V"/>
+                            <constraint firstItem="ndZ-ac-h8M" firstAttribute="leading" secondItem="Oie-lJ-Dco" secondAttribute="leading" id="fgZ-ua-4xp"/>
+                            <constraint firstItem="Yhu-3k-KT3" firstAttribute="top" secondItem="ndZ-ac-h8M" secondAttribute="bottom" id="pmW-Ns-5ym"/>
+                            <constraint firstItem="Oie-lJ-Dco" firstAttribute="trailing" secondItem="Yhu-3k-KT3" secondAttribute="trailing" id="sDS-zm-DQl"/>
+                            <constraint firstItem="ndZ-ac-h8M" firstAttribute="top" secondItem="Zga-Kp-aCC" secondAttribute="bottom" constant="8" symbolic="YES" id="sgA-4X-IZZ"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Oie-lJ-Dco"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="pMb-55-ntK"/>
+                    <connections>
+                        <outlet property="categoryCollection" destination="Zga-Kp-aCC" id="WEZ-TJ-BFQ"/>
+                        <outlet property="googleMapView" destination="ndZ-ac-h8M" id="Iuf-nA-Ga2"/>
+                        <outlet property="invisibleBottomCons" destination="bT4-fC-3qL" id="EPs-B2-TiB"/>
+                        <outlet property="invisibleView" destination="Yhu-3k-KT3" id="15h-2c-Sjt"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="80R-U5-d7l" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="11.594202898550726" y="1612.5"/>
+        </scene>
+    </scenes>
+</document>

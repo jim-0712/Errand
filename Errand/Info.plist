@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string></string>
+	<string>Errand想存取您的位置，方便您使用定位功能來查詢附近任務</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -53,15 +53,13 @@
 	<key>MKDirectionsApplicationSupportedModes</key>
 	<array/>
 	<key>NSAppleMusicUsageDescription</key>
-	<string></string>
+	<string>您的媒體影音檔將用於任務環境做使用</string>
 	<key>NSCameraUsageDescription</key>
-	<string></string>
+	<string>您的相機將用於此app使用，用來存取照片</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string></string>
+	<string>Errand想存取您的位置，方便您使用定位功能來查詢附近任務</string>
 	<key>Privacy – Photo Library Usage Description</key>
-	<string></string>
+	<string>您的照片將用於任務環境做使用</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>setofont</string>

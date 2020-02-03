@@ -10,6 +10,7 @@ import Foundation
 import FBSDKLoginKit
 import Firebase
 import FirebaseAuth
+import FirebaseFirestore
 
 class UserManager {
   
@@ -167,9 +168,10 @@ class UserManager {
       
       document.reference.updateData(["photo": transferPhoto]) { error in
         
-        guard let _ = error else { return }
-        
-        completion(.failure(FireBaseUpdateError.updateError))
+        if error != nil {
+          
+          completion(.failure(FireBaseUpdateError.updateError))
+        }
       }
       
       completion(.success("Update Success"))
@@ -229,5 +231,29 @@ class UserManager {
       }
     }
   }
-
+                                
+  func updateData(completion: @escaping (Result<String, Error>) -> Void) {
+    
+    guard let userInfo = currentUserInfo else { return }
+    
+    dbF.collection("Users").whereField("email", isEqualTo: userInfo.email).getDocuments { (querySnapshot, error) in
+      if let querySnapshot = querySnapshot {
+        let document = querySnapshot.documents.first
+        
+        document?.reference.updateData(["status": 1 ], completion: { (error) in
+          
+          if error != nil {
+            
+            completion(.failure(FireBaseUpdateError.updateError))
+            
+          } else {
+            
+            completion(.success("Update Success"))
+            
+          }
+        })
+      }
+    }
+  }
+  
 }

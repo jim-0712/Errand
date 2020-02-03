@@ -148,41 +148,5 @@ class MapManager {
       }
     }.resume()
   }
-  
-  //  func getAddressFromLatLong(latitude: String, longitude: String, completion: @escaping ((Result<Address, Error>) -> Void)) {
-  //
-  //    let url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=\(latitude),\(longitude)&key=\(key)&language=zh-tw"
-  //
-  //    guard let locationURL = URL(string: url) else { return }
-  //
-  //    var request = URLRequest(url: locationURL)
-  //
-  //    request.httpMethod = "GET"
-  //
-  //    locationSession.dataTask(with: request) { (data, response, error) in
-  //
-  //      guard let response = response as? HTTPURLResponse, response.statusCode == 200 else { return }
-  //
-  //      guard let error = error else {
-  //
-  //        print("wtf")
-  //
-  //        completion(.failure(GoogleApiError.comnnectError))
-  //
-  //        return }
-  //
-  //      guard let data = data else { return }
-  //      do {
-  //
-  //        let result = try self.decoder.decode(Address.self, from: data)
-  //
-  //        completion(.success(result))
-  //
-  //      } catch {
-  //
-  //        completion(.failure(GoogleApiError.comnnectError))
-  //      }
-  //    }.resume()
-  //  }
-  
+
 }

@@ -30,8 +30,23 @@
 		FB387C5823CF551A00B6D8C4 /* Content.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB387C5723CF551A00B6D8C4 /* Content.storyboard */; };
 		FB4A50E123D6A8E60028BC82 /* PersonalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A50E023D6A8E60028BC82 /* PersonalViewController.swift */; };
 		FB4A50E323D6D19A0028BC82 /* UserDataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A50E223D6D19A0028BC82 /* UserDataItem.swift */; };
+		FB4BF7B423E288D600C4C05A /* ListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4BF7B323E288D600C4C05A /* ListTableViewCell.swift */; };
 		FB5F5BCE23DB2639003B9ABC /* AddLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F5BCD23DB2639003B9ABC /* AddLocationViewController.swift */; };
 		FB5F5BD023DB2847003B9ABC /* setofont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB5F5BCF23DB2847003B9ABC /* setofont.ttf */; };
+		FB6365FE23E2B975008555BC /* MissionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6365FD23E2B975008555BC /* MissionDetailViewController.swift */; };
+		FB63660123E2CF6E008555BC /* MissionDetailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB63660023E2CF6E008555BC /* MissionDetailCollectionViewCell.swift */; };
+		FB63660323E31E67008555BC /* KingFisherWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB63660223E31E67008555BC /* KingFisherWrapper.swift */; };
+		FB63664823E3CF15008555BC /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB63664723E3CF15008555BC /* TabBarViewController.swift */; };
+		FB63664B23E3ED77008555BC /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB63664A23E3ED77008555BC /* NetworkExtension.framework */; };
+		FB63664F23E3FC1B008555BC /* MissionDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB63664E23E3FC1B008555BC /* MissionDetailTableViewCell.swift */; };
+		FB638D7923E53FE900030CB2 /* MissionContentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB638D7823E53FE900030CB2 /* MissionContentTableViewCell.swift */; };
+		FB638D7B23E5557B00030CB2 /* MissionPersonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB638D7A23E5557B00030CB2 /* MissionPersonTableViewCell.swift */; };
+		FB638D7F23E56FC000030CB2 /* CategoryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB638D7D23E56FC000030CB2 /* CategoryCollectionViewCell.swift */; };
+		FB638D8023E56FC000030CB2 /* CategoryCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB638D7E23E56FC000030CB2 /* CategoryCollectionViewCell.xib */; };
+		FB638DC823E71AED00030CB2 /* UIStoryboard+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB638DC723E71AED00030CB2 /* UIStoryboard+Extension.swift */; };
+		FB638DCA23E71D0C00030CB2 /* Map.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB638DC923E71D0C00030CB2 /* Map.storyboard */; };
+		FB638DCC23E71D2800030CB2 /* Mission.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB638DCB23E71D2800030CB2 /* Mission.storyboard */; };
+		FB638DCE23E71D3500030CB2 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB638DCD23E71D3500030CB2 /* Profile.storyboard */; };
 		FB752ABB23D5DFB200BF3852 /* PermanentMarker.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */; };
 		FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB752ABD23D5E57900BF3852 /* Background.swift */; };
 		FB9A2BFE23D068FF00553D97 /* MissionListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */; };
@@ -95,8 +110,24 @@
 		FB387C5723CF551A00B6D8C4 /* Content.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Content.storyboard; sourceTree = "<group>"; };
 		FB4A50E023D6A8E60028BC82 /* PersonalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalViewController.swift; sourceTree = "<group>"; };
 		FB4A50E223D6D19A0028BC82 /* UserDataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataItem.swift; sourceTree = "<group>"; };
+		FB4BF7B323E288D600C4C05A /* ListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewCell.swift; sourceTree = "<group>"; };
 		FB5F5BCD23DB2639003B9ABC /* AddLocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLocationViewController.swift; sourceTree = "<group>"; };
 		FB5F5BCF23DB2847003B9ABC /* setofont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = setofont.ttf; sourceTree = "<group>"; };
+		FB6365FD23E2B975008555BC /* MissionDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionDetailViewController.swift; sourceTree = "<group>"; };
+		FB63660023E2CF6E008555BC /* MissionDetailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionDetailCollectionViewCell.swift; sourceTree = "<group>"; };
+		FB63660223E31E67008555BC /* KingFisherWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KingFisherWrapper.swift; sourceTree = "<group>"; };
+		FB63664723E3CF15008555BC /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
+		FB63664923E3ED77008555BC /* Errand.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Errand.entitlements; sourceTree = "<group>"; };
+		FB63664A23E3ED77008555BC /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
+		FB63664E23E3FC1B008555BC /* MissionDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionDetailTableViewCell.swift; sourceTree = "<group>"; };
+		FB638D7823E53FE900030CB2 /* MissionContentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionContentTableViewCell.swift; sourceTree = "<group>"; };
+		FB638D7A23E5557B00030CB2 /* MissionPersonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionPersonTableViewCell.swift; sourceTree = "<group>"; };
+		FB638D7D23E56FC000030CB2 /* CategoryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCollectionViewCell.swift; sourceTree = "<group>"; };
+		FB638D7E23E56FC000030CB2 /* CategoryCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CategoryCollectionViewCell.xib; sourceTree = "<group>"; };
+		FB638DC723E71AED00030CB2 /* UIStoryboard+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStoryboard+Extension.swift"; sourceTree = "<group>"; };
+		FB638DC923E71D0C00030CB2 /* Map.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Map.storyboard; sourceTree = "<group>"; };
+		FB638DCB23E71D2800030CB2 /* Mission.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Mission.storyboard; sourceTree = "<group>"; };
+		FB638DCD23E71D3500030CB2 /* Profile.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PermanentMarker.ttf; sourceTree = "<group>"; };
 		FB752ABD23D5E57900BF3852 /* Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionListViewController.swift; sourceTree = "<group>"; };
@@ -113,6 +144,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB9A2C0023D0729400553D97 /* MapKit.framework in Frameworks */,
+				FB63664B23E3ED77008555BC /* NetworkExtension.framework in Frameworks */,
 				35D6F10C7FD31F054E953DEB /* Pods_Errand.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -152,6 +184,7 @@
 		D6CA3CD977931CCA5629628A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FB63664A23E3ED77008555BC /* NetworkExtension.framework */,
 				FB9A2BFF23D0729400553D97 /* MapKit.framework */,
 				BE91492BEFF455014401A8A6 /* Pods_Errand.framework */,
 				A85AAEF02EB4115272C07D69 /* Pods_Errand_ErrandUITests.framework */,
@@ -160,11 +193,12 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		FB24EC0D23D96A0400FA3F02 /* New Group */ = {
+		FB24EC0D23D96A0400FA3F02 /* TabBar */ = {
 			isa = PBXGroup;
 			children = (
+				FB63664723E3CF15008555BC /* TabBarViewController.swift */,
 			);
-			path = "New Group";
+			path = TabBar;
 			sourceTree = "<group>";
 		};
 		FB24EC1023D96CED00FA3F02 /* PostMission */ = {
@@ -209,6 +243,8 @@
 		FB387C0E23CEEF0E00B6D8C4 /* Errand */ = {
 			isa = PBXGroup;
 			children = (
+				FB63664923E3ED77008555BC /* Errand.entitlements */,
+				FB638DC623E71AC300030CB2 /* Extension */,
 				FB387C4B23CF065100B6D8C4 /* Third Pary Wrapper */,
 				FB387C4A23CF05FD00B6D8C4 /* Model */,
 				FB387C4523CEF5BB00B6D8C4 /* View */,
@@ -247,7 +283,7 @@
 		FB387C4423CEF5A900B6D8C4 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				FB24EC0D23D96A0400FA3F02 /* New Group */,
+				FB24EC0D23D96A0400FA3F02 /* TabBar */,
 				FB4A50DF23D6A8C90028BC82 /* Personalinfo */,
 				FB9A2BFC23D068E200553D97 /* Mission */,
 				FB387C5923CF552A00B6D8C4 /* Map */,
@@ -260,10 +296,16 @@
 		FB387C4523CEF5BB00B6D8C4 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				FB638D7C23E56F6900030CB2 /* Map */,
+				FB6365FF23E2CF45008555BC /* MissionDetail */,
+				FB4BF7B223E286FD00C4C05A /* MissionList */,
 				FB24EC1023D96CED00FA3F02 /* PostMission */,
 				FB752ABC23D5E55600BF3852 /* Background */,
 				FB387C1523CEEF0E00B6D8C4 /* Main.storyboard */,
 				FB387C5723CF551A00B6D8C4 /* Content.storyboard */,
+				FB638DC923E71D0C00030CB2 /* Map.storyboard */,
+				FB638DCB23E71D2800030CB2 /* Mission.storyboard */,
+				FB638DCD23E71D3500030CB2 /* Profile.storyboard */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -299,6 +341,7 @@
 			isa = PBXGroup;
 			children = (
 				FB387C4C23CF098F00B6D8C4 /* JGProgressHUDWrapper.swift */,
+				FB63660223E31E67008555BC /* KingFisherWrapper.swift */,
 			);
 			path = "Third Pary Wrapper";
 			sourceTree = "<group>";
@@ -337,6 +380,42 @@
 			path = Personalinfo;
 			sourceTree = "<group>";
 		};
+		FB4BF7B223E286FD00C4C05A /* MissionList */ = {
+			isa = PBXGroup;
+			children = (
+				FB4BF7B323E288D600C4C05A /* ListTableViewCell.swift */,
+			);
+			path = MissionList;
+			sourceTree = "<group>";
+		};
+		FB6365FF23E2CF45008555BC /* MissionDetail */ = {
+			isa = PBXGroup;
+			children = (
+				FB63660023E2CF6E008555BC /* MissionDetailCollectionViewCell.swift */,
+				FB63664E23E3FC1B008555BC /* MissionDetailTableViewCell.swift */,
+				FB638D7823E53FE900030CB2 /* MissionContentTableViewCell.swift */,
+				FB638D7A23E5557B00030CB2 /* MissionPersonTableViewCell.swift */,
+			);
+			path = MissionDetail;
+			sourceTree = "<group>";
+		};
+		FB638D7C23E56F6900030CB2 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				FB638D7D23E56FC000030CB2 /* CategoryCollectionViewCell.swift */,
+				FB638D7E23E56FC000030CB2 /* CategoryCollectionViewCell.xib */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
+		FB638DC623E71AC300030CB2 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				FB638DC723E71AED00030CB2 /* UIStoryboard+Extension.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		FB752ABC23D5E55600BF3852 /* Background */ = {
 			isa = PBXGroup;
 			children = (
@@ -348,8 +427,9 @@
 		FB9A2BFC23D068E200553D97 /* Mission */ = {
 			isa = PBXGroup;
 			children = (
-				FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */,
 				FB24EC0E23D96B8500FA3F02 /* PostMissionViewController.swift */,
+				FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */,
+				FB6365FD23E2B975008555BC /* MissionDetailViewController.swift */,
 			);
 			path = Mission;
 			sourceTree = "<group>";
@@ -476,12 +556,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB387C1F23CEEF0F00B6D8C4 /* LaunchScreen.storyboard in Resources */,
+				FB638DCE23E71D3500030CB2 /* Profile.storyboard in Resources */,
 				FB752ABB23D5DFB200BF3852 /* PermanentMarker.ttf in Resources */,
+				FB638DCA23E71D0C00030CB2 /* Map.storyboard in Resources */,
 				FB387C1C23CEEF0F00B6D8C4 /* Assets.xcassets in Resources */,
 				FB5F5BD023DB2847003B9ABC /* setofont.ttf in Resources */,
+				FB638D8023E56FC000030CB2 /* CategoryCollectionViewCell.xib in Resources */,
 				FBF7AB5623D52EEF004B521A /* GoogleService-Info.plist in Resources */,
 				FB387C1723CEEF0E00B6D8C4 /* Main.storyboard in Resources */,
 				FB387C5823CF551A00B6D8C4 /* Content.storyboard in Resources */,
+				FB638DCC23E71D2800030CB2 /* Mission.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -665,19 +749,29 @@
 				FB24EC1923DAB72500FA3F02 /* TaskManager.swift in Sources */,
 				FB24EC0F23D96B8500FA3F02 /* PostMissionViewController.swift in Sources */,
 				FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */,
+				FB638D7F23E56FC000030CB2 /* CategoryCollectionViewCell.swift in Sources */,
 				FB387C5323CF323600B6D8C4 /* UserInfoViewController.swift in Sources */,
 				FB387C1423CEEF0E00B6D8C4 /* HomePageViewController.swift in Sources */,
+				FB63660123E2CF6E008555BC /* MissionDetailCollectionViewCell.swift in Sources */,
 				FB5F5BCE23DB2639003B9ABC /* AddLocationViewController.swift in Sources */,
 				FB24EC1723DAB00F00FA3F02 /* TaskDataItem.swift in Sources */,
+				FB638D7B23E5557B00030CB2 /* MissionPersonTableViewCell.swift in Sources */,
 				FB387C1023CEEF0E00B6D8C4 /* AppDelegate.swift in Sources */,
 				FB24EC1423D9B19300FA3F02 /* CustomeColor.swift in Sources */,
+				FB638DC823E71AED00030CB2 /* UIStoryboard+Extension.swift in Sources */,
 				FB4A50E123D6A8E60028BC82 /* PersonalViewController.swift in Sources */,
+				FB63664823E3CF15008555BC /* TabBarViewController.swift in Sources */,
 				FB387C5023CF0E8E00B6D8C4 /* RegisterItem.swift in Sources */,
+				FB638D7923E53FE900030CB2 /* MissionContentTableViewCell.swift in Sources */,
 				FB9A2BFE23D068FF00553D97 /* MissionListViewController.swift in Sources */,
+				FB6365FE23E2B975008555BC /* MissionDetailViewController.swift in Sources */,
+				FB4BF7B423E288D600C4C05A /* ListTableViewCell.swift in Sources */,
+				FB63664F23E3FC1B008555BC /* MissionDetailTableViewCell.swift in Sources */,
 				FB387C1A23CEEF0E00B6D8C4 /* Errand.xcdatamodeld in Sources */,
 				FB4A50E323D6D19A0028BC82 /* UserDataItem.swift in Sources */,
 				FBF7AB5823D56F5D004B521A /* GoogleMapViewController.swift in Sources */,
 				FBF7AB5D23D590E7004B521A /* MapManager.swift in Sources */,
+				FB63660323E31E67008555BC /* KingFisherWrapper.swift in Sources */,
 				FB387C4D23CF098F00B6D8C4 /* JGProgressHUDWrapper.swift in Sources */,
 				FBF7AB5B23D58AE2004B521A /* MapDataItem.swift in Sources */,
 			);
@@ -853,6 +947,7 @@
 			baseConfigurationReference = F10FE434B9C4A84CFF81C162 /* Pods-Errand.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Errand/Errand.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6V9XMJR84F;
 				INFOPLIST_FILE = Errand/Info.plist;
@@ -872,6 +967,7 @@
 			baseConfigurationReference = 9EBB17268953F51CE7F8DE54 /* Pods-Errand.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Errand/Errand.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6V9XMJR84F;
 				INFOPLIST_FILE = Errand/Info.plist;

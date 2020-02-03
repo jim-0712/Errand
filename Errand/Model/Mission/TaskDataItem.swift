@@ -5,9 +5,14 @@
 //  Created by Jim on 2020/1/24.
 //  Copyright © 2020 Jim. All rights reserved.
 //
-
+import UIKit
 import Foundation
 import CoreLocation
+
+enum ReadDataError: Error {
+  
+  case readDataError
+}
 
 struct TaskInfo {
   
@@ -31,6 +36,12 @@ struct TaskInfo {
   
   let classfied: Int
   
+  let status: Int
+  
+  let fileType: [Int]
+  
+  let personPhoto: String
+  
   var toDict: [String: Any] {
     
     return [   "email": email,
@@ -52,7 +63,22 @@ struct TaskInfo {
               "lat": lat,
               
               "long": long,
+              
+              "status": status,
+              
+              "fileType": fileType,
+      
+              "personPhoto": personPhoto
     
           ]
   }
+}
+
+struct TaskGroup {
+
+    let color: UIColor
+
+    let title: String
+  
+    let image: String
 }
