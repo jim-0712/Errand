@@ -8,6 +8,7 @@
 
 import UIKit
 import Kingfisher
+import MobileCoreServices
 import FirebaseAuth
 import FirebaseDatabase
 import FirebaseStorage
@@ -15,34 +16,39 @@ import FirebaseStorage
 class PersonalViewController: UIViewController {
   
   let imagePickerController = UIImagePickerController()
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    setUpView()
-    // 委任代理
-    imagePickerController.delegate = self
-    
-    imagePickerController.allowsEditing = true
-    // Do any additional setup after loading the view.
+    if UserManager.shared.isTourist {
+      
+      UserManager.shared.goToSign(viewController: self)
+      
+    } else {
+      
+      setUpView()
+      // 委任代理
+      imagePickerController.delegate = self
+
+      imagePickerController.allowsEditing = true
+      
+      imagePickerController.mediaTypes = [kUTTypeMovie as String, kUTTypeImage as String]
+      // Do any additional setup after loading the view.
+
+    }
   }
   @IBOutlet weak var upLoadBtn: UIButton!
   
   @IBOutlet weak var personPhoto: UIImageView!
   
   func setUpView() {
-    
-    guard let personImage = UserDefaults.standard.value(forKey: "personPhoto") as? URL else {
       
       personPhoto.image = UIImage(named: "user-2")
-      
-      return }
-    
-    personPhoto.kf.setImage(with: personImage)
+
   }
   
   @IBAction func upLoadAct(_ sender: Any) {
-  
+    
     // 建立一個 UIAlertController 的實體
     // 設定 UIAlertController 的標題與樣式為 動作清單 (actionSheet)
     let imagePickerAlertController = UIAlertController(title: "上傳圖片", message: "請選擇要上傳的圖片", preferredStyle: .actionSheet)
@@ -91,14 +97,13 @@ extension PersonalViewController: UIImagePickerControllerDelegate, UINavigationC
     
     LKProgressHUD.show(controller: self)
     
+    guard let userName = Auth.auth().currentUser?.email else { return }
+    
     var selectedImageFromPicker: UIImage?
     
-    if let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+    if let pickedImage = info[.originalImage ] as? UIImage {
       
       selectedImageFromPicker = pickedImage
-    }
-    
-    guard let userName = Auth.auth().currentUser?.email else { return }
     
     if let selectedImage = selectedImageFromPicker {
       
@@ -122,13 +127,9 @@ extension PersonalViewController: UIImagePickerControllerDelegate, UINavigationC
               
               LKProgressHUD.dismiss()
               
-              print("1")
-              
               LKProgressHUD.showFailure(text: "Error", controller: self)
               
               return }
-            
-            UserDefaults.standard.set(url, forKey: "personPhoto")
             
             self.personPhoto.image = selectedImage
             
@@ -142,15 +143,11 @@ extension PersonalViewController: UIImagePickerControllerDelegate, UINavigationC
                 
                 LKProgressHUD.dismiss()
                 
-                print("2")
-                
                 LKProgressHUD.showSuccess(text: "Success", controller: self)
                 
               case .failure(let error):
                 
                 LKProgressHUD.dismiss()
-                
-                 print("3")
                 
                 LKProgressHUD.showFailure(text: error.localizedDescription, controller: self)
               }
@@ -160,7 +157,69 @@ extension PersonalViewController: UIImagePickerControllerDelegate, UINavigationC
         })
       }
     }
-  
+      
+    } else {
+      
+      if let videoURL = info[.mediaURL ] as? NSURL {
+        
+        let id = UUID().uuidString
+        
+        let storageRef = Storage.storage().reference().child("TaskVideo").child("\(id).mov")
+
+        var movieData: Data?
+        do {
+          movieData = try Data(contentsOf: videoURL as URL, options: .alwaysMapped)
+        } catch {
+            print(error)
+            movieData = nil
+            return
+        }
+        
+        storageRef.putData(movieData!, metadata: nil ) { (_, error) in
+          
+          if error != nil {
+            
+            LKProgressHUD.dismiss()
+            
+            return
+          }
+          
+          storageRef.downloadURL { (url, error) in
+            
+            if error != nil {
+              
+              LKProgressHUD.dismiss()
+              
+              LKProgressHUD.showFailure(text: "Error", controller: self)
+              
+              return }
+            
+//            guard let urlBack = url else { return }
+//
+//            UserManager.shared.updatePhotoData(photo: urlBack) { result in
+//
+//              switch result {
+//
+//              case .success:
+//
+//                LKProgressHUD.dismiss()
+//
+//                LKProgressHUD.showSuccess(text: "Success", controller: self)
+//
+//              case .failure(let error):
+//
+//                LKProgressHUD.dismiss()
+//
+//                LKProgressHUD.showFailure(text: error.localizedDescription, controller: self)
+//              }
+//            }
+            
+          }
+        }
+      }
+      
+    }
+    
     dismiss(animated: true, completion: nil)
   }
   

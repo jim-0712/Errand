@@ -10,10 +10,13 @@ import UIKit
 import GoogleSignIn
 import FirebaseAuth
 import FBSDKLoginKit
+import IQKeyboardManager
 
 class ViewController: UIViewController {
   
   var isEmail = false
+  
+  var photo = ""
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -21,6 +24,8 @@ class ViewController: UIViewController {
     setUpBtn()
     
     visitorRegisterBtn.isEnabled = false
+    
+    IQKeyboardManager.shared().isEnabled = true
     
     NotificationCenter.default.addObserver(self, selector: #selector(goToUserInfo), name: Notification.Name("userInfo"), object: nil)
   }
@@ -36,7 +41,7 @@ class ViewController: UIViewController {
   @IBOutlet weak var googleLoginBtn: UIButton!
   
   @IBOutlet weak var visitorBtn: UIButton!
-    
+  
   @IBOutlet weak var appleLogo: UIImageView!
   
   @IBOutlet weak var appleLoginBtn: UIButton!
@@ -54,8 +59,8 @@ class ViewController: UIViewController {
     UserManager.shared.isTourist = true
     
     guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? UITabBarController else { return }
-           
-           self.present(mapVc, animated: true, completion: nil)
+    
+    self.present(mapVc, animated: true, completion: nil)
   }
   
   @IBAction func googleLoginAct(_ sender: Any) {
@@ -78,21 +83,45 @@ class ViewController: UIViewController {
             
           case .success:
             
-            UserManager.shared.loadFBProfile(controller: self) { result in
+            UserManager.shared.loadFBProfile(controller: self) { [weak self] result in
+              
+              guard let strongSelf = self else { return }
               
               switch result {
                 
               case .success:
                 
-                guard let userInfoVc = self.storyboard?.instantiateViewController(identifier: "userinfo") as? UserInfoViewController else { return }
+                UserManager.shared.isTourist = false
                 
-                userInfoVc.isSocial = true
+                guard let photoBack = Auth.auth().currentUser?.photoURL?.absoluteString,
+                  let email = Auth.auth().currentUser?.email else { return }
                 
-                self.present(userInfoVc, animated: true, completion: nil)
+                strongSelf.photo = photoBack
+                
+                UserManager.shared.createDataBase(classification: "Users", gender: 1, nickName: "", email: email, photo: strongSelf.photo) { result in
+                  
+                  switch result {
+                    
+                  case .success(let success):
+                    
+                    UserManager.shared.isTourist = false
+                    
+                    LKProgressHUD.showSuccess(text: success, controller: strongSelf)
+                    
+                    guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? UITabBarController else { return }
+                    
+                    strongSelf.present(mapVc, animated: true, completion: nil)
+                    
+                  case .failure(let error):
+                    
+                    LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
+                    
+                  }
+                }
                 
               case .failure(let error):
                 
-                LKProgressHUD.showFailure(text: error.localizedDescription, controller: self)
+                LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
               }
             }
             
@@ -111,7 +140,6 @@ class ViewController: UIViewController {
         
       }
     }
-    
   }
   
   @IBAction func visitorRegisterAct(_ sender: Any) {
@@ -136,30 +164,46 @@ class ViewController: UIViewController {
       
       LKProgressHUD.show(controller: self)
       
-      UserManager.shared.registAccount(account: account, password: password) { result in
+      UserManager.shared.registAccount(account: account, password: password) { [weak self] result in
+        
+        guard let strongSelf = self else { return }
         
         switch result {
           
         case .success:
           
-          LKProgressHUD.dismiss()
+          guard let photoBack = Auth.auth().currentUser?.photoURL?.absoluteString else { return }
           
-          guard let userInfoVc = self.storyboard?.instantiateViewController(identifier: "userinfo") as? UserInfoViewController else { return }
+          strongSelf.photo = photoBack
           
-          userInfoVc.isSocial = false
+          UserManager.shared.createDataBase(classification: "Users", gender: 1, nickName: "", email: account, photo: strongSelf.photo) { result in
+            
+            switch result {
+              
+            case .success(let success):
+              
+              UserManager.shared.isTourist = false
+              
+              LKProgressHUD.showSuccess(text: success, controller: strongSelf)
+              
+              guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? UITabBarController else { return }
+              
+              strongSelf.present(mapVc, animated: true, completion: nil)
+              
+            case .failure(let error):
+              
+              LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
+              
+            }
+          }
           
-          self.present(userInfoVc, animated: true, completion: nil)
+        case .failure:
           
-        case .failure(let error):
-          
-          LKProgressHUD.showFailure(text: error.localizedDescription, controller: self)
+          LKProgressHUD.showFailure(text: "Error Email", controller: strongSelf)
         }
+        
       }
-    } else {
-      
-      LKProgressHUD.showFailure(text: "Error Email", controller: self)
-    }
-  }
+    }}
   
   func checkMail(email: String) -> Bool {
     
@@ -215,11 +259,35 @@ class ViewController: UIViewController {
   
   @objc func goToUserInfo () {
     
-    guard let userInfoVc = self.storyboard?.instantiateViewController(identifier: "userinfo") as? UserInfoViewController else { return }
+    UserManager.shared.isTourist = false
     
-    userInfoVc.isSocial = true
+    guard let photoBack = Auth.auth().currentUser?.photoURL?.absoluteString,
+      let email = Auth.auth().currentUser?.email else { return }
     
-    self.present(userInfoVc, animated: true, completion: nil)
+    self.photo = photoBack
+    
+    UserManager.shared.createDataBase(classification: "Users", gender: 1, nickName: "", email: email, photo: self.photo) { [weak self] result in
+      
+      guard let strongSelf = self else { return }
+      
+      switch result {
+        
+      case .success(let success):
+        
+        UserManager.shared.isTourist = false
+        
+        LKProgressHUD.showSuccess(text: success, controller: strongSelf)
+        
+        guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? TabBarViewController else { return }
+        
+        strongSelf.present(mapVc, animated: true, completion: nil)
+        
+      case .failure(let error):
+        
+        LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
+        
+      }
+    }
   }
 }
 
