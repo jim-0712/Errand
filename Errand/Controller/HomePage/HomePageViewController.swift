@@ -22,9 +22,7 @@ class ViewController: UIViewController {
     super.viewDidLoad()
     
     setUpBtn()
-    
     visitorRegisterBtn.isEnabled = false
-    
     IQKeyboardManager.shared().isEnabled = true
     
     NotificationCenter.default.addObserver(self, selector: #selector(goToUserInfo), name: Notification.Name("userInfo"), object: nil)

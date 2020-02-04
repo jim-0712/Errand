@@ -47,23 +47,16 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     setUpView()
-    
     changeConstraints()
-    
     setUpLocation()
-    
     checkLocationAuth()
-    
     setupCollectin()
-    
     self.navigationController?.navigationBar.isHidden = true
-    
   }
   
   override func viewWillAppear(_ animated: Bool) {
     
     super.viewWillAppear(animated)
-    
     getTaskData()
   }
   

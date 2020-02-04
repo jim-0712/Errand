@@ -18,7 +18,6 @@ class MissionListViewController: UIViewController {
     setUp()
     getTaskData()
     setUpSearch()
-    
   }
 
   @objc func reloadTable() {

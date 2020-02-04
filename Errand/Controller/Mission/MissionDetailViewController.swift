@@ -17,15 +17,10 @@ class MissionDetailViewController: UIViewController {
     super.viewDidLoad()
     
     URLSessionConfiguration.default.multipathServiceType = .handover
-    
     setUp()
-    
     setUpBtn()
-    
     setUppageControll()
-    
     setUpImageView()
-    // Do any additional setup after loading the view.
   }
   
   override func viewDidLayoutSubviews() {

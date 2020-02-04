@@ -222,10 +222,7 @@ extension PersonalViewController: UIImagePickerControllerDelegate, UINavigationC
     
     dismiss(animated: true, completion: nil)
   }
-  
 }
-
-  
 //  func getDirectionBack(origin: CLLocationCoordinate2D, destination: CLLocationCoordinate2D) {
 //
 //    directionManager.getDirection(origin: origin, destination: destination) { result in

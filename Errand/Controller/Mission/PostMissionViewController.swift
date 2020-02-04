@@ -14,7 +14,7 @@ import CoreLocation
 import FirebaseAuth
 import FirebaseDatabase
 import FirebaseStorage
-//import IQKeyboardManager
+import IQKeyboardManager
 
 class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   
@@ -22,16 +22,22 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-
+    
     setUp()
-    
     setUpBtn()
-    
     setUpTextView()
-    
     setUpCollectionView()
     
+    setUpPhotoCollectionView()
   }
+  
+  func setUpPhotoCollectionView() {
+    
+    photoCollectionView.delegate = self
+    
+    photoCollectionView.dataSource = self
+  }
+  @IBOutlet weak var photoCollectionView: UICollectionView!
   
   @IBOutlet weak var photoUploadText: UILabel!
   
@@ -58,9 +64,14 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   @IBOutlet weak var postBtn: UIButton!
   
   @IBOutlet weak var stackNTDView: UIStackView!
+  
   let imagePickerController = UIImagePickerController()
   
   let backgroundManager = BackgroundManager.shared
+  
+  var imageReady: [UIImage] = []
+  
+  var videoReady: [NSURL] = []
   
   var fileURL: [String] = []
   
@@ -75,8 +86,135 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   let screenwidth = UIScreen.main.bounds.width
   
   let screenheight = UIScreen.main.bounds.height
-    
+  
   @IBAction func postAct(_ sender: Any) {
+    print("post")
+    
+    LKProgressHUD.show(controller: self)
+    
+    let group: DispatchGroup = DispatchGroup()
+    
+    let photoQueue = DispatchQueue(label: "photo", attributes: .concurrent)
+    
+    let videoQueue = DispatchQueue(label: "video", attributes: .concurrent)
+    
+    group.enter()
+    
+    photoQueue.async(group: group) {
+      
+      if self.imageReady.count == 0 {
+        
+        group.leave()
+      } else {
+        
+        for count in 0 ..< self.imageReady.count {
+          
+          let id = UUID().uuidString
+          
+          guard let imageData = self.imageReady[count].pngData() else { return }
+          
+          let storageRef = Storage.storage().reference().child("TaskFinder").child("\(id).png")
+          
+          storageRef.putData(imageData, metadata: nil, completion: { [weak self] (_, error) in
+            
+            guard let strongSelf = self else { return }
+            
+            if error != nil {
+              
+              return
+            }
+            
+            storageRef.downloadURL { (url, error) in
+              
+              if error != nil {
+                
+                LKProgressHUD.dismiss()
+                
+                LKProgressHUD.showFailure(text: "Error", controller: strongSelf)
+                
+                return }
+              
+              guard let urlBack = url else { return }
+              
+              let stringUrl = "\(urlBack)"
+              
+              strongSelf.fileURL.append(stringUrl)
+              
+              group.leave()
+            }
+          })
+        }
+      }
+    }
+    
+    group.enter()
+    
+    videoQueue.async(group: group) {
+      
+      if self.videoReady.count == 0 {
+        
+        group.leave()
+      } else {
+        
+        for count in 0 ..< self.videoReady.count {
+          
+          let id = UUID().uuidString
+          
+          let storageRef = Storage.storage().reference().child("TaskVideo").child("\(id).mov")
+          
+          let videoTransferUrl = self.videoReady[count] as URL
+          
+          var movieData: Data?
+          do {
+            
+            movieData = try Data(contentsOf: videoTransferUrl, options: .alwaysMapped)
+          } catch {
+            movieData = nil
+            return
+          }
+          
+          storageRef.putData(movieData!, metadata: nil ) { (_, error) in
+            
+            if error != nil {
+              
+              LKProgressHUD.dismiss()
+              
+              return
+            }
+            
+            storageRef.downloadURL { [weak self](url, error) in
+              
+              guard let strongSelf = self else { return }
+              
+              if error != nil {
+                
+                LKProgressHUD.dismiss()
+                
+                LKProgressHUD.showFailure(text: "Error", controller: strongSelf)
+                
+                return }
+              
+              guard let urlBack = url else { return }
+              
+              let stringUrl = "\(urlBack)"
+              
+              strongSelf.fileURL.append(stringUrl)
+              
+              group.leave()
+            }
+          }
+        }
+      }
+    }
+    
+    group.notify(queue: DispatchQueue.main) {
+      print("ya")
+      LKProgressHUD.dismiss()
+      self.createDataBase()
+    }
+  }
+  
+  func createDataBase() {
     
     guard let money = priceTextField.text,
       let content = missionContentTextView.text,
@@ -84,16 +222,16 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
       let lat = lat,
       let long = long else { return }
     
-      let intMoney = Int(money) ?? 0
+    let intMoney = Int(money) ?? 0
     
-      let now = NSDate()
+    let now = NSDate()
     
-      let currentTimeS = Int(now.timeIntervalSince1970)
+    let currentTimeS = Int(now.timeIntervalSince1970)
     
-      let location = CLLocationCoordinate2DMake(lat, long)
+    let location = CLLocationCoordinate2DMake(lat, long)
     
-      let taskData: [Int] = [currentTimeS, intMoney, indexfinal, 0]
-      
+    let taskData: [Int] = [currentTimeS, intMoney, indexfinal, 0]
+    
     TaskManager.shared.createMission(taskPhoto: fileURL, coordinate: location, taskData: taskData, detail: content, fileType: self.fileType) { [weak self](result) in
       
       guard let strongSelf = self else { return }
@@ -127,42 +265,36 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   
   @IBAction func uploadAction(_ sender: Any) {
     
-    if fileURL.count > 3 {
+    let imagePickerAlertController = UIAlertController(title: "上傳圖片", message: "請選擇要上傳的圖片", preferredStyle: .actionSheet)
+    
+    let imageFromLibAction = UIAlertAction(title: "照片圖庫", style: .default) { (_) in
       
-      print("error")
-    } else {
-      
-      let imagePickerAlertController = UIAlertController(title: "上傳圖片", message: "請選擇要上傳的圖片", preferredStyle: .actionSheet)
-      
-      let imageFromLibAction = UIAlertAction(title: "照片圖庫", style: .default) { (_) in
+      if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
         
-        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-          
-          self.imagePickerController.sourceType = .photoLibrary
-          self.present(self.imagePickerController, animated: true, completion: nil)
-        }
+        self.imagePickerController.sourceType = .photoLibrary
+        self.present(self.imagePickerController, animated: true, completion: nil)
       }
-      let imageFromCameraAction = UIAlertAction(title: "相機", style: .default) { (_) in
-        
-        if UIImagePickerController.isSourceTypeAvailable(.camera) {
-          
-          self.imagePickerController.sourceType = .camera
-          self.present(self.imagePickerController, animated: true, completion: nil)
-        }
-      }
-      
-      let cancelAction = UIAlertAction(title: "取消", style: .cancel) { (_) in
-        
-        imagePickerAlertController.dismiss(animated: true, completion: nil)
-      }
-      
-      imagePickerAlertController.addAction(imageFromLibAction)
-      imagePickerAlertController.addAction(imageFromCameraAction)
-      imagePickerAlertController.addAction(cancelAction)
-      
-      present(imagePickerAlertController, animated: true, completion: nil)
-      
     }
+    let imageFromCameraAction = UIAlertAction(title: "相機", style: .default) { (_) in
+      
+      if UIImagePickerController.isSourceTypeAvailable(.camera) {
+        
+        self.imagePickerController.sourceType = .camera
+        self.present(self.imagePickerController, animated: true, completion: nil)
+      }
+    }
+    
+    let cancelAction = UIAlertAction(title: "取消", style: .cancel) { (_) in
+      
+      imagePickerAlertController.dismiss(animated: true, completion: nil)
+    }
+    
+    imagePickerAlertController.addAction(imageFromLibAction)
+    imagePickerAlertController.addAction(imageFromCameraAction)
+    imagePickerAlertController.addAction(cancelAction)
+    
+    present(imagePickerAlertController, animated: true, completion: nil)
+    
   }
   
   func setUpCollectionView() {
@@ -194,11 +326,11 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   func setUpBtn() {
     
     postBtn.layer.cornerRadius = screenwidth / 40
-    
+  
     postBtn.isEnabled = false
     
     postBtn.layer.shadowOpacity = 0.5
-      
+    
     postBtn.layer.shadowOffset = CGSize(width: 3, height: 3)
   }
   
@@ -243,10 +375,10 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     
     if segue.identifier == "addlocation" {
-        
-        guard let locationVC = segue.destination as? AddLocationViewController else { return }
-
-        locationVC.delegate = self
+      
+      guard let locationVC = segue.destination as? AddLocationViewController else { return }
+      
+      locationVC.delegate = self
     }
   }
   
@@ -254,8 +386,8 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
     
     let controller = UIAlertController(title: "任務上傳成功", message: "返回任務頁面", preferredStyle: .alert)
     let okAction = UIAlertAction(title: "好的", style: .default) { (_) in
-       
-       viewController.navigationController?.popViewController(animated: true)
+      
+      viewController.navigationController?.popViewController(animated: true)
     }
     controller.addAction(okAction)
     present(controller, animated: true, completion: nil)
@@ -266,21 +398,95 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     
-    return TaskManager.shared.taskClassified.count - 1
+    if collectionView == self.missionGroupCollectionView {
+      
+      return TaskManager.shared.taskClassified.count - 1
+    } else {
+      
+      if fileType.count == 0 {
+        
+        return 1
+      } else {
+        
+        return fileType.count + 1
+      }
+    }
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     
-    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "group", for: indexPath) as? MissionGroupCollectionViewCell else { return UICollectionViewCell() }
-    
-    cell.setUpContent(label: TaskManager.shared.taskClassified[indexPath.row + 1].title, color: TaskManager.shared.taskClassified[indexPath.row + 1].color)
-    
-    return cell
+    if collectionView == self.missionGroupCollectionView {
+      
+      guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "group", for: indexPath) as? MissionGroupCollectionViewCell else { return UICollectionViewCell() }
+      
+      cell.setUpContent(label: TaskManager.shared.taskClassified[indexPath.row + 1].title, color: TaskManager.shared.taskClassified[indexPath.row + 1].color)
+      
+      return cell
+      
+    } else {
+      
+      var photoCounter = 0
+      
+      var videoCounter = 0
+      
+      guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photo", for: indexPath) as? PhotoCollectionViewCell else { return UICollectionViewCell() }
+      
+      cell.delegate = self
+      
+      if fileType.count == 0 {
+        
+        cell.backgroundColor = .green
+        
+        cell.addPhotoBtn.isHidden = false
+        
+        cell.photoImageView.isHidden = true
+        
+        return cell
+      } else if indexPath.row != fileType.count && fileType[indexPath.row] == 0 {
+        
+        cell.addPhotoBtn.isHidden = true
+        
+        cell.photoImageView.image = imageReady[photoCounter]
+        
+        photoCounter += 1
+        
+        return cell
+      } else if indexPath.row != fileType.count && fileType[indexPath.row] == 1 {
+        
+        cell.photoImageView.isHidden = true
+
+        let player = AVPlayer(url: videoReady[videoCounter] as URL)
+        
+        let playerLayer = AVPlayerLayer(player: player)
+        
+        playerLayer.frame = cell.contentView.bounds
+        
+        cell.layer.addSublayer(playerLayer)
+        
+        videoCounter += 1
+
+        player.play()
+        
+        return cell
+      } else {
+        
+        cell.backgroundColor = .red
+        
+        cell.addPhotoBtn.isHidden = false
+        
+        cell.photoImageView.isHidden = true
+        
+        return cell
+      }
+    }
   }
   
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     
-    selectIndex = indexPath.row
+    if collectionView == self.missionGroupCollectionView {
+      
+       selectIndex = indexPath.row
+    }
   }
   
 }
@@ -289,12 +495,24 @@ extension PostMissionViewController: UICollectionViewDelegateFlowLayout {
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     
-    return CGSize(width: screenwidth / 2.5, height: screenheight / 20)
+     if collectionView == self.missionGroupCollectionView {
+    
+      return CGSize(width: screenwidth / 2.5, height: screenheight / 20)
+     } else {
+      
+      return CGSize(width: 100, height: 100)
+    }
+     
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
     
-    return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+    if collectionView == self.missionGroupCollectionView {
+      return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+    } else {
+      
+       return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    }
   }
 }
 
@@ -302,134 +520,51 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
   
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
     
-    LKProgressHUD.show(controller: self)
-    
-    let id = UUID().uuidString
-    
-    var selectedImageFromPicker: UIImage?
-    
     if let pickedImage = info[.originalImage ] as? UIImage {
       
-      selectedImageFromPicker = pickedImage
+      imageReady.append(pickedImage)
       
-      if let selectedImage = selectedImageFromPicker {
-        
-        let storageRef = Storage.storage().reference().child("TaskFinder").child("\(id).png")
-        
-        if let uploadData = selectedImage.pngData() {
-          
-          storageRef.putData(uploadData, metadata: nil, completion: { [weak self] (_, error) in
-            
-            guard let strongSelf = self else { return }
-            
-            if error != nil {
-              
-              LKProgressHUD.dismiss()
-              
-              return
-            }
-            
-            storageRef.downloadURL { (url, error) in
-              
-              if error != nil {
-                
-                LKProgressHUD.dismiss()
-                
-                LKProgressHUD.showFailure(text: "Error", controller: strongSelf)
-                
-                return }
-              
-              strongSelf.fileType.append(0)
-              
-              strongSelf.uploadImageVisibleView[strongSelf.fileURL.count].isHidden = false
-              
-              strongSelf.uploadImageVisibleView[strongSelf.fileURL.count].image = selectedImage
-              
-              strongSelf.backgroundVisibleView[strongSelf.fileURL.count].backgroundColor = .clear
-              
-              LKProgressHUD.dismiss()
-              
-              guard let urlBack = url else { return }
-              
-              let stringUrl = "\(urlBack)"
-              
-              strongSelf.fileURL.append(stringUrl)
-              
-            }
-          })
-        }
-      }
+      self.fileType.append(0)
+      
+      photoCollectionView.reloadData()
+      
+      self.uploadImageVisibleView[self.fileType.count - 1].isHidden = false
+      
+      self.uploadImageVisibleView[self.fileType.count - 1].image = pickedImage
+      
+      self.backgroundVisibleView[self.fileType.count - 1].backgroundColor = .clear
       
     } else {
       
       if let videoURL = info[.mediaURL ] as? NSURL {
         
-        let storageRef = Storage.storage().reference().child("TaskVideo").child("\(id).mov")
-        
         let videoTransferUrl = videoURL as URL
         
-        var movieData: Data?
-        do {
-          
-          movieData = try Data(contentsOf: videoTransferUrl, options: .alwaysMapped)
-        } catch {
-          print(error)
-          movieData = nil
-          return
-        }
+        self.videoReady.append(videoURL)
         
-        storageRef.putData(movieData!, metadata: nil ) { (_, error) in
-          
-          if error != nil {
-            
-            LKProgressHUD.dismiss()
-            
-            return
-          }
-          
-          storageRef.downloadURL { [weak self](url, error) in
-            
-            guard let strongSelf = self else { return }
-            
-            if error != nil {
-              
-              LKProgressHUD.dismiss()
-              
-              LKProgressHUD.showFailure(text: "Error", controller: strongSelf)
-              
-              return }
-            
-            strongSelf.fileType.append(1)
-            
-            strongSelf.uploadImageVisibleView[strongSelf.fileURL.count].backgroundColor = .clear
-            
-            strongSelf.backgroundVisibleView[strongSelf.fileURL.count].backgroundColor = .clear
-            
-            strongSelf.videoView[strongSelf.fileURL.count].isHidden = false
-           
-            LKProgressHUD.dismiss()
-            
-            let player = AVPlayer(url: videoTransferUrl)
-            
-            let playerLayer = AVPlayerLayer(player: player)
-            
-            playerLayer.frame = strongSelf.videoView[strongSelf.fileURL.count].bounds
-            
-            strongSelf.videoView[strongSelf.fileURL.count].layer.addSublayer(playerLayer)
-            
-            player.play()
-            
-            guard let urlBack = url else { return }
-            
-            let stringUrl = "\(urlBack)"
-            
-            strongSelf.fileURL.append(stringUrl)
-            
-          }
-        }
+        self.fileType.append(1)
+        
+        photoCollectionView.reloadData()
+        
+        self.uploadImageVisibleView[self.fileType.count - 1].backgroundColor = .clear
+        
+        self.backgroundVisibleView[self.fileType.count - 1].backgroundColor = .clear
+        
+        self.videoView[self.fileType.count - 1].isHidden = false
+        
+        LKProgressHUD.dismiss()
+        
+        let player = AVPlayer(url: videoTransferUrl)
+        
+        let playerLayer = AVPlayerLayer(player: player)
+        
+        playerLayer.frame = self.videoView[self.fileURL.count].bounds
+        
+        self.videoView[self.fileURL.count].layer.addSublayer(playerLayer)
+        
+        player.play()
       }      
     }
-    
     dismiss(animated: true, completion: nil)
   }
 }
@@ -439,32 +574,62 @@ extension PostMissionViewController: UITextFieldDelegate, UITextViewDelegate {
   func textFieldDidEndEditing(_ textField: UITextField) {
     
     if priceTextField.text != nil && missionContentTextView.text != nil && fileURL.count > 0 && selectIndex != nil {
-      
       postBtn.isEnabled = true
     } else {
-      
       postBtn.isEnabled = false
     }
   }
   
   func textViewDidEndEditing(_ textView: UITextView) {
     
-    if priceTextField.text != nil && missionContentTextView.text != nil && fileURL.count > 0 && selectIndex != nil {
-      
+    if priceTextField.text != nil && missionContentTextView.text != nil && selectIndex != nil {
       postBtn.isEnabled = true
     } else {
-      
+
       postBtn.isEnabled = false
     }
   }
 }
 
 extension PostMissionViewController: LocationManager {
-  
   func locationReturn(viewController: AddLocationViewController, lat: Double, long: Double) {
     
     self.lat = lat
-    
     self.long = long
+  }
+}
+
+extension PostMissionViewController: UploadDataManager {
+  func tapOnUpload(collectionViewCelll: PhotoCollectionViewCell) {
+    
+    let imagePickerAlertController = UIAlertController(title: "上傳圖片", message: "請選擇要上傳的圖片", preferredStyle: .actionSheet)
+    
+    let imageFromLibAction = UIAlertAction(title: "照片圖庫", style: .default) { (_) in
+      
+      if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+        
+        self.imagePickerController.sourceType = .photoLibrary
+        self.present(self.imagePickerController, animated: true, completion: nil)
+      }
+    }
+    let imageFromCameraAction = UIAlertAction(title: "相機", style: .default) { (_) in
+      
+      if UIImagePickerController.isSourceTypeAvailable(.camera) {
+        
+        self.imagePickerController.sourceType = .camera
+        self.present(self.imagePickerController, animated: true, completion: nil)
+      }
+    }
+    
+    let cancelAction = UIAlertAction(title: "取消", style: .cancel) { (_) in
+      
+      imagePickerAlertController.dismiss(animated: true, completion: nil)
+    }
+    
+    imagePickerAlertController.addAction(imageFromLibAction)
+    imagePickerAlertController.addAction(imageFromCameraAction)
+    imagePickerAlertController.addAction(cancelAction)
+    
+    present(imagePickerAlertController, animated: true, completion: nil)
   }
 }
