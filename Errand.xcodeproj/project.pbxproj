@@ -302,7 +302,6 @@
 			isa = PBXGroup;
 			children = (
 				FB638D7C23E56F6900030CB2 /* Map */,
-				FB6365FF23E2CF45008555BC /* MissionDetail */,
 				FB4BF7B223E286FD00C4C05A /* MissionList */,
 				FB24EC1023D96CED00FA3F02 /* PostMission */,
 				FB752ABC23D5E55600BF3852 /* Background */,
@@ -425,6 +424,7 @@
 		FB752ABC23D5E55600BF3852 /* Background */ = {
 			isa = PBXGroup;
 			children = (
+				FB6365FF23E2CF45008555BC /* MissionDetail */,
 				FB752ABD23D5E57900BF3852 /* Background.swift */,
 			);
 			path = Background;

@@ -47,12 +47,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   
   @IBOutlet weak var uploadPhotoBtn: UIButton!
   
-  @IBOutlet var backgroundVisibleView: [UIView]!
-  
-  @IBOutlet var uploadImageVisibleView: [UIImageView]!
-  
-  @IBOutlet var videoView: [UIView]!
-  
   @IBOutlet weak var priceLabel: UILabel!
   
   @IBOutlet weak var priceTextField: UITextField!
@@ -68,6 +62,10 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   let imagePickerController = UIImagePickerController()
   
   let backgroundManager = BackgroundManager.shared
+  
+  var photoCounter = 0
+  
+  var videoCounter = 0
   
   var imageReady: [UIImage] = []
   
@@ -348,23 +346,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
     
     imagePickerController.mediaTypes = [kUTTypeMovie as String, kUTTypeImage as String]
     
-    for count in 0 ..< uploadImageVisibleView.count {
-      
-      uploadImageVisibleView[count].isHidden = true
-    }
-    
-    for count in 0 ..< videoView.count {
-      
-      videoView[count].isHidden = true
-    }
-    
-    for count in 0 ..< videoView.count {
-      
-      backgroundVisibleView[count].layer.shadowOpacity = 0.2
-      
-      backgroundVisibleView[count].layer.shadowOffset = CGSize(width: 3, height: 3)
-    }
-    
   }
   
   @IBAction func addLocationAct(_ sender: Any) {
@@ -425,57 +406,55 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
       
     } else {
       
-      var photoCounter = 0
-      
-      var videoCounter = 0
-      
       guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photo", for: indexPath) as? PhotoCollectionViewCell else { return UICollectionViewCell() }
       
       cell.delegate = self
       
       if fileType.count == 0 {
-        
-        cell.backgroundColor = .green
-        
+
+        cell.backgroundColor = .white
+
         cell.addPhotoBtn.isHidden = false
-        
+
         cell.photoImageView.isHidden = true
-        
+
         return cell
       } else if indexPath.row != fileType.count && fileType[indexPath.row] == 0 {
         
+        cell.photoImageView.isHidden = false
+
         cell.addPhotoBtn.isHidden = true
-        
+
+        cell.backgroundColor = .clear
+
         cell.photoImageView.image = imageReady[photoCounter]
-        
+
         photoCounter += 1
-        
+
         return cell
       } else if indexPath.row != fileType.count && fileType[indexPath.row] == 1 {
-        
+
         cell.photoImageView.isHidden = true
 
         let player = AVPlayer(url: videoReady[videoCounter] as URL)
-        
+
         let playerLayer = AVPlayerLayer(player: player)
-        
+
         playerLayer.frame = cell.contentView.bounds
-        
+
         cell.layer.addSublayer(playerLayer)
-        
+
         videoCounter += 1
 
         player.play()
-        
+
         return cell
       } else {
-        
-        cell.backgroundColor = .red
-        
+
         cell.addPhotoBtn.isHidden = false
-        
+
         cell.photoImageView.isHidden = true
-        
+
         return cell
       }
     }
@@ -500,7 +479,7 @@ extension PostMissionViewController: UICollectionViewDelegateFlowLayout {
       return CGSize(width: screenwidth / 2.5, height: screenheight / 20)
      } else {
       
-      return CGSize(width: 100, height: 100)
+      return CGSize(width: 150, height: 150)
     }
      
   }
@@ -526,19 +505,15 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
       
       self.fileType.append(0)
       
+      photoCounter = 0
+      
+      videoCounter = 0
+      
       photoCollectionView.reloadData()
-      
-      self.uploadImageVisibleView[self.fileType.count - 1].isHidden = false
-      
-      self.uploadImageVisibleView[self.fileType.count - 1].image = pickedImage
-      
-      self.backgroundVisibleView[self.fileType.count - 1].backgroundColor = .clear
       
     } else {
       
       if let videoURL = info[.mediaURL ] as? NSURL {
-        
-        let videoTransferUrl = videoURL as URL
         
         self.videoReady.append(videoURL)
         
@@ -546,23 +521,8 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
         
         photoCollectionView.reloadData()
         
-        self.uploadImageVisibleView[self.fileType.count - 1].backgroundColor = .clear
-        
-        self.backgroundVisibleView[self.fileType.count - 1].backgroundColor = .clear
-        
-        self.videoView[self.fileType.count - 1].isHidden = false
-        
         LKProgressHUD.dismiss()
         
-        let player = AVPlayer(url: videoTransferUrl)
-        
-        let playerLayer = AVPlayerLayer(player: player)
-        
-        playerLayer.frame = self.videoView[self.fileURL.count].bounds
-        
-        self.videoView[self.fileURL.count].layer.addSublayer(playerLayer)
-        
-        player.play()
       }      
     }
     dismiss(animated: true, completion: nil)

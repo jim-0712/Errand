@@ -15,6 +15,24 @@ protocol UploadDataManager: AnyObject {
 
 class PhotoCollectionViewCell: UICollectionViewCell {
   
+  override init(frame: CGRect) {
+    
+    super.init(frame: frame)
+    
+    self.contentView.layer.borderColor = UIColor.black.cgColor
+    
+    self.contentView.layer.borderWidth = 1.0
+  }
+  
+  required init?(coder: NSCoder) {
+    
+    super.init(coder: coder)
+    
+    self.contentView.layer.borderColor = UIColor.black.cgColor
+       
+    self.contentView.layer.borderWidth = 1.0
+  }
+  
   weak var delegate: UploadDataManager?
     
   @IBOutlet weak var photoImageView: UIImageView!
