@@ -53,7 +53,9 @@ class UserManager {
     
     let userId = Auth.auth().currentUser?.uid
     
-    let info = AccountInfo(email: email, nickname: nickName, gender: gender, task: task, friends: friends, photo: photo, report: report, blacklist: blacklist, onTask: false)
+    guard let deviceToken = UserDefaults.standard.value(forKey: "deviceToken") as? String else { return }
+    
+    let info = AccountInfo(email: email, nickname: nickName, gender: gender, task: task, friends: friends, photo: photo, report: report, blacklist: blacklist, onTask: false, deviceToken: deviceToken)
     
     self.dbF.collection(classification).document(email).setData(info.toDict) { error in
       
@@ -145,7 +147,7 @@ class UserManager {
       } else {
         
         completion(Result.success("Success"))
-        
+      
       }
     }
   }
@@ -177,6 +179,22 @@ class UserManager {
       completion(.success("Update Success"))
     }
   }
+  
+  func updateDeviceToken() {
+    
+    guard let email = Auth.auth().currentUser?.email,
+      let deviceToken = UserDefaults.standard.value(forKey: "deviceToken") as? String else { return }
+    
+    dbF.collection("Users").whereField("email", isEqualTo: email).getDocuments { (querySnapshot, error) in
+      
+      guard let document = querySnapshot?.documents.first else { return }
+      
+      document.reference.updateData(["deviceToken": deviceToken]) { error in
+        
+      print("123123123123213")
+    }
+  }
+}
   
   func goToSign(viewController: UIViewController) {
     
@@ -223,9 +241,12 @@ class UserManager {
           let friends = quary.documents.first?.data()["friends"] as? [String],
           let photo = quary.documents.first?.data()["photo"] as? String,
           let blacklist = quary.documents.first?.data()["blacklist"] as? [String],
-          let report = quary.documents.first?.data()["report"] as? Int else { return }
+          let report = quary.documents.first?.data()["report"] as? Int,
+          let deviceToken = quary.documents.first?.data()["deviceToken"] as? String else { return }
         
-        let dataReturn = AccountInfo(email: email, nickname: nickname, gender: gender, task: task, friends: friends, photo: photo, report: report, blacklist: blacklist, onTask: onTask)
+        let dataReturn = AccountInfo(email: email, nickname: nickname, gender: gender, task: task, friends: friends, photo: photo, report: report, blacklist: blacklist, onTask: onTask, deviceToken: deviceToken)
+        
+        print(dataReturn)
         
         completion(.success(dataReturn))
       }

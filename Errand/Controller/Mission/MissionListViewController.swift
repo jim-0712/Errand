@@ -10,6 +10,8 @@ import UIKit
 
 class MissionListViewController: UIViewController {
   
+  var refreshControl: UIRefreshControl!
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -18,7 +20,6 @@ class MissionListViewController: UIViewController {
     setUp()
     getTaskData()
     setUpSearch()
-    
   }
 
   @objc func reloadTable() {
@@ -55,6 +56,8 @@ class MissionListViewController: UIViewController {
         DispatchQueue.main.async {
           
           self.postMissionBtn.isHidden = false
+          
+          self.refreshControl.endRefreshing()
           
           self.taskListTable.reloadData()
           
@@ -98,14 +101,24 @@ class MissionListViewController: UIViewController {
   
   func setUpSearch() {
     
+//    self.extendedLayoutIncludesOpaqueBars = true
+    refreshControl = UIRefreshControl()
+    taskListTable.addSubview(refreshControl)
+    refreshControl.addTarget(self, action: #selector(loadData), for: .valueChanged)
     self.navigationItem.searchController = searchCustom
-    self.navigationController?.navigationBar.prefersLargeTitles = true
+//    self.navigationController?.navigationBar.prefersLargeTitles = true
     searchCustom.searchBar.searchBarStyle = .prominent
     searchCustom.searchBar.delegate = self
     searchCustom.searchBar.placeholder = "搜尋發文主"
     searchCustom.searchResultsUpdater = self
     searchCustom.searchBar.sizeToFit()
     searchCustom.obscuresBackgroundDuringPresentation = false
+    
+  }
+  
+  @objc func loadData() {
+    
+    getTaskData()
   }
   
   func getTaskData() {
@@ -179,19 +192,13 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
     
     guard let data = self.data else { return UITableViewCell() }
     
-    let time = Date.init(timeIntervalSince1970: TimeInterval((data.time)))
+    self.timeString = TaskManager.shared.timeConverter(time: data.time)
     
-    let dateFormatter = DateFormatter()
-    
-    dateFormatter.dateFormat = "yyyy-MM-dd hh:mm"
-    
-    let timeConvert = dateFormatter.string(from: time)
-    
-    self.timeString = timeConvert
+    guard let time = timeString else { return UITableViewCell() }
     
     let missionText = TaskManager.shared.filterClassified(classified: data.classfied + 1)
     
-    cell.setUp(missionImage: missionText[1], author: data.nickname, missionLabel: missionText[0], price: data.money, time: timeConvert, timeInt: data.time)
+    cell.setUp(missionImage: missionText[1], author: data.nickname, missionLabel: missionText[0], price: data.money, time: time, timeInt: data.time)
   
     return cell
   }

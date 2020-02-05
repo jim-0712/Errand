@@ -22,9 +22,7 @@ class ViewController: UIViewController {
     super.viewDidLoad()
     
     setUpBtn()
-    
     visitorRegisterBtn.isEnabled = false
-    
     IQKeyboardManager.shared().isEnabled = true
     
     NotificationCenter.default.addObserver(self, selector: #selector(goToUserInfo), name: Notification.Name("userInfo"), object: nil)
@@ -98,13 +96,15 @@ class ViewController: UIViewController {
                 
                 strongSelf.photo = photoBack
                 
-                UserManager.shared.createDataBase(classification: "Users", gender: 1, nickName: "", email: email, photo: strongSelf.photo) { result in
+                UserManager.shared.createDataBase(classification: "Users", gender: 1, nickName: "發抖", email: email, photo: strongSelf.photo) { result in
                   
                   switch result {
                     
                   case .success(let success):
                     
                     UserManager.shared.isTourist = false
+                    
+                    UserManager.shared.updateDeviceToken()
                     
                     LKProgressHUD.showSuccess(text: success, controller: strongSelf)
                     
@@ -275,6 +275,8 @@ class ViewController: UIViewController {
       case .success(let success):
         
         UserManager.shared.isTourist = false
+        
+        UserManager.shared.updateDeviceToken()
         
         LKProgressHUD.showSuccess(text: success, controller: strongSelf)
         

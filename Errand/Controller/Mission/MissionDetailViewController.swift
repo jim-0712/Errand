@@ -17,15 +17,10 @@ class MissionDetailViewController: UIViewController {
     super.viewDidLoad()
     
     URLSessionConfiguration.default.multipathServiceType = .handover
-    
     setUp()
-    
     setUpBtn()
-    
     setUppageControll()
-    
     setUpImageView()
-    // Do any additional setup after loading the view.
   }
   
   override func viewDidLayoutSubviews() {
@@ -152,6 +147,10 @@ class MissionDetailViewController: UIViewController {
         
         button.setImage(UIImage(named: "play-button"), for: .normal)
         
+        button.backgroundColor = .red
+        
+        button.addTarget(self, action: #selector(videoPlay(sender:)), for: .touchUpInside)
+        
         return button
       }()
       
@@ -173,10 +172,27 @@ class MissionDetailViewController: UIViewController {
       
       taskVideoView.layer.addSublayer(playerLayer)
       
-            player.play()
+      taskVideoView.addSubview(playButton)
+      
+      NSLayoutConstraint.activate([
+      
+        playButton.centerXAnchor.constraint(equalTo: taskVideoView.centerXAnchor),
+        playButton.centerYAnchor.constraint(equalTo: taskVideoView.centerYAnchor),
+        playButton.widthAnchor.constraint(equalToConstant: 50),
+        playButton.heightAnchor.constraint(equalToConstant: 50)
+      ])
       
     }
   }
+  
+  @objc func videoPlay(sender: UIButton) {
+    
+    guard let layer = sender.superview?.layer as? AVPlayerLayer else { return }
+    
+    layer.player?.play()
+  
+  }
+
 }
 
 extension MissionDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource {

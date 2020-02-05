@@ -199,6 +199,9 @@ PODS:
   - Firebase/Firestore (6.14.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 1.8.2)
+  - Firebase/Messaging (6.14.0):
+    - Firebase/CoreOnly
+    - FirebaseMessaging (~> 4.1.10)
   - Firebase/Storage (6.14.0):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 3.4.3)
@@ -211,6 +214,7 @@ PODS:
     - GoogleUtilities/Network (~> 6.0)
     - "GoogleUtilities/NSData+zlib (~> 6.0)"
     - nanopb (= 0.3.9011)
+  - FirebaseAnalyticsInterop (1.5.0)
   - FirebaseAuth (6.4.1):
     - FirebaseAuthInterop (~> 1.0)
     - FirebaseCore (~> 6.2)
@@ -251,6 +255,15 @@ PODS:
     - FirebaseCore (~> 6.5)
     - GoogleUtilities/Environment (~> 6.4)
     - GoogleUtilities/UserDefaults (~> 6.4)
+  - FirebaseMessaging (4.1.10):
+    - FirebaseAnalyticsInterop (~> 1.3)
+    - FirebaseCore (~> 6.2)
+    - FirebaseInstanceID (~> 4.1)
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.2)
+    - GoogleUtilities/Environment (~> 6.2)
+    - GoogleUtilities/Reachability (~> 6.2)
+    - GoogleUtilities/UserDefaults (~> 6.2)
+    - Protobuf (>= 3.9.2, ~> 3.9)
   - FirebaseStorage (3.4.3):
     - FirebaseAuthInterop (~> 1.0)
     - FirebaseCore (~> 6.0)
@@ -329,6 +342,8 @@ PODS:
     - nanopb/encode (= 0.3.9011)
   - nanopb/decode (0.3.9011)
   - nanopb/encode (0.3.9011)
+  - Protobuf (3.11.3)
+  - Refreshable (1.2.0)
   - SwiftLint (0.38.0)
 
 DEPENDENCIES:
@@ -341,6 +356,7 @@ DEPENDENCIES:
   - Firebase/Core
   - Firebase/Database
   - Firebase/Firestore
+  - Firebase/Messaging
   - Firebase/Storage
   - GoogleMaps
   - GooglePlaces
@@ -348,6 +364,7 @@ DEPENDENCIES:
   - IQKeyboardManager
   - JGProgressHUD
   - Kingfisher
+  - Refreshable
   - SwiftLint
 
 SPEC REPOS:
@@ -362,6 +379,7 @@ SPEC REPOS:
     - FBSDKLoginKit
     - Firebase
     - FirebaseAnalytics
+    - FirebaseAnalyticsInterop
     - FirebaseAuth
     - FirebaseAuthInterop
     - FirebaseCore
@@ -370,6 +388,7 @@ SPEC REPOS:
     - FirebaseDatabase
     - FirebaseFirestore
     - FirebaseInstanceID
+    - FirebaseMessaging
     - FirebaseStorage
     - GoogleAppMeasurement
     - GoogleDataTransport
@@ -387,6 +406,8 @@ SPEC REPOS:
     - Kingfisher
     - leveldb-library
     - nanopb
+    - Protobuf
+    - Refreshable
     - SwiftLint
 
 SPEC CHECKSUMS:
@@ -400,6 +421,7 @@ SPEC CHECKSUMS:
   FBSDKLoginKit: c7c6ffd9ca9ea45aee32361840af040ad8f6706a
   Firebase: 0219bb4782eb1406f1b9b0628a2e625484ce910d
   FirebaseAnalytics: f68b9f3f1241385129ae0a83b63627fc420c05e5
+  FirebaseAnalyticsInterop: 3f86269c38ae41f47afeb43ebf32a001f58fcdae
   FirebaseAuth: 831577b184ecaba38bc886768c1c22a450cc44e3
   FirebaseAuthInterop: 0ffa57668be100582bb7643d4fcb7615496c41fc
   FirebaseCore: 632e05cc5e1199d9147122c16d92305eb04c34bd
@@ -408,6 +430,7 @@ SPEC CHECKSUMS:
   FirebaseDatabase: 9db0c9bb6d3308870cc831a8a6d70c82fd169f37
   FirebaseFirestore: 52120e2833f804a874ba1a9f59aab864a8ae2286
   FirebaseInstanceID: ce993a3c3670a8f5d47ce371ac5d143c560608c5
+  FirebaseMessaging: 089b7a4991425783384acc8bcefcd78c0af913bd
   FirebaseStorage: 93fe2f8190a01bfb2b2c4932df7d679744c4ef1d
   GoogleAppMeasurement: db118eb61a97dd8c4f7014e368d3c335cbbcf80a
   GoogleDataTransport: 8e9b210c97d55fbff306cc5468ff91b9cb32dcf5
@@ -425,8 +448,10 @@ SPEC CHECKSUMS:
   Kingfisher: dc6e0f53bb5b12c3e75bedb0e01bbd7a640eea69
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
+  Protobuf: 0e94afe3b47cb11876eb6aee296638711a24bf75
+  Refreshable: 0f76b6d198178e6cd2823a553fbf4e84a3dba527
   SwiftLint: 4105f061f9812b214568b736dab580ab2c73a582
 
-PODFILE CHECKSUM: 5c90abc6f9933ee6d306d986ba090d4e24bf1cb1
+PODFILE CHECKSUM: 820dd40615f94babeac7f64bb84cc73eea04c34f
 
 COCOAPODS: 1.8.4

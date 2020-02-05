@@ -20,7 +20,6 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
     setUp()
   }
   

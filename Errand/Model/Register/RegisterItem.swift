@@ -65,6 +65,8 @@ struct AccountInfo {
   
   let onTask: Bool
   
+  let deviceToken: String
+  
   var toDict: [String: Any] {
     
     return [  "email": email,
@@ -83,7 +85,9 @@ struct AccountInfo {
               
               "report": report,
               
-              "onTask": onTask
+              "onTask": onTask,
+              
+              "deviceToken": deviceToken
           ]
   }
 }
