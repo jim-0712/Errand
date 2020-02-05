@@ -10,6 +10,8 @@ import UIKit
 
 class MissionListViewController: UIViewController {
   
+  var refreshControl: UIRefreshControl!
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -55,6 +57,8 @@ class MissionListViewController: UIViewController {
           
           self.postMissionBtn.isHidden = false
           
+          self.refreshControl.endRefreshing()
+          
           self.taskListTable.reloadData()
           
           LKProgressHUD.dismiss()
@@ -97,14 +101,24 @@ class MissionListViewController: UIViewController {
   
   func setUpSearch() {
     
+//    self.extendedLayoutIncludesOpaqueBars = true
+    refreshControl = UIRefreshControl()
+    taskListTable.addSubview(refreshControl)
+    refreshControl.addTarget(self, action: #selector(loadData), for: .valueChanged)
     self.navigationItem.searchController = searchCustom
-    self.navigationController?.navigationBar.prefersLargeTitles = true
+//    self.navigationController?.navigationBar.prefersLargeTitles = true
     searchCustom.searchBar.searchBarStyle = .prominent
     searchCustom.searchBar.delegate = self
     searchCustom.searchBar.placeholder = "搜尋發文主"
     searchCustom.searchResultsUpdater = self
     searchCustom.searchBar.sizeToFit()
     searchCustom.obscuresBackgroundDuringPresentation = false
+    
+  }
+  
+  @objc func loadData() {
+    
+    getTaskData()
   }
   
   func getTaskData() {

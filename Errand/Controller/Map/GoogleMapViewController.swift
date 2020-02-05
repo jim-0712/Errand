@@ -122,11 +122,16 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
         
         TaskManager.shared.taskData = []
         
-        strongSelf.taskDataReturn = taskData.filter({ info in
+        strongSelf.taskDataReturn = taskData.filter({ [weak self] info in
+          
+          guard let strongSelf = self else { return false }
           
           let distance = MapManager.shared.getDistance(lat1: info.lat, lng1: info.long, lat2: strongSelf.finalLat, lng2: strongSelf.finalLong)
           
-          if distance <= kiloDouble {
+          if strongSelf.currentClassified == 0 && distance <= kiloDouble {
+            
+            return true
+          } else if distance <= kiloDouble && info.classfied == strongSelf.currentClassified {
             
             return true
           } else {
@@ -167,7 +172,10 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   
   @IBAction func checkDetailAct(_ sender: Any) {
     
+    performSegue(withIdentifier: "Mapdetail", sender: nil)
   }
+
+  var currentClassified = 0
   
   var finalLat: Double = 0.0
   
@@ -404,7 +412,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     
-    if segue.identifier == "taskDetail" {
+    if segue.identifier == "Mapdetail" {
       
       guard let detailVC = segue.destination as? MissionDetailViewController else { return }
       
@@ -421,18 +429,24 @@ extension GoogleMapViewController: GMSMapViewDelegate {
   
   func mapView(_ mapView: GMSMapView, didTapInfoWindowOf marker: GMSMarker) {
     
-    isTapOnContent = !isTapOnContent
+//    isTapOnContent = !isTapOnContent
+    
+    isTapOnContent = true
     
     guard let snippet = marker.snippet,
       let classified = marker.title,
       let lat = myLocationManager.location?.coordinate.latitude,
       let long = myLocationManager.location?.coordinate.longitude else { return }
     
+      let classifiedReturn = TaskManager.shared.filterClassifiedToInt(task: classified) - 1
+    
     for count in 0 ..< taskDataReturn.count {
       
       let info = taskDataReturn[count]
       
-      if info.nickname == snippet {
+      if info.nickname == snippet && info.classfied == classifiedReturn {
+        
+        self.specificData = [info]
         
         let distance = MapManager.shared.getDistance(lat1: info.lat, lng1: info.long, lat2: lat, lng2: long)
         
@@ -483,8 +497,12 @@ extension GoogleMapViewController: UICollectionViewDelegate, UICollectionViewDat
     
     if indexPath.row == 0 {
       
+      currentClassified = 0
+      
       self.getTaskData()
     } else {
+      
+      currentClassified = indexPath.row
       
       TaskManager.shared.taskData = []
       

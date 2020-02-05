@@ -42,6 +42,10 @@ struct TaskInfo {
   
   let personPhoto: String
   
+  let requester: [String]
+  
+  let deviceToken: String
+  
   var toDict: [String: Any] {
     
     return [   "email": email,
@@ -68,7 +72,11 @@ struct TaskInfo {
               
               "fileType": fileType,
       
-              "personPhoto": personPhoto
+              "personPhoto": personPhoto,
+              
+              "requester": requester,
+              
+              "deviceToken": deviceToken
     
           ]
   }

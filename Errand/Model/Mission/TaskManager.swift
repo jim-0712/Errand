@@ -36,12 +36,13 @@ class TaskManager {
     guard let email = UserManager.shared.currentUserInfo?.email,
       let nickname = UserManager.shared.currentUserInfo?.nickname,
       let gender = UserManager.shared.currentUserInfo?.gender,
-      let photo = Auth.auth().currentUser?.photoURL else {return }
+      let photo = Auth.auth().currentUser?.photoURL,
+      let deviceToken = UserManager.shared.currentUserInfo?.deviceToken else {return }
     let lat = coordinate.latitude as Double
     let long = coordinate.longitude as Double
     let personPhoto = "\(photo)"
     
-    let info = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: taskData[0], detail: detail, lat: lat, long: long, money: taskData[1], classfied: taskData[2], status: taskData[3], fileType: fileType, personPhoto: personPhoto)
+    let info = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: taskData[0], detail: detail, lat: lat, long: long, money: taskData[1], classfied: taskData[2], status: taskData[3], fileType: fileType, personPhoto: personPhoto, requester: [], deviceToken: deviceToken)
     
     self.dbF.collection("Tasks").document(email).setData(info.toDict) { error in
       
@@ -85,9 +86,11 @@ class TaskManager {
             let status = info.data()["status"] as? Int,
             let fileType = info.data()["fileType"] as? [Int],
             let classfied = info.data()["classfied"] as? Int,
-            let personPhoto = info.data()["personPhoto"] as? String else { return }
+            let personPhoto = info.data()["personPhoto"] as? String,
+            let requester = info.data()["requester"] as? [String],
+            let deviceToken = info.data()["deviceToken"] as? String else { return }
           
-          let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, fileType: fileType, personPhoto: personPhoto)
+          let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, fileType: fileType, personPhoto: personPhoto, requester: requester, deviceToken: deviceToken)
           
           strongSelf.taskData.append(dataReturn)
         }
@@ -125,9 +128,11 @@ class TaskManager {
             let status = info.data()["status"] as? Int,
             let fileType = info.data()["fileType"] as? [Int],
             let classfied = info.data()["classfied"] as? Int,
-            let personPhoto = info.data()["personPhoto"] as? String else { return }
+            let personPhoto = info.data()["personPhoto"] as? String,
+            let requester = info.data()["requester"] as? [String],
+            let deviceToken = info.data()["deviceToken"] as? String else { return }
           
-          let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, fileType: fileType, personPhoto: personPhoto)
+          let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, fileType: fileType, personPhoto: personPhoto, requester: requester, deviceToken: deviceToken)
           
           strongSelf.taskData.append(dataReturn)
         }
@@ -169,6 +174,41 @@ class TaskManager {
       
       return [self.taskClassified[8].title, self.taskClassified[8].image]
     }
+  }
+  
+  func filterClassifiedToInt(task: String) -> Int {
+    
+    switch task {
+      
+    case taskClassified[0].title :
+      
+      return 0
+    case taskClassified[1].title :
+      
+      return 1
+    case taskClassified[2].title :
+      
+      return 2
+    case taskClassified[3].title :
+      
+      return 3
+    case taskClassified[4].title :
+      
+      return 4
+    case taskClassified[5].title :
+      
+      return 5
+    case taskClassified[6].title :
+      
+      return 6
+    case taskClassified[7].title :
+      
+      return 7
+    default:
+      
+      return 8
+    }
+    
   }
   
   func timeConverter(time: Int) -> String {

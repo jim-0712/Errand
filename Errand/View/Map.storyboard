@@ -105,7 +105,7 @@
                                         <state key="normal" title="查看詳情"/>
                                         <connections>
                                             <action selector="checkDetailAct:" destination="6gx-gd-c6b" eventType="touchUpInside" id="LJR-dA-V48"/>
-                                            <segue destination="BRH-cl-CQc" kind="presentation" modalPresentationStyle="fullScreen" id="HSz-5k-Eej"/>
+                                            <segue destination="BRH-cl-CQc" kind="presentation" identifier="Mapdetail" modalPresentationStyle="fullScreen" id="HSz-5k-Eej"/>
                                         </connections>
                                     </button>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="money" translatesAutoresizingMaskIntoConstraints="NO" id="cgM-1O-sD3">
@@ -233,7 +233,7 @@
                                             <constraint firstAttribute="height" constant="36" id="rc1-dW-cxF"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rcR-uT-U3j">
                                         <rect key="frame" x="12" y="78" width="156" height="30"/>

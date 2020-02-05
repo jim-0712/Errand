@@ -479,7 +479,7 @@ extension PostMissionViewController: UICollectionViewDelegateFlowLayout {
       return CGSize(width: screenwidth / 2.5, height: screenheight / 20)
      } else {
       
-      return CGSize(width: 150, height: 150)
+      return CGSize(width: 120, height: 120)
     }
      
   }
@@ -490,7 +490,7 @@ extension PostMissionViewController: UICollectionViewDelegateFlowLayout {
       return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
     } else {
       
-       return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+       return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
     }
   }
 }
@@ -509,8 +509,6 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
       
       videoCounter = 0
       
-      photoCollectionView.reloadData()
-      
     } else {
       
       if let videoURL = info[.mediaURL ] as? NSURL {
@@ -519,12 +517,15 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
         
         self.fileType.append(1)
         
-        photoCollectionView.reloadData()
+        photoCounter = 0
+        
+        videoCounter = 0
         
         LKProgressHUD.dismiss()
         
       }      
     }
+    photoCollectionView.reloadData()
     dismiss(animated: true, completion: nil)
   }
 }
