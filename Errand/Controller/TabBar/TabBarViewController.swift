@@ -15,6 +15,8 @@ private enum Tab {
     case missionList
 
     case profile
+    
+    case requester
 
     func controller() -> UIViewController {
 
@@ -28,6 +30,7 @@ private enum Tab {
 
         case .profile: controller = UIStoryboard.profile.instantiateInitialViewController()!
 
+        case .requester: controller = UIStoryboard.requester.instantiateInitialViewController()!
         }
 
         controller.tabBarItem = tabBarItem()
@@ -62,13 +65,19 @@ private enum Tab {
                 image: UIImage.init(named: "mission"),
                 selectedImage: UIImage.init(named: "mission2")
             )
-        }
+        case .requester:
+          return UITabBarItem(
+              title: nil,
+              image: UIImage.init(named: "mission"),
+              selectedImage: UIImage.init(named: "mission2")
+          )
+      }
     }
 }
 
 class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
 
-  private let tabs: [Tab] = [.map, .missionList, .profile]
+  private let tabs: [Tab] = [.map, .missionList, .requester, .profile]
         
         var trolleyTabBarItem: UITabBarItem!
         

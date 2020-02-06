@@ -27,6 +27,7 @@ target 'Errand' do
   pod 'Fabric', '~> 1.10.2'
   pod 'Crashlytics', '~> 3.14.0'
   pod "Refreshable"
+  pod "Cosmos"
 
   target 'ErrandTests' do
     inherit! :search_paths

@@ -53,18 +53,13 @@ class ViewController: UIViewController {
   }
   
   @IBAction func visitorAct(_ sender: Any) {
-    
     UserManager.shared.isTourist = true
-    
     guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? UITabBarController else { return }
-    
     self.present(mapVc, animated: true, completion: nil)
   }
   
   @IBAction func googleLoginAct(_ sender: Any) {
-    
     GIDSignIn.sharedInstance()?.signIn()
-    
   }
   
   @IBAction func fbLoginAct(_ sender: Any) {
@@ -81,6 +76,8 @@ class ViewController: UIViewController {
             
           case .success:
             
+            LKProgressHUD.show(controller: self)
+            
             UserManager.shared.loadFBProfile(controller: self) { [weak self] result in
               
               guard let strongSelf = self else { return }
@@ -93,7 +90,7 @@ class ViewController: UIViewController {
                 
                 guard let photoBack = Auth.auth().currentUser?.photoURL?.absoluteString,
                   let email = Auth.auth().currentUser?.email else { return }
-                
+      
                 strongSelf.photo = photoBack
                 
                 UserManager.shared.createDataBase(classification: "Users", gender: 1, nickName: "發抖", email: email, photo: strongSelf.photo) { result in
@@ -102,9 +99,9 @@ class ViewController: UIViewController {
                     
                   case .success(let success):
                     
+                    LKProgressHUD.dismiss()
                     UserManager.shared.isTourist = false
-                    
-                    UserManager.shared.updateDeviceToken()
+                    UserManager.shared.updatefcmToken()
                     
                     LKProgressHUD.showSuccess(text: success, controller: strongSelf)
                     
@@ -121,23 +118,20 @@ class ViewController: UIViewController {
                 
               case .failure(let error):
                 
+                LKProgressHUD.dismiss()
                 LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
               }
             }
-            
             LKProgressHUD.showSuccess(text: "Success", controller: self)
             
           case .failure(let error):
             
             LKProgressHUD.showFailure(text: error.localizedDescription, controller: self)
-            
           }
         }
-        
       case .failure(let error):
         
         LKProgressHUD.showFailure(text: error.localizedDescription, controller: self)
-        
       }
     }
   }
@@ -149,7 +143,6 @@ class ViewController: UIViewController {
       guard let account = accountText.text,
         
         accountText.text != "" else {
-          
           LKProgressHUD.showFailure(text: RegistMessage.emptyAccount.rawValue, controller: self)
           
           return }
@@ -157,7 +150,6 @@ class ViewController: UIViewController {
       guard let password = passwordText.text,
         
         passwordText.text != "" else {
-          
           LKProgressHUD.showFailure(text: RegistMessage.emptyPassword.rawValue, controller: self)
           
           return }
@@ -215,15 +207,11 @@ class ViewController: UIViewController {
       let matches = regEx.matches(in: email, options: [], range: NSRange(location: 0, length: email.count))
       
       if matches.count > 0 {
-        
         return true
       } else {
-        
         return false
       }
-      
     } catch {
-      
       fatalError("Wrong email pattern")
     }
   }
@@ -231,29 +219,17 @@ class ViewController: UIViewController {
   func setUpBtn() {
     
     fbLoginBtn.layer.cornerRadius = 20
-    
     visitorRegisterBtn.layer.cornerRadius = 20
-    
     googleLoginBtn.layer.cornerRadius = 20
-    
     appleLoginBtn.layer.cornerRadius = 20
-    
     visitorBtn.layer.cornerRadius = 20
-    
     appleLoginBtn.layer.borderWidth = 1.0
-    
     appleLoginBtn.layer.borderColor = UIColor.black.cgColor
-    
     GIDSignIn.sharedInstance()?.presentingViewController = self
-    
     accountText.delegate = self
-    
     passwordText.delegate = self
-    
     logoLabel.transform = CGAffineTransform(a: 1.0, b: -0.15, c: 0, d: 0.7, tx: 0, ty: 10)
-    
     let backView = backgroundManager.setUpView(view: self.view)
-    
     self.view.layer.insertSublayer(backView, at: 0)
   }
   
@@ -275,13 +251,10 @@ class ViewController: UIViewController {
       case .success(let success):
         
         UserManager.shared.isTourist = false
-        
-        UserManager.shared.updateDeviceToken()
-        
+        UserManager.shared.updatefcmToken()
         LKProgressHUD.showSuccess(text: success, controller: strongSelf)
-        
+  
         guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? TabBarViewController else { return }
-        
         strongSelf.present(mapVc, animated: true, completion: nil)
         
       case .failure(let error):
@@ -298,16 +271,10 @@ extension ViewController: UITextFieldDelegate {
   func textFieldDidEndEditing(_ textField: UITextField) {
     
     guard let account = accountText.text,
-      
-      accountText.text != "" else {
-        
-        return }
+      accountText.text != "" else { return }
     
     guard let password = passwordText.text,
-      
-      passwordText.text != "" else {
-        
-        return }
+      passwordText.text != "" else { return }
     
     isEmail = checkMail(email: account)
     

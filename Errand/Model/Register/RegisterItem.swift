@@ -49,23 +49,31 @@ struct AccountInfo {
   
   let email: String
   
-  let nickname: String
+  var nickname: String
   
-  let gender: Int
+  var gender: Int
   
-  let task: [String]
+  var task: [String]
   
-  let friends: [String]
+  var friends: [String]
   
-  let photo: String
+  var photo: String
   
-  let report: Int
+  var report: Int
 
-  let blacklist: [String]
+  var blacklist: [String]
   
-  let onTask: Bool
+  var onTask: Bool
   
-  let deviceToken: String
+  var fcmToken: String
+  
+  var status: Int
+  
+  var about: String
+  
+  var taskCount: Int
+  
+  var totalStar: Double
   
   var toDict: [String: Any] {
     
@@ -87,7 +95,15 @@ struct AccountInfo {
               
               "onTask": onTask,
               
-              "deviceToken": deviceToken
+              "fcmToken": fcmToken,
+              
+              "status": status,
+              
+              "about": about,
+              
+              "taskCount": taskCount,
+              
+              "totalStar": totalStar
           ]
   }
 }

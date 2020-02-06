@@ -109,18 +109,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
   }
   
   func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-    
-    print("Recived: \(userInfo)")
-    //Parsing userinfo:
-    var temp: NSDictionary = userInfo as NSDictionary
-    if let info = userInfo["aps"] as? Dictionary<String, AnyObject> {
-              guard let alertMsg = info["alert"] as? String else { return }
-              
-              let controller = UIAlertController(title: "怎麼可以忘了!", message: alertMsg, preferredStyle: .alert)
-              let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-              controller.addAction(okAction)
-
-             }
+//    
+//    print("Recived: \(userInfo)")
+//    //Parsing userinfo:
+////    var temp: NSDictionary = userInfo as NSDictionary
+//    if let info = userInfo["aps"] as? Dictionary<String, AnyObject> {
+//              guard let alertMsg = info["alert"] as? String else { return }
+//              
+//              let controller = UIAlertController(title: "怎麼可以忘了!", message: alertMsg, preferredStyle: .alert)
+//              let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+//              controller.addAction(okAction)
+//
+//             }
   }
   
   lazy var persistentContainer: NSPersistentContainer = {

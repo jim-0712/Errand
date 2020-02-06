@@ -76,17 +76,11 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
   func setUp() {
     
     addLocationMap.delegate = self
-    
     myLocationManager.delegate = self
-    
     guard let center = myLocationManager.location?.coordinate else { return }
-    
     let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 18)
-    
     addLocationMap.camera = myArrange
-    
     finalLat = center.latitude
-    
     finalLong = center.longitude
   }
   
@@ -104,9 +98,7 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     controller.addAction(okAction)
-    
     let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
-    
     controller.addAction(cancelAction)
     
     present(controller, animated: true, completion: nil)
@@ -118,7 +110,6 @@ extension AddLocationViewController: GMSMapViewDelegate {
   func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
     
     finalLat = position.target.latitude
-    
     finalLong = position.target.longitude
   }
 }

@@ -53,9 +53,9 @@ class UserManager {
     
     let userId = Auth.auth().currentUser?.uid
     
-    guard let deviceToken = UserDefaults.standard.value(forKey: "deviceToken") as? String else { return }
+    guard let token = UserDefaults.standard.value(forKey: "fcmToken") as? String else { return }
     
-    let info = AccountInfo(email: email, nickname: nickName, gender: gender, task: task, friends: friends, photo: photo, report: report, blacklist: blacklist, onTask: false, deviceToken: deviceToken)
+    let info = AccountInfo(email: email, nickname: nickName, gender: gender, task: task, friends: friends, photo: photo, report: report, blacklist: blacklist, onTask: false, fcmToken: token, status: 0, about: "", taskCount: 0, totalStar: 0.0)
     
     self.dbF.collection(classification).document(email).setData(info.toDict) { error in
       
@@ -180,16 +180,16 @@ class UserManager {
     }
   }
   
-  func updateDeviceToken() {
+  func updatefcmToken() {
     
     guard let email = Auth.auth().currentUser?.email,
-      let deviceToken = UserDefaults.standard.value(forKey: "deviceToken") as? String else { return }
+      let token = UserDefaults.standard.value(forKey: "fcmToken") as? String else { return }
     
-    dbF.collection("Users").whereField("email", isEqualTo: email).getDocuments { (querySnapshot, error) in
+    dbF.collection("Users").whereField("email", isEqualTo: email).getDocuments { (querySnapshot, _) in
       
       guard let document = querySnapshot?.documents.first else { return }
       
-      document.reference.updateData(["deviceToken": deviceToken]) { error in
+      document.reference.updateData(["fcmToken": token]) { _ in
         
       print("123123123123213")
     }
@@ -242,9 +242,13 @@ class UserManager {
           let photo = quary.documents.first?.data()["photo"] as? String,
           let blacklist = quary.documents.first?.data()["blacklist"] as? [String],
           let report = quary.documents.first?.data()["report"] as? Int,
-          let deviceToken = quary.documents.first?.data()["deviceToken"] as? String else { return }
+          let fcmToken = quary.documents.first?.data()["fcmToken"] as? String,
+          let status = quary.documents.first?.data()["status"] as? Int,
+          let about = quary.documents.first?.data()["about"] as? String,
+          let totalStar = quary.documents.first?.data()["totalStar"] as? Double,
+          let taskCount = quary.documents.first?.data()["taskCount"] as? Int else { return }
         
-        let dataReturn = AccountInfo(email: email, nickname: nickname, gender: gender, task: task, friends: friends, photo: photo, report: report, blacklist: blacklist, onTask: onTask, deviceToken: deviceToken)
+        let dataReturn = AccountInfo(email: email, nickname: nickname, gender: gender, task: task, friends: friends, photo: photo, report: report, blacklist: blacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar)
         
         print(dataReturn)
         
@@ -253,7 +257,7 @@ class UserManager {
     }
   }
                                 
-  func updateData(completion: @escaping (Result<String, Error>) -> Void) {
+  func updateData(status: Int, completion: @escaping (Result<String, Error>) -> Void) {
     
     guard let userInfo = currentUserInfo else { return }
     
@@ -261,7 +265,7 @@ class UserManager {
       if let querySnapshot = querySnapshot {
         let document = querySnapshot.documents.first
         
-        document?.reference.updateData(["status": 1 ], completion: { (error) in
+        document?.reference.updateData(["status": status ], completion: { (error) in
           
           if error != nil {
             
@@ -270,6 +274,41 @@ class UserManager {
           } else {
             
             completion(.success("Update Success"))
+            
+          }
+        })
+      }
+    }
+  }
+  
+  func updateUserInfo(completion: @escaping (Result<String,Error>) -> Void){
+    guard let data = currentUserInfo else { return }
+    dbF.collection("Users").whereField("email", isEqualTo: data.email).getDocuments { (querySnapshot, error) in
+      if let querySnapshot = querySnapshot {
+        let document = querySnapshot.documents.first
+        document?.reference.updateData(data.toDict, completion: { error in
+          
+          if error != nil {
+            
+            completion(.failure(FireBaseUpdateError.updateError))
+          } else {
+            self.readData(account: data.email) { [weak self] result in
+              
+              guard let strongSelf = self else { return }
+              
+              switch result {
+                
+              case .success(let dataReturn):
+                
+                strongSelf.currentUserInfo = dataReturn
+    
+                completion(.success("Success"))
+                
+              case .failure:
+                
+                completion(.failure(FireBaseUpdateError.updateError))
+              }
+            }
             
           }
         })

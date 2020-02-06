@@ -156,8 +156,8 @@
                     <connections>
                         <outlet property="postMissionBtn" destination="lbZ-XW-AdV" id="ame-Wp-jmi"/>
                         <outlet property="taskListTable" destination="hiW-yp-QIs" id="j33-uB-Qlu"/>
-                        <segue destination="aZU-mc-oHp" kind="show" identifier="post" id="ePH-MP-EJm"/>
                         <segue destination="gg9-hF-MfY" kind="showDetail" identifier="detail" id="NZZ-pD-LDK"/>
+                        <segue destination="aZU-mc-oHp" kind="show" identifier="post" id="tUj-f1-BdP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kAe-PW-HcI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -388,10 +388,6 @@
                                     <constraint firstAttribute="width" constant="300" id="9qh-CG-Txg"/>
                                     <constraint firstAttribute="height" constant="50" id="CpI-5Q-SVO"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="17"/>
-                                <state key="normal" title="接受任務">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
                                 <connections>
                                     <action selector="takeMissionAct:" destination="gg9-hF-MfY" eventType="touchUpInside" id="jQZ-bl-oPr"/>
                                 </connections>
@@ -439,7 +435,22 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FaA-mp-vSg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2025" y="2354"/>
+            <point key="canvasLocation" x="1880" y="2354"/>
+        </scene>
+        <!--Going Mission View Controller-->
+        <scene sceneID="fqN-Cf-RZp">
+            <objects>
+                <viewController storyboardIdentifier="going" id="aho-Cy-iaR" customClass="GoingMissionViewController" customModule="Errand" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="rgu-6J-EMd">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="PE5-Fh-45o"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="F12-VH-j8E" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2841" y="2352"/>
         </scene>
         <!--發布任務-->
         <scene sceneID="bF8-z3-hm7">
@@ -592,6 +603,7 @@
                                     <constraint firstAttribute="height" constant="50" id="HYx-FL-dfE"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="20"/>
+                                <inset key="imageEdgeInsets" minX="-1" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <state key="normal" title="發布">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>

@@ -17,26 +17,77 @@ class MissionListViewController: UIViewController {
     
     NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("postMission"), object: nil)
     
+    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("takeMission"), object: nil)
+    
     setUp()
     getTaskData()
     setUpSearch()
+    getMissionStartData()
   }
-
+  
   @objc func reloadTable() {
-
+    
     getTaskData()
   }
+  
+  func getMissionStartData() {
+    
+    if UserManager.shared.currentUserInfo?.status == 1 {
+      
+      guard let email = UserManager.shared.currentUserInfo?.email else { return }
+      
+      taskMan.readSpecificData(parameter: "email", parameterString: email) {[weak self](result) in
+             
+             guard let strongSelf = self else { return }
+             
+             switch result {
+               
+             case .success(let dataReturn):
+               
+               strongSelf.missionStartData = dataReturn[0]
+               
+             case .failure(let error):
+               
+               LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
+             }
+           }
+      
+    } else if UserManager.shared.currentUserInfo?.status == 2 {
+      
+      guard let email = UserManager.shared.currentUserInfo?.email else { return }
+      
+      taskMan.readSpecificData(parameter: "missionTaker", parameterString: email) { [weak self](result) in
+        
+        guard let strongSelf = self else { return }
+        
+        switch result {
+          
+        case .success(let dataReturn):
+          
+          strongSelf.missionStartData = dataReturn[0]
+          
+        case .failure(let error):
+          
+          LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
+        }
+      }
+    } else {
+      return
+    }
+  }
+  
+  let taskMan = TaskManager.shared
   
   var detailData: TaskInfo?
   
   var data: TaskInfo?
   
+  var missionStartData: TaskInfo?
+  
   var timeString: String?
   
   var shouldShowSearchResults = false {
-    
     didSet {
-      
       self.taskListTable.reloadData()
     }
   }
@@ -49,18 +100,14 @@ class MissionListViewController: UIViewController {
       if taskDataReturn.isEmpty {
         
         self.postMissionBtn.isHidden = true
-        
         LKProgressHUD.show(controller: self)
         
       } else {
         DispatchQueue.main.async {
           
           self.postMissionBtn.isHidden = false
-          
           self.refreshControl.endRefreshing()
-          
           self.taskListTable.reloadData()
-          
           LKProgressHUD.dismiss()
         }
       }
@@ -71,18 +118,15 @@ class MissionListViewController: UIViewController {
     
     didSet {
       if taskDataReturn.isEmpty {
-        
+
         self.postMissionBtn.isHidden = true
-        
         LKProgressHUD.show(controller: self)
         
       } else {
         DispatchQueue.main.async {
           
           self.postMissionBtn.isHidden = false
-          
           self.taskListTable.reloadData()
-          
           LKProgressHUD.dismiss()
         }
       }
@@ -95,18 +139,35 @@ class MissionListViewController: UIViewController {
   
   @IBAction func postMissionBtn(_ sender: Any) {
     
-    performSegue(withIdentifier: "post", sender: nil)
+    if UserManager.shared.currentUserInfo?.status == 0 {
+      performSegue(withIdentifier: "post", sender: nil)
+    } else {
+      presentAlert(viewController: self)
+    }
+  }
+  
+  func presentAlert(viewController: UIViewController) {
     
+    let controller = UIAlertController(title: "任務進行中", message: "請完成當前任務", preferredStyle: .alert)
+    let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+      
+      guard let goingVc = self.storyboard?.instantiateViewController(identifier: "going") as? GoingMissionViewController else { return }
+      
+      goingVc.missionData = self.missionStartData
+      self.show(goingVc, sender: nil)
+    }
+    controller.addAction(okAction)
+    present(controller, animated: true, completion: nil)
   }
   
   func setUpSearch() {
     
-//    self.extendedLayoutIncludesOpaqueBars = true
+    //    self.extendedLayoutIncludesOpaqueBars = true
     refreshControl = UIRefreshControl()
     taskListTable.addSubview(refreshControl)
     refreshControl.addTarget(self, action: #selector(loadData), for: .valueChanged)
     self.navigationItem.searchController = searchCustom
-//    self.navigationController?.navigationBar.prefersLargeTitles = true
+    //    self.navigationController?.navigationBar.prefersLargeTitles = true
     searchCustom.searchBar.searchBarStyle = .prominent
     searchCustom.searchBar.delegate = self
     searchCustom.searchBar.placeholder = "搜尋發文主"
@@ -132,11 +193,8 @@ class MissionListViewController: UIViewController {
       case .success(let taskData):
         
         strongSelf.taskDataReturn = taskData
-        
         strongSelf.postMissionBtn.isHidden = false
-        
         TaskManager.shared.taskData = []
-        
         LKProgressHUD.dismiss()
         
       case .failure(let error):
@@ -149,21 +207,23 @@ class MissionListViewController: UIViewController {
   func setUp() {
     
     postMissionBtn.isHidden = true
-    
     taskListTable.delegate = self
-    
     taskListTable.dataSource = self
-    
     taskListTable.translatesAutoresizingMaskIntoConstraints = false
-    
     taskListTable.rowHeight = UITableView.automaticDimension
-    
     taskListTable.estimatedRowHeight = 200
   }
   
 }
 
 extension MissionListViewController: UITableViewDataSource, UITableViewDelegate {
+  
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    
+     if UserManager.shared.currentUserInfo?.status != 0 {
+       presentAlert(viewController: self)
+     }
+  }
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     
@@ -182,11 +242,8 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
     cell.delegate = self
     
     if shouldShowSearchResults {
-      
       self.data = filteredArray[indexPath.row]
-      
     } else {
-      
       self.data = taskDataReturn[indexPath.row]
     }
     
@@ -199,7 +256,14 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
     let missionText = TaskManager.shared.filterClassified(classified: data.classfied + 1)
     
     cell.setUp(missionImage: missionText[1], author: data.nickname, missionLabel: missionText[0], price: data.money, time: time, timeInt: data.time)
-  
+    
+    if UserManager.shared.currentUserInfo?.status != 0 {
+      
+      cell.seeDetailBtn.isEnabled = false
+    } else {
+      
+      cell.seeDetailBtn.isEnabled = true
+    }
     return cell
   }
   
@@ -211,7 +275,6 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
         let time = self.timeString else { return }
       
       detailVC.detailData = detailData
-      
       detailVC.receiveTime = time
     }
   }
@@ -222,9 +285,7 @@ extension MissionListViewController: DetailManager {
   func detailData(tableViewCell: ListTableViewCell, nickName: String, time: Int) {
     
     for count in 0 ..< taskDataReturn.count {
-      
       if taskDataReturn[count].time == time && taskDataReturn[count].nickname == nickName {
-        
         self.detailData = taskDataReturn[count]
         break
       }
@@ -236,12 +297,10 @@ extension MissionListViewController: DetailManager {
 extension MissionListViewController: UISearchBarDelegate {
   
   func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-    
     shouldShowSearchResults = true
   }
   
   func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-    
     shouldShowSearchResults = false
   }
   
@@ -249,7 +308,6 @@ extension MissionListViewController: UISearchBarDelegate {
     
     if !shouldShowSearchResults {
       shouldShowSearchResults = true
-      
     }
     searchCustom.searchBar.resignFirstResponder()
   }

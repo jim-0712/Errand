@@ -44,7 +44,9 @@ struct TaskInfo {
   
   let requester: [String]
   
-  let deviceToken: String
+  let fcmToken: String
+  
+  let missionTaker: String
   
   var toDict: [String: Any] {
     
@@ -76,7 +78,9 @@ struct TaskInfo {
               
               "requester": requester,
               
-              "deviceToken": deviceToken
+              "fcmToken": fcmToken,
+              
+              "missionTaker": missionTaker
     
           ]
   }
