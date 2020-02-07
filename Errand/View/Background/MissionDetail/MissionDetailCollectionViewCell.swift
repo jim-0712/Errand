@@ -10,4 +10,7 @@ import UIKit
 
 class MissionDetailCollectionViewCell: UICollectionViewCell {
     
+  @IBOutlet weak var detailImage: UIImageView!
+  
+  @IBOutlet weak var playBtn: UIButton!
 }

@@ -168,7 +168,7 @@ class ViewController: UIViewController {
           
           strongSelf.photo = photoBack
           
-          UserManager.shared.createDataBase(classification: "Users", gender: 1, nickName: "", email: account, photo: strongSelf.photo) { result in
+          UserManager.shared.createDataBase(classification: "Users", gender: 1, nickName: "發抖", email: account, photo: strongSelf.photo) { result in
             
             switch result {
               
@@ -242,7 +242,7 @@ class ViewController: UIViewController {
     
     self.photo = photoBack
     
-    UserManager.shared.createDataBase(classification: "Users", gender: 1, nickName: "", email: email, photo: self.photo) { [weak self] result in
+    UserManager.shared.createDataBase(classification: "Users", gender: 1, nickName: "發抖", email: email, photo: self.photo) { [weak self] result in
       
       guard let strongSelf = self else { return }
       

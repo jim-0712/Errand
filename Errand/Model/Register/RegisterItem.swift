@@ -75,6 +75,8 @@ struct AccountInfo {
   
   var totalStar: Double
   
+  var uid: String
+  
   var toDict: [String: Any] {
     
     return [  "email": email,
@@ -103,7 +105,9 @@ struct AccountInfo {
               
               "taskCount": taskCount,
               
-              "totalStar": totalStar
+              "totalStar": totalStar,
+              
+              "uid": uid
           ]
   }
 }

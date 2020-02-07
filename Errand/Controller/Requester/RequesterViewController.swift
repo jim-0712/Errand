@@ -12,10 +12,12 @@ class RequesterViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+      
+      NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("acceptRequester"), object: nil)
+      NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("refuseRequester"), object: nil)
 
       if UserManager.shared.currentUserInfo?.status == 2 {
         
-      
       } else {
         
         setUpTable()
@@ -23,13 +25,21 @@ class RequesterViewController: UIViewController {
       }
     }
   
+  @objc func reload() {
+    
+    readRequester()
+  }
+  
+  var refreshControl: UIRefreshControl!
+  
   var userInfo = [AccountInfo]() {
     didSet {
-      if userInfo.isEmpty{
+      if userInfo.isEmpty {
         
         LKProgressHUD.show(controller: self)
       } else {
-        
+        LKProgressHUD.dismiss()
+        self.refreshControl.endRefreshing()
         requesterTable.reloadData()
       }
     }
@@ -40,9 +50,17 @@ class RequesterViewController: UIViewController {
   func setUpTable() {
     requesterTable.delegate = self
     requesterTable.dataSource = self
+    refreshControl = UIRefreshControl()
+    requesterTable.addSubview(refreshControl)
+    refreshControl.addTarget(self, action: #selector(loadData), for: .valueChanged)
     requesterTable.separatorStyle = .none
     requesterTable.rowHeight = UITableView.automaticDimension
     requesterTable.register(UINib(nibName: "RequesterTableViewCell", bundle: nil), forCellReuseIdentifier: "requester")
+  }
+  
+  @objc func loadData() {
+    
+    readRequester()
   }
   
   func readRequester() {
@@ -57,31 +75,42 @@ class RequesterViewController: UIViewController {
         
       case .success(let taskInfo):
         
-        for count in 0 ..< taskInfo[0].requester.count {
+        if taskInfo.count == 0 {
+          strongSelf.userInfo = []
+          TaskManager.shared.showAlert(title: "注意", message: "您當前沒有任務", viewController: strongSelf)
           
-          UserManager.shared.readData(account: taskInfo[0].requester[count]) { result in
+        } else if taskInfo[0].status == 1 {
+          strongSelf.userInfo = []
+          TaskManager.shared.showAlert(title: "注意", message: "任務進行中", viewController: strongSelf)
+        } else {
+          
+          for count in 0 ..< taskInfo[0].requester.count {
             
-            switch result {
+            UserManager.shared.readData(uid: taskInfo[0].requester[count]) { result in
               
-            case .success(let accountInfo):
-              
-              strongSelf.storeInfo.append(accountInfo)
-              
-              if count == taskInfo[0].requester.count - 1 {
+              switch result {
+                
+              case .success(let accountInfo):
+                
+                strongSelf.storeInfo.append(accountInfo)
+                
+                if count == taskInfo[0].requester.count - 1 {
+                  
+                  LKProgressHUD.dismiss()
+                  
+                  strongSelf.userInfo = strongSelf.storeInfo
+                }
+                
+              case .failure(let error):
                 
                 LKProgressHUD.dismiss()
                 
-                strongSelf.userInfo = strongSelf.storeInfo
+                LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
+                
               }
-              
-            case .failure(let error):
-              
-              LKProgressHUD.dismiss()
-              
-              LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
-              
             }
           }
+          
         }
         
       case .failure(let error):
@@ -95,21 +124,14 @@ class RequesterViewController: UIViewController {
     
   @IBOutlet weak var requesterTable: UITableView!
   
-  func presentAlert(viewController: UIViewController) {
+  func checkRequest(viewController: UIViewController, indexInt: Int) {
     
-    let controller = UIAlertController(title: "任務進行中", message: "請完成當前任務", preferredStyle: .alert)
-    let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+    guard let requesterInfo = self.storyboard?.instantiateViewController(identifier: "requesterInfo") as? CheckRequesterViewController else { return }
+
+      requesterInfo.infoData = self.userInfo[indexInt]
       
-//      guard let goingVc = self.storyboard?.instantiateViewController(identifier: "going") as? GoingMissionViewController else { return }
-//
-//
-//
-//      self.show(goingVc, sender: nil)
-    }
-    controller.addAction(okAction)
-    present(controller, animated: true, completion: nil)
+      self.show(requesterInfo, sender: nil)
   }
-  
 }
 
 extension RequesterViewController: UITableViewDelegate, UITableViewDataSource {
@@ -132,6 +154,6 @@ extension RequesterViewController: UITableViewDelegate, UITableViewDataSource {
 extension RequesterViewController: CheckPersonalInfoManager {
   func checkTheInfo(tableViewCell: RequesterTableViewCell, index: Int) {
     
-    print("123")
+    checkRequest(viewController: self, indexInt: index)
   }
 }

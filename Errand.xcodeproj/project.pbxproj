@@ -33,7 +33,7 @@
 		FB4BF7B423E288D600C4C05A /* ListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4BF7B323E288D600C4C05A /* ListTableViewCell.swift */; };
 		FB53F30B23EA51A70041C49D /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB53F30A23EA51A70041C49D /* NotificationManager.swift */; };
 		FB53F30D23EA7D630041C49D /* PushNotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB53F30C23EA7D630041C49D /* PushNotificationSender.swift */; };
-		FB53F30F23EA9A430041C49D /* GoingMissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB53F30E23EA9A430041C49D /* GoingMissionViewController.swift */; };
+		FB53F30F23EA9A430041C49D /* CheckRequesterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB53F30E23EA9A430041C49D /* CheckRequesterViewController.swift */; };
 		FB53F31123EAAE3C0041C49D /* Requester.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB53F31023EAAE3C0041C49D /* Requester.storyboard */; };
 		FB53F31423EAAEA40041C49D /* RequesterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB53F31323EAAEA40041C49D /* RequesterViewController.swift */; };
 		FB53F31723EAAFC20041C49D /* RequesterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB53F31523EAAFC20041C49D /* RequesterTableViewCell.swift */; };
@@ -68,6 +68,9 @@
 		FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB752ABD23D5E57900BF3852 /* Background.swift */; };
 		FB9A2BFE23D068FF00553D97 /* MissionListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */; };
 		FB9A2C0023D0729400553D97 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB9A2BFF23D0729400553D97 /* MapKit.framework */; };
+		FBA557F723ED17A400521B89 /* RequesterRateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA557F623ED17A400521B89 /* RequesterRateTableViewCell.swift */; };
+		FBA557F923ED580100521B89 /* UIcolorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA557F823ED580100521B89 /* UIcolorExtension.swift */; };
+		FBA557FB23ED6D0C00521B89 /* StartMissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA557FA23ED6D0C00521B89 /* StartMissionViewController.swift */; };
 		FBF7AB5623D52EEF004B521A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FBF7AB5523D52EEF004B521A /* GoogleService-Info.plist */; };
 		FBF7AB5823D56F5D004B521A /* GoogleMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF7AB5723D56F5D004B521A /* GoogleMapViewController.swift */; };
 		FBF7AB5B23D58AE2004B521A /* MapDataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF7AB5A23D58AE2004B521A /* MapDataItem.swift */; };
@@ -130,7 +133,7 @@
 		FB4BF7B323E288D600C4C05A /* ListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewCell.swift; sourceTree = "<group>"; };
 		FB53F30A23EA51A70041C49D /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		FB53F30C23EA7D630041C49D /* PushNotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationSender.swift; sourceTree = "<group>"; };
-		FB53F30E23EA9A430041C49D /* GoingMissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoingMissionViewController.swift; sourceTree = "<group>"; };
+		FB53F30E23EA9A430041C49D /* CheckRequesterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckRequesterViewController.swift; sourceTree = "<group>"; };
 		FB53F31023EAAE3C0041C49D /* Requester.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Requester.storyboard; sourceTree = "<group>"; };
 		FB53F31323EAAEA40041C49D /* RequesterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequesterViewController.swift; sourceTree = "<group>"; };
 		FB53F31523EAAFC20041C49D /* RequesterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequesterTableViewCell.swift; sourceTree = "<group>"; };
@@ -165,6 +168,9 @@
 		FB752ABD23D5E57900BF3852 /* Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionListViewController.swift; sourceTree = "<group>"; };
 		FB9A2BFF23D0729400553D97 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		FBA557F623ED17A400521B89 /* RequesterRateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequesterRateTableViewCell.swift; sourceTree = "<group>"; };
+		FBA557F823ED580100521B89 /* UIcolorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIcolorExtension.swift; sourceTree = "<group>"; };
+		FBA557FA23ED6D0C00521B89 /* StartMissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartMissionViewController.swift; sourceTree = "<group>"; };
 		FBF7AB5523D52EEF004B521A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FBF7AB5723D56F5D004B521A /* GoogleMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleMapViewController.swift; sourceTree = "<group>"; };
 		FBF7AB5A23D58AE2004B521A /* MapDataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapDataItem.swift; sourceTree = "<group>"; };
@@ -331,6 +337,7 @@
 		FB387C4523CEF5BB00B6D8C4 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				FBA557F523ED177E00521B89 /* Requester */,
 				FB53F31923EB20610041C49D /* personInfo */,
 				FB638D7C23E56F6900030CB2 /* Map */,
 				FB4BF7B223E286FD00C4C05A /* MissionList */,
@@ -439,6 +446,7 @@
 			isa = PBXGroup;
 			children = (
 				FB53F31323EAAEA40041C49D /* RequesterViewController.swift */,
+				FB53F30E23EA9A430041C49D /* CheckRequesterViewController.swift */,
 			);
 			path = Requester;
 			sourceTree = "<group>";
@@ -483,6 +491,7 @@
 				FB638DC723E71AED00030CB2 /* UIStoryboard+Extension.swift */,
 				FB638DCF23E7ECA400030CB2 /* DoubleExtension.swift */,
 				FB53F33223EBFE290041C49D /* WhiteSpace.swift */,
+				FBA557F823ED580100521B89 /* UIcolorExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -502,9 +511,17 @@
 				FB24EC0E23D96B8500FA3F02 /* PostMissionViewController.swift */,
 				FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */,
 				FB6365FD23E2B975008555BC /* MissionDetailViewController.swift */,
-				FB53F30E23EA9A430041C49D /* GoingMissionViewController.swift */,
+				FBA557FA23ED6D0C00521B89 /* StartMissionViewController.swift */,
 			);
 			path = Mission;
+			sourceTree = "<group>";
+		};
+		FBA557F523ED177E00521B89 /* Requester */ = {
+			isa = PBXGroup;
+			children = (
+				FBA557F623ED17A400521B89 /* RequesterRateTableViewCell.swift */,
+			);
+			path = Requester;
 			sourceTree = "<group>";
 		};
 		FBF7AB5923D58AB4004B521A /* Map */ = {
@@ -828,7 +845,7 @@
 				FB387C5623CF521D00B6D8C4 /* UserManager.swift in Sources */,
 				FB24EC1923DAB72500FA3F02 /* TaskManager.swift in Sources */,
 				FB24EC0F23D96B8500FA3F02 /* PostMissionViewController.swift in Sources */,
-				FB53F30F23EA9A430041C49D /* GoingMissionViewController.swift in Sources */,
+				FB53F30F23EA9A430041C49D /* CheckRequesterViewController.swift in Sources */,
 				FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */,
 				FB638D7F23E56FC000030CB2 /* CategoryCollectionViewCell.swift in Sources */,
 				FB53F31723EAAFC20041C49D /* RequesterTableViewCell.swift in Sources */,
@@ -857,13 +874,16 @@
 				FB4BF7B423E288D600C4C05A /* ListTableViewCell.swift in Sources */,
 				FB63664F23E3FC1B008555BC /* MissionDetailTableViewCell.swift in Sources */,
 				FB53F32C23EBCE220041C49D /* PersonAboutTableViewCell.swift in Sources */,
+				FBA557F723ED17A400521B89 /* RequesterRateTableViewCell.swift in Sources */,
 				FB387C1A23CEEF0E00B6D8C4 /* Errand.xcdatamodeld in Sources */,
 				FB4A50E323D6D19A0028BC82 /* UserDataItem.swift in Sources */,
 				FBF7AB5823D56F5D004B521A /* GoogleMapViewController.swift in Sources */,
 				FBF7AB5D23D590E7004B521A /* MapManager.swift in Sources */,
 				FB63660323E31E67008555BC /* KingFisherWrapper.swift in Sources */,
+				FBA557FB23ED6D0C00521B89 /* StartMissionViewController.swift in Sources */,
 				FB387C4D23CF098F00B6D8C4 /* JGProgressHUDWrapper.swift in Sources */,
 				FBF7AB5B23D58AE2004B521A /* MapDataItem.swift in Sources */,
+				FBA557F923ED580100521B89 /* UIcolorExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

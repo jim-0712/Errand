@@ -46,6 +46,7 @@ class PersonalViewController: UIViewController {
       
       // 委任代理
       setUpTableView()
+      self.navigationController?.navigationBar.prefersLargeTitles = true
       imagePickerController.delegate = self
       imagePickerController.allowsEditing = true
       imagePickerController.mediaTypes = [kUTTypeImage as String]
@@ -60,10 +61,13 @@ class PersonalViewController: UIViewController {
     
     if !isSetting {
       
+      settingBtn.setImage(UIImage(named: "checked"), for: .normal)
       isSetting = !isSetting
       infoTableView.reloadData()
       
     } else {
+      
+      settingBtn.setImage(UIImage(named: "wheel-2"), for: .normal)
       
       if isName && isAbout {
         

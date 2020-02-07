@@ -23,7 +23,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
       //      refreshBtn.isEnabled = false
       
     } else {
-      
+      LKProgressHUD.show(controller: self)
       //      refreshBtn.isEnabled = true
       loadUserInfo()
     }
@@ -46,14 +46,15 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   
   func loadUserInfo() {
     
-    if let account = Auth.auth().currentUser?.email {
+    if let uid = Auth.auth().currentUser?.uid {
       
-      UserManager.shared.readData(account: account) { result in
+      UserManager.shared.readData(uid: uid) { result in
         
         switch result {
           
         case .success(let dataReturn):
-
+          
+          LKProgressHUD.dismiss()
           UserManager.shared.isPostTask = dataReturn.onTask
           UserManager.shared.currentUserInfo = dataReturn
           
@@ -250,7 +251,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     pageView.layer.shadowOpacity = 0.2
     pageView.layer.shadowOffset = CGSize(width: 3, height: 3)
     checkDetailBtn.layer.borderWidth = 1.0
-    checkDetailBtn.layer.borderColor = UIColor(red: 110.0/255.0, green: 181.0/255.0, blue: 188.0/255.0, alpha: 1.0).cgColor
+    checkDetailBtn.layer.borderColor = UIColor.G1?.cgColor
     checkDetailBtn.layer.cornerRadius = checkDetailBtn.bounds.height / 4
     backBtn.layer.cornerRadius = backBtn.bounds.height / 2
     isSearch = true

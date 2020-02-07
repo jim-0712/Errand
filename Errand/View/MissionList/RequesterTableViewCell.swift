@@ -49,7 +49,7 @@ class RequesterTableViewCell: UITableViewCell {
     
     self.index = index
     
-    personBtn.layer.borderColor = UIColor(red: 110/255.0, green: 1810/255.0, blue: 188.0/255.0, alpha: 1.0).cgColor
+    personBtn.layer.borderColor = UIColor.G1?.cgColor
     
     personBtn.layer.borderWidth = 1.0
     

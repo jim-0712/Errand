@@ -16,6 +16,13 @@ import FirebaseDatabase
 import FirebaseStorage
 import IQKeyboardManager
 
+struct MediaManager {
+  
+  let type: Int
+  
+  let mediaURL: String
+}
+
 class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   
   let myLocationManager = CLLocationManager()
@@ -61,10 +68,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   
   let backgroundManager = BackgroundManager.shared
   
-  var photoCounter = 0
-  
-  var videoCounter = 0
-  
   var imageReady: [UIImage] = []
   
   var videoReady: [NSURL] = []
@@ -72,6 +75,8 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   var fileURL: [String] = []
   
   var fileType: [Int] = []
+  
+  var luke: [Any] = []
   
   var selectIndex: Int?
   
@@ -202,7 +207,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   }
   
   func createDataBase() {
-    
     guard let money = priceTextField.text,
       let content = missionContentTextView.text,
       let indexfinal = selectIndex,
@@ -234,6 +238,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
           case .success:
             
             NotificationCenter.default.post(name: Notification.Name("postMission"), object: nil)
+            UserManager.shared.currentUserInfo?.status = 1
             strongSelf.showAlert(viewController: strongSelf)
             
           case .failure(let error):
@@ -246,7 +251,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
         print("fail")
       }
     }
-    
   }
   
   @IBAction func uploadAction(_ sender: Any) {
@@ -348,11 +352,8 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
     if collectionView == self.missionGroupCollectionView {
       return TaskManager.shared.taskClassified.count - 1
     } else {
-      if fileType.count == 0 {
-        return 1
-      } else {
-        return fileType.count + 1
-      }
+      print(luke.count + 1)
+        return luke.count + 1
     }
   }
   
@@ -372,30 +373,39 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
       
       cell.delegate = self
       
-      if fileType.count == 0 {
+      if luke.count == 0 {
 
         cell.backgroundColor = .white
         cell.addPhotoBtn.isHidden = false
         cell.photoImageView.isHidden = true
         return cell
         
-      } else if indexPath.row != fileType.count && fileType[indexPath.row] == 0 {
+      } else if indexPath.row != luke.count && ((luke[indexPath.row] as? UIImage) != nil) {
     
         cell.photoImageView.isHidden = false
+        
+        guard let layers = cell.layer.sublayers else { return UICollectionViewCell() }
+        for layer in layers {
+          if let avPlayerLayer = layer as? AVPlayerLayer {
+            avPlayerLayer.removeFromSuperlayer()
+          }
+        }
+        
+        guard let image = luke[indexPath.row] as? UIImage else { return UICollectionViewCell() }
         cell.addPhotoBtn.isHidden = true
         cell.backgroundColor = .clear
-        cell.photoImageView.image = imageReady[photoCounter]
-        photoCounter += 1
+        cell.photoImageView.image = image
         return cell
         
-      } else if indexPath.row != fileType.count && fileType[indexPath.row] == 1 {
+      } else if indexPath.row != luke.count && ((luke[indexPath.row] as? URL) != nil) {
 
         cell.photoImageView.isHidden = true
-        let player = AVPlayer(url: videoReady[videoCounter] as URL)
+        guard let video = luke[indexPath.row] as? URL else { return UICollectionViewCell() }
+        let player = AVPlayer(url: video)
         let playerLayer = AVPlayerLayer(player: player)
         playerLayer.frame = cell.contentView.bounds
         cell.layer.addSublayer(playerLayer)
-        videoCounter += 1
+ 
         player.play()
         return cell
         
@@ -443,20 +453,15 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
     
     if let pickedImage = info[.originalImage ] as? UIImage {
-      
       imageReady.append(pickedImage)
+      luke.append(pickedImage)
       self.fileType.append(0)
-      photoCounter = 0
-      videoCounter = 0
-      
     } else {
     
       if let videoURL = info[.mediaURL ] as? NSURL {
-        
         self.videoReady.append(videoURL)
+        luke.append(videoURL)
         self.fileType.append(1)
-        photoCounter = 0
-        videoCounter = 0
         LKProgressHUD.dismiss()
       }      
     }

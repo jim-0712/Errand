@@ -55,10 +55,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     
     FirebaseApp.configure()
     
-    let pushManager = PushNotificationManager()
-    
-    pushManager.registerForPushNotifications()
-    
     //    GMSServices.provideAPIKey("AIzaSyB_voEc15Sn0T_O9C2O-6dWz7c_ju42jXs")
     
     GMSServices.provideAPIKey("AIzaSyBbTnBn0MHPMnioaL4y68Da3d41JlaSY-g")
@@ -70,6 +66,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     UNUserNotificationCenter.current().delegate = self
     
     UIApplication.shared.registerForRemoteNotifications()
+    
+    let pushManager = PushNotificationManager()
+    
+    pushManager.registerForPushNotifications()
     
     var firstVC: UIViewController?
     

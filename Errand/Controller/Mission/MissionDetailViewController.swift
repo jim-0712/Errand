@@ -22,7 +22,6 @@ class MissionDetailViewController: UIViewController {
     setUp()
     setUpBtn()
     setUppageControll()
-    setUpImageView()
   }
   
   override func viewDidLayoutSubviews() {
@@ -51,8 +50,8 @@ class MissionDetailViewController: UIViewController {
     LKProgressHUD.show(controller: self)
     
     guard let taskInfo = detailData else { return }
-  
-    TaskManager.shared.updateTaskRequest(owner: taskInfo.email) { [weak self ]result in
+    
+    TaskManager.shared.updateTaskRequest(owner: taskInfo.uid) { [weak self ]result in
       
       guard let strongSelf = self else { return }
       
@@ -64,7 +63,7 @@ class MissionDetailViewController: UIViewController {
         
         let sender = PushNotificationSender()
         sender.sendPushNotification(to: taskInfo.fcmToken, body: "趕快開啟查看")
-//        strongSelf.isRequester = true
+        //        strongSelf.isRequester = true
         
         strongSelf.setUpBtnEnable()
         LKProgressHUD.dismiss()
@@ -77,14 +76,13 @@ class MissionDetailViewController: UIViewController {
     }
     
   }
+  var receiveTime: String?
   
   var detailData: TaskInfo?
   
   var arrangementPhoto: [String] = []
   
   var arrangementVideo: [String] = []
-  
-  var receiveTime: String?
   
   let missionDetail = ["任務內容", "懸賞價格", "發布時間", "任務細節"]
   
@@ -100,32 +98,29 @@ class MissionDetailViewController: UIViewController {
   
   func setUpBtnEnable() {
     
-    guard let taskdata = detailData,
-            let user = UserManager.shared.currentUserInfo?.email else { return }
-
-       for count in 0 ..< taskdata.requester.count {
-         
-         if taskdata.requester[count] == user {
-           isRequester = true
-         } else {
-           isRequester = false
-         }
-       }
-       
-       if isRequester {
-         
-         takeMissionBtn.backgroundColor = .lightGray
-         takeMissionBtn.setTitle("等待接受中", for: .normal)
-         takeMissionBtn.tintColor = .black
-         takeMissionBtn.isEnabled = false
-        
-       } else {
-         
-         takeMissionBtn.backgroundColor = UIColor(red: 246.0/255.0, green: 212/255.0, blue: 95/255.0, alpha: 1.0)
-         takeMissionBtn.setTitle("接受任務", for: .normal)
-         takeMissionBtn.tintColor = .black
-         takeMissionBtn.isEnabled = true
-       }
+      guard let user = UserManager.shared.currentUserInfo?.status else { return }
+           let state = UserManager.shared.checkDetailBtn  
+    
+    if user == 1 && state || user == 2 && state {
+      
+      takeMissionBtn.backgroundColor = .lightGray
+      takeMissionBtn.setTitle("任務進行中", for: .normal)
+      takeMissionBtn.tintColor = .black
+      takeMissionBtn.isEnabled = false
+      
+    } else if user == 1 && !state || user == 2 && !state{
+      
+      takeMissionBtn.backgroundColor = .lightGray
+      takeMissionBtn.setTitle("請先完成當前任務", for: .normal)
+      takeMissionBtn.tintColor = .black
+      takeMissionBtn.isEnabled = false
+    } else {
+      takeMissionBtn.backgroundColor = UIColor(red: 246.0/255.0, green: 212/255.0, blue: 95/255.0, alpha: 1.0)
+      takeMissionBtn.setTitle("接受任務", for: .normal)
+      takeMissionBtn.tintColor = .black
+      takeMissionBtn.isEnabled = true
+      
+    }
   }
   
   func setUpBtn() {
@@ -140,75 +135,13 @@ class MissionDetailViewController: UIViewController {
   func setUppageControll() {
     
     guard let data = detailData else { return }
-
+    
     pageControl.currentPage = 0
     pageControl.currentPageIndicatorTintColor = .black
     pageControl.pageIndicatorTintColor = .lightGray
     pageControl.layer.cornerRadius = 10
     pageControl.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
     pageControl.numberOfPages = data.taskPhoto.count
-  }
-  
-  func setUpImageView() {
-    
-    guard let data = detailData else { return }
-    
-    for count in 0 ..< data.fileType.count {
-      
-      if data.fileType[count] == 0 {
-        
-        self.arrangementPhoto.append(data.taskPhoto[count])
-        
-      } else {
-        
-        self.arrangementVideo.append(data.taskPhoto[count])
-      }
-    }
-    
-    var taskImage = UIImageView()
-    
-    var taskVideoView = UIView()
-    
-    for count in 0 ..< arrangementPhoto.count {
-      taskImage = UIImageView(frame: CGRect(x: 0, y: 0, width: fullSize.width, height: 350))
-      taskImage.contentMode = .scaleAspectFill
-      taskImage.clipsToBounds = true
-      taskImage.center = CGPoint(x: fullSize.width * (0.5 + CGFloat(count)), y: 175)
-      taskViewCollectionView.addSubview(taskImage)
-      taskImage.loadImage(arrangementPhoto[count])
-    }
-    
-    for count in 0 ..< arrangementVideo.count {
-      
-      let playButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "play-button"), for: .normal)
-        button.backgroundColor = .red
-        button.addTarget(self, action: #selector(videoPlay(sender:)), for: .touchUpInside)
-        return button
-      }()
-      
-      guard let url = URL(string: arrangementVideo[count]) else { return }
-      
-      taskVideoView = UIView(frame: CGRect(x: 0, y: 0, width: fullSize.width, height: 350))
-      taskVideoView.contentMode = .center
-      taskVideoView.center = CGPoint(x: fullSize.width * (0.5 + CGFloat(arrangementPhoto.count + count)), y: 175)
-      taskViewCollectionView.addSubview(taskVideoView)
-      
-      let player = AVPlayer(url: url)
-      let playerLayer = AVPlayerLayer(player: player)
-      playerLayer.frame = taskVideoView.bounds
-      taskVideoView.layer.addSublayer(playerLayer)
-      
-      taskVideoView.addSubview(playButton)
-      NSLayoutConstraint.activate([
-        playButton.centerXAnchor.constraint(equalTo: taskVideoView.centerXAnchor),
-        playButton.centerYAnchor.constraint(equalTo: taskVideoView.centerYAnchor),
-        playButton.widthAnchor.constraint(equalToConstant: 50),
-        playButton.heightAnchor.constraint(equalToConstant: 50)
-      ])
-      
-    }
   }
   
   @objc func videoPlay(sender: UIButton) {
@@ -241,11 +174,39 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     
-    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "detailView", for: indexPath) as? MissionDetailCollectionViewCell else { return UICollectionViewCell() }
+    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "detail", for: indexPath) as? MissionDetailCollectionViewCell,
+      let data = detailData else { return UICollectionViewCell() }
     
-    cell.backgroundColor = .gray
+    let typeManager = data.taskPhoto[indexPath.row].components(separatedBy: "mov")
     
+    if typeManager.count > 1 {
+      
+      cell.detailImage.isHidden = true
+      cell.playBtn.addTarget(self, action: #selector(videoPlay(sender:)), for: .touchUpInside)
+      guard let video = URL(string: data.taskPhoto[indexPath.row]) else { return UICollectionViewCell() }
+      let player = AVPlayer(url: video)
+      let playerLayer = AVPlayerLayer(player: player)
+      playerLayer.frame = cell.contentView.bounds
+      cell.layer.addSublayer(playerLayer)
+      cell.playBtn.isHidden = false
+      
+    } else {
+      cell.playBtn.isHidden = true
+      cell.detailImage.isHidden = false
+      guard let layers = cell.layer.sublayers else { return UICollectionViewCell() }
+      for layer in layers {
+        if let avPlayerLayer = layer as? AVPlayerLayer {
+          avPlayerLayer.removeFromSuperlayer()
+        }
+      }
+      cell.detailImage.loadImage(data.taskPhoto[indexPath.row])
+      cell.detailImage.contentMode = .scaleAspectFill
+    }
     return cell
+  }
+  
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    return 0
   }
 }
 
@@ -253,7 +214,7 @@ extension MissionDetailViewController: UICollectionViewDelegateFlowLayout {
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     
-    return CGSize(width: UIScreen.main.bounds.width, height: 400)
+    return CGSize(width: UIScreen.main.bounds.width, height: 300)
   }
 }
 
@@ -267,7 +228,7 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     guard let data = detailData,
-         let time = self.receiveTime else { return UITableViewCell() }
+      let time = self.receiveTime else { return UITableViewCell() }
     
     if indexPath.row == 0 {
       
@@ -278,8 +239,8 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
       return cell
       
     } else if indexPath.row != 3 {
-    
-    guard let cell = tableView.dequeueReusableCell(withIdentifier: "missionDetail", for: indexPath) as? MissionDetailTableViewCell else { return UITableViewCell() }
+      
+      guard let cell = tableView.dequeueReusableCell(withIdentifier: "missionDetail", for: indexPath) as? MissionDetailTableViewCell else { return UITableViewCell() }
       
       switch indexPath.row {
         
@@ -289,10 +250,10 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
       default:
         cell.setUp(title: "\(missionDetail[indexPath.row])元", content: time)
       }
-
-    return cell
-    
-  } else {
+      
+      return cell
+      
+    } else {
       
       guard let cell = tableView.dequeueReusableCell(withIdentifier: "content", for: indexPath) as? MissionContentTableViewCell else { return UITableViewCell() }
       
