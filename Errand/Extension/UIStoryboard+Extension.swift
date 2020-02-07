@@ -16,6 +16,8 @@ private struct StoryboardCategory {
     static let missionList = "Mission"
 
     static let profile = "Profile"
+  
+    static let requester = "Requester"
 }
 
 extension UIStoryboard {
@@ -25,6 +27,8 @@ extension UIStoryboard {
   static var missionList: UIStoryboard { return stStoryboard(name: StoryboardCategory.missionList) }
 
   static var profile: UIStoryboard { return stStoryboard(name: StoryboardCategory.profile) }
+  
+  static var requester: UIStoryboard { return stStoryboard(name: StoryboardCategory.requester) }
 
   private static func stStoryboard(name: String) -> UIStoryboard {
 

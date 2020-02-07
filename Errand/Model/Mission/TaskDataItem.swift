@@ -16,35 +16,41 @@ enum ReadDataError: Error {
 
 struct TaskInfo {
   
-  let email: String
+  var email: String
   
-  let nickname: String
+  var nickname: String
   
-  let gender: Int
+  var gender: Int
   
-  let taskPhoto: [String]
+  var taskPhoto: [String]
   
-  let time: Int
+  var time: Int
   
-  let detail: String
+  var detail: String
   
-  let lat: Double
+  var lat: Double
   
-  let long: Double
+  var long: Double
   
-  let money: Int
+  var money: Int
   
-  let classfied: Int
+  var classfied: Int
   
-  let status: Int
+  var status: Int
   
-  let fileType: [Int]
+  var fileType: [Int]
   
-  let personPhoto: String
+  var personPhoto: String
   
-  let requester: [String]
+  var requester: [String]
   
-  let deviceToken: String
+  var fcmToken: String
+  
+  var missionTaker: String
+  
+  var refuse: [String]
+  
+  var uid: String
   
   var toDict: [String: Any] {
     
@@ -76,8 +82,13 @@ struct TaskInfo {
               
               "requester": requester,
               
-              "deviceToken": deviceToken
-    
+              "fcmToken": fcmToken,
+              
+              "missionTaker": missionTaker,
+              
+              "refuse": refuse,
+              
+              "uid": uid
           ]
   }
 }

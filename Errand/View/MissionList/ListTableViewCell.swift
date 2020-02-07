@@ -75,7 +75,7 @@ class ListTableViewCell: UITableViewCell {
     
     seeDetailBtn.layer.borderWidth = 1.0
     
-    seeDetailBtn.layer.borderColor = UIColor(red: 110.0/255.0, green: 181.0/255.0, blue: 188.0/255.0, alpha: 1.0).cgColor
+    seeDetailBtn.layer.borderColor = UIColor.G1?.cgColor
     
     seeDetailBtn.layer.cornerRadius = 10
   }

@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="hiW-yp-QIs">
-                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                                <rect key="frame" x="0.0" y="135" width="414" height="761"/>
                                 <color key="backgroundColor" red="0.92156231399999999" green="0.92156261210000001" blue="0.92156094310000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="list" rowHeight="217" id="UaD-83-Xh9" customClass="ListTableViewCell" customModule="Errand" customModuleProvider="target">
@@ -140,29 +140,78 @@
                                     <action selector="postMissionBtn:" destination="IGl-we-hdX" eventType="touchUpInside" id="sMU-i8-fhj"/>
                                 </connections>
                             </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="LYO-cX-bO2">
+                                <rect key="frame" x="0.0" y="97" width="414" height="30"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OKq-Bo-ghN">
+                                        <rect key="frame" x="0.0" y="0.0" width="207" height="30"/>
+                                        <state key="normal" title="所有任務">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="allMissionAct:" destination="IGl-we-hdX" eventType="touchUpInside" id="hVE-K3-U9e"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SdY-QC-ykr">
+                                        <rect key="frame" x="207" y="0.0" width="207" height="30"/>
+                                        <state key="normal" title="當前任務">
+                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="currentMission:" destination="IGl-we-hdX" eventType="touchUpInside" id="buD-Fp-5zr"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="FWS-yl-JK1"/>
+                                </constraints>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="hiW-yp-QIs" firstAttribute="top" secondItem="uah-Uj-ZjB" secondAttribute="top" id="1We-hR-7gf"/>
                             <constraint firstItem="uah-Uj-ZjB" firstAttribute="trailing" secondItem="lbZ-XW-AdV" secondAttribute="trailing" constant="20" id="3NK-8s-MgC"/>
+                            <constraint firstItem="LYO-cX-bO2" firstAttribute="leading" secondItem="uah-Uj-ZjB" secondAttribute="leading" id="7Xd-Y8-Bv2"/>
+                            <constraint firstItem="uah-Uj-ZjB" firstAttribute="trailing" secondItem="LYO-cX-bO2" secondAttribute="trailing" id="BUB-bB-GMf"/>
+                            <constraint firstItem="hiW-yp-QIs" firstAttribute="top" secondItem="LYO-cX-bO2" secondAttribute="bottom" constant="8" symbolic="YES" id="Cce-2Y-Sj1"/>
                             <constraint firstItem="hiW-yp-QIs" firstAttribute="leading" secondItem="uah-Uj-ZjB" secondAttribute="leading" id="GpM-zj-EaQ"/>
                             <constraint firstItem="uah-Uj-ZjB" firstAttribute="bottom" secondItem="lbZ-XW-AdV" secondAttribute="bottom" constant="20" id="LlY-Xu-4Rn"/>
                             <constraint firstItem="uah-Uj-ZjB" firstAttribute="trailing" secondItem="hiW-yp-QIs" secondAttribute="trailing" id="dC6-Uv-MvD"/>
+                            <constraint firstItem="LYO-cX-bO2" firstAttribute="top" secondItem="uah-Uj-ZjB" secondAttribute="top" constant="9" id="oWu-mF-i2N"/>
                             <constraint firstAttribute="bottom" secondItem="hiW-yp-QIs" secondAttribute="bottom" id="w95-PN-xKk"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="uah-Uj-ZjB"/>
                     </view>
                     <navigationItem key="navigationItem" title="任務列表" id="ftr-xv-PYb"/>
                     <connections>
+                        <outlet property="allMissionBtn" destination="OKq-Bo-ghN" id="mTk-aC-1VS"/>
+                        <outlet property="btnStackView" destination="LYO-cX-bO2" id="ILA-dq-KnD"/>
+                        <outlet property="currentBtn" destination="SdY-QC-ykr" id="PyQ-XY-0Vj"/>
                         <outlet property="postMissionBtn" destination="lbZ-XW-AdV" id="ame-Wp-jmi"/>
                         <outlet property="taskListTable" destination="hiW-yp-QIs" id="j33-uB-Qlu"/>
-                        <segue destination="aZU-mc-oHp" kind="show" identifier="post" id="ePH-MP-EJm"/>
                         <segue destination="gg9-hF-MfY" kind="showDetail" identifier="detail" id="NZZ-pD-LDK"/>
+                        <segue destination="aZU-mc-oHp" kind="show" identifier="post" id="tUj-f1-BdP"/>
+                        <segue destination="Kgm-Ce-nGE" kind="show" identifier="startMission" id="0l2-43-aJj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kAe-PW-HcI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="980" y="1613"/>
+            <point key="canvasLocation" x="979.71014492753636" y="1612.5"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="V0J-Cr-M89">
+            <objects>
+                <viewController id="Kgm-Ce-nGE" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="gtU-SM-Eq0">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="aXm-3b-9iR"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="2cU-we-tyW"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XaS-Gq-zH0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2557" y="1613"/>
         </scene>
         <!--Mission Detail View Controller-->
         <scene sceneID="uNy-9h-rgP">
@@ -172,27 +221,52 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="u8o-NW-uvb">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="u8o-NW-uvb">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="300"/>
                                 <color key="backgroundColor" red="0.92156231399999999" green="0.92156261210000001" blue="0.92156094310000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="300" id="U2g-tI-iMN"/>
                                 </constraints>
-                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="dtE-mz-hBO">
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="dtE-mz-hBO">
                                     <size key="itemSize" width="356" height="319"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="detailView" id="dY7-fF-Hsi" customClass="MissionDetailCollectionViewCell" customModule="Errand" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="detail" id="dY7-fF-Hsi" customClass="MissionDetailCollectionViewCell" customModule="Errand" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="-9.5" width="356" height="319"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Dn0-Ve-oUs">
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Rur-2Q-QVd">
                                             <rect key="frame" x="0.0" y="0.0" width="356" height="319"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="agm-SY-tCf">
+                                                    <rect key="frame" x="0.0" y="0.0" width="356" height="319"/>
+                                                </imageView>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xCh-2O-0Dx">
+                                                    <rect key="frame" x="143" y="124.5" width="70" height="70"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="70" id="cO0-fR-kCq"/>
+                                                        <constraint firstAttribute="width" constant="70" id="tkf-tj-81S"/>
+                                                    </constraints>
+                                                    <state key="normal" image="play-button"/>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="xCh-2O-0Dx" firstAttribute="centerY" secondItem="agm-SY-tCf" secondAttribute="centerY" id="02r-20-1cl"/>
+                                                <constraint firstAttribute="trailing" secondItem="agm-SY-tCf" secondAttribute="trailing" id="3GD-dK-v2b"/>
+                                                <constraint firstItem="xCh-2O-0Dx" firstAttribute="centerX" secondItem="agm-SY-tCf" secondAttribute="centerX" id="8R2-MN-Wfd"/>
+                                                <constraint firstAttribute="bottom" secondItem="agm-SY-tCf" secondAttribute="bottom" id="OMt-QV-uuC"/>
+                                                <constraint firstItem="agm-SY-tCf" firstAttribute="top" secondItem="Rur-2Q-QVd" secondAttribute="top" id="XuP-KO-Nb8"/>
+                                                <constraint firstItem="agm-SY-tCf" firstAttribute="leading" secondItem="Rur-2Q-QVd" secondAttribute="leading" id="a7W-dP-IPA"/>
+                                            </constraints>
                                         </collectionViewCellContentView>
                                         <size key="customSize" width="356" height="319"/>
+                                        <connections>
+                                            <outlet property="detailImage" destination="agm-SY-tCf" id="WVY-iz-bXp"/>
+                                            <outlet property="playBtn" destination="xCh-2O-0Dx" id="dyO-rw-2Wl"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
@@ -388,10 +462,6 @@
                                     <constraint firstAttribute="width" constant="300" id="9qh-CG-Txg"/>
                                     <constraint firstAttribute="height" constant="50" id="CpI-5Q-SVO"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="17"/>
-                                <state key="normal" title="接受任務">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </state>
                                 <connections>
                                     <action selector="takeMissionAct:" destination="gg9-hF-MfY" eventType="touchUpInside" id="jQZ-bl-oPr"/>
                                 </connections>
@@ -439,7 +509,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FaA-mp-vSg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2025" y="2354"/>
+            <point key="canvasLocation" x="1880" y="2354"/>
         </scene>
         <!--發布任務-->
         <scene sceneID="bF8-z3-hm7">
@@ -592,6 +662,7 @@
                                     <constraint firstAttribute="height" constant="50" id="HYx-FL-dfE"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="20"/>
+                                <inset key="imageEdgeInsets" minX="-1" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <state key="normal" title="發布">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -822,6 +893,7 @@
         <image name="close" width="512" height="512"/>
         <image name="marker" width="512" height="512"/>
         <image name="pin" width="512" height="512"/>
+        <image name="play-button" width="512" height="512"/>
         <image name="plus-icon" width="512" height="512"/>
         <image name="right" width="512" height="512"/>
     </resources>

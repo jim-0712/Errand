@@ -37,14 +37,15 @@ class TaskManager {
       let nickname = UserManager.shared.currentUserInfo?.nickname,
       let gender = UserManager.shared.currentUserInfo?.gender,
       let photo = Auth.auth().currentUser?.photoURL,
-      let deviceToken = UserManager.shared.currentUserInfo?.deviceToken else {return }
+      let fcmToken = UserManager.shared.currentUserInfo?.fcmToken,
+      let uid = UserManager.shared.currentUserInfo?.uid else {return }
     let lat = coordinate.latitude as Double
     let long = coordinate.longitude as Double
     let personPhoto = "\(photo)"
     
-    let info = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: taskData[0], detail: detail, lat: lat, long: long, money: taskData[1], classfied: taskData[2], status: taskData[3], fileType: fileType, personPhoto: personPhoto, requester: [], deviceToken: deviceToken)
+    let info = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: taskData[0], detail: detail, lat: lat, long: long, money: taskData[1], classfied: taskData[2], status: taskData[3], fileType: fileType, personPhoto: personPhoto, requester: [], fcmToken: fcmToken, missionTaker: "", refuse: [], uid: uid)
     
-    self.dbF.collection("Tasks").document(email).setData(info.toDict) { error in
+    self.dbF.collection("Tasks").document(uid).setData(info.toDict) { error in
       
       if error != nil {
         
@@ -59,6 +60,8 @@ class TaskManager {
   }
   
   func readData(completion: @escaping ((Result<[TaskInfo], Error>) -> Void)) {
+    
+    self.taskData = []
     
     dbF.collection("Tasks").getDocuments { [weak self] (querySnapshot, err) in
       
@@ -88,11 +91,17 @@ class TaskManager {
             let classfied = info.data()["classfied"] as? Int,
             let personPhoto = info.data()["personPhoto"] as? String,
             let requester = info.data()["requester"] as? [String],
-            let deviceToken = info.data()["deviceToken"] as? String else { return }
-          
-          let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, fileType: fileType, personPhoto: personPhoto, requester: requester, deviceToken: deviceToken)
-          
-          strongSelf.taskData.append(dataReturn)
+            let fcmToken = info.data()["fcmToken"] as? String,
+            let missionTaker = info.data()["missionTaker"] as? String,
+            let refuse = info.data()["refuse"] as? [String],
+            let uid = info.data()["uid"] as? String  else { return }
+            if status == 1 {
+              return
+            } else {
+              let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, fileType: fileType, personPhoto: personPhoto, requester: requester, fcmToken: fcmToken, missionTaker: missionTaker, refuse: refuse, uid: uid)
+              
+              strongSelf.taskData.append(dataReturn)
+          }
         }
         
         completion(.success(strongSelf.taskData))
@@ -100,9 +109,11 @@ class TaskManager {
     }
   }
   
-  func readSpecificData(classified: Int, completion: @escaping ((Result<[TaskInfo], Error>) -> Void)) {
+  func readSpecificData(parameter: String, parameterDataInt: Int, completion: @escaping ((Result<[TaskInfo], Error>) -> Void)) {
     
-    dbF.collection("Tasks").whereField("classfied", isEqualTo: classified).getDocuments { [weak self] (querySnapshot, err) in
+    self.taskData = []
+    
+    dbF.collection("Tasks").whereField(parameter, isEqualTo: parameterDataInt).getDocuments { [weak self] (querySnapshot, err) in
       
       guard let strongSelf = self else { return }
       
@@ -130,9 +141,59 @@ class TaskManager {
             let classfied = info.data()["classfied"] as? Int,
             let personPhoto = info.data()["personPhoto"] as? String,
             let requester = info.data()["requester"] as? [String],
-            let deviceToken = info.data()["deviceToken"] as? String else { return }
+            let fcmToken = info.data()["fcmToken"] as? String,
+            let missionTaker = info.data()["missionTaker"] as? String,
+            let refuse = info.data()["refuse"] as? [String],
+            let uid = info.data()["uid"] as? String  else { return }
           
-          let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, fileType: fileType, personPhoto: personPhoto, requester: requester, deviceToken: deviceToken)
+          let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, fileType: fileType, personPhoto: personPhoto, requester: requester, fcmToken: fcmToken, missionTaker: missionTaker, refuse: refuse, uid: uid)
+          
+          strongSelf.taskData.append(dataReturn)
+        }
+        
+        completion(.success(strongSelf.taskData))
+      }
+    }
+  }
+  
+  func readSpecificData(parameter: String, parameterString: String, completion: @escaping ((Result<[TaskInfo], Error>) -> Void)) {
+    
+    self.taskData = []
+    
+    dbF.collection("Tasks").whereField(parameter, isEqualTo: parameterString).getDocuments { [weak self] (querySnapshot, err) in
+      
+      guard let strongSelf = self else { return }
+      
+      if err != nil {
+        
+        completion(.failure(ReadDataError.readDataError))
+        
+      } else {
+        
+        guard let quary = querySnapshot else {return }
+        
+        quary.documents.map { info in
+          
+          guard let email = info.data()["email"] as? String,
+            let nickname = info.data()["nickname"] as? String,
+            let gender = info.data()["gender"] as? Int,
+            let taskPhoto = info.data()["taskPhoto"] as? [String],
+            let time = info.data()["time"] as? Int,
+            let detail = info.data()["detail"] as? String,
+            let lat = info.data()["lat"] as? Double,
+            let long = info.data()["long"] as? Double,
+            let money = info.data()["money"] as? Int,
+            let status = info.data()["status"] as? Int,
+            let fileType = info.data()["fileType"] as? [Int],
+            let classfied = info.data()["classfied"] as? Int,
+            let personPhoto = info.data()["personPhoto"] as? String,
+            let requester = info.data()["requester"] as? [String],
+            let fcmToken = info.data()["fcmToken"] as? String,
+            let missionTaker = info.data()["missionTaker"] as? String,
+            let refuse = info.data()["refuse"] as? [String],
+            let uid = info.data()["uid"] as? String else { return }
+          
+          let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, fileType: fileType, personPhoto: personPhoto, requester: requester, fcmToken: fcmToken, missionTaker: missionTaker, refuse: refuse, uid: uid)
           
           strongSelf.taskData.append(dataReturn)
         }
@@ -222,5 +283,74 @@ class TaskManager {
     let timeConvert = dateFormatter.string(from: time)
     
     return timeConvert
+  }
+  
+  func updateTaskRequest(owner: String, completion: @escaping (Result<String, Error>) -> Void) {
+    
+      guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
+    
+    dbF.collection("Tasks").whereField("uid", isEqualTo: owner).getDocuments { (querySnapshot, error) in
+      
+      if error != nil {
+        
+        completion(.failure(FireBaseUpdateError.updateError))
+        
+      }
+      
+      guard let document = querySnapshot?.documents.first,
+           var requester = document.data()["requester"] as? [String] else { return }
+      
+      requester.append(uid)
+      
+      document.reference.updateData(["requester": requester]) { error in
+        
+        if error != nil {
+          
+          completion(.failure(FireBaseUpdateError.updateError))
+        }
+      }
+      
+      completion(.success("Update Success"))
+    }
+  }
+  
+  func showAlert(title: String, message: String, viewController: UIViewController) {
+    let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    let okAction = UIAlertAction(title: "ok", style: .default) { _ in
+      LKProgressHUD.dismiss()
+    }
+    controller.addAction(okAction)
+    viewController.present(controller, animated: true, completion: nil)
+  }
+  
+  func updateWholeTask(task: TaskInfo, completion: @escaping (Result<String,Error>) -> Void ) {
+    
+    guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
+    
+    dbF.collection("Tasks").whereField("uid", isEqualTo: uid).getDocuments { (querySnapshot, error) in
+      
+      if error != nil {
+        
+        completion(.failure(FireBaseUpdateError.updateError))
+        
+      }
+      
+      let taskNewVersion = TaskInfo(email: task.email, nickname: task.nickname, gender: task.gender, taskPhoto: task.taskPhoto, time: task.time, detail: task.detail, lat: task.lat, long: task.long, money: task.money, classfied: task.classfied, status: task.status, fileType: task.fileType, personPhoto: task.personPhoto, requester: task.requester, fcmToken: task.fcmToken, missionTaker: task.missionTaker, refuse: task.refuse, uid: task.uid)
+      
+      if let querySnapshot = querySnapshot {
+        
+        let document = querySnapshot.documents.first
+        
+        document?.reference.updateData(taskNewVersion.toDict) { error in
+          
+          if error != nil {
+            
+            completion(.failure(FireBaseUpdateError.updateError))
+          }
+        }
+      }
+      
+      completion(.success("Update Success"))
+    }
   }
 }
