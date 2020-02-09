@@ -10,6 +10,7 @@ import UIKit
 import Photos
 import Firebase
 import MessageKit
+import InputBarAccessoryView
 import FirebaseFirestore
 
 class ChatViewController: MessagesViewController {
@@ -17,10 +18,21 @@ class ChatViewController: MessagesViewController {
   private var messages: [Message] = []
   private var messageListener: ListenerRegistration?
   
+  private let db = Firestore.firestore()
+  private var reference: CollectionReference?
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    setUpMessage()
     preSetUp()
+    
+    guard let data = detailData else { return }
+    reference = db.collection(["Chatrooms", data.chatRoom, "thread"].joined(separator: "/"))
+//    guard let user = Auth.auth().currentUser else { return }
+//
+//    let testMessage = Message(user: user, content: "I love pizza, what is your favorite kind?")
+//    insertNewMessage(testMessage)
   }
   
   var detailData: TaskInfo?
@@ -28,22 +40,7 @@ class ChatViewController: MessagesViewController {
   var selfSender: String?
   
   var receiver: String?
-  
-  private let user: User
-  private let channel: Channel
-  
-  init(user: User, channel: Channel) {
-    self.user = user
-    self.channel = channel
-    super.init(nibName: nil, bundle: nil)
-    
-    title = channel.name
-  }
-  
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-  
+
   func preSetUp() {
     guard let userInfo = UserManager.shared.currentUserInfo,
       let taskData = detailData  else { return }
@@ -59,14 +56,44 @@ class ChatViewController: MessagesViewController {
   
   func setUpMessage() {
     navigationItem.largeTitleDisplayMode = .never
-    
     maintainPositionOnKeyboardFrameChanged = true
     messageInputBar.inputTextView.tintColor = .primary
     messageInputBar.sendButton.setTitleColor(.primary, for: .normal)
+    messageInputBar.sendButton.addTarget(self, action: #selector(tapSend), for: .touchUpInside)
     messageInputBar.delegate = self
     messagesCollectionView.messagesDataSource = self
     messagesCollectionView.messagesLayoutDelegate = self
     messagesCollectionView.messagesDisplayDelegate = self
+  }
+  
+  private func save(_ message: Message) {
+    reference?.addDocument(data: message.representation) { error in
+      if let eccc = error {
+        print("Error sending message: \(eccc.localizedDescription)")
+        return
+      }
+      self.messagesCollectionView.scrollToBottom()
+    }
+  }
+  
+  private func insertNewMessage(_ message: Message) {
+    guard !messages.contains(message) else {
+      return
+    }
+    
+    messages.append(message)
+    messages.sort()
+    
+    let isLatestMessage = messages.index(of: message) == (messages.count - 1)
+    let shouldScrollToBottom = messagesCollectionView.isAtBottom && isLatestMessage
+    
+    messagesCollectionView.reloadData()
+    
+    if shouldScrollToBottom {
+      DispatchQueue.main.async {
+        self.messagesCollectionView.scrollToBottom(animated: true)
+      }
+    }
   }
   
 }
@@ -87,10 +114,10 @@ extension ChatViewController: MessagesDataSource {
     return messages[indexPath.section]
   }
   
-  func messageTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-    return 12
-  }
-  
+//  func messageTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+//    return 12
+//  }
+//
   func messageTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
     
     return NSAttributedString(string: message.sender.displayName, attributes: [.font: UIFont.systemFont(ofSize: 12)])
@@ -132,9 +159,24 @@ extension ChatViewController: MessagesDisplayDelegate {
 extension ChatViewController: MessageInputBarDelegate {
   
   func messageInputBar(_ inputBar: MessageInputBar, didPressSendButtonWith text: String) {
+    print("1")
+    
+    guard let user = Auth.auth().currentUser else { return }
     
     let message = Message(user: user, content: text)
-//    save(message)
+    save(message)
     inputBar.inputTextView.text = ""
+  }
+  
+  @objc func tapSend() {
+
+    guard let text = messageInputBar.inputTextView.text,
+         let user = Auth.auth().currentUser else { return }
+
+    let message = Message(user: user, content: text)
+       save(message)
+       messageInputBar.inputTextView.resignFirstResponder()
+       self.view.endEditing(true)
+       messageInputBar.inputTextView.text = ""
   }
 }

@@ -347,11 +347,11 @@ class TaskManager {
   
   func createChatRoom(chatRoomID: String, completion: @escaping (Result<String, Error>) -> Void) {
     
-    let dataArray: [String: Any] = ["roomname": chatRoomID]
+    let channel = Channel(name: chatRoomID)
     
-    database.child("Chatrooms").child(chatRoomID).setValue(dataArray) { _, ref in
+    dbF.collection("Chatrooms").document(chatRoomID).setData(channel.representation) { (_) in
       
-      completion(.success("success"))
+      completion(.success("ya"))
     }
   }
 }

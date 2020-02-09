@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class StartMissionViewController: UIViewController {
 
@@ -30,9 +31,11 @@ class StartMissionViewController: UIViewController {
     
     if segue.identifier == "chat" {
       guard let chatroomVC = segue.destination as? ChatViewController,
-           let data = detailData  else { return }
+           let data = detailData else { return }
+      
         chatroomVC.modalPresentationStyle = .fullScreen
         chatroomVC.detailData = data
+
       }
   }
 
