@@ -99,7 +99,7 @@ class PersonalViewController: UIViewController {
           
           switch result {
             
-          case .success(let success):
+          case .success:
             
             LKProgressHUD.dismiss()
             

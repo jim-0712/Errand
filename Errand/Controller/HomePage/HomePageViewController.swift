@@ -7,10 +7,12 @@
 //
 
 import UIKit
+import CryptoKit
 import GoogleSignIn
 import FirebaseAuth
 import FBSDKLoginKit
 import IQKeyboardManager
+import AuthenticationServices
 
 class ViewController: UIViewController {
   
@@ -22,7 +24,7 @@ class ViewController: UIViewController {
     super.viewDidLoad()
     
     setUpBtn()
-    visitorRegisterBtn.isEnabled = false
+    setUpAppleBtn()
     IQKeyboardManager.shared().isEnabled = true
     
     NotificationCenter.default.addObserver(self, selector: #selector(goToUserInfo), name: Notification.Name("userInfo"), object: nil)
@@ -34,28 +36,15 @@ class ViewController: UIViewController {
   
   @IBOutlet weak var fbLoginBtn: UIButton!
   
-  @IBOutlet weak var visitorRegisterBtn: UIButton!
-  
   @IBOutlet weak var googleLoginBtn: UIButton!
   
   @IBOutlet weak var visitorBtn: UIButton!
   
-  @IBOutlet weak var appleLogo: UIImageView!
-  
-  @IBOutlet weak var appleLoginBtn: UIButton!
-  
-  @IBOutlet weak var accountText: UITextField!
-  
-  @IBOutlet weak var passwordText: UITextField!
-  
-  @IBAction func appleLoginAct(_ sender: Any) {
-    
-  }
+  @IBOutlet weak var appleView: UIView!
   
   @IBAction func visitorAct(_ sender: Any) {
     UserManager.shared.isTourist = true
-    guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? UITabBarController else { return }
-    self.present(mapVc, animated: true, completion: nil)
+    gotoMap(viewController: self)
   }
   
   @IBAction func googleLoginAct(_ sender: Any) {
@@ -88,12 +77,7 @@ class ViewController: UIViewController {
                 
                 UserManager.shared.isTourist = false
                 
-                guard let photoBack = Auth.auth().currentUser?.photoURL?.absoluteString,
-                  let email = Auth.auth().currentUser?.email else { return }
-      
-                strongSelf.photo = photoBack
-                
-                UserManager.shared.createDataBase(classification: "Users", gender: 1, nickName: "發抖", email: email, photo: strongSelf.photo) { result in
+                strongSelf.createDataBase(isApple: false) { result in
                   
                   switch result {
                     
@@ -105,9 +89,7 @@ class ViewController: UIViewController {
                     
                     LKProgressHUD.showSuccess(text: success, controller: strongSelf)
                     
-                    guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? UITabBarController else { return }
-                    
-                    strongSelf.present(mapVc, animated: true, completion: nil)
+                    strongSelf.gotoMap(viewController: strongSelf)
                     
                   case .failure(let error):
                     
@@ -122,7 +104,6 @@ class ViewController: UIViewController {
                 LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
               }
             }
-            LKProgressHUD.showSuccess(text: "Success", controller: self)
             
           case .failure(let error):
             
@@ -136,51 +117,192 @@ class ViewController: UIViewController {
     }
   }
   
-  @IBAction func visitorRegisterAct(_ sender: Any) {
+  let appleButton: ASAuthorizationAppleIDButton = {
+    let button = ASAuthorizationAppleIDButton()
+    button.addTarget(self, action: #selector(startSignInWithAppleFlow), for: .touchUpInside)
+    button.layer.cornerRadius = button.bounds.height / 2
+    return button
+  }()
+  
+  func setUpBtn() {
+    fbLoginBtn.layer.cornerRadius = fbLoginBtn.bounds.height / 2
+    googleLoginBtn.layer.cornerRadius = googleLoginBtn.bounds.height / 2
+    visitorBtn.layer.cornerRadius = visitorBtn.bounds.height / 2
+    GIDSignIn.sharedInstance()?.presentingViewController = self
+    logoLabel.transform = CGAffineTransform(a: 1.0, b: -0.15, c: 0, d: 0.7, tx: 0, ty: 10)
+    let backView = backgroundManager.setUpView(view: self.view)
+    self.view.layer.insertSublayer(backView, at: 0)
     
-    if isEmail {
-      
-      guard let account = accountText.text,
-        
-        accountText.text != "" else {
-          LKProgressHUD.showFailure(text: RegistMessage.emptyAccount.rawValue, controller: self)
-          
-          return }
-      
-      guard let password = passwordText.text,
-        
-        passwordText.text != "" else {
-          LKProgressHUD.showFailure(text: RegistMessage.emptyPassword.rawValue, controller: self)
-          
-          return }
-      
-      LKProgressHUD.show(controller: self)
-      
-      UserManager.shared.registAccount(account: account, password: password) { [weak self] result in
+  }
+  
+  func setUpAppleBtn() {
+    appleView.backgroundColor = .clear
+    appleView.addSubview(appleButton)
+    appleButton.translatesAutoresizingMaskIntoConstraints = false
+    
+    NSLayoutConstraint.activate([
+      appleButton.topAnchor.constraint(equalTo: appleView.topAnchor, constant: 0),
+      appleButton.bottomAnchor.constraint(equalTo: appleView.bottomAnchor, constant: 0),
+      appleButton.leadingAnchor.constraint(equalTo: appleView.leadingAnchor, constant: 0),
+      appleButton.trailingAnchor.constraint(equalTo: appleView.trailingAnchor, constant: 0)
+      ])
+  }
+  
+  @objc func goToUserInfo () {
+    
+    UserManager.shared.isTourist = false
+    
+    self.createDataBase(isApple: false) { [weak self] result in
         
         guard let strongSelf = self else { return }
         
         switch result {
           
-        case .success:
+        case .success(let success):
           
-          guard let photoBack = Auth.auth().currentUser?.photoURL?.absoluteString else { return }
+          UserManager.shared.isTourist = false
+          UserManager.shared.updatefcmToken()
+          LKProgressHUD.showSuccess(text: success, controller: strongSelf)
+    
+          strongSelf.gotoMap(viewController: strongSelf)
           
-          strongSelf.photo = photoBack
+        case .failure(let error):
           
-          UserManager.shared.createDataBase(classification: "Users", gender: 1, nickName: "發抖", email: account, photo: strongSelf.photo) { result in
+          LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
+          
+        }
+      }
+  }
+  
+  func createDataBase(isApple: Bool, completion: @escaping (Result<String, Error>) -> Void) {
+    
+    if isApple {
+      self.photo = ""
+    } else {
+      guard let photoBack = Auth.auth().currentUser?.photoURL?.absoluteString else { return }
+      self.photo = photoBack
+    }
+    
+    guard let email = Auth.auth().currentUser?.email else { return }
+    
+    UserManager.shared.createDataBase(classification: "Users", nickName: "使用者", email: email, photo: self.photo) { result in
+      
+      switch result {
+        
+      case .success:
+        
+        completion(.success("good"))
+        
+      case .failure:
+        
+        completion(.failure(RegiError.registFailed))
+      }
+    }
+  }
+  
+  private func randomNonceString(length: Int = 32) -> String {
+    precondition(length > 0)
+    let charset: Array<Character> =
+        Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+    var result = ""
+    var remainingLength = length
+
+    while remainingLength > 0 {
+      let randoms: [UInt8] = (0 ..< 16).map { _ in
+        var random: UInt8 = 0
+        let errorCode = SecRandomCopyBytes(kSecRandomDefault, 1, &random)
+        if errorCode != errSecSuccess {
+          fatalError("Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)")
+        }
+        return random
+      }
+
+      randoms.forEach { random in
+        if length == 0 {
+          return
+        }
+
+        if random < charset.count {
+          result.append(charset[Int(random)])
+          remainingLength -= 1
+        }
+      }
+    }
+
+    return result
+  }
+  
+  fileprivate var currentNonce: String?
+  
+ @objc func startSignInWithAppleFlow() {
+    let nonce = randomNonceString()
+    currentNonce = nonce
+    let appleIDProvider = ASAuthorizationAppleIDProvider()
+    let request = appleIDProvider.createRequest()
+    request.requestedScopes = [.fullName, .email]
+    request.nonce = sha256(nonce)
+
+    let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+    authorizationController.delegate = self
+    authorizationController.presentationContextProvider = self
+    authorizationController.performRequests()
+  }
+
+  private func sha256(_ input: String) -> String {
+    let inputData = Data(input.utf8)
+    let hashedData = SHA256.hash(data: inputData)
+    let hashString = hashedData.compactMap {
+      return String(format: "%02x", $0)
+    }.joined()
+
+    return hashString
+  }
+}
+
+extension ViewController: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+  func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+    
+    return self.view.window!
+  }
+  
+  func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+    if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+      guard let nonce = currentNonce else {
+        fatalError("Invalid state: A login callback was received, but no login request was sent.")
+      }
+      guard let appleIDToken = appleIDCredential.identityToken else {
+        print("Unable to fetch identity token")
+        return
+      }
+      guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
+        print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
+        return
+      }
+   
+      let credential = OAuthProvider.credential(withProviderID: "apple.com",
+                                                idToken: idTokenString,
+                                                rawNonce: nonce)
+      // Sign in with Firebase.
+      Auth.auth().signIn(with: credential) { (_, error) in
+
+        if let error = error {
+          print(error)
+          return
+        }
+        
+        self.createDataBase(isApple: true) { [weak self] result in
+            
+            guard let strongSelf = self else { return }
             
             switch result {
               
             case .success(let success):
               
               UserManager.shared.isTourist = false
-              
+              UserManager.shared.updatefcmToken()
               LKProgressHUD.showSuccess(text: success, controller: strongSelf)
-              
-              guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? UITabBarController else { return }
-              
-              strongSelf.present(mapVc, animated: true, completion: nil)
+        
+              strongSelf.gotoMap(viewController: strongSelf)
               
             case .failure(let error):
               
@@ -188,102 +310,19 @@ class ViewController: UIViewController {
               
             }
           }
-          
-        case .failure:
-          
-          LKProgressHUD.showFailure(text: "Error Email", controller: strongSelf)
-        }
-        
-      }
-    }}
-  
-  func checkMail(email: String) -> Bool {
-    
-    let emailPattern = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
-    
-    do {
-      let regEx = try NSRegularExpression(pattern: emailPattern, options: .caseInsensitive)
-      
-      let matches = regEx.matches(in: email, options: [], range: NSRange(location: 0, length: email.count))
-      
-      if matches.count > 0 {
-        return true
-      } else {
-        return false
-      }
-    } catch {
-      fatalError("Wrong email pattern")
-    }
-  }
-  
-  func setUpBtn() {
-    
-    fbLoginBtn.layer.cornerRadius = 20
-    visitorRegisterBtn.layer.cornerRadius = 20
-    googleLoginBtn.layer.cornerRadius = 20
-    appleLoginBtn.layer.cornerRadius = 20
-    visitorBtn.layer.cornerRadius = 20
-    appleLoginBtn.layer.borderWidth = 1.0
-    appleLoginBtn.layer.borderColor = UIColor.black.cgColor
-    GIDSignIn.sharedInstance()?.presentingViewController = self
-    accountText.delegate = self
-    passwordText.delegate = self
-    logoLabel.transform = CGAffineTransform(a: 1.0, b: -0.15, c: 0, d: 0.7, tx: 0, ty: 10)
-    let backView = backgroundManager.setUpView(view: self.view)
-    self.view.layer.insertSublayer(backView, at: 0)
-  }
-  
-  @objc func goToUserInfo () {
-    
-    UserManager.shared.isTourist = false
-    
-    guard let photoBack = Auth.auth().currentUser?.photoURL?.absoluteString,
-      let email = Auth.auth().currentUser?.email else { return }
-    
-    self.photo = photoBack
-    
-    UserManager.shared.createDataBase(classification: "Users", gender: 1, nickName: "發抖", email: email, photo: self.photo) { [weak self] result in
-      
-      guard let strongSelf = self else { return }
-      
-      switch result {
-        
-      case .success(let success):
-        
-        UserManager.shared.isTourist = false
-        UserManager.shared.updatefcmToken()
-        LKProgressHUD.showSuccess(text: success, controller: strongSelf)
-  
-        guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? TabBarViewController else { return }
-        strongSelf.present(mapVc, animated: true, completion: nil)
-        
-      case .failure(let error):
-        
-        LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
-        
       }
     }
   }
-}
 
-extension ViewController: UITextFieldDelegate {
-  
-  func textFieldDidEndEditing(_ textField: UITextField) {
-    
-    guard let account = accountText.text,
-      accountText.text != "" else { return }
-    
-    guard let password = passwordText.text,
-      passwordText.text != "" else { return }
-    
-    isEmail = checkMail(email: account)
-    
-    if isEmail && password.count > 5 {
-      
-      visitorRegisterBtn.isEnabled = true
-    } else {
-      
-      visitorRegisterBtn.isEnabled = false
-    }
+  func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+    // Handle error.
+    print("Sign in with Apple errored: \(error)")
   }
+
+  func gotoMap(viewController: UIViewController) {
+    
+    guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? TabBarViewController else { return }
+        viewController.present(mapVc, animated: true, completion: nil)
+    }
+  
 }

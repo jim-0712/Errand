@@ -55,7 +55,7 @@ class UserInfoViewController: UIViewController {
       photo = photoBack
     }
 
-    UserManager.shared.createDataBase(classification: "Users", gender: gender, nickName: nickName, email: email, photo: photo) { result in
+    UserManager.shared.createDataBase(classification: "Users", nickName: nickName, email: email, photo: photo) { result in
       
       switch result {
         

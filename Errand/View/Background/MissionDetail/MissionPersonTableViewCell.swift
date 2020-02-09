@@ -30,7 +30,7 @@ class MissionPersonTableViewCell: UITableViewCell {
     
     personImage.layer.cornerRadius = personImage.bounds.width / 2
     
-    personImage.loadImage(personURL)
+    personImage.loadImage(personURL, placeHolder: UIImage(named: "photographer"))
     
     nickName.text = name
   }

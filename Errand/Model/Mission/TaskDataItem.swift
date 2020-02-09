@@ -52,6 +52,8 @@ struct TaskInfo {
   
   var uid: String
   
+  var chatRoom: String
+  
   var toDict: [String: Any] {
     
     return [   "email": email,
@@ -88,7 +90,9 @@ struct TaskInfo {
               
               "refuse": refuse,
               
-              "uid": uid
+              "uid": uid,
+              
+              "chatRoom": chatRoom
           ]
   }
 }

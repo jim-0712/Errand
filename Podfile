@@ -28,6 +28,8 @@ target 'Errand' do
   pod 'Crashlytics', '~> 3.14.0'
   pod "Refreshable"
   pod "Cosmos"
+  pod 'MessageKit'
+  pod 'Scaledrone', '~> 0.3.0'
 
   target 'ErrandTests' do
     inherit! :search_paths

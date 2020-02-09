@@ -227,7 +227,11 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
       
       guard let strongSelf = self else { return }
       
-      switch result {
+        switch result {
+          
+      case .failure:
+      
+      print("fail")
         
       case .success:
         
@@ -246,9 +250,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
             LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
           }
         }
-      case .failure:
-        
-        print("fail")
       }
     }
   }

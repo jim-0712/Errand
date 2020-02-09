@@ -64,6 +64,14 @@
 		FB638DCE23E71D3500030CB2 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB638DCD23E71D3500030CB2 /* Profile.storyboard */; };
 		FB638DD023E7ECA400030CB2 /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB638DCF23E7ECA400030CB2 /* DoubleExtension.swift */; };
 		FB638DD223E8913800030CB2 /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB638DD123E8913800030CB2 /* PhotoCollectionViewCell.swift */; };
+		FB69552423EFA1AB0049DB14 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FB69552323EFA1AB0049DB14 /* GoogleService-Info.plist */; };
+		FB69552923F000B50049DB14 /* UICollectionView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB69552823F000B50049DB14 /* UICollectionView+Additions.swift */; };
+		FB69552C23F000BE0049DB14 /* UIView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB69552A23F000BD0049DB14 /* UIView+Additions.swift */; };
+		FB69552D23F000BE0049DB14 /* UIImage+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB69552B23F000BE0049DB14 /* UIImage+Additions.swift */; };
+		FB69553123F001350049DB14 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB69552E23F001350049DB14 /* Channel.swift */; };
+		FB69553223F001350049DB14 /* DatabaseRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB69552F23F001350049DB14 /* DatabaseRepresentation.swift */; };
+		FB69553323F001350049DB14 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB69553023F001350049DB14 /* Message.swift */; };
+		FB69553523F0055B0049DB14 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB69553423F0055B0049DB14 /* AppSettings.swift */; };
 		FB752ABB23D5DFB200BF3852 /* PermanentMarker.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */; };
 		FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB752ABD23D5E57900BF3852 /* Background.swift */; };
 		FB9A2BFE23D068FF00553D97 /* MissionListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */; };
@@ -71,7 +79,8 @@
 		FBA557F723ED17A400521B89 /* RequesterRateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA557F623ED17A400521B89 /* RequesterRateTableViewCell.swift */; };
 		FBA557F923ED580100521B89 /* UIcolorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA557F823ED580100521B89 /* UIcolorExtension.swift */; };
 		FBA557FB23ED6D0C00521B89 /* StartMissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA557FA23ED6D0C00521B89 /* StartMissionViewController.swift */; };
-		FBF7AB5623D52EEF004B521A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FBF7AB5523D52EEF004B521A /* GoogleService-Info.plist */; };
+		FBA557FE23EE54B500521B89 /* Chat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FBA557FD23EE54B500521B89 /* Chat.storyboard */; };
+		FBA5580123EE554F00521B89 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA5580023EE554F00521B89 /* ChatViewController.swift */; };
 		FBF7AB5823D56F5D004B521A /* GoogleMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF7AB5723D56F5D004B521A /* GoogleMapViewController.swift */; };
 		FBF7AB5B23D58AE2004B521A /* MapDataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF7AB5A23D58AE2004B521A /* MapDataItem.swift */; };
 		FBF7AB5D23D590E7004B521A /* MapManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF7AB5C23D590E7004B521A /* MapManager.swift */; };
@@ -164,6 +173,14 @@
 		FB638DCD23E71D3500030CB2 /* Profile.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		FB638DCF23E7ECA400030CB2 /* DoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
 		FB638DD123E8913800030CB2 /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
+		FB69552323EFA1AB0049DB14 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		FB69552823F000B50049DB14 /* UICollectionView+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Additions.swift"; sourceTree = "<group>"; };
+		FB69552A23F000BD0049DB14 /* UIView+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Additions.swift"; sourceTree = "<group>"; };
+		FB69552B23F000BE0049DB14 /* UIImage+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Additions.swift"; sourceTree = "<group>"; };
+		FB69552E23F001350049DB14 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
+		FB69552F23F001350049DB14 /* DatabaseRepresentation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseRepresentation.swift; sourceTree = "<group>"; };
+		FB69553023F001350049DB14 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		FB69553423F0055B0049DB14 /* AppSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PermanentMarker.ttf; sourceTree = "<group>"; };
 		FB752ABD23D5E57900BF3852 /* Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionListViewController.swift; sourceTree = "<group>"; };
@@ -171,7 +188,8 @@
 		FBA557F623ED17A400521B89 /* RequesterRateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequesterRateTableViewCell.swift; sourceTree = "<group>"; };
 		FBA557F823ED580100521B89 /* UIcolorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIcolorExtension.swift; sourceTree = "<group>"; };
 		FBA557FA23ED6D0C00521B89 /* StartMissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartMissionViewController.swift; sourceTree = "<group>"; };
-		FBF7AB5523D52EEF004B521A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		FBA557FD23EE54B500521B89 /* Chat.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Chat.storyboard; sourceTree = "<group>"; };
+		FBA5580023EE554F00521B89 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		FBF7AB5723D56F5D004B521A /* GoogleMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleMapViewController.swift; sourceTree = "<group>"; };
 		FBF7AB5A23D58AE2004B521A /* MapDataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapDataItem.swift; sourceTree = "<group>"; };
 		FBF7AB5C23D590E7004B521A /* MapManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapManager.swift; sourceTree = "<group>"; };
@@ -290,14 +308,15 @@
 				FB387C4523CEF5BB00B6D8C4 /* View */,
 				FB387C4423CEF5A900B6D8C4 /* Controller */,
 				FB387C0F23CEEF0E00B6D8C4 /* AppDelegate.swift */,
+				FB69553423F0055B0049DB14 /* AppSettings.swift */,
 				FB24EC1323D9B19300FA3F02 /* CustomeColor.swift */,
+				FB69552323EFA1AB0049DB14 /* GoogleService-Info.plist */,
 				FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */,
 				FB5F5BCF23DB2847003B9ABC /* setofont.ttf */,
 				FB387C1B23CEEF0F00B6D8C4 /* Assets.xcassets */,
 				FB387C1D23CEEF0F00B6D8C4 /* LaunchScreen.storyboard */,
 				FB387C2023CEEF0F00B6D8C4 /* Info.plist */,
 				FB387C1823CEEF0E00B6D8C4 /* Errand.xcdatamodeld */,
-				FBF7AB5523D52EEF004B521A /* GoogleService-Info.plist */,
 			);
 			path = Errand;
 			sourceTree = "<group>";
@@ -323,6 +342,7 @@
 		FB387C4423CEF5A900B6D8C4 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				FBA557FF23EE553A00521B89 /* Friends+Chat */,
 				FB53F31223EAAE8D0041C49D /* Requester */,
 				FB24EC0D23D96A0400FA3F02 /* TabBar */,
 				FB4A50DF23D6A8C90028BC82 /* Personalinfo */,
@@ -349,6 +369,7 @@
 				FB638DCB23E71D2800030CB2 /* Mission.storyboard */,
 				FB638DCD23E71D3500030CB2 /* Profile.storyboard */,
 				FB53F31023EAAE3C0041C49D /* Requester.storyboard */,
+				FBA557FD23EE54B500521B89 /* Chat.storyboard */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -372,6 +393,7 @@
 		FB387C4A23CF05FD00B6D8C4 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				FB69552523EFE5430049DB14 /* Chat */,
 				FB24EC1523DAAFDB00FA3F02 /* Mission */,
 				FBF7AB5923D58AB4004B521A /* Map */,
 				FB387C5423CF520100B6D8C4 /* User */,
@@ -490,10 +512,23 @@
 			children = (
 				FB638DC723E71AED00030CB2 /* UIStoryboard+Extension.swift */,
 				FB638DCF23E7ECA400030CB2 /* DoubleExtension.swift */,
+				FB69552B23F000BE0049DB14 /* UIImage+Additions.swift */,
+				FB69552A23F000BD0049DB14 /* UIView+Additions.swift */,
+				FB69552823F000B50049DB14 /* UICollectionView+Additions.swift */,
 				FB53F33223EBFE290041C49D /* WhiteSpace.swift */,
 				FBA557F823ED580100521B89 /* UIcolorExtension.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		FB69552523EFE5430049DB14 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				FB69552E23F001350049DB14 /* Channel.swift */,
+				FB69552F23F001350049DB14 /* DatabaseRepresentation.swift */,
+				FB69553023F001350049DB14 /* Message.swift */,
+			);
+			path = Chat;
 			sourceTree = "<group>";
 		};
 		FB752ABC23D5E55600BF3852 /* Background */ = {
@@ -522,6 +557,14 @@
 				FBA557F623ED17A400521B89 /* RequesterRateTableViewCell.swift */,
 			);
 			path = Requester;
+			sourceTree = "<group>";
+		};
+		FBA557FF23EE553A00521B89 /* Friends+Chat */ = {
+			isa = PBXGroup;
+			children = (
+				FBA5580023EE554F00521B89 /* ChatViewController.swift */,
+			);
+			path = "Friends+Chat";
 			sourceTree = "<group>";
 		};
 		FBF7AB5923D58AB4004B521A /* Map */ = {
@@ -655,12 +698,13 @@
 				FB53F31D23EB21890041C49D /* PhotoTableViewCell.xib in Resources */,
 				FB53F31823EAAFC20041C49D /* RequesterTableViewCell.xib in Resources */,
 				FB638D8023E56FC000030CB2 /* CategoryCollectionViewCell.xib in Resources */,
-				FBF7AB5623D52EEF004B521A /* GoogleService-Info.plist in Resources */,
 				FB387C1723CEEF0E00B6D8C4 /* Main.storyboard in Resources */,
 				FB53F32D23EBCE220041C49D /* PersonAboutTableViewCell.xib in Resources */,
+				FB69552423EFA1AB0049DB14 /* GoogleService-Info.plist in Resources */,
 				FB387C5823CF551A00B6D8C4 /* Content.storyboard in Resources */,
 				FB638DCC23E71D2800030CB2 /* Mission.storyboard in Resources */,
 				FB53F31123EAAE3C0041C49D /* Requester.storyboard in Resources */,
+				FBA557FE23EE54B500521B89 /* Chat.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -848,6 +892,8 @@
 				FB53F30F23EA9A430041C49D /* CheckRequesterViewController.swift in Sources */,
 				FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */,
 				FB638D7F23E56FC000030CB2 /* CategoryCollectionViewCell.swift in Sources */,
+				FB69553323F001350049DB14 /* Message.swift in Sources */,
+				FB69553223F001350049DB14 /* DatabaseRepresentation.swift in Sources */,
 				FB53F31723EAAFC20041C49D /* RequesterTableViewCell.swift in Sources */,
 				FB387C5323CF323600B6D8C4 /* UserInfoViewController.swift in Sources */,
 				FB387C1423CEEF0E00B6D8C4 /* HomePageViewController.swift in Sources */,
@@ -855,9 +901,11 @@
 				FB638DD223E8913800030CB2 /* PhotoCollectionViewCell.swift in Sources */,
 				FB53F33323EBFE290041C49D /* WhiteSpace.swift in Sources */,
 				FB5F5BCE23DB2639003B9ABC /* AddLocationViewController.swift in Sources */,
+				FBA5580123EE554F00521B89 /* ChatViewController.swift in Sources */,
 				FB24EC1723DAB00F00FA3F02 /* TaskDataItem.swift in Sources */,
 				FB638D7B23E5557B00030CB2 /* MissionPersonTableViewCell.swift in Sources */,
 				FB387C1023CEEF0E00B6D8C4 /* AppDelegate.swift in Sources */,
+				FB69552923F000B50049DB14 /* UICollectionView+Additions.swift in Sources */,
 				FB24EC1423D9B19300FA3F02 /* CustomeColor.swift in Sources */,
 				FB53F30B23EA51A70041C49D /* NotificationManager.swift in Sources */,
 				FB638DC823E71AED00030CB2 /* UIStoryboard+Extension.swift in Sources */,
@@ -870,12 +918,15 @@
 				FB9A2BFE23D068FF00553D97 /* MissionListViewController.swift in Sources */,
 				FB53F31C23EB21890041C49D /* PhotoTableViewCell.swift in Sources */,
 				FB6365FE23E2B975008555BC /* MissionDetailViewController.swift in Sources */,
+				FB69552C23F000BE0049DB14 /* UIView+Additions.swift in Sources */,
 				FB638DD023E7ECA400030CB2 /* DoubleExtension.swift in Sources */,
 				FB4BF7B423E288D600C4C05A /* ListTableViewCell.swift in Sources */,
 				FB63664F23E3FC1B008555BC /* MissionDetailTableViewCell.swift in Sources */,
 				FB53F32C23EBCE220041C49D /* PersonAboutTableViewCell.swift in Sources */,
 				FBA557F723ED17A400521B89 /* RequesterRateTableViewCell.swift in Sources */,
+				FB69552D23F000BE0049DB14 /* UIImage+Additions.swift in Sources */,
 				FB387C1A23CEEF0E00B6D8C4 /* Errand.xcdatamodeld in Sources */,
+				FB69553123F001350049DB14 /* Channel.swift in Sources */,
 				FB4A50E323D6D19A0028BC82 /* UserDataItem.swift in Sources */,
 				FBF7AB5823D56F5D004B521A /* GoogleMapViewController.swift in Sources */,
 				FBF7AB5D23D590E7004B521A /* MapManager.swift in Sources */,
@@ -883,6 +934,7 @@
 				FBA557FB23ED6D0C00521B89 /* StartMissionViewController.swift in Sources */,
 				FB387C4D23CF098F00B6D8C4 /* JGProgressHUDWrapper.swift in Sources */,
 				FBF7AB5B23D58AE2004B521A /* MapDataItem.swift in Sources */,
+				FB69553523F0055B0049DB14 /* AppSettings.swift in Sources */,
 				FBA557F923ED580100521B89 /* UIcolorExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

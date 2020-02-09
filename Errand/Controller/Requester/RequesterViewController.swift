@@ -65,9 +65,10 @@ class RequesterViewController: UIViewController {
   
   func readRequester() {
     
-    guard let email = UserManager.shared.currentUserInfo?.email else { return }
+    guard let uid = UserManager.shared.currentUserInfo?.uid,
+         let currentUser = UserManager.shared.currentUserInfo else { return }
     
-    TaskManager.shared.readSpecificData(parameter: "email", parameterString: email) { [weak self] result in
+    TaskManager.shared.readSpecificData(parameter: "uid", parameterString: uid) { [weak self] result in
       
       guard let strongSelf = self else { return }
       
@@ -99,6 +100,8 @@ class RequesterViewController: UIViewController {
                   LKProgressHUD.dismiss()
                   
                   strongSelf.userInfo = strongSelf.storeInfo
+                  
+                  UserManager.shared.currentUserInfo = currentUser
                 }
                 
               case .failure(let error):
@@ -128,7 +131,7 @@ class RequesterViewController: UIViewController {
     
     guard let requesterInfo = self.storyboard?.instantiateViewController(identifier: "requesterInfo") as? CheckRequesterViewController else { return }
 
-      requesterInfo.infoData = self.userInfo[indexInt]
+      requesterInfo.requsterInfoData = self.userInfo[indexInt]
       
       self.show(requesterInfo, sender: nil)
   }

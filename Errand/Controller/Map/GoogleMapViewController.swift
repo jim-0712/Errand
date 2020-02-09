@@ -25,7 +25,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     } else {
       LKProgressHUD.show(controller: self)
       //      refreshBtn.isEnabled = true
-      loadUserInfo()
     }
     setUpView()
     changeConstraints()
@@ -37,6 +36,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    loadUserInfo()
     getTaskData()
   }
   
@@ -341,7 +341,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   
   func addAnnotation() {
     
-    taskDataReturn.map { info in
+    for info in taskDataReturn {
       
       let marker = GMSMarker()
       marker.position = CLLocationCoordinate2D(latitude: info.lat, longitude: info.long)
@@ -350,6 +350,15 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
       marker.snippet = info.nickname
       marker.map = googleMapView
     }
+//    taskDataReturn.map { info in
+//
+//      let marker = GMSMarker()
+//      marker.position = CLLocationCoordinate2D(latitude: info.lat, longitude: info.long)
+//      let markerTitle = TaskManager.shared.filterClassified(classified: info.classfied + 1)
+//      marker.title =  markerTitle[0]
+//      marker.snippet = info.nickname
+//      marker.map = googleMapView
+//    }
   }
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

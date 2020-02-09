@@ -19,5 +19,21 @@ class StartMissionViewController: UIViewController {
   var receiveTime: String?
   
   var detailData: TaskInfo?
+  
+  @IBAction func enterChatroomAct(_ sender: Any) {
+    
+    performSegue(withIdentifier: "chat", sender: nil)
+    
+   }
+  
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    
+    if segue.identifier == "chat" {
+      guard let chatroomVC = segue.destination as? ChatViewController,
+           let data = detailData  else { return }
+        chatroomVC.modalPresentationStyle = .fullScreen
+        chatroomVC.detailData = data
+      }
+  }
 
 }

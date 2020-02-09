@@ -10,6 +10,7 @@ import UIKit
 import AVKit
 import AVFoundation
 import Kingfisher
+import FirebaseAuth
 
 class MissionDetailViewController: UIViewController {
   
@@ -19,6 +20,8 @@ class MissionDetailViewController: UIViewController {
     super.viewDidLoad()
     
     URLSessionConfiguration.default.multipathServiceType = .handover
+
+    loadUserInfo()
     setUp()
     setUpBtn()
     setUppageControll()
@@ -63,7 +66,6 @@ class MissionDetailViewController: UIViewController {
         
         let sender = PushNotificationSender()
         sender.sendPushNotification(to: taskInfo.fcmToken, body: "趕快開啟查看")
-        //        strongSelf.isRequester = true
         
         strongSelf.setUpBtnEnable()
         LKProgressHUD.dismiss()
@@ -96,6 +98,26 @@ class MissionDetailViewController: UIViewController {
     detailTableView.rowHeight = UITableView.automaticDimension
   }
   
+  func loadUserInfo() {
+    
+    if let uid = Auth.auth().currentUser?.uid {
+      
+      UserManager.shared.readData(uid: uid) {result in
+        
+        switch result {
+          
+        case .success(let dataReturn):
+          UserManager.shared.isPostTask = dataReturn.onTask
+          UserManager.shared.currentUserInfo = dataReturn
+          
+        case .failure:
+          
+          return
+        }
+      }
+    }
+  }
+  
   func setUpBtnEnable() {
     
       guard let user = UserManager.shared.currentUserInfo?.status else { return }
@@ -108,7 +130,7 @@ class MissionDetailViewController: UIViewController {
       takeMissionBtn.tintColor = .black
       takeMissionBtn.isEnabled = false
       
-    } else if user == 1 && !state || user == 2 && !state{
+    } else if user == 1 && !state || user == 2 && !state {
       
       takeMissionBtn.backgroundColor = .lightGray
       takeMissionBtn.setTitle("請先完成當前任務", for: .normal)

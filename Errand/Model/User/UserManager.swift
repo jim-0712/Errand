@@ -43,7 +43,7 @@ class UserManager {
     }
   }
   
-  func createDataBase(classification: String, gender: Int, nickName: String, email: String, photo: String, completion: @escaping (Result<String, Error>) -> Void) {
+  func createDataBase(classification: String, nickName: String, email: String, photo: String, completion: @escaping (Result<String, Error>) -> Void) {
     
     let report = 0
     
@@ -58,17 +58,15 @@ class UserManager {
     guard let token = UserDefaults.standard.value(forKey: "fcmToken") as? String,
          let uid = Auth.auth().currentUser?.uid else { return }
     
-    let info = AccountInfo(email: email, nickname: nickName, gender: gender, task: task, friends: friends, photo: photo, report: report, blacklist: blacklist, onTask: false, fcmToken: token, status: 0, about: "", taskCount: 0, totalStar: 0.0, uid: uid)
+    let info = AccountInfo(email: email, nickname: nickName, gender: 1, task: task, friends: friends, photo: photo, report: report, blacklist: blacklist, onTask: false, fcmToken: token, status: 0, about: "", taskCount: 0, totalStar: 0.0, uid: uid)
     
-    self.dbF.collection(classification).document(email).setData(info.toDict) { error in
+    self.dbF.collection(classification).document(uid).setData(info.toDict) { error in
       
       if error != nil {
         
         completion(Result.failure(RegiError.registFailed))
         
       } else {
-        
-        UserDefaults.standard.set(gender, forKey: "gender")
         
         UserDefaults.standard.set(nickName, forKey: "nickname")
         
@@ -286,7 +284,7 @@ class UserManager {
     }
   }
   
-  func updateUserInfo(completion: @escaping (Result<String,Error>) -> Void){
+  func updateUserInfo(completion: @escaping (Result<String, Error>) -> Void) {
     guard let data = currentUserInfo else { return }
     dbF.collection("Users").whereField("uid", isEqualTo: data.uid).getDocuments { (querySnapshot, error) in
       if let querySnapshot = querySnapshot {
@@ -321,4 +319,25 @@ class UserManager {
     }
   }
   
+  func updateStatus(uid: String, status: Int, completion: @escaping (Result<String, Error>) -> Void) {
+    
+    dbF.collection("Users").whereField("uid", isEqualTo: uid).getDocuments { (querySnapshot, error) in
+      if let querySnapshot = querySnapshot {
+        let document = querySnapshot.documents.first
+        
+        document?.reference.updateData(["status": status ], completion: { (error) in
+          
+          if error != nil {
+            
+            completion(.failure(FireBaseUpdateError.updateError))
+            
+          } else {
+            
+            completion(.success("Update Success"))
+            
+          }
+        })
+      }
+    }
+  }
 }

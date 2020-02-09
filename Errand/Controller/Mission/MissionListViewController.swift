@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class MissionListViewController: UIViewController {
   
@@ -15,26 +16,53 @@ class MissionListViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    LKProgressHUD.show(controller: self)
+    
+    setUpSearch()
+    setUp()
+    
     NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("postMission"), object: nil)
     
     NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("takeMission"), object: nil)
     
-    setUp()
-    getTaskData()
-    setUpSearch()
+    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("acceptRequester"), object: nil)
     
   }
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    
-    setUpindicatorView()
+    loadUserInfo()
   }
   
   @objc func reloadTable() {
     
     getTaskData()
   }
+  
+  func loadUserInfo() {
+     
+     if let uid = Auth.auth().currentUser?.uid {
+       
+       UserManager.shared.readData(uid: uid) { result in
+         
+         switch result {
+           
+         case .success(let dataReturn):
+           
+           LKProgressHUD.dismiss()
+           UserManager.shared.isPostTask = dataReturn.onTask
+           UserManager.shared.currentUserInfo = dataReturn
+
+           self.getTaskData()
+           self.setUpindicatorView()
+          
+         case .failure:
+           
+           return
+         }
+       }
+     }
+   }
   
    var indicatorCon: NSLayoutConstraint?
   
@@ -135,7 +163,8 @@ class MissionListViewController: UIViewController {
   @IBOutlet weak var btnStackView: UIStackView!
   
   @IBAction func allMissionAct(_ sender: UIButton) {
-    
+    LKProgressHUD.show(controller: self)
+    getTaskData()
     sender.isEnabled = false
     currentBtn.isEnabled = true
     UserManager.shared.checkDetailBtn = !UserManager.shared.checkDetailBtn
@@ -172,8 +201,8 @@ class MissionListViewController: UIViewController {
     didSet {
       if taskDataReturn.isEmpty {
         self.postMissionBtn.isHidden = true
-        LKProgressHUD.show(controller: self)
-        
+        LKProgressHUD.dismiss()
+        self.taskListTable.reloadData()
       } else {
         DispatchQueue.main.async {
           self.postMissionBtn.isHidden = false
@@ -310,8 +339,9 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
     self.timeString = TaskManager.shared.timeConverter(time: data.time)
     guard let time = timeString else { return UITableViewCell() }
     let missionText = TaskManager.shared.filterClassified(classified: data.classfied + 1)
+    let priceAndTimeInt = [data.money, data.time]
     
-    cell.setUp(missionImage: missionText[1], author: data.nickname, missionLabel: missionText[0], price: data.money, time: time, timeInt: data.time)
+    cell.setUp(missionImage: missionText[1], author: data.nickname, missionLabel: missionText[0], priceTimeInt: priceAndTimeInt, time: time)
     
     return cell
   }
@@ -340,7 +370,7 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
       detailVC.receiveTime = time
     } else if segue.identifier == "startMission"{
       
-      guard let detailVC = segue.destination as? MissionDetailViewController,
+      guard let detailVC = segue.destination as? StartMissionViewController,
            let time = self.timeString else { return }
       detailVC.detailData = detailData
       detailVC.receiveTime = time

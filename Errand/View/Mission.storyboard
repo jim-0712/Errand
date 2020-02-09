@@ -197,21 +197,46 @@
             </objects>
             <point key="canvasLocation" x="979.71014492753636" y="1612.5"/>
         </scene>
-        <!--View Controller-->
+        <!--Start Mission View Controller-->
         <scene sceneID="V0J-Cr-M89">
             <objects>
-                <viewController id="Kgm-Ce-nGE" sceneMemberID="viewController">
+                <viewController id="Kgm-Ce-nGE" customClass="StartMissionViewController" customModule="Errand" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="gtU-SM-Eq0">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eCp-zI-a1Z">
+                                <rect key="frame" x="184" y="460" width="46" height="30"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <action selector="enterChatroomAct:" destination="J8g-Wv-Uij" eventType="touchUpInside" id="vSH-GA-3YK"/>
+                                    <segue destination="JuS-xh-g1m" kind="show" identifier="chat" id="rq4-j3-NxH"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="eCp-zI-a1Z" firstAttribute="centerX" secondItem="aXm-3b-9iR" secondAttribute="centerX" id="4bT-gy-Qza"/>
+                            <constraint firstItem="eCp-zI-a1Z" firstAttribute="centerY" secondItem="aXm-3b-9iR" secondAttribute="centerY" id="WSD-iE-xHL"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="aXm-3b-9iR"/>
                     </view>
                     <navigationItem key="navigationItem" id="2cU-we-tyW"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XaS-Gq-zH0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="J8g-Wv-Uij" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2557" y="1613"/>
+        </scene>
+        <!--ChatViewController-->
+        <scene sceneID="Tdv-XJ-Hdt">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Chat" referencedIdentifier="ChatViewController" id="JuS-xh-g1m" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="MJO-Lw-9NQ"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sqo-ND-hRM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3256" y="1613"/>
         </scene>
         <!--Mission Detail View Controller-->
         <scene sceneID="uNy-9h-rgP">
