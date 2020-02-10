@@ -113,7 +113,7 @@ class CheckRequesterViewController: UIViewController {
         
       case .success:
         
-         UserManager.shared.updateStatus(uid: user.uid, status: 3) { result in
+         UserManager.shared.updateStatus(uid: user.uid, status: 2) { result in
              
              switch result {
                

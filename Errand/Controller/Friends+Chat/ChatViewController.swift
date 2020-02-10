@@ -23,16 +23,23 @@ class ChatViewController: MessagesViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    setUpListener()
     setUpMessage()
     preSetUp()
-    
+  }
+  
+  func setUpListener() {
     guard let data = detailData else { return }
     reference = db.collection(["Chatrooms", data.chatRoom, "thread"].joined(separator: "/"))
-//    guard let user = Auth.auth().currentUser else { return }
-//
-//    let testMessage = Message(user: user, content: "I love pizza, what is your favorite kind?")
-//    insertNewMessage(testMessage)
+    messageListener = reference?.addSnapshotListener { querySnapshot, error in
+      guard let snapshot = querySnapshot else {
+        print("Error listening for channel updates: \(error?.localizedDescription ?? "No error")")
+        return
+      }
+      snapshot.documentChanges.forEach { change in
+        self.handleDocumentChange(change)
+      }
+    }
   }
   
   var detailData: TaskInfo?
@@ -96,12 +103,26 @@ class ChatViewController: MessagesViewController {
     }
   }
   
+  private func handleDocumentChange(_ change: DocumentChange) {
+    guard let message = Message(document: change.document) else {
+
+      return
+    }
+
+    switch change.type {
+    case .added:
+      insertNewMessage(message)
+
+    default:
+      break
+    }
+  }
 }
 
 extension ChatViewController: MessagesDataSource {
   func currentSender() -> SenderType {
     
-    guard let sender = selfSender else { return Sender(senderId: "", displayName: "")}
+    guard let sender = selfSender else { return Sender(id: "", displayName: "")}
     
     return Sender(id: sender, displayName: AppSettings.displayName)
   }
@@ -114,20 +135,38 @@ extension ChatViewController: MessagesDataSource {
     return messages[indexPath.section]
   }
   
-//  func messageTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-//    return 12
-//  }
-//
+  func messageTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+    return 18
+  }
+
   func messageTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
     
     return NSAttributedString(string: message.sender.displayName, attributes: [.font: UIFont.systemFont(ofSize: 12)])
+  }
+  
+  func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
+    
+    UserManager.shared.readData(uid: message.sender.senderId) { result in
+      
+      switch result {
+        
+      case .success(let userInfo):
+        
+        avatarView.loadImage(userInfo.photo, placeHolder: UIImage(named: "develop"))
+        
+      case .failure(let error):
+        
+        print(error.localizedDescription)
+      }
+      
+    }
   }
 }
 
 extension ChatViewController: MessagesLayoutDelegate {
   
   func avatarSize(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGSize {
-    return .zero
+    return CGSize(width: 100, height: 100)
   }
   
   func footerViewSize(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGSize {
@@ -158,22 +197,22 @@ extension ChatViewController: MessagesDisplayDelegate {
 
 extension ChatViewController: MessageInputBarDelegate {
   
-  func messageInputBar(_ inputBar: MessageInputBar, didPressSendButtonWith text: String) {
-    print("1")
-    
-    guard let user = Auth.auth().currentUser else { return }
-    
-    let message = Message(user: user, content: text)
-    save(message)
-    inputBar.inputTextView.text = ""
-  }
-  
   @objc func tapSend() {
+    
+    var personPhoto = ""
 
     guard let text = messageInputBar.inputTextView.text,
-         let user = Auth.auth().currentUser else { return }
+      let user = Auth.auth().currentUser else { return }
 
-    let message = Message(user: user, content: text)
+    if let photo = Auth.auth().currentUser?.photoURL {
+      
+      personPhoto = "\(photo)"
+    } else {
+    
+      personPhoto = ""
+    }
+
+    let message = Message(user: user, content: text, personPhoto: personPhoto)
        save(message)
        messageInputBar.inputTextView.resignFirstResponder()
        self.view.endEditing(true)

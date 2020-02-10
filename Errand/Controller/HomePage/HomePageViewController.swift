@@ -20,6 +20,8 @@ class ViewController: UIViewController {
   
   var photo = ""
   
+  var name = "使用者"
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -179,13 +181,15 @@ class ViewController: UIViewController {
     if isApple {
       self.photo = ""
     } else {
-      guard let photoBack = Auth.auth().currentUser?.photoURL?.absoluteString else { return }
+      guard let photoBack = Auth.auth().currentUser?.photoURL?.absoluteString,
+           let name = Auth.auth().currentUser?.displayName else { return }
       self.photo = photoBack
+      self.name = name
     }
     
     guard let email = Auth.auth().currentUser?.email else { return }
     
-    UserManager.shared.createDataBase(classification: "Users", nickName: "使用者", email: email, photo: self.photo) { result in
+    UserManager.shared.createDataBase(classification: "Users", nickName: name, email: email, photo: self.photo) { result in
       
       switch result {
         
