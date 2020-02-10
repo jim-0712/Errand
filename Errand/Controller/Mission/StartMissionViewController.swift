@@ -16,10 +16,11 @@ class StartMissionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpTable()
-//        setUpCamera()
+        setUpCamera()
         // Do any additional setup after loading the view.
     }
   
+  @IBOutlet weak var mapView: GMSMapView!
   let myLocationManager = CLLocationManager()
   
   @IBOutlet weak var infoTableView: UITableView!
@@ -28,8 +29,6 @@ class StartMissionViewController: UIViewController {
   
   var detailData: TaskInfo?
   
-  @IBOutlet weak var mapView: GMSMapView!
-  
   func setUpTable() {
     
     infoTableView.delegate = self
@@ -37,11 +36,11 @@ class StartMissionViewController: UIViewController {
     infoTableView.register(UINib(nibName: "StartMissionTableViewCell", bundle: nil), forCellReuseIdentifier: "startMission")
   }
   
-//  func setUpCamera() {
-//    guard let center = myLocationManager.location?.coordinate else { return }
-//    let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 17)
-//    mapView.camera = myArrange
-//  }
+  func setUpCamera() {
+    guard let center = myLocationManager.location?.coordinate else { return }
+    let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 17)
+    mapView.camera = myArrange
+  }
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     
@@ -54,7 +53,6 @@ class StartMissionViewController: UIViewController {
 
       }
   }
-
 }
 
 extension StartMissionViewController: UITableViewDelegate, UITableViewDataSource {

@@ -182,7 +182,7 @@ class ViewController: UIViewController {
       self.photo = ""
     } else {
       guard let photoBack = Auth.auth().currentUser?.photoURL?.absoluteString,
-           let name = Auth.auth().currentUser?.displayName else { return }
+            let name = Auth.auth().currentUser?.displayName else { return }
       self.photo = photoBack
       self.name = name
     }

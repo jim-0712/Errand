@@ -212,18 +212,27 @@
                                     <constraint firstAttribute="height" constant="140" id="FcL-nG-LYi"/>
                                 </constraints>
                             </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QkL-D8-Ut0" customClass="GMSMapView">
+                                <rect key="frame" x="0.0" y="236" width="414" height="626"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="xQy-9h-zi1" firstAttribute="top" secondItem="aXm-3b-9iR" secondAttribute="top" id="21o-8z-xb3"/>
                             <constraint firstItem="xQy-9h-zi1" firstAttribute="leading" secondItem="aXm-3b-9iR" secondAttribute="leading" id="APO-GX-t4z"/>
+                            <constraint firstItem="aXm-3b-9iR" firstAttribute="bottom" secondItem="QkL-D8-Ut0" secondAttribute="bottom" id="Lge-Kl-yHJ"/>
+                            <constraint firstItem="QkL-D8-Ut0" firstAttribute="leading" secondItem="aXm-3b-9iR" secondAttribute="leading" id="Log-n9-HnS"/>
                             <constraint firstItem="aXm-3b-9iR" firstAttribute="trailing" secondItem="xQy-9h-zi1" secondAttribute="trailing" id="g69-Yo-KbN"/>
+                            <constraint firstItem="QkL-D8-Ut0" firstAttribute="top" secondItem="xQy-9h-zi1" secondAttribute="bottom" constant="8" symbolic="YES" id="tXn-1l-IEV"/>
+                            <constraint firstItem="aXm-3b-9iR" firstAttribute="trailing" secondItem="QkL-D8-Ut0" secondAttribute="trailing" id="wIK-h5-cm7"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="aXm-3b-9iR"/>
                     </view>
                     <navigationItem key="navigationItem" id="2cU-we-tyW"/>
                     <connections>
                         <outlet property="infoTableView" destination="xQy-9h-zi1" id="FQ1-W6-Ntn"/>
+                        <outlet property="mapView" destination="QkL-D8-Ut0" id="3yw-gN-tgt"/>
                         <segue destination="JuS-xh-g1m" kind="show" identifier="chat" id="NEJ-Il-mQe"/>
                     </connections>
                 </viewController>
