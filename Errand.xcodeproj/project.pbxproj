@@ -72,6 +72,8 @@
 		FB69553223F001350049DB14 /* DatabaseRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB69552F23F001350049DB14 /* DatabaseRepresentation.swift */; };
 		FB69553323F001350049DB14 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB69553023F001350049DB14 /* Message.swift */; };
 		FB69553523F0055B0049DB14 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB69553423F0055B0049DB14 /* AppSettings.swift */; };
+		FB69553823F1461D0049DB14 /* StartMissionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB69553623F1461D0049DB14 /* StartMissionTableViewCell.swift */; };
+		FB69553923F1461D0049DB14 /* StartMissionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB69553723F1461D0049DB14 /* StartMissionTableViewCell.xib */; };
 		FB752ABB23D5DFB200BF3852 /* PermanentMarker.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */; };
 		FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB752ABD23D5E57900BF3852 /* Background.swift */; };
 		FB9A2BFE23D068FF00553D97 /* MissionListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */; };
@@ -181,6 +183,8 @@
 		FB69552F23F001350049DB14 /* DatabaseRepresentation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseRepresentation.swift; sourceTree = "<group>"; };
 		FB69553023F001350049DB14 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		FB69553423F0055B0049DB14 /* AppSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		FB69553623F1461D0049DB14 /* StartMissionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartMissionTableViewCell.swift; sourceTree = "<group>"; };
+		FB69553723F1461D0049DB14 /* StartMissionTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StartMissionTableViewCell.xib; sourceTree = "<group>"; };
 		FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PermanentMarker.ttf; sourceTree = "<group>"; };
 		FB752ABD23D5E57900BF3852 /* Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionListViewController.swift; sourceTree = "<group>"; };
@@ -363,6 +367,7 @@
 				FB4BF7B223E286FD00C4C05A /* MissionList */,
 				FB24EC1023D96CED00FA3F02 /* PostMission */,
 				FB752ABC23D5E55600BF3852 /* Background */,
+				FB6365FF23E2CF45008555BC /* MissionDetail */,
 				FB387C1523CEEF0E00B6D8C4 /* Main.storyboard */,
 				FB387C5723CF551A00B6D8C4 /* Content.storyboard */,
 				FB638DC923E71D0C00030CB2 /* Map.storyboard */,
@@ -494,6 +499,8 @@
 				FB63664E23E3FC1B008555BC /* MissionDetailTableViewCell.swift */,
 				FB638D7823E53FE900030CB2 /* MissionContentTableViewCell.swift */,
 				FB638D7A23E5557B00030CB2 /* MissionPersonTableViewCell.swift */,
+				FB69553623F1461D0049DB14 /* StartMissionTableViewCell.swift */,
+				FB69553723F1461D0049DB14 /* StartMissionTableViewCell.xib */,
 			);
 			path = MissionDetail;
 			sourceTree = "<group>";
@@ -534,7 +541,6 @@
 		FB752ABC23D5E55600BF3852 /* Background */ = {
 			isa = PBXGroup;
 			children = (
-				FB6365FF23E2CF45008555BC /* MissionDetail */,
 				FB752ABD23D5E57900BF3852 /* Background.swift */,
 			);
 			path = Background;
@@ -693,6 +699,7 @@
 				FB53F32323EBB42A0041C49D /* PersonDetailTableViewCell.xib in Resources */,
 				FB752ABB23D5DFB200BF3852 /* PermanentMarker.ttf in Resources */,
 				FB638DCA23E71D0C00030CB2 /* Map.storyboard in Resources */,
+				FB69553923F1461D0049DB14 /* StartMissionTableViewCell.xib in Resources */,
 				FB387C1C23CEEF0F00B6D8C4 /* Assets.xcassets in Resources */,
 				FB5F5BD023DB2847003B9ABC /* setofont.ttf in Resources */,
 				FB53F31D23EB21890041C49D /* PhotoTableViewCell.xib in Resources */,
@@ -904,6 +911,7 @@
 				FBA5580123EE554F00521B89 /* ChatViewController.swift in Sources */,
 				FB24EC1723DAB00F00FA3F02 /* TaskDataItem.swift in Sources */,
 				FB638D7B23E5557B00030CB2 /* MissionPersonTableViewCell.swift in Sources */,
+				FB69553823F1461D0049DB14 /* StartMissionTableViewCell.swift in Sources */,
 				FB387C1023CEEF0E00B6D8C4 /* AppDelegate.swift in Sources */,
 				FB69552923F000B50049DB14 /* UICollectionView+Additions.swift in Sources */,
 				FB24EC1423D9B19300FA3F02 /* CustomeColor.swift in Sources */,

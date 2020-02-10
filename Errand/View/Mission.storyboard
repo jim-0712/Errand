@@ -205,28 +205,31 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eCp-zI-a1Z">
-                                <rect key="frame" x="184" y="460" width="46" height="30"/>
-                                <state key="normal" title="Button"/>
-                                <connections>
-                                    <action selector="enterChatroomAct:" destination="J8g-Wv-Uij" eventType="touchUpInside" id="vSH-GA-3YK"/>
-                                    <segue destination="JuS-xh-g1m" kind="show" identifier="chat" id="rq4-j3-NxH"/>
-                                </connections>
-                            </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="xQy-9h-zi1">
+                                <rect key="frame" x="0.0" y="88" width="414" height="140"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="140" id="FcL-nG-LYi"/>
+                                </constraints>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="eCp-zI-a1Z" firstAttribute="centerX" secondItem="aXm-3b-9iR" secondAttribute="centerX" id="4bT-gy-Qza"/>
-                            <constraint firstItem="eCp-zI-a1Z" firstAttribute="centerY" secondItem="aXm-3b-9iR" secondAttribute="centerY" id="WSD-iE-xHL"/>
+                            <constraint firstItem="xQy-9h-zi1" firstAttribute="top" secondItem="aXm-3b-9iR" secondAttribute="top" id="21o-8z-xb3"/>
+                            <constraint firstItem="xQy-9h-zi1" firstAttribute="leading" secondItem="aXm-3b-9iR" secondAttribute="leading" id="APO-GX-t4z"/>
+                            <constraint firstItem="aXm-3b-9iR" firstAttribute="trailing" secondItem="xQy-9h-zi1" secondAttribute="trailing" id="g69-Yo-KbN"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="aXm-3b-9iR"/>
                     </view>
                     <navigationItem key="navigationItem" id="2cU-we-tyW"/>
+                    <connections>
+                        <outlet property="infoTableView" destination="xQy-9h-zi1" id="FQ1-W6-Ntn"/>
+                        <segue destination="JuS-xh-g1m" kind="show" identifier="chat" id="NEJ-Il-mQe"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XaS-Gq-zH0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <exit id="J8g-Wv-Uij" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2557" y="1613"/>
+            <point key="canvasLocation" x="2556.521739130435" y="1612.5"/>
         </scene>
         <!--ChatViewController-->
         <scene sceneID="Tdv-XJ-Hdt">
@@ -247,10 +250,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="u8o-NW-uvb">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="300"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="400"/>
                                 <color key="backgroundColor" red="0.92156231399999999" green="0.92156261210000001" blue="0.92156094310000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="300" id="U2g-tI-iMN"/>
+                                    <constraint firstAttribute="height" constant="400" id="U2g-tI-iMN"/>
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="dtE-mz-hBO">
                                     <size key="itemSize" width="356" height="319"/>
@@ -260,7 +263,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="detail" id="dY7-fF-Hsi" customClass="MissionDetailCollectionViewCell" customModule="Errand" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="-9.5" width="356" height="319"/>
+                                        <rect key="frame" x="0.0" y="40.5" width="356" height="319"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Rur-2Q-QVd">
                                             <rect key="frame" x="0.0" y="0.0" width="356" height="319"/>
@@ -296,7 +299,7 @@
                                 </cells>
                             </collectionView>
                             <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="baA-nO-QZJ">
-                                <rect key="frame" x="364" y="270" width="50" height="30"/>
+                                <rect key="frame" x="364" y="370" width="50" height="30"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="Hez-X4-20K"/>
@@ -304,7 +307,7 @@
                                 </constraints>
                             </pageControl>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4Fc-N0-dCj">
-                                <rect key="frame" x="0.0" y="300" width="414" height="438"/>
+                                <rect key="frame" x="0.0" y="400" width="414" height="338"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="missionDetail" rowHeight="66" id="ybf-Fl-gDP" customClass="MissionDetailTableViewCell" customModule="Errand" customModuleProvider="target">

@@ -156,7 +156,7 @@ class TaskManager {
                let chatRoom = info.data()["chatRoom"] as? String else { return }
       
                if status == 1 {
-                 return
+                 continue
                } else {
                  let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, fileType: fileType, personPhoto: personPhoto, requester: requester, fcmToken: fcmToken, missionTaker: missionTaker, refuse: refuse, uid: uid, chatRoom: chatRoom)
                  
