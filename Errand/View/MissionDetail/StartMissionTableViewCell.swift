@@ -42,15 +42,16 @@ class StartMissionTableViewCell: UITableViewCell {
   @IBOutlet weak var pageView: UIView!
   
   func setUp(ownerImage: String, author: String, classified: String, price: Int) {
-    
     missionOwnerImage.loadImage(ownerImage, placeHolder: UIImage(named: "photographer"))
     authorLabel.text = author
     classifiedLabel.text = classified
     priceLabel.text = "\(price)元"
-    pageView.layer.cornerRadius = pageView.bounds.height / 2
+    pageView.layer.cornerRadius = pageView.bounds.height / 10
     pageView.layer.shadowOpacity = 0.3
     pageView.layer.shadowOffset = CGSize(width: 3, height: 3)
     pageView.layer.shadowColor = UIColor.black.cgColor
+    pageView.backgroundColor = UIColor.G1
+    self.contentView.backgroundColor = .clear
   }
   
   @IBAction func chatAct(_ sender: Any) {

@@ -88,6 +88,7 @@
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="FPE-6M-cnh" firstAttribute="centerY" secondItem="GTv-vg-Uyx" secondAttribute="centerY" id="6JI-cw-842"/>
                             <constraint firstItem="8ZH-hJ-Dgv" firstAttribute="leading" secondItem="iwz-j3-qwk" secondAttribute="leading" constant="20" id="BLD-I8-ibz"/>
@@ -112,6 +113,7 @@
                         </constraints>
                     </view>
                 </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="iwz-j3-qwk" secondAttribute="trailing" constant="15" id="5kP-mJ-uo9"/>
                     <constraint firstItem="iwz-j3-qwk" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="15" id="TRZ-qM-jey"/>

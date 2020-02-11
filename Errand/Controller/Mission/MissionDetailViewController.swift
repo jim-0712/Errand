@@ -146,9 +146,8 @@ class MissionDetailViewController: UIViewController {
   }
   
   func setUpBtn() {
-    
-    backBtn.layer.cornerRadius = backBtn.bounds.width / 2
-    takeMissionBtn.layer.cornerRadius = 20
+    backBtn.layer.cornerRadius = backBtn.bounds.height / 2
+    takeMissionBtn.layer.cornerRadius = takeMissionBtn.bounds.height / 5
     takeMissionBtn.layer.shadowOpacity = 0.5
     takeMissionBtn.layer.shadowOffset = CGSize(width: 3, height: 3)
     setUpBtnEnable()
@@ -157,7 +156,6 @@ class MissionDetailViewController: UIViewController {
   func setUppageControll() {
     
     guard let data = detailData else { return }
-    
     pageControl.currentPage = 0
     pageControl.currentPageIndicatorTintColor = .black
     pageControl.pageIndicatorTintColor = .lightGray
@@ -236,7 +234,7 @@ extension MissionDetailViewController: UICollectionViewDelegateFlowLayout {
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     
-    return CGSize(width: UIScreen.main.bounds.width, height: 400)
+    return CGSize(width: UIScreen.main.bounds.width, height: 350)
   }
 }
 

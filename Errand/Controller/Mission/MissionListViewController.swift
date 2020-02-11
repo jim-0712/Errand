@@ -20,6 +20,8 @@ class MissionListViewController: UIViewController {
     
     setUpSearch()
     setUp()
+    getTaskData()
+    setUpindicatorView()
     
     NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("postMission"), object: nil)
     
@@ -31,38 +33,12 @@ class MissionListViewController: UIViewController {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    loadUserInfo()
   }
   
   @objc func reloadTable() {
     
     getTaskData()
   }
-  
-  func loadUserInfo() {
-     
-     if let uid = Auth.auth().currentUser?.uid {
-       
-       UserManager.shared.readData(uid: uid) { result in
-         
-         switch result {
-           
-         case .success(let dataReturn):
-           
-           LKProgressHUD.dismiss()
-           UserManager.shared.isPostTask = dataReturn.onTask
-           UserManager.shared.currentUserInfo = dataReturn
-
-           self.getTaskData()
-           self.setUpindicatorView()
-          
-         case .failure:
-           
-           return
-         }
-       }
-     }
-   }
   
    var indicatorCon: NSLayoutConstraint?
   
@@ -142,11 +118,9 @@ class MissionListViewController: UIViewController {
   }
   
   func setUpindicatorView() {
-    
     self.view.addSubview(indicatorView)
     indicatorView.backgroundColor = .G1
     indicatorView.translatesAutoresizingMaskIntoConstraints = false
-    
     indicatorCon = indicatorView.centerXAnchor.constraint(equalTo: allMissionBtn.centerXAnchor)
     
     NSLayoutConstraint.activate([
@@ -206,6 +180,13 @@ class MissionListViewController: UIViewController {
       } else {
         DispatchQueue.main.async {
           self.postMissionBtn.isHidden = false
+          
+          guard let status = UserManager.shared.currentUserInfo?.status else { return }
+          if status == 0 {
+            self.postMissionBtn.isHidden = false
+          } else {
+            self.postMissionBtn.isHidden = true
+          }
           self.refreshControl.endRefreshing()
           self.taskListTable.reloadData()
           LKProgressHUD.dismiss()
@@ -218,13 +199,10 @@ class MissionListViewController: UIViewController {
     
     didSet {
       if taskDataReturn.isEmpty {
-
         self.postMissionBtn.isHidden = true
         LKProgressHUD.show(controller: self)
-        
       } else {
         DispatchQueue.main.async {
-          
           self.postMissionBtn.isHidden = false
           self.taskListTable.reloadData()
           LKProgressHUD.dismiss()
@@ -262,9 +240,8 @@ class MissionListViewController: UIViewController {
   func setUpSearch() {
     refreshControl = UIRefreshControl()
     taskListTable.addSubview(refreshControl)
-    refreshControl.addTarget(self, action: #selector(loadData), for: .valueChanged)
+    refreshControl.addTarget(self, action: #selector(reloadTable), for: .valueChanged)
     self.navigationItem.searchController = searchCustom
-    //    self.navigationController?.navigationBar.prefersLargeTitles = true
     searchCustom.searchBar.searchBarStyle = .prominent
     searchCustom.searchBar.delegate = self
     searchCustom.searchBar.placeholder = "搜尋發文主"
@@ -273,12 +250,7 @@ class MissionListViewController: UIViewController {
     searchCustom.obscuresBackgroundDuringPresentation = false
   }
   
-  @objc func loadData() {
-    getTaskData()
-  }
-  
   func getTaskData() {
-    
     TaskManager.shared.readData { [weak self] result in
       guard let strongSelf = self else { return }
       switch result {
@@ -296,14 +268,13 @@ class MissionListViewController: UIViewController {
   }
   
   func setUp() {
-    postMissionBtn.isHidden = true
+     postMissionBtn.isHidden = true
     taskListTable.delegate = self
     taskListTable.dataSource = self
     taskListTable.translatesAutoresizingMaskIntoConstraints = false
     taskListTable.rowHeight = UITableView.automaticDimension
     taskListTable.estimatedRowHeight = 200
   }
-  
 }
 
 extension MissionListViewController: UITableViewDataSource, UITableViewDelegate {
@@ -315,7 +286,6 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
   }
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    
     if shouldShowSearchResults {
       return filteredArray.count
     } else {

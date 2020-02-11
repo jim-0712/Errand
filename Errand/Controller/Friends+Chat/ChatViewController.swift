@@ -24,17 +24,6 @@ class ChatViewController: MessagesViewController {
   private let db = Firestore.firestore()
   private var reference: CollectionReference?
   
-  private var isSendingPhoto = false
-  //  {
-  //    didSet {
-  //      DispatchQueue.main.async {
-  //        self.messageInputBar.leftStackViewItems.forEach { item in
-  //          item.isEnable  = !self.isSendingPhoto
-  //        }
-  //      }
-  //    }
-  //  }
-  
   private let storage = Storage.storage().reference()
   
   override func viewDidLoad() {
@@ -42,7 +31,6 @@ class ChatViewController: MessagesViewController {
     setUpListener()
     setUpMessage()
     preSetUp()
-    setUpCamera()
   }
   
   func setUpListener() {
@@ -81,97 +69,6 @@ class ChatViewController: MessagesViewController {
       selfSender = userInfo.uid
       receiver = taskData.uid
     }
-  }
-  
-  private func uploadImage(_ image: UIImage, to channel: String, completion: @escaping (URL?) -> Void) {
-    
-    guard let scaledImage = image.scaledToSafeUploadSize,
-      let data = scaledImage.jpegData(compressionQuality: 0.4) else {
-        completion(nil)
-        return
-    }
-    
-    let metadata = StorageMetadata()
-    metadata.contentType = "image/jpeg"
-    
-    let imageName = [UUID().uuidString, String(Date().timeIntervalSince1970)].joined()
-    
-    let storageRef = storage.storage.reference().child(channel).child(imageName)
-    storageRef.putData(data, metadata: metadata) { _, error in
-      
-      storageRef.downloadURL { (url, error) in
-        
-        if error != nil { return }
-        
-        guard let urlBack = url else { return }
-        
-        completion(urlBack)
-        
-      }
-    }
-  }
-  
-  private func sendPhoto(_ image: UIImage) {
-    isSendingPhoto = true
-    
-    guard let task = detailData else { return }
-    
-    uploadImage(image, to: task.chatRoom) { [weak self] url in
-      guard let strongSelf = self else {
-        return
-      }
-      strongSelf.isSendingPhoto = false
-      
-      guard let url = url else {
-        return
-      }
-      
-      guard let user = Auth.auth().currentUser else { return }
-      if let photo = Auth.auth().currentUser?.photoURL {
-        
-        strongSelf.personPhoto = "\(photo)"
-      } else {
-        
-        strongSelf.personPhoto = ""
-      }
-    
-      var message = Message(user: user, image: image, personPhoto: strongSelf.personPhoto)
-      message.downloadURL = url
-      
-      strongSelf.save(message)
-      strongSelf.messagesCollectionView.scrollToBottom()
-    }
-  }
-  
-  @objc private func cameraButtonPressed() {
-    let picker = UIImagePickerController()
-    picker.delegate = self
-    
-    if UIImagePickerController.isSourceTypeAvailable(.camera) {
-      picker.sourceType = .camera
-    } else {
-      picker.sourceType = .photoLibrary
-    }
-    
-    present(picker, animated: true, completion: nil)
-  }
-  
-  func setUpCamera() {
-    let cameraItem = InputBarButtonItem(type: .system)
-    cameraItem.tintColor = .primary
-    cameraItem.image = UIImage(named: "drive")
-    // 2
-    cameraItem.addTarget(
-      self,
-      action: #selector(cameraButtonPressed),
-      for: .primaryActionTriggered
-    )
-    cameraItem.setSize(CGSize(width: 60, height: 30), animated: false)
-    
-    messageInputBar.leftStackView.alignment = .center
-    messageInputBar.setLeftStackViewWidthConstant(to: 50, animated: false)
-    // 3
-    messageInputBar.setStackViewItems([cameraItem], forStack: .left, animated: false)
   }
   
   func setUpMessage() {
@@ -224,40 +121,11 @@ class ChatViewController: MessagesViewController {
     
     switch change.type {
     case .added:
-      if let url = message.downloadURL {
         
-        if let imageData = NSData(contentsOf: url) as Data? {
-          message.image = UIImage(data: imageData)
-          insertNewMessage(message)
-        }
-        
-//        downloadImage(at: url) { [weak self] image in
-//          guard let strongSelf = self else { return }
-//          message.image =
-//          message.image = image
-//          strongSelf.insertNewMessage(message)
-//        }
-      } else {
-        
-        insertNewMessage(message)
-      }
+    insertNewMessage(message)
       
     default:
       break
-    }
-  }
-  
-  private func downloadImage(at url: URL, completion: @escaping (UIImage?) -> Void) {
-    let ref = Storage.storage().reference(forURL: url.absoluteString)
-    let megaByte = Int64(1 * 1024 * 1024)
-    
-    ref.getData(maxSize: megaByte) { data, error in
-      guard let imageData = data else {
-        completion(nil)
-        return
-      }
-      
-      completion(UIImage(data: imageData))
     }
   }
 }
@@ -361,19 +229,4 @@ extension ChatViewController: MessageInputBarDelegate {
     self.view.endEditing(true)
     messageInputBar.inputTextView.text = ""
   }
-}
-
-extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-  
-  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-   
-    if let image = info[.originalImage] as? UIImage { // 2
-      picker.dismiss(animated: true, completion: nil)
-      sendPhoto(image)
-    }
-  }
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-    picker.dismiss(animated: true, completion: nil)
-  }
-  
 }

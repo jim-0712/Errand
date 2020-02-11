@@ -47,7 +47,25 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
     //    }
     //
     func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
+      
       print(remoteMessage.appData)
+          
+          if let uid = Auth.auth().currentUser?.uid {
+            
+            UserManager.shared.readData(uid: uid) { result in
+              switch result {
+                
+              case .success(let dataReturn):
+            
+                UserManager.shared.isPostTask = dataReturn.onTask
+                UserManager.shared.currentUserInfo = dataReturn
+               
+              case .failure:
+                
+                return
+              }
+            }
+          }
     }
     
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {

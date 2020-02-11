@@ -338,6 +338,7 @@ PODS:
   - Kingfisher (5.12.0):
     - Kingfisher/Core (= 5.12.0)
   - Kingfisher/Core (5.12.0)
+  - KMPlaceholderTextView (1.4.0)
   - leveldb-library (1.22)
   - MessageKit (3.0.0):
     - InputBarAccessoryView (~> 4.2.2)
@@ -348,9 +349,6 @@ PODS:
   - nanopb/encode (0.3.9011)
   - Protobuf (3.11.3)
   - Refreshable (1.2.0)
-  - Scaledrone (0.3.0):
-    - Starscream (~> 2.1.0)
-  - Starscream (2.1.1)
   - SwiftLint (0.38.0)
 
 DEPENDENCIES:
@@ -372,9 +370,9 @@ DEPENDENCIES:
   - IQKeyboardManager
   - JGProgressHUD
   - Kingfisher
+  - KMPlaceholderTextView (~> 1.4.0)
   - MessageKit
   - Refreshable
-  - Scaledrone (~> 0.3.0)
   - SwiftLint
 
 SPEC REPOS:
@@ -416,13 +414,12 @@ SPEC REPOS:
     - IQKeyboardManager
     - JGProgressHUD
     - Kingfisher
+    - KMPlaceholderTextView
     - leveldb-library
     - MessageKit
     - nanopb
     - Protobuf
     - Refreshable
-    - Scaledrone
-    - Starscream
     - SwiftLint
 
 SPEC CHECKSUMS:
@@ -463,15 +460,14 @@ SPEC CHECKSUMS:
   IQKeyboardManager: 72b359cd7e777e3a984cedbe05f8da45320cbb63
   JGProgressHUD: aa403e9a5b45cae98903c4600cccdd98c0c3ec90
   Kingfisher: dc6e0f53bb5b12c3e75bedb0e01bbd7a640eea69
+  KMPlaceholderTextView: 2206c3df39979e9396e2d96fa9f427a8951121b0
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   MessageKit: e892a9ca49ebe6d82684d3a93ad84021fa23e2c6
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   Protobuf: 0e94afe3b47cb11876eb6aee296638711a24bf75
   Refreshable: 0f76b6d198178e6cd2823a553fbf4e84a3dba527
-  Scaledrone: 25e5e70107222ed50046fc0ed9569915bdb85262
-  Starscream: 142bd8ef24592d985daee9fa48c936070b85b15f
   SwiftLint: 4105f061f9812b214568b736dab580ab2c73a582
 
-PODFILE CHECKSUM: cf2c0544075c2a6d9ae8b711553347b5f81b6901
+PODFILE CHECKSUM: 2d85432bd4a9cfef1c70806ea25813f9048fd740
 
 COCOAPODS: 1.8.4

@@ -29,7 +29,7 @@ target 'Errand' do
   pod "Refreshable"
   pod "Cosmos"
   pod 'MessageKit'
-  pod 'Scaledrone', '~> 0.3.0'
+  pod 'KMPlaceholderTextView', '~> 1.4.0'
 
   target 'ErrandTests' do
     inherit! :search_paths

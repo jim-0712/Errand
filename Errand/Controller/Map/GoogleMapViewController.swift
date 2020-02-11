@@ -153,12 +153,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     searchView.isHidden = isSearch
   }
   
-  @IBAction func reLocation(_ sender: Any) {
-    guard let center = myLocationManager.location?.coordinate else { return }
-    let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 17)
-    googleMapView.camera = myArrange
-  }
-  
   @IBAction func backAct(_ sender: Any) {
     isTapOnContent = !isTapOnContent
     changeConstraints()
@@ -266,8 +260,16 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     arrangeTextField.layer.shadowOffset = CGSize(width: 3, height: 3)
   }
   
+  @IBAction func reloadLocation(_ sender: Any) {
+    guard let center = myLocationManager.location?.coordinate else { return }
+    let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 17)
+    googleMapView.camera = myArrange
+  }
+  
   func setUpLocation() {
-    
+//    googleMapView.settings.compassButton = true
+//    googleMapView.settings.myLocationButton = true
+//    googleMapView.isMyLocationEnabled = true
     myLocationManager.delegate = self
     googleMapView.delegate = self
     myLocationManager.distanceFilter = kCLLocationAccuracyNearestTenMeters
@@ -290,7 +292,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   
   func centerViewOnUserLocation() {
     guard let center = myLocationManager.location?.coordinate else { return }
-    let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 16)
+    let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 17)
     googleMapView.camera = myArrange
   }
   
@@ -366,6 +368,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     if segue.identifier == "Mapdetail" {
       guard let detailVC = segue.destination as? MissionDetailViewController else { return }
       detailVC.modalPresentationStyle = .fullScreen
+      
       detailVC.detailData = specificData[0]
       detailVC.receiveTime =  TaskManager.shared.timeConverter(time: specificData[0].time)
     }
@@ -399,7 +402,7 @@ extension GoogleMapViewController: GMSMapViewDelegate {
         
         let returnString = String(format: "%.2f", distance)
         
-        taskPersonPhoto.loadImage(info.personPhoto)
+        taskPersonPhoto.loadImage(info.personPhoto, placeHolder: UIImage(named: "photographer"))
         authorLabel.text = info.nickname
         taskClassifiedLabel.text = classified
         priceLabel.text = "\(info.money)元"
@@ -410,7 +413,6 @@ extension GoogleMapViewController: GMSMapViewDelegate {
   }
   
   func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
-    
     finalLat = position.target.latitude
     finalLong = position.target.longitude
   }
