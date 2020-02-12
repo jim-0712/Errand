@@ -61,6 +61,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     
     GIDSignIn.sharedInstance().delegate = self
     
+    UNUserNotificationCenter.current().delegate = self
+    
     let pushManager = PushNotificationManager()
     
     pushManager.registerForPushNotifications()
@@ -144,6 +146,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     //        }
     //      }
     //    }
+  }
+  
+  func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+      print("hellooooooo")
+      completionHandler([.badge, .sound, .alert])
   }
   
   func backGroundNoti(title: String, body: String) {

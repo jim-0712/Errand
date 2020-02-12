@@ -40,16 +40,13 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
           UserManager.shared.updatefcmToken()
 
     }
-    
-   func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
-        print(remoteMessage.appData)
-    }
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
         updateFirestorePushTokenIfNeeded()
     }
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        print(response)
-    }
   
+  func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+      print("hellooooooo")
+      completionHandler([.badge, .sound, .alert])
+  }
 }
 
