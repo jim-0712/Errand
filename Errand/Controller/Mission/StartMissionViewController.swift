@@ -74,32 +74,66 @@ class StartMissionViewController: UIViewController {
     let group = DispatchGroup()
     
     group.enter()
-    group.enter()
+    //    group.enter()
+    //    group.enter()
+    //
+    //    TaskManager.shared.updateJudge(owner: judgerOwner, classified: taskData.classfied, judge: judge, star: starView.rating) { (result) in
+    //      switch result {
+    //      case .success:
+    //        group.leave()
+    //      case .failure:
+    //        print("error")
+    //      }
+    //    }
     
-    TaskManager.shared.updateJudge(owner: judgerOwner, classified: taskData.classfied, judge: judge, star: starView.rating) { (result) in
-      switch result {
-      case .success:
-        group.leave()
-      case .failure:
-        print("error")
-      }
-    }
+    //    TaskManager.shared.taskUpdateData(uid: taskData.uid, status: true, identity: owner)  { (result) in
+    //      switch result {
+    //      case .success:
+    //        group.leave()
+    //      case .failure:
+    //        print("error")
+    //      }
+    //    }
     
-    TaskManager.shared.taskUpdateData(uid: taskData.uid, status: true, identity: owner)  { (result) in
-      switch result {
-      case .success:
-        group.leave()
-      case .failure:
-        print("error")
+    var destination = ""
+    
+    if status == 1 {
+      
+      guard let userInfo = UserManager.shared.currentUserInfo else { group.leave()
+        return }
+      
+      UserManager.shared.readData(uid: taskData.missionTaker) { result in
+        
+        switch result {
+          
+        case .success(let info):
+          
+          destination = info.fcmToken
+          UserManager.shared.currentUserInfo = userInfo
+          group.leave()
+          
+        case .failure:
+          print("error")
+          group.leave()
+        }
       }
-    }
+      
+    } else if status == 2 {
+      destination = taskData.fcmToken
+      group.leave()
+    } else { group.leave() }
     
     group.notify(queue: DispatchQueue.main) {
-      
-      TaskManager.shared.showAlert(title: "恭喜", message: "正在等待對方完成", viewController: self)
+      let sender = PushNotificationSender()
+      sender.sendPushNotification(to: destination, body: "對方任務完成")
+      //       TaskManager.shared.showAlert(title: "恭喜", message: "正在等待對方完成", viewController: self)
+      self.finishBtn.isEnabled = false
+      self.finishBtn.backgroundColor = UIColor.LG1
+      self.finishBtn.setTitle("正在等待對方完成", for: .normal)
+      NotificationCenter.default.post(name: Notification.Name("finishSelf"), object: nil)
     }
-    
   }
+  
   func setUpTable() {
     infoTableView.delegate = self
     infoTableView.dataSource = self
@@ -123,6 +157,23 @@ class StartMissionViewController: UIViewController {
     finishBtn.layer.shadowOpacity = 0.4
     finishBtn.layer.shadowColor = UIColor.black.cgColor
     finishBtn.layer.shadowOffset = CGSize(width: 3, height: 3)
+    
+    guard let task = detailData,
+      let status = UserManager.shared.currentUserInfo?.status else { return }
+    
+    if status == 1 && task.ownerOK {
+      finishBtn.isEnabled = false
+      finishBtn.backgroundColor = UIColor.LG1
+      finishBtn.setTitle("正在等待對方完成", for: .normal)
+    } else if status == 2 && task.takerOK {
+      finishBtn.isEnabled = false
+      finishBtn.backgroundColor = UIColor.LG1
+      finishBtn.setTitle("正在等待對方完成", for: .normal)
+    } else {
+      finishBtn.isEnabled = true
+      finishBtn.backgroundColor = UIColor.Y1
+      finishBtn.setTitle("提交任務", for: .normal)
+    }
   }
   
   func setUpPicker() {
@@ -144,7 +195,7 @@ class StartMissionViewController: UIViewController {
   
   @objc func report () {
     
-    
+    addToBlackList(viewController: self)
   }
   
   func setUpListener() {
@@ -183,25 +234,113 @@ class StartMissionViewController: UIViewController {
     }
   }
   
-  func showAlert(title: String, message: String, viewController: UIViewController) {
+  func addToBlackList(viewController: UIViewController) {
+    
+    let alert = UIAlertController(title: "檢舉系統", message: "請選擇要做的行動", preferredStyle: .actionSheet)
+    
+    
+    let report = UIAlertAction(title: "檢舉", style: .default) { _ in
+      
+      LKProgressHUD.showSuccess(text: "系統已到您的通知", controller: self)
+      
+    }
+    let blackList = UIAlertAction(title: "加入黑名單", style: .default) { [weak self] _ in
+      
+      guard let strongSelf = self else { return }
+      guard var userInfo = UserManager.shared.currentUserInfo,
+        let taskInfo = strongSelf.detailData else { return }
+      
+      if userInfo.status == 1 {
+        userInfo.blacklist.append(taskInfo.missionTaker)
+      } else {
+        userInfo.blacklist.append(taskInfo.uid)
+      }
+      UserManager.shared.currentUserInfo = userInfo
+      
+      UserManager.shared.updateUserInfo { result in
+        
+        switch result {
+          
+        case .success:
+          print("yes")
+        case .failure:
+          print("no")
+        }
+      }
+      
+    }
+    
+    let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
+    
+    alert.addAction(report)
+    alert.addAction(blackList)
+    alert.addAction(cancelAction)
+    
+    present(alert, animated: true, completion: nil)
+  }
+  
+  func finishMissionAlert(title: String, message: String, viewController: UIViewController) {
     let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
     let okAction = UIAlertAction(title: "ok", style: .default) { [weak self]_ in
       
       guard let strongSelf = self else { return }
-      guard let task = strongSelf.detailData else { return }
+      guard let task = strongSelf.detailData,
+        let  currentUserStatus = UserManager.shared.currentUserInfo?.status else { return }
       
-      let group
+      LKProgressHUD.show(controller: strongSelf)
       
-      TaskManager.shared.taskUpdateData(uid: task.uid, status: true, identity: "isComplete") { (result) in
-        switch result {
-        case .success:
-          strongSelf.dismiss(animated: true, completion: nil)
-        case .failure:
-          print("error")
-        }
-      }
-      LKProgressHUD.dismiss()
-     }
+      //      let group = DispatchGroup()
+      //      group.enter()
+      //      group.enter()
+      //      group.enter()
+      //
+      //      TaskManager.shared.taskUpdateData(uid: task.uid, status: true, identity: "isComplete") { (result) in
+      //        switch result {
+      //        case .success:
+      //          group.leave()
+      //        case .failure:
+      //          print("error")
+      //        }
+      //      }
+      //
+      //      UserManager.shared.updateStatus(uid: task.missionTaker, status: 0) { (result) in
+      //             switch result {
+      //             case .success:
+      //               group.leave()
+      //             case .failure:
+      //               print("error")
+      //             }
+      //        }
+      //
+      //      UserManager.shared.updateStatus(uid: task.uid, status: 0) { (result) in
+      //           switch result {
+      //           case .success:
+      //             group.leave()
+      //           case .failure:
+      //             print("error")
+      //           }
+      //      }
+      
+      var destination = ""
+      
+      if currentUserStatus == 1 {
+        
+        destination = task.missionTakerFcmToken
+      } else if currentUserStatus == 2 {
+        destination = task.fcmToken
+      } else {}
+      
+      let sender = PushNotificationSender()
+      sender.sendPushNotification(to: destination, body: "對方任務完成")
+      
+      //      group.notify(queue: DispatchQueue.main) {
+      //        NotificationCenter.default.post(name: Notification.Name("finishTask"), object: nil)
+      //        LKProgressHUD.dismiss()
+      //        let vc =  UIApplication.shared.windows.first?.rootViewController
+      //        vc?.dismiss(animated: true, completion: nil)
+      //      }
+    }
+    
     controller.addAction(okAction)
     viewController.present(controller, animated: true, completion: nil)
   }

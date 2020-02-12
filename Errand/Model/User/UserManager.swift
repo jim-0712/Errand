@@ -43,45 +43,6 @@ class UserManager {
     }
   }
   
-  func createDataBase(classification: String, nickName: String, email: String, photo: String, completion: @escaping (Result<String, Error>) -> Void) {
-    
-    let report = 0
-    
-    let blacklist: [String] = []
-    
-    let friends: [String] = []
-    
-    let task: [String] = []
-    
-    let userId = Auth.auth().currentUser?.uid
-    
-    guard let token = UserDefaults.standard.value(forKey: "fcmToken") as? String,
-         let uid = Auth.auth().currentUser?.uid else { return }
-    
-    let info = AccountInfo(email: email, nickname: nickName, gender: 1, task: task, friends: friends, photo: photo, report: report, blacklist: blacklist, onTask: false, fcmToken: token, status: 0, about: "", taskCount: 0, totalStar: 0.0, uid: uid)
-    
-    self.dbF.collection(classification).document(uid).setData(info.toDict) { error in
-      
-      if error != nil {
-        
-        completion(Result.failure(RegiError.registFailed))
-        
-      } else {
-        
-        UserDefaults.standard.set(nickName, forKey: "nickname")
-        
-        UserDefaults.standard.set(email, forKey: "email")
-        
-        UserDefaults.standard.set(true, forKey: "login")
-        
-        UserDefaults.standard.set(userId, forKey: "userid")
-        
-        completion(Result.success("Success"))
-        
-      }
-    }
-  }
-  
   func fbLogin(controller: UIViewController, completion: @escaping (Result<String, Error>) -> Void) {
     
     let manager = LoginManager()
@@ -184,7 +145,7 @@ class UserManager {
   func updatefcmToken() {
     
     guard let uid = Auth.auth().currentUser?.uid,
-      let token = UserDefaults.standard.value(forKey: "fcmToken") as? String else { return }
+         let token = UserDefaults.standard.value(forKey: "fcmToken") as? String else { return }
     
     dbF.collection("Users").whereField("uid", isEqualTo: uid).getDocuments { (querySnapshot, _) in
       

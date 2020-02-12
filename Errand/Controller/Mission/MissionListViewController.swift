@@ -29,10 +29,13 @@ class MissionListViewController: UIViewController {
     
     NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("acceptRequester"), object: nil)
     
+    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("finishSelf"), object: nil)
+    
   }
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    setUpBtn()
   }
   
   @objc func reloadTable() {
@@ -268,12 +271,25 @@ class MissionListViewController: UIViewController {
   }
   
   func setUp() {
-     postMissionBtn.isHidden = true
     taskListTable.delegate = self
     taskListTable.dataSource = self
     taskListTable.translatesAutoresizingMaskIntoConstraints = false
     taskListTable.rowHeight = UITableView.automaticDimension
     taskListTable.estimatedRowHeight = 200
+  }
+  
+  func setUpBtn() {
+    guard let status = UserManager.shared.currentUserInfo?.status else { return }
+    
+    if status == 1 {
+      postMissionBtn.isHidden = false
+      postMissionBtn.setImage(UIImage(named: "wheel-2"), for: .normal)
+    } else if status == 2 {
+      postMissionBtn.isHidden = true
+    } else {
+      postMissionBtn.isHidden = false
+      postMissionBtn.setImage(UIImage(named: "plus"), for: .normal)
+    }
   }
 }
 

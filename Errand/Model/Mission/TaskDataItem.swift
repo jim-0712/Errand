@@ -76,6 +76,8 @@ struct TaskInfo {
   
   var missionTaker: String
   
+  var missionTakerFcmToken: String
+  
   var refuse: [String]
   
   var uid: String
@@ -132,7 +134,9 @@ struct TaskInfo {
                
                "takerOK": takerOK,
                
-               "star": star
+               "star": star,
+               
+               "missionTakerUid": missionTakerFcmToken
     ]
   }
 }

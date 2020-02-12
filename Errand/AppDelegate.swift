@@ -55,17 +55,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     
     FirebaseApp.configure()
     
-    //    GMSServices.provideAPIKey("AIzaSyB_voEc15Sn0T_O9C2O-6dWz7c_ju42jXs")
-    
     GMSServices.provideAPIKey("AIzaSyBbTnBn0MHPMnioaL4y68Da3d41JlaSY-g")
     
     GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
     
     GIDSignIn.sharedInstance().delegate = self
-    
-    UNUserNotificationCenter.current().delegate = self
-    
-    UIApplication.shared.registerForRemoteNotifications()
     
     let pushManager = PushNotificationManager()
     
@@ -108,19 +102,64 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     UserDefaults.standard.set(tokenString, forKey: "deviceToken")
   }
   
-  func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-//    
-//    print("Recived: \(userInfo)")
-//    //Parsing userinfo:
-////    var temp: NSDictionary = userInfo as NSDictionary
-//    if let info = userInfo["aps"] as? Dictionary<String, AnyObject> {
-//              guard let alertMsg = info["alert"] as? String else { return }
-//              
-//              let controller = UIAlertController(title: "怎麼可以忘了!", message: alertMsg, preferredStyle: .alert)
-//              let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-//              controller.addAction(okAction)
-//
-//             }
+  func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+    //
+    
+    print("Hi")
+    print("Recived: \(userInfo)")
+    
+    var pretitle = ""
+    var prebody = ""
+    if let info = userInfo["aps"] as? [String: Any] {
+      guard let message = info["alert"] as? [String: Any] else { return }
+      guard let title = message["title"] as? String,
+           let body = message["body"] as? String else { return }
+      pretitle = title
+      prebody = body
+    }
+    
+    let state = application.applicationState
+    
+    if state == .active {
+      backGroundNoti(title: pretitle, body: prebody)
+    } else {
+      print("2")
+    }
+   
+    completionHandler(.newData)
+    //
+    //    if let uid = Auth.auth().currentUser?.uid {
+    //
+    //      UserManager.shared.readData(uid: uid) { result in
+    //        switch result {
+    //
+    //        case .success(let dataReturn):
+    //
+    //          UserManager.shared.isPostTask = dataReturn.onTask
+    //          UserManager.shared.currentUserInfo = dataReturn
+    //
+    //        case .failure:
+    //
+    //          return
+    //        }
+    //      }
+    //    }
+  }
+  
+  func backGroundNoti(title: String, body: String) {
+    
+    let center = UNUserNotificationCenter.current()
+         let content = UNMutableNotificationContent()
+         content.title = title
+         content.body = body
+         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+         let request = UNNotificationRequest(identifier: "Errand", content: content, trigger: trigger)
+         center.add(request) { error in
+           if error != nil {
+             print(error?.localizedDescription)
+           }
+           print("ya")
+         }
   }
   
   lazy var persistentContainer: NSPersistentContainer = {

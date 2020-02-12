@@ -67,8 +67,6 @@ class ViewController: UIViewController {
             
           case .success:
             
-            LKProgressHUD.show(controller: self)
-            
             UserManager.shared.loadFBProfile(controller: self) { [weak self] result in
               
               guard let strongSelf = self else { return }
@@ -79,7 +77,11 @@ class ViewController: UIViewController {
                 
                 UserManager.shared.isTourist = false
                 
-                strongSelf.createDataBase(isApple: false) { result in
+                guard let uid = Auth.auth().currentUser?.uid else { return }
+                
+                UserDefaults.standard.set(uid, forKey: "uid")
+                
+                strongSelf.createDataBase(isApple: false, isFB: true) { result in
                   
                   switch result {
                     
@@ -87,7 +89,6 @@ class ViewController: UIViewController {
                     
                     LKProgressHUD.dismiss()
                     UserManager.shared.isTourist = false
-                    UserManager.shared.updatefcmToken()
                     
                     LKProgressHUD.showSuccess(text: success, controller: strongSelf)
                     
@@ -154,7 +155,7 @@ class ViewController: UIViewController {
     
     UserManager.shared.isTourist = false
     
-    self.createDataBase(isApple: false) { [weak self] result in
+    self.createDataBase(isApple: false, isFB: false) { [weak self] result in
         
         guard let strongSelf = self else { return }
         
@@ -176,20 +177,23 @@ class ViewController: UIViewController {
       }
   }
   
-  func createDataBase(isApple: Bool, completion: @escaping (Result<String, Error>) -> Void) {
+  func createDataBase(isApple: Bool, isFB: Bool, completion: @escaping (Result<String, Error>) -> Void) {
     
     if isApple {
       self.photo = ""
-    } else {
-      guard let photoBack = Auth.auth().currentUser?.photoURL?.absoluteString,
-            let name = Auth.auth().currentUser?.displayName else { return }
-      self.photo = photoBack
+    } else if isFB {
+      guard let photoBack = UserManager.shared.FBData?.image,
+        let name = UserManager.shared.FBData?.name else { return }
+      self.photo = "\(photoBack)"
       self.name = name
+    } else {
+      self.photo = ""
+      self.name = ""
     }
     
     guard let email = Auth.auth().currentUser?.email else { return }
     
-    UserManager.shared.createDataBase(classification: "Users", nickName: name, email: email, photo: self.photo) { result in
+    DataBaseManager.shared.createDataBase(classification: "Users", nickName: name, email: email, photo: self.photo) { result in
       
       switch result {
         
@@ -294,7 +298,7 @@ extension ViewController: ASAuthorizationControllerDelegate, ASAuthorizationCont
           return
         }
         
-        self.createDataBase(isApple: true) { [weak self] result in
+        self.createDataBase(isApple: true, isFB: false) { [weak self] result in
             
             guard let strongSelf = self else { return }
             

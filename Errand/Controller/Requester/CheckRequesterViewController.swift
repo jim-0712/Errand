@@ -98,7 +98,7 @@ class CheckRequesterViewController: UIViewController {
   @IBAction func confirmAct(_ sender: Any) {
     
     guard let user = requsterInfoData,
-        var taskInfo = taskInfo else { return }
+         var taskInfo = taskInfo else { return }
     
     let chatRoomID = UUID().uuidString
     
