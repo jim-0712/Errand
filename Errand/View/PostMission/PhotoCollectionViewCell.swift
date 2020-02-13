@@ -11,6 +11,8 @@ import UIKit
 protocol UploadDataManager: AnyObject {
   
   func tapOnUpload(collectionViewCelll: PhotoCollectionViewCell)
+  
+  func tapOnDelete(collectionViewCelll: PhotoCollectionViewCell, indexRow: Int)
 }
 
 class PhotoCollectionViewCell: UICollectionViewCell {
@@ -23,6 +25,8 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     
     self.contentView.layer.borderWidth = 1.0
   }
+  
+  var indexRow = 0
   
   required init?(coder: NSCoder) {
     
@@ -39,10 +43,14 @@ class PhotoCollectionViewCell: UICollectionViewCell {
   
   @IBOutlet weak var addPhotoBtn: UIButton!
   
+  @IBOutlet weak var deleteBtn: UIButton!
+  
   @IBAction func addPhoto(_ sender: Any) {
-    
     self.delegate?.tapOnUpload(collectionViewCelll: self)
-    
+  }
+  
+  @IBAction func deleteAct(_ sender: Any) {
+    self.delegate?.tapOnDelete(collectionViewCelll: self, indexRow: indexRow)
   }
   
 }

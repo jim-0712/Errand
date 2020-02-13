@@ -17,7 +17,6 @@ class MissionListViewController: UIViewController {
     super.viewDidLoad()
     
     LKProgressHUD.show(controller: self)
-    
     setUpSearch()
     setUp()
     getTaskData()
@@ -40,7 +39,6 @@ class MissionListViewController: UIViewController {
   }
   
   @objc func reloadTable() {
-    
     getTaskData()
   }
   
@@ -163,6 +161,8 @@ class MissionListViewController: UIViewController {
   
   var detailData: TaskInfo?
   
+  var statusOneData: TaskInfo?
+  
   var data: TaskInfo?
   
   var timeString: String?
@@ -186,7 +186,7 @@ class MissionListViewController: UIViewController {
           self.postMissionBtn.isHidden = false
           
           guard let status = UserManager.shared.currentUserInfo?.status else { return }
-          if status == 0 {
+          if status == 0 || status == 1 {
             self.postMissionBtn.isHidden = false
           } else {
             self.postMissionBtn.isHidden = true
@@ -221,6 +221,8 @@ class MissionListViewController: UIViewController {
   
   @IBAction func postMissionBtn(_ sender: Any) {
     if UserManager.shared.currentUserInfo?.status == 0 {
+      performSegue(withIdentifier: "post", sender: nil)
+    } else if UserManager.shared.currentUserInfo?.status == 1 {
       performSegue(withIdentifier: "post", sender: nil)
     } else {
       presentAlert(viewController: self)
@@ -361,6 +363,11 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
            let time = self.timeString else { return }
       detailVC.detailData = detailData
       detailVC.receiveTime = time
+    } else if segue.identifier == "post" {
+      
+      guard let detailVC = segue.destination as? PostMissionViewController,
+           let taskData = TaskManager.shared.statusOneData else { return }
+      detailVC.statusOneData = taskData
     }
   }
 }
@@ -410,10 +417,11 @@ extension MissionListViewController: UISearchResultsUpdating {
     
     guard let searchString = searchCustom.searchBar.text else { return }
     
-    self.filteredArray = taskDataReturn.filter({ (country) -> Bool in
-      let countryText: NSString = country.nickname as NSString
+    self.filteredArray = taskDataReturn.filter({ (info) -> Bool in
       
-      return (countryText.range(of: searchString, options: NSString.CompareOptions.caseInsensitive).location) != NSNotFound
+      let nickname = info.nickname
+      let isMatch = nickname.localizedCaseInsensitiveContains(searchString)
+      return isMatch
     })
     taskListTable.reloadData()
   }

@@ -90,7 +90,15 @@ class RequesterViewController: UIViewController {
         
       case .success(let taskInfo):
         
-        if taskInfo.count == 0 {
+        let taskCount = taskInfo.filter { info in
+          if info.isComplete {
+            return false
+          } else {
+            return true
+          }
+        }
+        
+        if taskCount.count == 0 {
           strongSelf.userInfo = []
           strongSelf.showAlert(title: "注意", message: "您當前沒有任務", viewController: strongSelf)
           

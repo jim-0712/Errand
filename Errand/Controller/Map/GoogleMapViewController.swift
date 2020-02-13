@@ -41,7 +41,20 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     super.viewWillAppear(animated)
     loadUserInfo()
     getTaskData()
-//    self.navigationController?.navigationBar.isHidden = true
+  }
+  
+  func getStatusOne() {
+    guard let user = UserManager.shared.currentUserInfo else { return }
+    if user.status == 1 {
+      TaskManager.shared.readSpecificData(parameter: "uid", parameterString: user.uid) { result in
+        switch result {
+        case .success(let task):
+          TaskManager.shared.statusOneData = task[0]
+        case .failure(let error):
+          LKProgressHUD.showFailure(text: error.localizedDescription, controller: self)
+        }
+      }
+    }
   }
   
   @objc func reGetUserInfo() {
@@ -61,6 +74,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
           LKProgressHUD.dismiss()
           UserManager.shared.isPostTask = dataReturn.onTask
           UserManager.shared.currentUserInfo = dataReturn
+          self.getStatusOne()
           
         case .failure:
           

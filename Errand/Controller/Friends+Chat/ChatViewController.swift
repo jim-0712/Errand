@@ -114,7 +114,7 @@ class ChatViewController: MessagesViewController {
   }
   
   private func handleDocumentChange(_ change: DocumentChange) {
-    guard var message = Message(document: change.document) else {
+    guard let message = Message(document: change.document) else {
       
       return
     }

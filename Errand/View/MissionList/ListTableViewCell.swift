@@ -71,7 +71,7 @@ class ListTableViewCell: UITableViewCell {
     
     priceLabel.text = "價格 : \(priceTimeInt[0])"
     
-    timeLabel.text = "發布時間 : \(priceTimeInt[1])"
+    timeLabel.text = "發布時間 : \(time)"
     
     seeDetailBtn.layer.borderWidth = 1.0
     

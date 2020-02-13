@@ -27,9 +27,11 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   
   let myLocationManager = CLLocationManager()
   
+  var statusOneData: TaskInfo?
+  
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    setUpSetting()
     setUp()
     setUpBtn()
     setUpTextView()
@@ -42,6 +44,35 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
     photoCollectionView.delegate = self
     photoCollectionView.dataSource = self
   }
+  
+  func setUpSetting() {
+    
+    guard let taskInfo = statusOneData else { return }
+    isChange = true
+    lat = taskInfo.lat
+    long = taskInfo.long
+    fileURL = taskInfo.taskPhoto
+    fileType = taskInfo.fileType
+    priceTextField.text = "\(taskInfo.money)"
+    missionContentTextView.text = taskInfo.detail
+
+    for count in 0 ..< taskInfo.taskPhoto.count {
+      
+      if fileType[count] == 0 {
+        guard let url = URL(string: fileURL[count]) else { return }
+        guard let data = try? Data(contentsOf: url) else { return }
+        guard let image = UIImage(data: data) else { return }
+        imageReady.append(image)
+        luke.append(image)
+      } else if fileType[count] == 1 {
+        guard let url = URL(string: fileURL[count]) else { return }
+        videoReady.append(url as NSURL)
+        luke.append(url as NSURL)
+      }
+      
+    }
+  }
+  
   @IBOutlet weak var photoCollectionView: UICollectionView!
   
   @IBOutlet weak var photoUploadText: UILabel!
@@ -68,6 +99,8 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   
   let backgroundManager = BackgroundManager.shared
   
+  var isChange = false
+  
   var imageReady: [UIImage] = []
   
   var videoReady: [NSURL] = []
@@ -78,7 +111,9 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   
   var luke: [Any] = []
   
-  var selectIndex: Int?
+  var selectIndex = 0
+  
+  var indexRow = 0
   
   var lat: Double?
   
@@ -98,16 +133,18 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
     
     let videoQueue = DispatchQueue(label: "video", attributes: .concurrent)
     
-    group.enter()
+    
     
     photoQueue.async(group: group) {
-      
+   
       if self.imageReady.count == 0 {
         
-        group.leave()
+ 
       } else {
         
         for count in 0 ..< self.imageReady.count {
+          
+          group.enter()
           
           let id = UUID().uuidString
           
@@ -138,22 +175,22 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
               strongSelf.fileURL.append(stringUrl)
               
               group.leave()
+            
             }
           })
         }
       }
     }
     
-    group.enter()
-    
     videoQueue.async(group: group) {
       
       if self.videoReady.count == 0 {
         
-        group.leave()
       } else {
         
         for count in 0 ..< self.videoReady.count {
+          
+          group.enter()
           
           let id = UUID().uuidString
           
@@ -209,9 +246,10 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   func createDataBase() {
     guard let money = priceTextField.text,
       let content = missionContentTextView.text,
-      let indexfinal = selectIndex,
       let lat = lat,
       let long = long else { return }
+    
+    let indexfinal = selectIndex
     
     let intMoney = Int(money) ?? 0
     
@@ -350,7 +388,7 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
       return TaskManager.shared.taskClassified.count - 1
     } else {
       print(luke.count + 1)
-        return luke.count + 1
+      return luke.count + 1
     }
   }
   
@@ -362,6 +400,9 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
       
       cell.setUpContent(label: TaskManager.shared.taskClassified[indexPath.row + 1].title, color: TaskManager.shared.taskClassified[indexPath.row + 1].color)
       
+      if indexPath.row == 0 {
+        cell.isSelected = true
+      }
       return cell
       
     } else {
@@ -369,9 +410,9 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
       guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photo", for: indexPath) as? PhotoCollectionViewCell else { return UICollectionViewCell() }
       
       cell.delegate = self
-      
       if luke.count == 0 {
-
+        cell.indexRow = 0
+        cell.deleteBtn.isHidden = true
         cell.backgroundColor = .white
         cell.addPhotoBtn.isHidden = false
         cell.photoImageView.isHidden = true
@@ -380,7 +421,7 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
       } else if indexPath.row != luke.count && ((luke[indexPath.row] as? UIImage) != nil) {
     
         cell.photoImageView.isHidden = false
-        
+        cell.indexRow = indexPath.row
         guard let layers = cell.layer.sublayers else { return UICollectionViewCell() }
         for layer in layers {
           if let avPlayerLayer = layer as? AVPlayerLayer {
@@ -390,24 +431,27 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
         
         guard let image = luke[indexPath.row] as? UIImage else { return UICollectionViewCell() }
         cell.addPhotoBtn.isHidden = true
+        cell.deleteBtn.isHidden = false
         cell.backgroundColor = .clear
         cell.photoImageView.image = image
         return cell
         
       } else if indexPath.row != luke.count && ((luke[indexPath.row] as? URL) != nil) {
-
+        cell.indexRow = indexPath.row
+        cell.deleteBtn.isHidden = false
         cell.photoImageView.isHidden = true
         guard let video = luke[indexPath.row] as? URL else { return UICollectionViewCell() }
         let player = AVPlayer(url: video)
         let playerLayer = AVPlayerLayer(player: player)
         playerLayer.frame = cell.contentView.bounds
         cell.layer.addSublayer(playerLayer)
- 
+        
         player.play()
         return cell
         
       } else {
-
+        cell.indexRow = indexPath.row
+        cell.deleteBtn.isHidden = true
         cell.addPhotoBtn.isHidden = false
         cell.photoImageView.isHidden = true
         return cell
@@ -471,7 +515,7 @@ extension PostMissionViewController: UITextFieldDelegate, UITextViewDelegate {
   
   func textFieldDidEndEditing(_ textField: UITextField) {
     
-    if priceTextField.text != nil && missionContentTextView.text != nil && fileURL.count > 0 && selectIndex != nil {
+    if priceTextField.text != nil && missionContentTextView.text != nil && fileURL.count > 0 {
       postBtn.isEnabled = true
     } else {
       postBtn.isEnabled = false
@@ -480,7 +524,7 @@ extension PostMissionViewController: UITextFieldDelegate, UITextViewDelegate {
   
   func textViewDidEndEditing(_ textView: UITextView) {
     
-    if priceTextField.text != nil && missionContentTextView.text != nil && selectIndex != nil {
+    if priceTextField.text != nil && missionContentTextView.text != nil {
       postBtn.isEnabled = true
     } else {
       postBtn.isEnabled = false
@@ -497,6 +541,31 @@ extension PostMissionViewController: LocationManager {
 }
 
 extension PostMissionViewController: UploadDataManager {
+  func tapOnDelete(collectionViewCelll: PhotoCollectionViewCell, indexRow: Int) {
+    self.luke.remove(at: indexRow)
+    self.fileType.remove(at: indexRow)
+    self.fileURL.remove(at: indexRow)
+    
+    var photoCount = 0
+    
+    var videoCount = 0
+    
+    for counter in 0 ..< indexRow {
+      
+      if fileType[counter] == 0 {
+        photoCount += 1
+      } else {
+        videoCount += 1
+      }
+      
+      if counter == indexRow {
+        
+      }
+    }
+    
+    photoCollectionView.reloadData()
+  }
+  
   func tapOnUpload(collectionViewCelll: PhotoCollectionViewCell) {
     
     let imagePickerAlertController = UIAlertController(title: "上傳圖片", message: "請選擇要上傳的圖片", preferredStyle: .actionSheet)

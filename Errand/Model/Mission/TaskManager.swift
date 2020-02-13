@@ -22,6 +22,8 @@ class TaskManager {
   
   var taskData = [TaskInfo]()
   
+  var statusOneData: TaskInfo?
+  
   let taskClassified = [
     TaskGroup(color: .black, title: "所有任務", image: "none"),
     TaskGroup(color: .red, title: "搬運物品", image: "trucks"),

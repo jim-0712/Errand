@@ -135,7 +135,6 @@ class ViewController: UIViewController {
     logoLabel.transform = CGAffineTransform(a: 1.0, b: -0.15, c: 0, d: 0.7, tx: 0, ty: 10)
     let backView = backgroundManager.setUpView(view: self.view)
     self.view.layer.insertSublayer(backView, at: 0)
-    
   }
   
   func setUpAppleBtn() {
