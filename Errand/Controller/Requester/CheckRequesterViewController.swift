@@ -73,8 +73,9 @@ class CheckRequesterViewController: UIViewController {
     })
     
     taskInfo.refuse.append(user.uid)
+    guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
     
-    TaskManager.shared.updateWholeTask(task: taskInfo) { [weak self] result in
+    TaskManager.shared.updateWholeTask(task: taskInfo, uid: uid) { [weak self] result in
       
       guard let strongSelf = self else { return }
       
@@ -118,8 +119,10 @@ class CheckRequesterViewController: UIViewController {
              switch result {
                
              case .success:
+              
+              guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
                
-               TaskManager.shared.updateWholeTask(task: taskInfo) { [weak self] result in
+              TaskManager.shared.updateWholeTask(task: taskInfo, uid: uid) { [weak self] result in
                     
                     guard let strongSelf = self else { return }
                     

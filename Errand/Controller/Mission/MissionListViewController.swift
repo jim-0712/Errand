@@ -36,6 +36,7 @@ class MissionListViewController: UIViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     setUpBtn()
+    startAnimate(sender: allMissionBtn)
   }
   
   @objc func reloadTable() {

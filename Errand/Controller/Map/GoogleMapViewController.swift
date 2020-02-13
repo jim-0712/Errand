@@ -34,13 +34,14 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     setUpLocation()
     checkLocationAuth()
     setupCollectin()
-    self.navigationController?.navigationBar.isHidden = true
+    
   }
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     loadUserInfo()
     getTaskData()
+//    self.navigationController?.navigationBar.isHidden = true
   }
   
   @objc func reGetUserInfo() {

@@ -33,7 +33,7 @@ struct JudgeInfo {
       
       "star": star,
       
-      "classified": classified,
+      "classified": classified
     ]
   }
 }
@@ -66,6 +66,10 @@ struct TaskInfo {
   
   var takerOK: Bool
   
+  var ownerAskFriend: Bool
+  
+  var takerAskFriend: Bool
+  
   var fileType: [Int]
   
   var personPhoto: String
@@ -75,8 +79,6 @@ struct TaskInfo {
   var fcmToken: String
   
   var missionTaker: String
-  
-  var missionTakerFcmToken: String
   
   var refuse: [String]
   
@@ -136,7 +138,9 @@ struct TaskInfo {
                
                "star": star,
                
-               "missionTakerUid": missionTakerFcmToken
+               "ownerAskFriend": ownerAskFriend,
+               
+               "takerAskFriend": takerAskFriend
     ]
   }
 }

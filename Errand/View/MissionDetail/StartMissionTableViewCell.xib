@@ -45,7 +45,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TAE-Eg-5gZ">
-                                <rect key="frame" x="376" y="40" width="40" height="40"/>
+                                <rect key="frame" x="376" y="70" width="40" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="40" id="TnR-CD-Gnj"/>
                                     <constraint firstAttribute="height" constant="40" id="guK-KK-HFS"/>
@@ -86,6 +86,17 @@
                                     <constraint firstAttribute="width" constant="28" id="l1u-fT-KPP"/>
                                 </constraints>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CDr-nB-Cvc">
+                                <rect key="frame" x="376" y="20" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="40" id="5yt-rJ-24T"/>
+                                    <constraint firstAttribute="height" constant="40" id="LN8-cZ-zw0"/>
+                                </constraints>
+                                <state key="normal" image="friend"/>
+                                <connections>
+                                    <action selector="addFriends:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="d0d-Y2-Cux"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <gestureRecognizers/>
@@ -94,11 +105,13 @@
                             <constraint firstItem="8ZH-hJ-Dgv" firstAttribute="leading" secondItem="iwz-j3-qwk" secondAttribute="leading" constant="20" id="BLD-I8-ibz"/>
                             <constraint firstItem="kef-jW-vDR" firstAttribute="top" secondItem="iwz-j3-qwk" secondAttribute="top" constant="10" id="DOK-QQ-cXW"/>
                             <constraint firstItem="GTv-vg-Uyx" firstAttribute="centerX" secondItem="kef-jW-vDR" secondAttribute="centerX" id="Ez7-cH-Uh8"/>
+                            <constraint firstItem="CDr-nB-Cvc" firstAttribute="centerX" secondItem="TAE-Eg-5gZ" secondAttribute="centerX" id="MSJ-4o-V9D"/>
                             <constraint firstItem="8ZH-hJ-Dgv" firstAttribute="top" secondItem="iwz-j3-qwk" secondAttribute="top" constant="10" id="Pct-pE-8xx"/>
+                            <constraint firstItem="CDr-nB-Cvc" firstAttribute="centerY" secondItem="iwz-j3-qwk" secondAttribute="centerY" constant="-30" id="QSh-RK-pD2"/>
                             <constraint firstAttribute="trailing" secondItem="LRg-Md-1GK" secondAttribute="trailing" constant="16" id="Rmk-Hg-0DY"/>
                             <constraint firstItem="TAE-Eg-5gZ" firstAttribute="leading" secondItem="FPE-6M-cnh" secondAttribute="trailing" constant="16" id="TYA-Pt-6dT"/>
                             <constraint firstItem="LRg-Md-1GK" firstAttribute="leading" secondItem="kef-jW-vDR" secondAttribute="trailing" constant="6" id="Uga-DS-a9H"/>
-                            <constraint firstItem="TAE-Eg-5gZ" firstAttribute="centerY" secondItem="8ZH-hJ-Dgv" secondAttribute="centerY" id="cXA-2J-pEa"/>
+                            <constraint firstItem="TAE-Eg-5gZ" firstAttribute="centerY" secondItem="8ZH-hJ-Dgv" secondAttribute="centerY" constant="30" id="cXA-2J-pEa"/>
                             <constraint firstItem="GTv-vg-Uyx" firstAttribute="top" secondItem="kef-jW-vDR" secondAttribute="bottom" constant="6" id="cqO-he-p4U"/>
                             <constraint firstAttribute="height" constant="140" id="fch-z4-yF2"/>
                             <constraint firstAttribute="trailing" secondItem="TAE-Eg-5gZ" secondAttribute="trailing" constant="32" id="icv-A4-Fg0"/>
@@ -123,6 +136,7 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
+                <outlet property="addFriendBtn" destination="CDr-nB-Cvc" id="nxx-VS-bqd"/>
                 <outlet property="authorImage" destination="kef-jW-vDR" id="EKU-Ey-bWx"/>
                 <outlet property="authorLabel" destination="LRg-Md-1GK" id="g3M-CA-Yqg"/>
                 <outlet property="chatBtn" destination="TAE-Eg-5gZ" id="Ndh-Ou-ywa"/>
@@ -138,6 +152,7 @@
     </objects>
     <resources>
         <image name="computer" width="512" height="512"/>
+        <image name="friend" width="512" height="512"/>
         <image name="money" width="32" height="32"/>
         <image name="tasks" width="64" height="64"/>
         <image name="writer" width="64" height="64"/>

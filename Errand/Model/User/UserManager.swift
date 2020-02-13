@@ -301,4 +301,47 @@ class UserManager {
       }
     }
   }
+  
+  func updatefreinds(ownerUid: String, takerUid: String, chatRoomID: String, completion: @escaping (Result<String, Error>) -> Void) {
+    
+    let ownerRdf = dbF.collection("Users").document(ownerUid)
+    
+    let takerRef = dbF.collection("Users").document(takerUid)
+    
+    let ownerFriend = Friends(nameREF: takerRef, chatRoomID: chatRoomID)
+    
+    let takerFriend = Friends(nameREF: ownerRdf, chatRoomID: chatRoomID)
+    
+    let group = DispatchGroup()
+    
+    group.enter()
+    group.enter()
+    
+    dbF.collection("Users").document(ownerUid).collection("Friends").document().setData(ownerFriend.toDict) { error in
+      
+      if error != nil {
+        
+        completion(.failure(FireBaseUpdateError.updateError))
+      } else {
+        
+        group.leave()
+      }
+    }
+    
+    dbF.collection("Users").document(takerUid).collection("Friends").document().setData(takerFriend.toDict) { error in
+      
+      if error != nil {
+        
+        completion(.failure(FireBaseUpdateError.updateError))
+      } else {
+        
+        group.leave()
+      }
+    }
+    
+    group.notify(queue: DispatchQueue.main) {
+      completion(.success("Success"))
+    }
+  }
+  
 }

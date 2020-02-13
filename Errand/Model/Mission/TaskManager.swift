@@ -46,7 +46,7 @@ class TaskManager {
     let long = coordinate.longitude as Double
     let personPhoto = "\(photo)"
     
-    let info = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: taskData[0], detail: detail, lat: lat, long: long, money: taskData[1], classfied: taskData[2], status: taskData[3], ownerOK: false, takerOK: false, fileType: fileType, personPhoto: personPhoto, requester: [], fcmToken: fcmToken, missionTaker: "", missionTakerFcmToken: "", refuse: [], uid: uid, chatRoom: "", isComplete: false, star: 0.0)
+    let info = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: taskData[0], detail: detail, lat: lat, long: long, money: taskData[1], classfied: taskData[2], status: taskData[3], ownerOK: false, takerOK: false, ownerAskFriend: false, takerAskFriend: false, fileType: fileType, personPhoto: personPhoto, requester: [], fcmToken: fcmToken, missionTaker: "", refuse: [], uid: uid, chatRoom: "", isComplete: false, star: 0.0)
     
     self.dbF.collection("Tasks").document(uid).setData(info.toDict) { error in
       
@@ -160,12 +160,13 @@ class TaskManager {
         let ownerOK = info.data()["ownerOK"] as? Bool,
         let takerOK = info.data()["takerOK"] as? Bool,
         let star = info.data()["star"] as? Double,
-        let missionTakerUid = info.data()["missionTakerUid"] as? String else { return }
+        let ownerAskFriend = info.data()["ownerAskFriend"] as? Bool,
+        let takerAskFriend = info.data()["takerAskFriend"] as? Bool else { return }
       
       if status == 1 || isComplete {
         continue
       } else {
-        let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, ownerOK: ownerOK, takerOK: takerOK, fileType: fileType, personPhoto: personPhoto, requester: requester, fcmToken: fcmToken, missionTaker: missionTaker, missionTakerFcmToken: missionTakerUid, refuse: refuse, uid: uid, chatRoom: chatRoom, isComplete: isComplete, star: star)
+        let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, ownerOK: ownerOK, takerOK: takerOK, ownerAskFriend: ownerAskFriend, takerAskFriend: takerAskFriend, fileType: fileType, personPhoto: personPhoto, requester: requester, fcmToken: fcmToken, missionTaker: missionTaker, refuse: refuse, uid: uid, chatRoom: chatRoom, isComplete: isComplete, star: star)
         
         self.taskData.append(dataReturn)
       }
@@ -201,9 +202,10 @@ class TaskManager {
         let ownerOK = info.data()["ownerOK"] as? Bool,
         let takerOK = info.data()["takerOK"] as? Bool,
         let star = info.data()["star"] as? Double,
-        let missionTakerUid = info.data()["missionTakerUid"] as? String else { return }
+        let ownerAskFriend = info.data()["ownerAskFriend"] as? Bool,
+        let takerAskFriend = info.data()["takerAskFriend"] as? Bool else { return }
       
-      let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, ownerOK: ownerOK, takerOK: takerOK, fileType: fileType, personPhoto: personPhoto, requester: requester, fcmToken: fcmToken, missionTaker: missionTaker, missionTakerFcmToken: missionTakerUid, refuse: refuse, uid: uid, chatRoom: chatRoom, isComplete: isComplete, star: star)
+      let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, ownerOK: ownerOK, takerOK: takerOK, ownerAskFriend: ownerAskFriend, takerAskFriend: takerAskFriend, fileType: fileType, personPhoto: personPhoto, requester: requester, fcmToken: fcmToken, missionTaker: missionTaker, refuse: refuse, uid: uid, chatRoom: chatRoom, isComplete: isComplete, star: star)
       
       self.taskData.append(dataReturn)
     }
@@ -237,9 +239,10 @@ class TaskManager {
       let ownerOK = quary["ownerOK"] as? Bool,
       let takerOK = quary["takerOK"] as? Bool,
       let star = quary["star"] as? Double,
-      let missionTakerUid = quary["missionTakerUid"] as? String else { return }
+      let ownerAskFriend = quary["ownerAskFriend"] as? Bool,
+      let takerAskFriend = quary["takerAskFriend"] as? Bool else { return }
     
-    let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, ownerOK: ownerOK, takerOK: takerOK, fileType: fileType, personPhoto: personPhoto, requester: requester, fcmToken: fcmToken, missionTaker: missionTaker, missionTakerFcmToken: missionTakerUid, refuse: refuse, uid: uid, chatRoom: chatRoom, isComplete: isComplete, star: star)
+    let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, ownerOK: ownerOK, takerOK: takerOK, ownerAskFriend: ownerAskFriend, takerAskFriend: takerAskFriend, fileType: fileType, personPhoto: personPhoto, requester: requester, fcmToken: fcmToken, missionTaker: missionTaker, refuse: refuse, uid: uid, chatRoom: chatRoom, isComplete: isComplete, star: star)
     
     completion(.success(dataReturn))
   }
@@ -357,17 +360,13 @@ class TaskManager {
   func showAlert(title: String, message: String, viewController: UIViewController) {
     let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
     let okAction = UIAlertAction(title: "ok", style: .default) { _ in
-      
-      
       LKProgressHUD.dismiss()
     }
     controller.addAction(okAction)
     viewController.present(controller, animated: true, completion: nil)
   }
   
-  func updateWholeTask(task: TaskInfo, completion: @escaping (Result<String, Error>) -> Void ) {
-    
-    guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
+  func updateWholeTask(task: TaskInfo, uid: String, completion: @escaping (Result<String, Error>) -> Void ) {
     
     dbF.collection("Tasks").whereField("uid", isEqualTo: uid).getDocuments { (querySnapshot, error) in
       
@@ -377,7 +376,7 @@ class TaskManager {
         
       }
       
-      let taskNewVersion = TaskInfo(email: task.email, nickname: task.nickname, gender: task.gender, taskPhoto: task.taskPhoto, time: task.time, detail: task.detail, lat: task.lat, long: task.long, money: task.money, classfied: task.classfied, status: task.status, ownerOK: task.ownerOK, takerOK: task.takerOK, fileType: task.fileType, personPhoto: task.personPhoto, requester: task.requester, fcmToken: task.fcmToken, missionTaker: task.missionTaker, missionTakerFcmToken: task.missionTakerFcmToken, refuse: task.refuse, uid: task.uid, chatRoom: task.chatRoom, isComplete: task.isComplete, star: task.star)
+      let taskNewVersion = TaskInfo(email: task.email, nickname: task.nickname, gender: task.gender, taskPhoto: task.taskPhoto, time: task.time, detail: task.detail, lat: task.lat, long: task.long, money: task.money, classfied: task.classfied, status: task.status, ownerOK: task.ownerOK, takerOK: task.takerOK, ownerAskFriend: task.ownerAskFriend, takerAskFriend: task.takerAskFriend, fileType: task.fileType, personPhoto: task.personPhoto, requester: task.requester, fcmToken: task.fcmToken, missionTaker: task.missionTaker, refuse: task.refuse, uid: task.uid, chatRoom: task.chatRoom, isComplete: task.isComplete, star: task.star)
       
       if let querySnapshot = querySnapshot {
         
@@ -437,6 +436,16 @@ class TaskManager {
       completion(Result.success("Success"))
     }
   }
+  
+  func deleteTask(uid: String, completion: @escaping (Result<String, Error>) -> Void) {
+    
+    dbF.collection("Tasks").document("uid").delete { error in
+      
+      if error != nil {
+        completion(.failure(FireBaseUpdateError.updateError))
+      } else {
+        completion(.success("Success"))
+      }
+    }
+  }
 }
-
-

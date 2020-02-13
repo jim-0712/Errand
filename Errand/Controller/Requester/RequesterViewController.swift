@@ -30,16 +30,20 @@ class RequesterViewController: UIViewController {
     readRequester()
   }
   
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    readRequester()
+  }
+  
   var refreshControl: UIRefreshControl!
   
   var userInfo = [AccountInfo]() {
     didSet {
       if userInfo.isEmpty {
-        
         LKProgressHUD.show(controller: self)
       } else {
         LKProgressHUD.dismiss()
-        self.refreshControl.endRefreshing()
+        refreshControl.endRefreshing()
         requesterTable.reloadData()
       }
     }
@@ -59,12 +63,10 @@ class RequesterViewController: UIViewController {
   }
   
   @objc func loadData() {
-    
     readRequester()
   }
   
   func readRequester() {
-    
     guard let uid = UserManager.shared.currentUserInfo?.uid,
          let currentUser = UserManager.shared.currentUserInfo else { return }
     

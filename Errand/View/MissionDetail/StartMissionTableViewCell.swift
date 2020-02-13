@@ -23,6 +23,8 @@ class StartMissionTableViewCell: UITableViewCell {
   
   var tapOnButton: (() -> Void)?
   
+  var tapAddFriend: (() -> Void)?
+  
   @IBOutlet weak var missionOwnerImage: UIImageView!
   
   @IBOutlet weak var authorImage: UIImageView!
@@ -38,6 +40,8 @@ class StartMissionTableViewCell: UITableViewCell {
   @IBOutlet weak var priceLabel: UILabel!
   
   @IBOutlet weak var chatBtn: UIButton!
+  
+  @IBOutlet weak var addFriendBtn: UIButton!
   
   @IBOutlet weak var pageView: UIView!
   
@@ -56,6 +60,11 @@ class StartMissionTableViewCell: UITableViewCell {
   
   @IBAction func chatAct(_ sender: Any) {
     self.tapOnButton?()
+  }
+  
+  @IBAction func addFriends(_ sender: Any) {
+    
+    self.tapAddFriend?()
   }
   
 }

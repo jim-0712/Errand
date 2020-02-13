@@ -53,6 +53,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     // Override point for customization after application launch.
     
+    NotificationCenter.default.addObserver(self, selector: #selector(perFormPushVC), name: Notification.Name("popVC"), object: nil)
+    
     FirebaseApp.configure()
     
     GMSServices.provideAPIKey("AIzaSyBbTnBn0MHPMnioaL4y68Da3d41JlaSY-g")
@@ -115,7 +117,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     if let info = userInfo["aps"] as? [String: Any] {
       guard let message = info["alert"] as? [String: Any] else { return }
       guard let title = message["title"] as? String,
-           let body = message["body"] as? String else { return }
+        let body = message["body"] as? String else { return }
       pretitle = title
       prebody = body
     }
@@ -127,7 +129,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     } else {
       print("2")
     }
-   
+    
     completionHandler(.newData)
     //
     //    if let uid = Auth.auth().currentUser?.uid {
@@ -148,25 +150,63 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     //    }
   }
   
-  func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-      print("hellooooooo")
-      completionHandler([.badge, .sound, .alert])
+  @objc func perFormPushVC() {
+    let storyboard = UIStoryboard(name: "Mission", bundle: nil)
+    if let conversationVC = storyboard.instantiateViewController(withIdentifier: "startMission") as? StartMissionViewController,
+      let tabBarController = self.window?.rootViewController as? TabBarViewController,
+      let navController = tabBarController.selectedViewController as? UINavigationController {
+      let group = DispatchGroup()
+      group.enter()
+      guard let userInfo = UserManager.shared.currentUserInfo else { return }
+      if userInfo.status == 1 {
+
+        TaskManager.shared.readSpecificData(parameter: "uid", parameterString: userInfo.uid) { result in
+
+          switch result{
+          case .success(let taskInfo):
+            conversationVC.detailData = taskInfo[0]
+            group.leave()
+          case .failure(let error):
+            print(error.localizedDescription)
+            group.leave()
+          }
+        }
+
+      } else if userInfo.status == 2 {
+        TaskManager.shared.readSpecificData(parameter: "missionTaker", parameterString: userInfo.uid) { result in
+
+          switch result{
+          case .success(let taskInfo):
+            conversationVC.detailData = taskInfo[0]
+            group.leave()
+          case .failure(let error):
+            print(error.localizedDescription)
+            group.leave()
+          }
+        }
+
+      }
+      group.notify(queue: DispatchQueue.main) {
+        navController.pushViewController(conversationVC, animated: true)
+//        navController.show(conversationVC, sender: nil)
+      }
+    }
   }
   
   func backGroundNoti(title: String, body: String) {
     
     let center = UNUserNotificationCenter.current()
-         let content = UNMutableNotificationContent()
-         content.title = title
-         content.body = body
-         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
-         let request = UNNotificationRequest(identifier: "Errand", content: content, trigger: trigger)
-         center.add(request) { error in
-           if error != nil {
-             print(error?.localizedDescription)
-           }
-           print("ya")
-         }
+    let content = UNMutableNotificationContent()
+    content.title = title
+    content.body = body
+    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+    let request = UNNotificationRequest(identifier: "Errand", content: content, trigger: trigger)
+    center.add(request) { error in
+      if error != nil {
+        print(error?.localizedDescription)
+      }
+      print("ya")
+    }
   }
   
   lazy var persistentContainer: NSPersistentContainer = {

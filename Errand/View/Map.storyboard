@@ -16,7 +16,7 @@
             </objects>
             <point key="canvasLocation" x="1565.9420289855075" y="1612.5"/>
         </scene>
-        <!--Google Map View Controller-->
+        <!--地圖-->
         <scene sceneID="3kQ-3K-BXi">
             <objects>
                 <viewController storyboardIdentifier="googleMap" id="6gx-gd-c6b" customClass="GoogleMapViewController" customModule="Errand" customModuleProvider="target" sceneMemberID="viewController">
@@ -294,7 +294,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Oie-lJ-Dco"/>
                     </view>
-                    <navigationItem key="navigationItem" id="pMb-55-ntK"/>
+                    <navigationItem key="navigationItem" title="地圖" id="pMb-55-ntK"/>
                     <connections>
                         <outlet property="arrangeLabel" destination="Rm6-de-LED" id="LEa-XG-3sh"/>
                         <outlet property="arrangeTextField" destination="xV2-WV-BOx" id="nYq-jM-hK3"/>
