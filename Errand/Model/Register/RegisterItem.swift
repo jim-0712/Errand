@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Firebase
 
 enum FireBaseMessage: Error {
   
@@ -117,4 +118,19 @@ struct FbData {
   var name: String
   
   var image: URL
+}
+
+struct Friends {
+  
+  var nameREF: DocumentReference
+  
+  var chatRoomID: String
+  
+  var toDict: [String: Any]{
+    
+    return [
+      "nameREF": nameREF,
+      "chatRoomID": chatRoomID
+          ]
+  }
 }

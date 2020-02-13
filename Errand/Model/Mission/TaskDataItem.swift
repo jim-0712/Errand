@@ -14,6 +14,30 @@ enum ReadDataError: Error {
   case readDataError
 }
 
+struct JudgeInfo {
+  
+  var owner: String
+  
+  var judge: String
+  
+  var star: Double
+  
+  var classified: Int
+  
+  var toDict: [String: Any] {
+    
+    return [
+      "owner": owner,
+      
+      "judge": judge,
+      
+      "star": star,
+      
+      "classified": classified
+    ]
+  }
+}
+
 struct TaskInfo {
   
   var email: String
@@ -38,6 +62,14 @@ struct TaskInfo {
   
   var status: Int
   
+  var ownerOK: Bool
+  
+  var takerOK: Bool
+  
+  var ownerAskFriend: Bool
+  
+  var takerAskFriend: Bool
+  
   var fileType: [Int]
   
   var personPhoto: String
@@ -52,52 +84,72 @@ struct TaskInfo {
   
   var uid: String
   
+  var chatRoom: String
+  
+  var isComplete: Bool
+  
+  var star: Double
+  
   var toDict: [String: Any] {
     
     return [   "email": email,
-              
-              "nickname": nickname,
-              
-              "gender": gender,
-              
-              "taskPhoto": taskPhoto,
-              
-              "time": time,
-              
-              "detail": detail,
-              
-              "money": money,
-              
-              "classfied": classfied,
-              
-              "lat": lat,
-              
-              "long": long,
-              
-              "status": status,
-              
-              "fileType": fileType,
-      
-              "personPhoto": personPhoto,
-              
-              "requester": requester,
-              
-              "fcmToken": fcmToken,
-              
-              "missionTaker": missionTaker,
-              
-              "refuse": refuse,
-              
-              "uid": uid
-          ]
+               
+               "nickname": nickname,
+               
+               "gender": gender,
+               
+               "taskPhoto": taskPhoto,
+               
+               "time": time,
+               
+               "detail": detail,
+               
+               "money": money,
+               
+               "classfied": classfied,
+               
+               "lat": lat,
+               
+               "long": long,
+               
+               "status": status,
+               
+               "fileType": fileType,
+               
+               "personPhoto": personPhoto,
+               
+               "requester": requester,
+               
+               "fcmToken": fcmToken,
+               
+               "missionTaker": missionTaker,
+               
+               "refuse": refuse,
+               
+               "uid": uid,
+               
+               "chatRoom": chatRoom,
+               
+               "isComplete": isComplete,
+               
+               "ownerOK": ownerOK,
+               
+               "takerOK": takerOK,
+               
+               "star": star,
+               
+               "ownerAskFriend": ownerAskFriend,
+               
+               "takerAskFriend": takerAskFriend
+    ]
   }
 }
 
 struct TaskGroup {
-
-    let color: UIColor
-
-    let title: String
   
-    let image: String
+  let color: UIColor
+  
+  let title: String
+  
+  let image: String
 }

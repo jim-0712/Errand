@@ -21,7 +21,7 @@ class CheckRequesterViewController: UIViewController {
   
   var averageStar = 0.0
   
-  var infoData: AccountInfo?
+  var requsterInfoData: AccountInfo?
   
   var taskInfo: TaskInfo?
   
@@ -60,22 +60,22 @@ class CheckRequesterViewController: UIViewController {
   
   @IBAction func refuseAct(_ sender: Any) {
     
-    guard let user = infoData,
+    guard let user = requsterInfoData,
       var taskInfo = taskInfo else { return }
-    
     
     taskInfo.requester = taskInfo.requester.filter({ info in
       
       if info != user.uid {
         return true
-      }else {
+      } else {
         return false
       }
     })
     
     taskInfo.refuse.append(user.uid)
+    guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
     
-    TaskManager.shared.updateWholeTask(task: taskInfo) { [weak self] result in
+    TaskManager.shared.updateWholeTask(task: taskInfo, uid: uid) { [weak self] result in
       
       guard let strongSelf = self else { return }
       
@@ -98,30 +98,58 @@ class CheckRequesterViewController: UIViewController {
   
   @IBAction func confirmAct(_ sender: Any) {
     
-    guard let user = infoData,
-      var taskInfo = taskInfo else { return }
+    guard let user = requsterInfoData,
+         var taskInfo = taskInfo else { return }
+    
+    let chatRoomID = UUID().uuidString
     
     taskInfo.missionTaker = user.uid
     taskInfo.requester = []
     taskInfo.status = 1
+    taskInfo.chatRoom = chatRoomID
     
-    TaskManager.shared.updateWholeTask(task: taskInfo) { [weak self] result in
-      
-      guard let strongSelf = self else { return }
+    TaskManager.shared.createChatRoom(chatRoomID: chatRoomID) { result in
       
       switch result {
         
       case .success:
         
-        NotificationCenter.default.post(name: Notification.Name("acceptRequester"), object: nil)
-        strongSelf.navigationController?.popViewController(animated: true)
+         UserManager.shared.updateStatus(uid: user.uid, status: 2) { result in
+             
+             switch result {
+               
+             case .success:
+              
+              guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
+               
+              TaskManager.shared.updateWholeTask(task: taskInfo, uid: uid) { [weak self] result in
+                    
+                    guard let strongSelf = self else { return }
+                    
+                    switch result {
+                      
+                    case .success:
+                      
+                      NotificationCenter.default.post(name: Notification.Name("acceptRequester"), object: nil)
+                      strongSelf.navigationController?.popViewController(animated: true)
+                      
+                    case .failure:
+                      
+                      TaskManager.shared.showAlert(title: "失敗", message: "請重新接受", viewController: strongSelf)
+                    }
+                  }
+             case .failure(let error):
+               
+               print(error.localizedDescription)
+             }
+           }
         
-      case .failure:
+      case .failure(let error):
         
-        TaskManager.shared.showAlert(title: "失敗", message: "請重新接受", viewController: strongSelf)
+        print(error.localizedDescription)
       }
     }
-    
+
     let sender = PushNotificationSender()
     sender.sendPushNotification(to: user.fcmToken, body: "任務接受成功")
   }
@@ -135,7 +163,7 @@ extension CheckRequesterViewController: UITableViewDelegate, UITableViewDataSour
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
-    guard let infoData = infoData else { return UITableViewCell() }
+    guard let infoData = requsterInfoData else { return UITableViewCell() }
     
     if infoData.taskCount == 0 {
       averageStar = 0.0

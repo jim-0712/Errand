@@ -53,9 +53,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     // Override point for customization after application launch.
     
-    FirebaseApp.configure()
+    NotificationCenter.default.addObserver(self, selector: #selector(perFormPushVC), name: Notification.Name("popVC"), object: nil)
     
-    //    GMSServices.provideAPIKey("AIzaSyB_voEc15Sn0T_O9C2O-6dWz7c_ju42jXs")
+    FirebaseApp.configure()
     
     GMSServices.provideAPIKey("AIzaSyBbTnBn0MHPMnioaL4y68Da3d41JlaSY-g")
     
@@ -64,8 +64,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     GIDSignIn.sharedInstance().delegate = self
     
     UNUserNotificationCenter.current().delegate = self
-    
-    UIApplication.shared.registerForRemoteNotifications()
     
     let pushManager = PushNotificationManager()
     
@@ -108,19 +106,107 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     UserDefaults.standard.set(tokenString, forKey: "deviceToken")
   }
   
-  func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-//    
-//    print("Recived: \(userInfo)")
-//    //Parsing userinfo:
-////    var temp: NSDictionary = userInfo as NSDictionary
-//    if let info = userInfo["aps"] as? Dictionary<String, AnyObject> {
-//              guard let alertMsg = info["alert"] as? String else { return }
-//              
-//              let controller = UIAlertController(title: "怎麼可以忘了!", message: alertMsg, preferredStyle: .alert)
-//              let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-//              controller.addAction(okAction)
-//
-//             }
+  func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+    //
+    
+    print("Hi")
+    print("Recived: \(userInfo)")
+    
+    var pretitle = ""
+    var prebody = ""
+    if let info = userInfo["aps"] as? [String: Any] {
+      guard let message = info["alert"] as? [String: Any] else { return }
+      guard let title = message["title"] as? String,
+        let body = message["body"] as? String else { return }
+      pretitle = title
+      prebody = body
+    }
+    
+    let state = application.applicationState
+    
+    if state == .active {
+      backGroundNoti(title: pretitle, body: prebody)
+    } else {
+      print("2")
+    }
+    
+    completionHandler(.newData)
+    //
+    //    if let uid = Auth.auth().currentUser?.uid {
+    //
+    //      UserManager.shared.readData(uid: uid) { result in
+    //        switch result {
+    //
+    //        case .success(let dataReturn):
+    //
+    //          UserManager.shared.isPostTask = dataReturn.onTask
+    //          UserManager.shared.currentUserInfo = dataReturn
+    //
+    //        case .failure:
+    //
+    //          return
+    //        }
+    //      }
+    //    }
+  }
+  
+  @objc func perFormPushVC() {
+    let storyboard = UIStoryboard(name: "Mission", bundle: nil)
+    if let conversationVC = storyboard.instantiateViewController(withIdentifier: "startMission") as? StartMissionViewController,
+      let tabBarController = self.window?.rootViewController as? TabBarViewController,
+      let navController = tabBarController.selectedViewController as? UINavigationController {
+      let group = DispatchGroup()
+      group.enter()
+      guard let userInfo = UserManager.shared.currentUserInfo else { return }
+      if userInfo.status == 1 {
+
+        TaskManager.shared.readSpecificData(parameter: "uid", parameterString: userInfo.uid) { result in
+
+          switch result{
+          case .success(let taskInfo):
+            conversationVC.detailData = taskInfo[0]
+            group.leave()
+          case .failure(let error):
+            print(error.localizedDescription)
+            group.leave()
+          }
+        }
+
+      } else if userInfo.status == 2 {
+        TaskManager.shared.readSpecificData(parameter: "missionTaker", parameterString: userInfo.uid) { result in
+
+          switch result{
+          case .success(let taskInfo):
+            conversationVC.detailData = taskInfo[0]
+            group.leave()
+          case .failure(let error):
+            print(error.localizedDescription)
+            group.leave()
+          }
+        }
+
+      }
+      group.notify(queue: DispatchQueue.main) {
+        navController.pushViewController(conversationVC, animated: true)
+//        navController.show(conversationVC, sender: nil)
+      }
+    }
+  }
+  
+  func backGroundNoti(title: String, body: String) {
+    
+    let center = UNUserNotificationCenter.current()
+    let content = UNMutableNotificationContent()
+    content.title = title
+    content.body = body
+    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
+    let request = UNNotificationRequest(identifier: "Errand", content: content, trigger: trigger)
+    center.add(request) { error in
+      if error != nil {
+        print(error?.localizedDescription)
+      }
+      print("ya")
+    }
   }
   
   lazy var persistentContainer: NSPersistentContainer = {

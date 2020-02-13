@@ -227,7 +227,11 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
       
       guard let strongSelf = self else { return }
       
-      switch result {
+        switch result {
+          
+      case .failure:
+      
+      print("fail")
         
       case .success:
         
@@ -246,9 +250,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
             LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
           }
         }
-      case .failure:
-        
-        print("fail")
       }
     }
   }
@@ -285,7 +286,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   }
   
   func setUpCollectionView() {
-    
     missionGroupCollectionView.delegate = self
     missionGroupCollectionView.dataSource = self
     missionGroupCollectionView.layer.shadowOpacity = 0.2
@@ -293,7 +293,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   }
   
   func setUpTextView() {
-    
     missionContentTextView.delegate = self
     missionContentTextView.layer.cornerRadius = screenwidth / 40
     missionContentTextView.layer.shadowOpacity = 0.4
@@ -303,15 +302,13 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   }
   
   func setUpBtn() {
-    
-    postBtn.layer.cornerRadius = screenwidth / 40
+    postBtn.layer.cornerRadius = postBtn.bounds.height / 8
     postBtn.isEnabled = false
     postBtn.layer.shadowOpacity = 0.5
     postBtn.layer.shadowOffset = CGSize(width: 3, height: 3)
   }
   
   func setUp() {
-    
     myLocationManager.delegate = self
     imagePickerController.delegate = self
     imagePickerController.allowsEditing = true

@@ -43,47 +43,6 @@ class UserManager {
     }
   }
   
-  func createDataBase(classification: String, gender: Int, nickName: String, email: String, photo: String, completion: @escaping (Result<String, Error>) -> Void) {
-    
-    let report = 0
-    
-    let blacklist: [String] = []
-    
-    let friends: [String] = []
-    
-    let task: [String] = []
-    
-    let userId = Auth.auth().currentUser?.uid
-    
-    guard let token = UserDefaults.standard.value(forKey: "fcmToken") as? String,
-         let uid = Auth.auth().currentUser?.uid else { return }
-    
-    let info = AccountInfo(email: email, nickname: nickName, gender: gender, task: task, friends: friends, photo: photo, report: report, blacklist: blacklist, onTask: false, fcmToken: token, status: 0, about: "", taskCount: 0, totalStar: 0.0, uid: uid)
-    
-    self.dbF.collection(classification).document(email).setData(info.toDict) { error in
-      
-      if error != nil {
-        
-        completion(Result.failure(RegiError.registFailed))
-        
-      } else {
-        
-        UserDefaults.standard.set(gender, forKey: "gender")
-        
-        UserDefaults.standard.set(nickName, forKey: "nickname")
-        
-        UserDefaults.standard.set(email, forKey: "email")
-        
-        UserDefaults.standard.set(true, forKey: "login")
-        
-        UserDefaults.standard.set(userId, forKey: "userid")
-        
-        completion(Result.success("Success"))
-        
-      }
-    }
-  }
-  
   func fbLogin(controller: UIViewController, completion: @escaping (Result<String, Error>) -> Void) {
     
     let manager = LoginManager()
@@ -186,7 +145,7 @@ class UserManager {
   func updatefcmToken() {
     
     guard let uid = Auth.auth().currentUser?.uid,
-      let token = UserDefaults.standard.value(forKey: "fcmToken") as? String else { return }
+         let token = UserDefaults.standard.value(forKey: "fcmToken") as? String else { return }
     
     dbF.collection("Users").whereField("uid", isEqualTo: uid).getDocuments { (querySnapshot, _) in
       
@@ -286,7 +245,7 @@ class UserManager {
     }
   }
   
-  func updateUserInfo(completion: @escaping (Result<String,Error>) -> Void){
+  func updateUserInfo(completion: @escaping (Result<String, Error>) -> Void) {
     guard let data = currentUserInfo else { return }
     dbF.collection("Users").whereField("uid", isEqualTo: data.uid).getDocuments { (querySnapshot, error) in
       if let querySnapshot = querySnapshot {
@@ -318,6 +277,70 @@ class UserManager {
           }
         })
       }
+    }
+  }
+  
+  func updateStatus(uid: String, status: Int, completion: @escaping (Result<String, Error>) -> Void) {
+    
+    dbF.collection("Users").whereField("uid", isEqualTo: uid).getDocuments { (querySnapshot, error) in
+      if let querySnapshot = querySnapshot {
+        let document = querySnapshot.documents.first
+        
+        document?.reference.updateData(["status": status ], completion: { (error) in
+          
+          if error != nil {
+            
+            completion(.failure(FireBaseUpdateError.updateError))
+            
+          } else {
+            
+            completion(.success("Update Success"))
+            
+          }
+        })
+      }
+    }
+  }
+  
+  func updatefreinds(ownerUid: String, takerUid: String, chatRoomID: String, completion: @escaping (Result<String, Error>) -> Void) {
+    
+    let ownerRdf = dbF.collection("Users").document(ownerUid)
+    
+    let takerRef = dbF.collection("Users").document(takerUid)
+    
+    let ownerFriend = Friends(nameREF: takerRef, chatRoomID: chatRoomID)
+    
+    let takerFriend = Friends(nameREF: ownerRdf, chatRoomID: chatRoomID)
+    
+    let group = DispatchGroup()
+    
+    group.enter()
+    group.enter()
+    
+    dbF.collection("Users").document(ownerUid).collection("Friends").document().setData(ownerFriend.toDict) { error in
+      
+      if error != nil {
+        
+        completion(.failure(FireBaseUpdateError.updateError))
+      } else {
+        
+        group.leave()
+      }
+    }
+    
+    dbF.collection("Users").document(takerUid).collection("Friends").document().setData(takerFriend.toDict) { error in
+      
+      if error != nil {
+        
+        completion(.failure(FireBaseUpdateError.updateError))
+      } else {
+        
+        group.leave()
+      }
+    }
+    
+    group.notify(queue: DispatchQueue.main) {
+      completion(.success("Success"))
     }
   }
   

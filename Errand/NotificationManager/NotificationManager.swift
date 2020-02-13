@@ -13,6 +13,7 @@ import FirebaseMessaging
 import UIKit
 import UserNotifications
 
+
 class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCenterDelegate {
   
   func registerForPushNotifications() {
@@ -25,35 +26,37 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
         completionHandler: {_, _ in })
       // For iOS 10 data message (sent via FCM)
       Messaging.messaging().delegate = self
-      
     } else {
-      let settings: UIUserNotificationSettings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+      let settings: UIUserNotificationSettings =
+        UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
       UIApplication.shared.registerUserNotificationSettings(settings)
     }
-    
     UIApplication.shared.registerForRemoteNotifications()
+    updateFirestorePushTokenIfNeeded()
+  }
+  
+  func updateFirestorePushTokenIfNeeded() {
     
     if let token = Messaging.messaging().fcmToken {
+      
       UserDefaults.standard.set(token, forKey: "fcmToken")
-        }
-      //        updateFirestorePushTokenIfNeeded()
+      UserManager.shared.updatefcmToken()
     }
     
-    //    func updateFirestorePushTokenIfNeeded() {
-    //        if let token = Messaging.messaging().fcmToken {
-    //            let usersRef = Firestore.firestore().collection("users_table").document(userID)
-    //            usersRef.setData(["fcmToken": token], merge: true)
-    //        }
-    //    }
-    //
-    func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
-      print(remoteMessage.appData)
-    }
-    
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
-      //        updateFirestorePushTokenIfNeeded()
-    }
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-      print(response)
-    }
+  }
+  func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+    updateFirestorePushTokenIfNeeded()
+  }
+  
+  func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    print("hellooooooo")
+    completionHandler([.badge, .sound, .alert])
+  }
+  
+  func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+      print("apple")
+      NotificationCenter.default.post(name: Notification.Name("popVC"), object: nil)
+      completionHandler()
+  }
 }
+

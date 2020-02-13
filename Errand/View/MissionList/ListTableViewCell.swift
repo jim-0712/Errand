@@ -47,7 +47,7 @@ class ListTableViewCell: UITableViewCell {
   
   var author: String?
   
-  func setUp(missionImage: String, author: String, missionLabel: String, price: Int, time: String, timeInt: Int) {
+  func setUp(missionImage: String, author: String, missionLabel: String, priceTimeInt: [Int], time: String) {
     
     backgorundVisibleView.layer.shadowOpacity = 0.3
   
@@ -59,7 +59,7 @@ class ListTableViewCell: UITableViewCell {
   
     backgorundVisibleView.layer.cornerRadius = 10
     
-    self.timeStorage = timeInt
+    self.timeStorage = priceTimeInt[1]
     
     self.author = author
     
@@ -69,9 +69,9 @@ class ListTableViewCell: UITableViewCell {
     
     missionGroupLabel.text = "任務種類 : \(missionLabel)"
     
-    priceLabel.text = "價格 : \(price)"
+    priceLabel.text = "價格 : \(priceTimeInt[0])"
     
-    timeLabel.text = "發布時間 : \(time)"
+    timeLabel.text = "發布時間 : \(priceTimeInt[1])"
     
     seeDetailBtn.layer.borderWidth = 1.0
     
