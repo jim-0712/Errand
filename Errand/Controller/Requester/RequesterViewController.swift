@@ -66,6 +66,18 @@ class RequesterViewController: UIViewController {
     readRequester()
   }
   
+  func showAlert(title: String, message: String, viewController: UIViewController) {
+    let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    let okAction = UIAlertAction(title: "ok", style: .default) { _ in
+      
+     let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
+             
+        self.view.window?.rootViewController = mapView
+    }
+    controller.addAction(okAction)
+    viewController.present(controller, animated: true, completion: nil)
+  }
+  
   func readRequester() {
     guard let uid = UserManager.shared.currentUserInfo?.uid,
          let currentUser = UserManager.shared.currentUserInfo else { return }
@@ -80,11 +92,11 @@ class RequesterViewController: UIViewController {
         
         if taskInfo.count == 0 {
           strongSelf.userInfo = []
-          TaskManager.shared.showAlert(title: "注意", message: "您當前沒有任務", viewController: strongSelf)
+          strongSelf.showAlert(title: "注意", message: "您當前沒有任務", viewController: strongSelf)
           
         } else if taskInfo[0].status == 1 {
           strongSelf.userInfo = []
-          TaskManager.shared.showAlert(title: "注意", message: "任務進行中", viewController: strongSelf)
+          strongSelf.showAlert(title: "注意", message: "任務進行中", viewController: strongSelf)
         } else {
           
           for count in 0 ..< taskInfo[0].requester.count {
