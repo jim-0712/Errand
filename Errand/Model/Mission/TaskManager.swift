@@ -22,8 +22,6 @@ class TaskManager {
   
   var taskData = [TaskInfo]()
   
-  var statusOneData: TaskInfo?
-  
   let taskClassified = [
     TaskGroup(color: .black, title: "所有任務", image: "none"),
     TaskGroup(color: .red, title: "搬運物品", image: "trucks"),
@@ -447,6 +445,39 @@ class TaskManager {
         completion(.failure(FireBaseUpdateError.updateError))
       } else {
         completion(.success("Success"))
+      }
+    }
+  }
+  
+  func setUpStatusData(completion: @escaping (Result<TaskInfo, Error>) -> Void) {
+    
+    guard let userInfo = UserManager.shared.currentUserInfo else {
+      
+      return
+    }
+    
+    if userInfo.status == 1 {
+      
+      TaskManager.shared.readSpecificData(parameter: "uid", parameterString: userInfo.uid) { result in
+        
+        switch result {
+        case .success(let taskInfo):
+          
+          completion(.success(taskInfo[0]))
+          
+        case .failure(let error):
+          completion(.failure(FireBaseUpdateError.updateError))
+        }
+      }
+    } else if userInfo.status == 2 {
+      TaskManager.shared.readSpecificData(parameter: "missionTaker", parameterString: userInfo.uid) { result in
+        
+        switch result {
+        case .success(let taskInfo):
+          completion(.success(taskInfo[0]))
+        case .failure(let error):
+          completion(.failure(FireBaseUpdateError.updateError))
+        }
       }
     }
   }

@@ -20,6 +20,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     
     NotificationCenter.default.addObserver(self, selector: #selector(reGetUserInfo), name: Notification.Name("finishTask"), object: nil)
     
+    NotificationCenter.default.addObserver(self, selector: #selector(reGetUserInfo), name: Notification.Name("reloadUser"), object: nil)
     
     if UserManager.shared.isTourist {
       
@@ -43,20 +44,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     getTaskData()
   }
   
-  func getStatusOne() {
-    guard let user = UserManager.shared.currentUserInfo else { return }
-    if user.status == 1 {
-      TaskManager.shared.readSpecificData(parameter: "uid", parameterString: user.uid) { result in
-        switch result {
-        case .success(let task):
-          TaskManager.shared.statusOneData = task[0]
-        case .failure(let error):
-          LKProgressHUD.showFailure(text: error.localizedDescription, controller: self)
-        }
-      }
-    }
-  }
-  
   @objc func reGetUserInfo() {
     loadUserInfo()
   }
@@ -74,8 +61,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
           LKProgressHUD.dismiss()
           UserManager.shared.isPostTask = dataReturn.onTask
           UserManager.shared.currentUserInfo = dataReturn
-          self.getStatusOne()
-          
         case .failure:
           
           return

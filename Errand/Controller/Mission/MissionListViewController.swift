@@ -161,8 +161,6 @@ class MissionListViewController: UIViewController {
   
   var detailData: TaskInfo?
   
-  var statusOneData: TaskInfo?
-  
   var data: TaskInfo?
   
   var timeString: String?
@@ -364,10 +362,13 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
       detailVC.detailData = detailData
       detailVC.receiveTime = time
     } else if segue.identifier == "post" {
-      
-      guard let detailVC = segue.destination as? PostMissionViewController,
-           let taskData = TaskManager.shared.statusOneData else { return }
-      detailVC.statusOneData = taskData
+      guard let status = UserManager.shared.currentUserInfo?.status,
+           let postVC = segue.destination as? PostMissionViewController else { return }
+      if status == 1 {
+        postVC.isEditing = true
+      } else {
+        postVC.isEditing = false
+      }
     }
   }
 }

@@ -20,13 +20,48 @@ class StartMissionViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     self.view.backgroundColor = UIColor.LG1
+    print("hello")
+    setUpData()
+  }
+  
+  func setUpData() {
+    guard let userinfo = UserManager.shared.currentUserInfo else {
+      guard let uid = Auth.auth().currentUser?.uid else { return }
+      UserManager.shared.readData(uid: uid) { result in
+        switch result {
+        case .success:
+          self.callTaskData()
+        case .failure:
+          print("error")
+        }
+      }
+      return
+    }
+    self.callTaskData()
+  }
+  
+  func callTaskData() {
+    TaskManager.shared.setUpStatusData { result in
+      switch result {
+      case .success(let taskInfo):
+        self.detailData = taskInfo
+        print("++++++++++++++++++++++++++++++++++++++")
+        print(taskInfo)
+        self.setUpall()
+      case .failure(let error):
+        print(error.localizedDescription)
+      }
+    }
+  }
+  
+  func setUpall() {
     setUpListener()
     setUpBtn()
     setUpStar()
     setUpTable()
     setUpPicker()
     setUpTextField()
-    
+    infoTableView.reloadData()
   }
   
   let myLocationManager = CLLocationManager()
@@ -79,7 +114,7 @@ class StartMissionViewController: UIViewController {
     let group = DispatchGroup()
     
     group.enter()
-        group.enter()
+    group.enter()
 //        group.enter()
 //    
 //        TaskManager.shared.updateJudge(owner: judgerOwner, classified: taskData.classfied, judge: judge, star: starView.rating) { (result) in
@@ -91,7 +126,7 @@ class StartMissionViewController: UIViewController {
 //          }
 //        }
     
-        TaskManager.shared.taskUpdateData(uid: taskData.uid, status: true, identity: owner)  { (result) in
+        TaskManager.shared.taskUpdateData(uid: taskData.uid, status: false, identity: owner) {(result) in
           switch result {
           case .success:
             group.leave()
@@ -410,7 +445,7 @@ class StartMissionViewController: UIViewController {
   func finishMissionAlert(title: String, message: String, viewController: UIViewController) {
     let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
     let okAction = UIAlertAction(title: "ok", style: .default) { [weak self]_ in
-      
+      NotificationCenter.default.post(name: Notification.Name("finishTask"), object: nil)
       guard let strongSelf = self else { return }
       guard let task = strongSelf.detailData,
         let  currentUserStatus = UserManager.shared.currentUserInfo?.status else { return }
@@ -481,7 +516,7 @@ class StartMissionViewController: UIViewController {
         
         let sender = PushNotificationSender()
         sender.sendPushNotification(to: strongSelf.destination, body: "對方任務完成")
-        NotificationCenter.default.post(name: Notification.Name("finishTask"), object: nil)
+//        NotificationCenter.default.post(name: Notification.Name("finishTask"), object: nil)
         LKProgressHUD.dismiss()
         let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
         

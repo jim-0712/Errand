@@ -55,7 +55,19 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
   
   func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
       print("apple")
+    
+    guard let userInfo = response.notification.request.content.userInfo as? [String: Any] else { return }
+    guard let info = userInfo["aps"] as? [String: Any],
+         let message = info["alert"] as? [String: Any],
+         let  body = message["body"] as? String else { return }
+    
+    if body != "您已被拒絕" {
       NotificationCenter.default.post(name: Notification.Name("popVC"), object: nil)
+    }
+
+    if body == "任務接受成功" {
+      NotificationCenter.default.post(name: Notification.Name("reloadUser"), object: nil)
+    }
       completionHandler()
   }
 }

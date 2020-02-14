@@ -13,8 +13,8 @@ class RequesterViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
       
-      NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("acceptRequester"), object: nil)
-      NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("refuseRequester"), object: nil)
+//      NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("acceptRequester"), object: nil)
+//      NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("refuseRequester"), object: nil)
 
       if UserManager.shared.currentUserInfo?.status == 2 {
         
@@ -41,6 +41,10 @@ class RequesterViewController: UIViewController {
     didSet {
       if userInfo.isEmpty {
         LKProgressHUD.show(controller: self)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+          LKProgressHUD.dismiss()
+        }
+        requesterTable.reloadData()
       } else {
         LKProgressHUD.dismiss()
         refreshControl.endRefreshing()
@@ -97,27 +101,34 @@ class RequesterViewController: UIViewController {
             return true
           }
         }
-        
+    
         if taskCount.count == 0 {
           strongSelf.userInfo = []
           strongSelf.showAlert(title: "注意", message: "您當前沒有任務", viewController: strongSelf)
           
-        } else if taskInfo[0].status == 1 {
+        } else if taskCount[0].status == 1 {
           strongSelf.userInfo = []
           strongSelf.showAlert(title: "注意", message: "任務進行中", viewController: strongSelf)
         } else {
           
-          for count in 0 ..< taskInfo[0].requester.count {
+          if taskCount[0].requester.count == 0 {
             
-            UserManager.shared.readData(uid: taskInfo[0].requester[count]) { result in
+            strongSelf.userInfo = []
+          } else {
+          
+          for count in 0 ..< taskCount[0].requester.count {
+            
+            UserManager.shared.readData(uid: taskCount[0].requester[count]) { result in
               
               switch result {
                 
               case .success(let accountInfo):
                 
+                strongSelf.storeInfo = []
+                
                 strongSelf.storeInfo.append(accountInfo)
                 
-                if count == taskInfo[0].requester.count - 1 {
+                if count == taskCount[0].requester.count - 1 {
                   
                   LKProgressHUD.dismiss()
                   
@@ -135,7 +146,7 @@ class RequesterViewController: UIViewController {
               }
             }
           }
-          
+          }
         }
         
       case .failure(let error):

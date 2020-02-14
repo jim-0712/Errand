@@ -125,29 +125,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     let state = application.applicationState
     
     if state == .active {
-      backGroundNoti(title: pretitle, body: prebody)
-    } else {
+//      backGroundNoti(title: pretitle, body: prebody)
+      print("1")
+    } else if state == .inactive{
       print("2")
+    } else {
+      print("3")
     }
     
     completionHandler(.newData)
-    //
-    //    if let uid = Auth.auth().currentUser?.uid {
-    //
-    //      UserManager.shared.readData(uid: uid) { result in
-    //        switch result {
-    //
-    //        case .success(let dataReturn):
-    //
-    //          UserManager.shared.isPostTask = dataReturn.onTask
-    //          UserManager.shared.currentUserInfo = dataReturn
-    //
-    //        case .failure:
-    //
-    //          return
-    //        }
-    //      }
-    //    }
   }
   
   @objc func perFormPushVC() {
@@ -155,40 +141,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     if let conversationVC = storyboard.instantiateViewController(withIdentifier: "startMission") as? StartMissionViewController,
       let tabBarController = self.window?.rootViewController as? TabBarViewController,
       let navController = tabBarController.selectedViewController as? UINavigationController {
-      let group = DispatchGroup()
-      group.enter()
-      guard let userInfo = UserManager.shared.currentUserInfo else { return }
-      if userInfo.status == 1 {
-
-        TaskManager.shared.readSpecificData(parameter: "uid", parameterString: userInfo.uid) { result in
-
-          switch result{
-          case .success(let taskInfo):
-            conversationVC.detailData = taskInfo[0]
-            group.leave()
-          case .failure(let error):
-            print(error.localizedDescription)
-            group.leave()
-          }
-        }
-
-      } else if userInfo.status == 2 {
-        TaskManager.shared.readSpecificData(parameter: "missionTaker", parameterString: userInfo.uid) { result in
-
-          switch result{
-          case .success(let taskInfo):
-            conversationVC.detailData = taskInfo[0]
-            group.leave()
-          case .failure(let error):
-            print(error.localizedDescription)
-            group.leave()
-          }
-        }
-
-      }
-      group.notify(queue: DispatchQueue.main) {
-        navController.pushViewController(conversationVC, animated: true)
-//        navController.show(conversationVC, sender: nil)
+      tabBarController.dismiss(animated: true) {
+        conversationVC.modalPresentationStyle = .fullScreen
+        tabBarController.present(conversationVC, animated: true, completion: nil)
       }
     }
   }
@@ -197,8 +152,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     
     let center = UNUserNotificationCenter.current()
     let content = UNMutableNotificationContent()
-    content.title = title
-    content.body = body
+    content.title = "背景"
+    content.body = "背景"
     let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
     let request = UNNotificationRequest(identifier: "Errand", content: content, trigger: trigger)
     center.add(request) { error in
@@ -210,26 +165,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
   }
   
   lazy var persistentContainer: NSPersistentContainer = {
-    /*
-     The persistent container for the application. This implementation
-     creates and returns a container, having loaded the store for the
-     application to it. This property is optional since there are legitimate
-     error conditions that could cause the creation of the store to fail.
-     */
+  
     let container = NSPersistentContainer(name: "Errand")
     container.loadPersistentStores(completionHandler: { (_, error) in
       if let error = error as NSError? {
-        // Replace this implementation with code to handle the error appropriately.
-        // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-        
-        /*
-         Typical reasons for an error here include:
-         * The parent directory does not exist, cannot be created, or disallows writing.
-         * The persistent store is not accessible, due to permissions or data protection when the device is locked.
-         * The device is out of space.
-         * The store could not be migrated to the current model version.
-         Check the error message to determine what the actual problem was.
-         */
         fatalError("Unresolved error \(error), \(error.userInfo)")
       }
     })
@@ -244,8 +183,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
       do {
         try context.save()
       } catch {
-        // Replace this implementation with code to handle the error appropriately.
-        // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
         let nserror = error as NSError
         fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
       }
