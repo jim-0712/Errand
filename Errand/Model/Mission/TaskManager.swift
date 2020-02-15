@@ -42,9 +42,9 @@ class TaskManager {
       let photo = UserManager.shared.currentUserInfo?.photo,
       let fcmToken = UserManager.shared.currentUserInfo?.fcmToken,
       let uid = UserManager.shared.currentUserInfo?.uid else {return }
-    let lat = coordinate.latitude as Double
-    let long = coordinate.longitude as Double
-    let personPhoto = "\(photo)"
+      let lat = coordinate.latitude as Double
+      let long = coordinate.longitude as Double
+      let personPhoto = "\(photo)"
     
     let info = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: taskData[0], detail: detail, lat: lat, long: long, money: taskData[1], classfied: taskData[2], status: taskData[3], ownerOK: false, takerOK: false, ownerAskFriend: false, takerAskFriend: false, fileType: fileType, personPhoto: personPhoto, requester: [], fcmToken: fcmToken, missionTaker: "", refuse: [], uid: uid, chatRoom: "", isComplete: false, star: 0.0)
     
@@ -134,43 +134,27 @@ class TaskManager {
   func reFactData(quary: QuerySnapshot) {
     
     self.taskData = []
-    
+    var storeData: [TaskInfo] = []
     for info in quary.documents {
       
-      guard let email = info.data()["email"] as? String,
-        let nickname = info.data()["nickname"] as? String,
-        let gender = info.data()["gender"] as? Int,
-        let taskPhoto = info.data()["taskPhoto"] as? [String],
-        let time = info.data()["time"] as? Int,
-        let detail = info.data()["detail"] as? String,
-        let lat = info.data()["lat"] as? Double,
-        let long = info.data()["long"] as? Double,
-        let money = info.data()["money"] as? Int,
-        let status = info.data()["status"] as? Int,
-        let fileType = info.data()["fileType"] as? [Int],
-        let classfied = info.data()["classfied"] as? Int,
-        let personPhoto = info.data()["personPhoto"] as? String,
-        let requester = info.data()["requester"] as? [String],
-        let fcmToken = info.data()["fcmToken"] as? String,
-        let missionTaker = info.data()["missionTaker"] as? String,
-        let refuse = info.data()["refuse"] as? [String],
-        let uid = info.data()["uid"] as? String,
-        let chatRoom = info.data()["chatRoom"] as? String,
-        let isComplete = info.data()["isComplete"] as? Bool,
-        let ownerOK = info.data()["ownerOK"] as? Bool,
-        let takerOK = info.data()["takerOK"] as? Bool,
-        let star = info.data()["star"] as? Double,
-        let ownerAskFriend = info.data()["ownerAskFriend"] as? Bool,
-        let takerAskFriend = info.data()["takerAskFriend"] as? Bool else { return }
-      
-      if status == 1 || isComplete {
-        continue
-      } else {
-        let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, ownerOK: ownerOK, takerOK: takerOK, ownerAskFriend: ownerAskFriend, takerAskFriend: takerAskFriend, fileType: fileType, personPhoto: personPhoto, requester: requester, fcmToken: fcmToken, missionTaker: missionTaker, refuse: refuse, uid: uid, chatRoom: chatRoom, isComplete: isComplete, star: star)
-        
-        self.taskData.append(dataReturn)
+      self.reFactDataSpec(quary: info) { result in
+
+        switch result {
+        case .success(let task):
+
+          if task.status == 1 || task.isComplete {
+
+          } else {
+            self.taskData.append(task)
+            storeData.append(task)
+            print(self.taskData)
+          }
+        case .failure(let error):
+          print(error.localizedDescription)
+        }
       }
     }
+    self.taskData = storeData
   }
   
   func reFactDataSpec(quary: QuerySnapshot) {
@@ -179,35 +163,45 @@ class TaskManager {
     
     for info in quary.documents {
       
-      guard let email = info.data()["email"] as? String,
-        let nickname = info.data()["nickname"] as? String,
-        let gender = info.data()["gender"] as? Int,
-        let taskPhoto = info.data()["taskPhoto"] as? [String],
-        let time = info.data()["time"] as? Int,
-        let detail = info.data()["detail"] as? String,
-        let lat = info.data()["lat"] as? Double,
-        let long = info.data()["long"] as? Double,
-        let money = info.data()["money"] as? Int,
-        let status = info.data()["status"] as? Int,
-        let fileType = info.data()["fileType"] as? [Int],
-        let classfied = info.data()["classfied"] as? Int,
-        let personPhoto = info.data()["personPhoto"] as? String,
-        let requester = info.data()["requester"] as? [String],
-        let fcmToken = info.data()["fcmToken"] as? String,
-        let missionTaker = info.data()["missionTaker"] as? String,
-        let refuse = info.data()["refuse"] as? [String],
-        let uid = info.data()["uid"] as? String,
-        let chatRoom = info.data()["chatRoom"] as? String,
-        let isComplete = info.data()["isComplete"] as? Bool,
-        let ownerOK = info.data()["ownerOK"] as? Bool,
-        let takerOK = info.data()["takerOK"] as? Bool,
-        let star = info.data()["star"] as? Double,
-        let ownerAskFriend = info.data()["ownerAskFriend"] as? Bool,
-        let takerAskFriend = info.data()["takerAskFriend"] as? Bool else { return }
+      self.reFactDataSpec(quary: info) { result in
+        
+        switch result {
+        case .success(let task):
+          self.taskData.append(task)
+        case .failure(let error):
+          print(error.localizedDescription)
+        }
+      }
       
-      let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, ownerOK: ownerOK, takerOK: takerOK, ownerAskFriend: ownerAskFriend, takerAskFriend: takerAskFriend, fileType: fileType, personPhoto: personPhoto, requester: requester, fcmToken: fcmToken, missionTaker: missionTaker, refuse: refuse, uid: uid, chatRoom: chatRoom, isComplete: isComplete, star: star)
+//      guard let email = info.data()["email"] as? String,
+//        let nickname = info.data()["nickname"] as? String,
+//        let gender = info.data()["gender"] as? Int,
+//        let taskPhoto = info.data()["taskPhoto"] as? [String],
+//        let time = info.data()["time"] as? Int,
+//        let detail = info.data()["detail"] as? String,
+//        let lat = info.data()["lat"] as? Double,
+//        let long = info.data()["long"] as? Double,
+//        let money = info.data()["money"] as? Int,
+//        let status = info.data()["status"] as? Int,
+//        let fileType = info.data()["fileType"] as? [Int],
+//        let classfied = info.data()["classfied"] as? Int,
+//        let personPhoto = info.data()["personPhoto"] as? String,
+//        let requester = info.data()["requester"] as? [String],
+//        let fcmToken = info.data()["fcmToken"] as? String,
+//        let missionTaker = info.data()["missionTaker"] as? String,
+//        let refuse = info.data()["refuse"] as? [String],
+//        let uid = info.data()["uid"] as? String,
+//        let chatRoom = info.data()["chatRoom"] as? String,
+//        let isComplete = info.data()["isComplete"] as? Bool,
+//        let ownerOK = info.data()["ownerOK"] as? Bool,
+//        let takerOK = info.data()["takerOK"] as? Bool,
+//        let star = info.data()["star"] as? Double,
+//        let ownerAskFriend = info.data()["ownerAskFriend"] as? Bool,
+//        let takerAskFriend = info.data()["takerAskFriend"] as? Bool else { return }
+//
+//      let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, ownerOK: ownerOK, takerOK: takerOK, ownerAskFriend: ownerAskFriend, takerAskFriend: takerAskFriend, fileType: fileType, personPhoto: personPhoto, requester: requester, fcmToken: fcmToken, missionTaker: missionTaker, refuse: refuse, uid: uid, chatRoom: chatRoom, isComplete: isComplete, star: star)
       
-      self.taskData.append(dataReturn)
+//      self.taskData.append(dataReturn)
     }
   }
   
@@ -440,7 +434,6 @@ class TaskManager {
   func deleteTask(uid: String, completion: @escaping (Result<String, Error>) -> Void) {
     
     dbF.collection("Tasks").document("uid").delete { error in
-      
       if error != nil {
         completion(.failure(FireBaseUpdateError.updateError))
       } else {
@@ -465,7 +458,7 @@ class TaskManager {
           
           completion(.success(taskInfo[0]))
           
-        case .failure(let error):
+        case .failure:
           completion(.failure(FireBaseUpdateError.updateError))
         }
       }
@@ -475,7 +468,7 @@ class TaskManager {
         switch result {
         case .success(let taskInfo):
           completion(.success(taskInfo[0]))
-        case .failure(let error):
+        case .failure:
           completion(.failure(FireBaseUpdateError.updateError))
         }
       }

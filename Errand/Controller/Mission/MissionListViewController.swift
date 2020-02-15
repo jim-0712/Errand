@@ -35,6 +35,7 @@ class MissionListViewController: UIViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     setUpBtn()
+//    setUpindicatorView()
     startAnimate(sender: allMissionBtn)
   }
   
@@ -105,11 +106,11 @@ class MissionListViewController: UIViewController {
   }
   
   func startAnimate(sender: UIButton) {
-    
-    UIView.animate(withDuration: 0.2) {
-      self.indicatorView.frame.origin.x = sender.frame.origin.x
-    }
-    
+
+//    UIView.animate(withDuration: 0.2) {
+//      self.indicatorView.frame.origin.x = sender.frame.origin.x
+//    }
+//
     let move = UIViewPropertyAnimator(duration: 0.1, curve: .easeInOut) {
       self.indicatorCon?.isActive = false
       self.indicatorCon = self.indicatorView.centerXAnchor.constraint(equalTo: sender.centerXAnchor)
@@ -141,16 +142,12 @@ class MissionListViewController: UIViewController {
   @IBAction func allMissionAct(_ sender: UIButton) {
     LKProgressHUD.show(controller: self)
     getTaskData()
-    sender.isEnabled = false
-    currentBtn.isEnabled = true
     UserManager.shared.checkDetailBtn = !UserManager.shared.checkDetailBtn
     startAnimate(sender: sender)
   }
   
   @IBAction func currentMission(_ sender: UIButton) {
     UserManager.shared.checkDetailBtn = !UserManager.shared.checkDetailBtn
-    sender.isEnabled = false
-    allMissionBtn.isEnabled = true
     startAnimate(sender: sender)
     getMissionStartData()
   }
@@ -221,7 +218,14 @@ class MissionListViewController: UIViewController {
     if UserManager.shared.currentUserInfo?.status == 0 {
       performSegue(withIdentifier: "post", sender: nil)
     } else if UserManager.shared.currentUserInfo?.status == 1 {
-      performSegue(withIdentifier: "post", sender: nil)
+      guard let editVC = storyboard?.instantiateViewController(identifier: "post") as? PostMissionViewController,
+           let status = UserManager.shared.currentUserInfo?.status else { return }
+      if status == 1 {
+        editVC.isEditing = true
+      } else {
+        editVC.isEditing = false
+      }
+      self.present(editVC, animated: true, completion: nil)
     } else {
       presentAlert(viewController: self)
     }
@@ -361,14 +365,6 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
            let time = self.timeString else { return }
       detailVC.detailData = detailData
       detailVC.receiveTime = time
-    } else if segue.identifier == "post" {
-      guard let status = UserManager.shared.currentUserInfo?.status,
-           let postVC = segue.destination as? PostMissionViewController else { return }
-      if status == 1 {
-        postVC.isEditing = true
-      } else {
-        postVC.isEditing = false
-      }
     }
   }
 }
@@ -385,7 +381,6 @@ extension MissionListViewController: DetailManager {
     }
     
     guard let data = detailData else { return }
-    
     if data.status == 0 {
      self.performSegue(withIdentifier: "detail", sender: nil)
     } else {

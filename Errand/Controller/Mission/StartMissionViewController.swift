@@ -25,7 +25,8 @@ class StartMissionViewController: UIViewController {
   }
   
   func setUpData() {
-    guard let userinfo = UserManager.shared.currentUserInfo else {
+    guard let _ = UserManager.shared.currentUserInfo else {
+      backBtn.isHidden = false
       guard let uid = Auth.auth().currentUser?.uid else { return }
       UserManager.shared.readData(uid: uid) { result in
         switch result {
@@ -37,6 +38,7 @@ class StartMissionViewController: UIViewController {
       }
       return
     }
+    backBtn.isHidden = true
     self.callTaskData()
   }
   
@@ -45,7 +47,6 @@ class StartMissionViewController: UIViewController {
       switch result {
       case .success(let taskInfo):
         self.detailData = taskInfo
-        print("++++++++++++++++++++++++++++++++++++++")
         print(taskInfo)
         self.setUpall()
       case .failure(let error):
@@ -82,6 +83,8 @@ class StartMissionViewController: UIViewController {
   
   var reference: CollectionReference?
   
+  @IBOutlet weak var backBtn: UIButton!
+  
   private var messageListener: ListenerRegistration?
   
   @IBOutlet weak var judgePicker: UIPickerView!
@@ -101,8 +104,8 @@ class StartMissionViewController: UIViewController {
     guard let taskData = self.detailData,
       let status = UserManager.shared.currentUserInfo?.status,
       let judge = judgeTextView.text else { return }
-    var owner = ""
-    var judgerOwner = ""
+      var owner = ""
+      var judgerOwner = ""
     if status == 1 {
       owner = "ownerOK"
       judgerOwner = taskData.missionTaker
@@ -177,6 +180,9 @@ class StartMissionViewController: UIViewController {
       self.giveUpBtn.isEnabled = false
       NotificationCenter.default.post(name: Notification.Name("finishSelf"), object: nil)
     }
+  }
+  @IBAction func backAct(_ sender: Any) {
+    self.dismiss(animated: true, completion: nil)
   }
   
   @IBAction func giveUpAct(_ sender: Any) {
@@ -448,7 +454,7 @@ class StartMissionViewController: UIViewController {
       NotificationCenter.default.post(name: Notification.Name("finishTask"), object: nil)
       guard let strongSelf = self else { return }
       guard let task = strongSelf.detailData,
-        let  currentUserStatus = UserManager.shared.currentUserInfo?.status else { return }
+           let  currentUserStatus = UserManager.shared.currentUserInfo?.status else { return }
       
       LKProgressHUD.show(controller: strongSelf)
       

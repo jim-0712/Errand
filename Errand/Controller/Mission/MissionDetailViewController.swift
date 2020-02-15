@@ -44,10 +44,9 @@ class MissionDetailViewController: UIViewController {
   @IBOutlet weak var backBtn: UIButton!
   
   @IBAction func backAct(_ sender: Any) {
-    
     self.dismiss(animated: true, completion: nil)
-    
   }
+  
   @IBAction func takeMissionAct(_ sender: Any) {
     
     LKProgressHUD.show(controller: self)
@@ -146,26 +145,25 @@ class MissionDetailViewController: UIViewController {
   }
   
   func setUpBtn() {
-    backBtn.layer.cornerRadius = backBtn.bounds.height / 2
-    takeMissionBtn.layer.cornerRadius = takeMissionBtn.bounds.height / 5
-    takeMissionBtn.layer.shadowOpacity = 0.5
-    takeMissionBtn.layer.shadowOffset = CGSize(width: 3, height: 3)
     setUpBtnEnable()
+    takeMissionBtn.layer.shadowOpacity = 0.5
+    backBtn.layer.cornerRadius = backBtn.bounds.height / 2
+    takeMissionBtn.layer.shadowOffset = CGSize(width: 3, height: 3)
+    takeMissionBtn.layer.cornerRadius = takeMissionBtn.bounds.height / 5
   }
   
   func setUppageControll() {
     
     guard let data = detailData else { return }
     pageControl.currentPage = 0
-    pageControl.currentPageIndicatorTintColor = .black
-    pageControl.pageIndicatorTintColor = .lightGray
     pageControl.layer.cornerRadius = 10
-    pageControl.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+    pageControl.pageIndicatorTintColor = .lightGray
     pageControl.numberOfPages = data.taskPhoto.count
+    pageControl.currentPageIndicatorTintColor = .black
+    pageControl.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
   }
   
   @objc func videoPlay(sender: UIButton) {
-    
     guard let layer = sender.superview?.layer as? AVPlayerLayer else { return }
     layer.player?.play()
   }
@@ -174,7 +172,6 @@ class MissionDetailViewController: UIViewController {
 extension MissionDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource {
   
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    
     let offSet = scrollView.contentOffset.x
     let width = scrollView.frame.width
     let horizontalCenter = width / 2
@@ -182,13 +179,11 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
   }
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    
     guard let data = detailData else { return 0 }
     return data.taskPhoto.count
   }
   
   func numberOfSections(in collectionView: UICollectionView) -> Int {
-    
     return 1
   }
   

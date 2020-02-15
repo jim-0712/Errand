@@ -33,6 +33,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    LKProgressHUD.show(controller: self)
     setUpSetting()
     setUpall()
   }
@@ -53,15 +54,20 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   func setUpSetting() {
     
     if isEditing {
+      editBackBtn.isHidden = false
       TaskManager.shared.setUpStatusData { result in
         switch result {
         case .success(let taskInfo):
           self.statusOneData = taskInfo
           self.setUpDetail()
+          
         case .failure(let error):
           LKProgressHUD.showFailure(text: error.localizedDescription, controller: self)
         }
       }
+    } else {
+      editBackBtn.isHidden = true
+      LKProgressHUD.dismiss()
     }
   }
   
@@ -86,7 +92,8 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
            luke.append(url as NSURL)
          }
        }
-    self.setUpall()
+    photoCollectionView.reloadData()
+    LKProgressHUD.dismiss()
   }
   
   @IBOutlet weak var photoCollectionView: UICollectionView!
@@ -98,6 +105,8 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   @IBOutlet weak var missionGroupCollectionView: UICollectionView!
   
   @IBOutlet weak var uploadPhotoBtn: UIButton!
+  
+  @IBOutlet weak var editBackBtn: UIButton!
   
   @IBOutlet weak var priceLabel: UILabel!
   
@@ -134,6 +143,11 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   let screenwidth = UIScreen.main.bounds.width
   
   let screenheight = UIScreen.main.bounds.height
+  
+  @IBAction func editBackAct(_ sender: Any) {
+    self.dismiss(animated: true, completion: nil)
+  }
+  
   
   @IBAction func postAct(_ sender: Any) {
     
@@ -334,7 +348,11 @@ func setUpTextView() {
 
 func setUpBtn() {
   postBtn.layer.cornerRadius = postBtn.bounds.height / 8
-  postBtn.isEnabled = false
+  if isEditing {
+    postBtn.isEnabled = true
+  } else {
+    postBtn.isEnabled = false
+  }
   postBtn.layer.shadowOpacity = 0.5
   postBtn.layer.shadowOffset = CGSize(width: 3, height: 3)
 }

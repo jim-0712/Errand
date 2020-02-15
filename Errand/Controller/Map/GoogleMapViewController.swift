@@ -46,6 +46,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   
   @objc func reGetUserInfo() {
     loadUserInfo()
+    NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
   }
   
   func loadUserInfo() {
@@ -61,6 +62,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
           LKProgressHUD.dismiss()
           UserManager.shared.isPostTask = dataReturn.onTask
           UserManager.shared.currentUserInfo = dataReturn
+          NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
         case .failure:
           
           return
@@ -243,24 +245,24 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   }
   
   func setUpView() {
-    taskPersonPhoto.layer.cornerRadius = taskPersonPhoto.bounds.width / 2
-    pageView.layer.cornerRadius = pageView.bounds.height / 10
-    pageView.layer.shadowOpacity = 0.2
-    pageView.layer.shadowOffset = CGSize(width: 3, height: 3)
-    checkDetailBtn.layer.borderWidth = 1.0
-    checkDetailBtn.layer.borderColor = UIColor.G1?.cgColor
-    checkDetailBtn.layer.cornerRadius = checkDetailBtn.bounds.height / 4
-    backBtn.layer.cornerRadius = backBtn.bounds.height / 2
     isSearch = true
     searchView.isHidden = isSearch
-    searchView.layer.shadowOpacity = 0.5
-    searchView.layer.shadowOffset = CGSize(width: 3, height: 3)
-    searchView.layer.cornerRadius = searchView.bounds.height / 10
-    searchBtn.layer.cornerRadius = searchBtn.bounds.height / 10
+    pageView.layer.shadowOpacity = 0.2
     searchBtn.layer.shadowOpacity = 0.5
-    searchBtn.layer.shadowOffset = CGSize(width: 3, height: 3)
+    searchView.layer.shadowOpacity = 0.5
+    checkDetailBtn.layer.borderWidth = 1.0
     arrangeTextField.layer.shadowOpacity = 0.5
+    checkDetailBtn.layer.borderColor = UIColor.G1?.cgColor
+    backBtn.layer.cornerRadius = backBtn.bounds.height / 2
+    pageView.layer.cornerRadius = pageView.bounds.height / 10
+    searchBtn.layer.cornerRadius = searchBtn.bounds.height / 10
+    searchView.layer.cornerRadius = searchView.bounds.height / 10
+    pageView.layer.shadowOffset = CGSize(width: 3, height: 3)
+    searchBtn.layer.shadowOffset = CGSize(width: 3, height: 3)
+    searchView.layer.shadowOffset = CGSize(width: 3, height: 3)
+    checkDetailBtn.layer.cornerRadius = checkDetailBtn.bounds.height / 4
     arrangeTextField.layer.shadowOffset = CGSize(width: 3, height: 3)
+    taskPersonPhoto.layer.cornerRadius = taskPersonPhoto.bounds.width / 2
   }
   
   @IBAction func reloadLocation(_ sender: Any) {
@@ -270,19 +272,16 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   }
   
   func setUpLocation() {
-//    googleMapView.settings.compassButton = true
-//    googleMapView.settings.myLocationButton = true
-//    googleMapView.isMyLocationEnabled = true
-    myLocationManager.delegate = self
-    googleMapView.delegate = self
-    myLocationManager.distanceFilter = kCLLocationAccuracyNearestTenMeters
-    myLocationManager.desiredAccuracy = kCLLocationAccuracyBest
     
     guard let lat = myLocationManager.location?.coordinate.latitude,
          let long = myLocationManager.location?.coordinate.longitude else { return }
     
-    finalLong = long
     finalLat = lat
+    finalLong = long
+    googleMapView.delegate = self
+    myLocationManager.delegate = self
+    myLocationManager.desiredAccuracy = kCLLocationAccuracyBest
+    myLocationManager.distanceFilter = kCLLocationAccuracyNearestTenMeters
   }
   
   func checkLocationService() {
@@ -305,8 +304,8 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     
     case .authorizedWhenInUse:
       
-      googleMapView.isMyLocationEnabled = true
       centerViewOnUserLocation()
+      googleMapView.isMyLocationEnabled = true
       myLocationManager.startUpdatingLocation()
       
     case .denied:
@@ -319,9 +318,9 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
       
     case .authorizedAlways:
       
-      googleMapView.isMyLocationEnabled = true
       centerViewOnUserLocation()
       myLocationManager.startUpdatingLocation()
+      googleMapView.isMyLocationEnabled = true
       
     case .restricted:
       
@@ -355,15 +354,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
       marker.snippet = info.nickname
       marker.map = googleMapView
     }
-//    taskDataReturn.map { info in
-//
-//      let marker = GMSMarker()
-//      marker.position = CLLocationCoordinate2D(latitude: info.lat, longitude: info.long)
-//      let markerTitle = TaskManager.shared.filterClassified(classified: info.classfied + 1)
-//      marker.title =  markerTitle[0]
-//      marker.snippet = info.nickname
-//      marker.map = googleMapView
-//    }
   }
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -371,7 +361,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     if segue.identifier == "Mapdetail" {
       guard let detailVC = segue.destination as? MissionDetailViewController else { return }
       detailVC.modalPresentationStyle = .fullScreen
-      
       detailVC.detailData = specificData[0]
       detailVC.receiveTime =  TaskManager.shared.timeConverter(time: specificData[0].time)
     }
@@ -473,12 +462,10 @@ extension GoogleMapViewController: UICollectionViewDelegate, UICollectionViewDat
 extension GoogleMapViewController: UICollectionViewDelegateFlowLayout {
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    
     return CGSize(width: screenwidth / 2.5, height: screenheight / 20)
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-    
-    return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+    return UIEdgeInsets(top: 5, left: 20, bottom: 0, right: 20)
   }
 }

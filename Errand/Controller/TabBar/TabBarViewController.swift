@@ -18,6 +18,8 @@ private enum Tab {
   
   case requester
   
+  case friend
+  
   func controller() -> UIViewController {
     
     var controller: UIViewController
@@ -31,6 +33,8 @@ private enum Tab {
     case .profile: controller = UIStoryboard.profile.instantiateInitialViewController()!
       
     case .requester: controller = UIStoryboard.requester.instantiateInitialViewController()!
+      
+    case .friend: controller = UIStoryboard.friend.instantiateInitialViewController()!
     }
     
     controller.tabBarItem = tabBarItem()
@@ -49,35 +53,42 @@ private enum Tab {
     case .map:
       return UITabBarItem(
         title: nil,
-        image: UIImage.init(named: "map"),
-        selectedImage: UIImage.init(named: "map-2")
+        image: UIImage.init(named: "earth"),
+        selectedImage: UIImage.init(named: "earth_2")
       )
       
     case .missionList:
       return UITabBarItem(
         title: nil,
-        image: UIImage.init(named: "mission"),
-        selectedImage: UIImage.init(named: "mission2")
+        image: UIImage.init(named: "list"),
+        selectedImage: UIImage.init(named: "list_2")
       )
     case .profile:
       return UITabBarItem(
         title: nil,
-        image: UIImage.init(named: "mission"),
-        selectedImage: UIImage.init(named: "mission2")
+        image: UIImage.init(named: "id_card"),
+        selectedImage: UIImage.init(named: "id_card_2")
       )
     case .requester:
       return UITabBarItem(
         title: nil,
-        image: UIImage.init(named: "mission"),
-        selectedImage: UIImage.init(named: "mission2")
+        image: UIImage.init(named: "question"),
+        selectedImage: UIImage.init(named: "question_2")
       )
+      
+    case .friend:
+    return UITabBarItem(
+      title: nil,
+      image: UIImage.init(named: "chat"),
+      selectedImage: UIImage.init(named: "chat_2")
+    )
     }
   }
 }
 
 class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
   
-  private let tabs: [Tab] = [.map, .missionList, .requester, .profile]
+  private let tabs: [Tab] = [.map, .missionList, .requester, .friend, .profile]
   
   var trolleyTabBarItem: UITabBarItem!
   
@@ -86,13 +97,24 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    NotificationCenter.default.addObserver(self, selector: #selector(setUpLabel), name: Notification.Name("onTask"), object: nil)
     viewControllers = tabs.map({ $0.controller() })
-    
+
     delegate = self
   }
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
+  }
+  
+  @objc func setUpLabel() {
+    
+    guard let userStatus = UserManager.shared.currentUserInfo?.status else { return }
+    if userStatus != 0 {
+      self.showNotificationView(isON: true)
+    } else {
+      self.showNotificationView(isON: false)
+    }
   }
   
   // MARK: - UITabBarControllerDelegate

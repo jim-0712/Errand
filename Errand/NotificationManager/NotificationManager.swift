@@ -13,7 +13,6 @@ import FirebaseMessaging
 import UIKit
 import UserNotifications
 
-
 class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCenterDelegate {
   
   func registerForPushNotifications() {
@@ -71,4 +70,3 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
       completionHandler()
   }
 }
-

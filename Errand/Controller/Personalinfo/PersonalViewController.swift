@@ -12,6 +12,7 @@ import MobileCoreServices
 import FirebaseAuth
 import FirebaseDatabase
 import FirebaseStorage
+import MarqueeLabel
 
 class PersonalViewController: UIViewController {
   
@@ -44,7 +45,6 @@ class PersonalViewController: UIViewController {
       UserManager.shared.goToSign(viewController: self)
     } else {
       
-      // 委任代理
       setUpTableView()
       self.navigationController?.navigationBar.prefersLargeTitles = true
       imagePickerController.delegate = self

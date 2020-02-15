@@ -340,6 +340,7 @@ PODS:
   - Kingfisher/Core (5.12.0)
   - KMPlaceholderTextView (1.4.0)
   - leveldb-library (1.22)
+  - MarqueeLabel (4.0.2)
   - MessageKit (3.0.0):
     - InputBarAccessoryView (~> 4.2.2)
   - nanopb (0.3.9011):
@@ -371,6 +372,7 @@ DEPENDENCIES:
   - JGProgressHUD
   - Kingfisher
   - KMPlaceholderTextView (~> 1.4.0)
+  - MarqueeLabel
   - MessageKit
   - Refreshable
   - SwiftLint
@@ -416,6 +418,7 @@ SPEC REPOS:
     - Kingfisher
     - KMPlaceholderTextView
     - leveldb-library
+    - MarqueeLabel
     - MessageKit
     - nanopb
     - Protobuf
@@ -462,12 +465,13 @@ SPEC CHECKSUMS:
   Kingfisher: dc6e0f53bb5b12c3e75bedb0e01bbd7a640eea69
   KMPlaceholderTextView: 2206c3df39979e9396e2d96fa9f427a8951121b0
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
+  MarqueeLabel: f762aa681ae201f66c1d511858b171f75d83013a
   MessageKit: e892a9ca49ebe6d82684d3a93ad84021fa23e2c6
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   Protobuf: 0e94afe3b47cb11876eb6aee296638711a24bf75
   Refreshable: 0f76b6d198178e6cd2823a553fbf4e84a3dba527
   SwiftLint: 4105f061f9812b214568b736dab580ab2c73a582
 
-PODFILE CHECKSUM: 2d85432bd4a9cfef1c70806ea25813f9048fd740
+PODFILE CHECKSUM: 7a771350c77b42550f0764a5525f4199f278cf2f
 
 COCOAPODS: 1.8.4

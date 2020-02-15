@@ -122,16 +122,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
       prebody = body
     }
     
-    let state = application.applicationState
-    
-    if state == .active {
-//      backGroundNoti(title: pretitle, body: prebody)
-      print("1")
-    } else if state == .inactive{
-      print("2")
-    } else {
-      print("3")
-    }
+//    let state = application.applicationState
+//
+//    if state == .active {
+////      backGroundNoti(title: pretitle, body: prebody)
+//      print("1")
+//    } else if state == .inactive {
+//      print("2")
+//    } else {
+//      print("3")
+//    }
     
     completionHandler(.newData)
   }
