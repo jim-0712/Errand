@@ -36,11 +36,13 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     
     groupLabel.text = label
     
+    groupLabel.textColor = .darkGray
+    
     colorBlock.backgroundColor = color
     
     colorBlock.layer.cornerRadius = UIScreen.main.bounds.width / 40
   
-    self.contentView.backgroundColor = UIColor(red: 230.0/255.0, green: 230.0/255.0, blue: 230.0/255.0, alpha: 1.0)
+    self.contentView.backgroundColor = UIColor.G1
   }
   
 }

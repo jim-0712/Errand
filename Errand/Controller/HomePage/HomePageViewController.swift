@@ -128,14 +128,13 @@ class ViewController: UIViewController {
   }()
   
   func setUpBtn() {
-    fbLoginBtn.layer.cornerRadius = fbLoginBtn.bounds.height / 2
-    googleLoginBtn.layer.cornerRadius = googleLoginBtn.bounds.height / 2
-    visitorBtn.layer.cornerRadius = visitorBtn.bounds.height / 2
+    fbLoginBtn.layer.cornerRadius = fbLoginBtn.bounds.height / 10
+    googleLoginBtn.layer.cornerRadius = googleLoginBtn.bounds.height / 10
+    visitorBtn.layer.cornerRadius = visitorBtn.bounds.height / 10
     GIDSignIn.sharedInstance()?.presentingViewController = self
-    logoLabel.transform = CGAffineTransform(a: 1.0, b: -0.15, c: 0, d: 0.7, tx: 0, ty: 10)
-    let backView = backgroundManager.setUpView(view: self.view)
-    self.view.layer.insertSublayer(backView, at: 0)
-    
+//    logoLabel.transform = CGAffineTransform(a: 1.0, b: -0.15, c: 0, d: 0.7, tx: 0, ty: 10)
+//    let backView = backgroundManager.setUpView(view: self.view)
+//    self.view.layer.insertSublayer(backView, at: 0)
   }
   
   func setUpAppleBtn() {
@@ -187,8 +186,9 @@ class ViewController: UIViewController {
       self.photo = "\(photoBack)"
       self.name = name
     } else {
+      
       self.photo = ""
-      self.name = ""
+      self.name = "使用者"
     }
     
     guard let email = Auth.auth().currentUser?.email else { return }

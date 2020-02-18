@@ -126,7 +126,7 @@ struct Friends {
   
   var chatRoomID: String
   
-  var toDict: [String: Any]{
+  var toDict: [String: Any] {
     
     return [
       "nameREF": nameREF,

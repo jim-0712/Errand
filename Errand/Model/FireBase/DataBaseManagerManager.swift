@@ -32,7 +32,7 @@ class DataBaseManager {
           return
     }
     
-    let info = AccountInfo(email: email, nickname: nickName, gender: 1, task: task, friends: friends, photo: photo, report: report, blacklist: blacklist, onTask: false, fcmToken: token, status: 0, about: "", taskCount: 0, totalStar: 0.0, uid: uid)
+    let info = AccountInfo(email: email, nickname: nickName, gender: 1, task: task, friends: friends, photo: photo, report: report, blacklist: blacklist, onTask: false, fcmToken: "", status: 0, about: "", taskCount: 0, totalStar: 0.0, uid: uid)
     
     self.dbF.collection(classification).document(uid).setData(info.toDict) { error in
       

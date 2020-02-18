@@ -84,6 +84,8 @@ class CheckRequesterViewController: UIViewController {
       case .success:
         
         NotificationCenter.default.post(name: Notification.Name("refuseRequester"), object: nil)
+        let sender = PushNotificationSender()
+          sender.sendPushNotification(to: user.fcmToken, body: "您已被拒絕")
         strongSelf.navigationController?.popViewController(animated: true)
         
       case .failure:
@@ -91,9 +93,6 @@ class CheckRequesterViewController: UIViewController {
         TaskManager.shared.showAlert(title: "失敗", message: "請重新接受", viewController: strongSelf)
       }
     }
-    
-    let sender = PushNotificationSender()
-    sender.sendPushNotification(to: user.fcmToken, body: "您已被拒絕")
   }
   
   @IBAction func confirmAct(_ sender: Any) {
@@ -131,6 +130,8 @@ class CheckRequesterViewController: UIViewController {
                     case .success:
                       
                       NotificationCenter.default.post(name: Notification.Name("acceptRequester"), object: nil)
+                      let sender = PushNotificationSender()
+                      sender.sendPushNotification(to: user.fcmToken, body: "任務接受成功")
                       strongSelf.navigationController?.popViewController(animated: true)
                       
                     case .failure:
@@ -149,9 +150,6 @@ class CheckRequesterViewController: UIViewController {
         print(error.localizedDescription)
       }
     }
-
-    let sender = PushNotificationSender()
-    sender.sendPushNotification(to: user.fcmToken, body: "任務接受成功")
   }
 }
 

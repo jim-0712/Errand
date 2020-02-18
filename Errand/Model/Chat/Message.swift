@@ -36,7 +36,7 @@ struct Message: MessageType {
   let id: String?
   let content: String
   let sentDate: Date
-  let personImage: String
+  let photo: String
   
   var kind: MessageKind {
     if let image = image as? MediaItem {
@@ -53,19 +53,19 @@ struct Message: MessageType {
   var image: UIImage?
   var downloadURL: URL?
   
-  init(user: User, content: String, personPhoto: String) {
+  init(user: User, content: String, photo: String) {
     sender = Sender(id: user.uid, displayName: AppSettings.displayName)
     self.content = content
-    self.personImage = personPhoto
+    self.photo = photo
     sentDate = Date()
     id = nil
   }
   
-  init(user: User, image: UIImage, personPhoto: String) {
+  init(user: User, image: UIImage, photo: String) {
     sender = Sender(id: user.uid, displayName: AppSettings.displayName)
     self.image = image
+    self.photo = photo
     content = ""
-    self.personImage = personPhoto
     sentDate = Date()
     id = nil
   }
@@ -86,9 +86,11 @@ struct Message: MessageType {
       return nil
     }
     
+    
+    
     id = document.documentID
     
-    self.personImage = photo
+    self.photo = photo
     self.sentDate = sentDate.dateValue()
     sender = Sender(id: senderID, displayName: senderName)
     
@@ -111,7 +113,7 @@ extension Message: DatabaseRepresentation {
       "created": sentDate,
       "senderID": sender.senderId,
       "senderName": sender.displayName,
-      "photo": personImage
+      "photo": self.photo
     ]
     
     if let url = downloadURL {

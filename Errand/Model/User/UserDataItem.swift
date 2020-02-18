@@ -12,3 +12,8 @@ enum FireBaseUpdateError: Error {
   
   case updateError
 }
+
+enum FireBaseDownloadError: Error {
+  
+  case downloadError
+}

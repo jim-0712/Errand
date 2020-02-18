@@ -81,9 +81,13 @@ class ChatViewController: MessagesViewController {
     messagesCollectionView.messagesDataSource = self
     messagesCollectionView.messagesLayoutDelegate = self
     messagesCollectionView.messagesDisplayDelegate = self
+    messagesCollectionView.delegate = self
+    messagesCollectionView.dataSource = self
+ 
   }
   
   private func save(_ message: Message) {
+    print(message.representation)
     reference?.addDocument(data: message.representation) { error in
       if let eccc = error {
         print("Error sending message: \(eccc.localizedDescription)")
@@ -114,7 +118,7 @@ class ChatViewController: MessagesViewController {
   }
   
   private func handleDocumentChange(_ change: DocumentChange) {
-    guard var message = Message(document: change.document) else {
+    guard let message = Message(document: change.document) else {
       
       return
     }
@@ -156,30 +160,20 @@ extension ChatViewController: MessagesDataSource {
   }
   
   func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
-    
-    //    message.
-    
-    //    UserManager.shared.readData(uid: message.sender.senderId) { result in
-    //
-    //      switch result {
-    //
-    //      case .success(let userInfo):
-    //
-    //        avatarView.loadImage(userInfo.photo, placeHolder: UIImage(named: "develop"))
-    //
-    //      case .failure(let error):
-    //
-    //        print(error.localizedDescription)
-    //      }
-    
-    //    }
+    guard let currentUser = UserManager.shared.currentUserInfo else { return }
+      
+      if message.sender.senderId == currentUser.uid {
+          avatarView.loadImage(currentUser.photo, placeHolder: UIImage(named: "photographer"))
+      } else {
+          avatarView.loadImage(receiverPhoto, placeHolder: UIImage(named: "photographer"))
+      }
+    }
   }
-}
 
 extension ChatViewController: MessagesLayoutDelegate {
   
   func avatarSize(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGSize {
-    return CGSize(width: 100, height: 100)
+    return CGSize(width: 20, height: 20)
   }
   
   func footerViewSize(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGSize {
@@ -206,6 +200,7 @@ extension ChatViewController: MessagesDisplayDelegate {
     let corner: MessageStyle.TailCorner = isFromCurrentSender(message: message) ? .bottomRight : .bottomLeft
     return .bubbleTail(corner, .curved)
   }
+
 }
 
 extension ChatViewController: MessageInputBarDelegate {
@@ -223,7 +218,7 @@ extension ChatViewController: MessageInputBarDelegate {
       personPhoto = ""
     }
     
-    let message = Message(user: user, content: text, personPhoto: personPhoto)
+    let message = Message(user: user, content: text, photo: personPhoto)
     save(message)
     messageInputBar.inputTextView.resignFirstResponder()
     self.view.endEditing(true)

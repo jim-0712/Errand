@@ -20,18 +20,104 @@ class StartMissionViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     self.view.backgroundColor = UIColor.LG1
+    setUpData()
+  }
+  
+  @IBAction func naviAct(_ sender: Any) {
+    
+    guard let originalLocation = myLocationManager.location?.coordinate,
+         let taskInfo = detailData else { return }
+    
+    let originCor = "\(originalLocation.latitude),\(originalLocation.longitude)"
+    let destination = "\(taskInfo.lat),\(taskInfo.long)"
+    
+    let url = URL(string: "comgooglemaps://?saddr=\(originCor)&daddr=\(destination)&directionsmode=driving")
+    
+    if UIApplication.shared.canOpenURL(url!) {
+        UIApplication.shared.open(url!, options: [:], completionHandler: nil)
+    } else {
+        // 若手機沒安裝 Google Map App 則導到 App Store(id443904275 為 Google Map App 的 ID)
+        let appStoreGoogleMapURL = URL(string: "itms-apps://itunes.apple.com/app/id585027354")!
+        UIApplication.shared.open(appStoreGoogleMapURL, options: [:], completionHandler: nil)
+    }
+  }
+  
+  func setUpData() {
+    guard let _ = UserManager.shared.currentUserInfo else {
+      backBtn.isHidden = false
+      NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
+      guard let uid = Auth.auth().currentUser?.uid else { return }
+      UserManager.shared.readData(uid: uid) { result in
+        switch result {
+        case .success:
+          self.callTaskData()
+        case .failure:
+          print("error")
+        }
+      }
+      return
+    }
+    NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
+    backBtn.isHidden = true
+    self.callTaskData()
+  }
+  
+  func getPhoto() {
+    
+    guard let status = UserManager.shared.currentUserInfo?.status,
+         let taskinfo = detailData,
+         let accountCurrent = UserManager.shared.currentUserInfo else { return }
+    if status == 1 {
+      UserManager.shared.readData(uid: taskinfo.missionTaker) { result in
+        switch result {
+        case .success(let accountInfo):
+          self.reversePhoto = accountInfo.photo
+          UserManager.shared.currentUserInfo = accountCurrent
+        case .failure:
+          print("error")
+        }
+      }
+    } else if status == 2 {
+      UserManager.shared.readData(uid: taskinfo.uid) { result in
+        switch result {
+        case .success(let accountInfo):
+          self.reversePhoto = accountInfo.photo
+          UserManager.shared.currentUserInfo = accountCurrent
+        case .failure:
+          print("error")
+        }
+      }
+    }
+  }
+  
+  func callTaskData() {
+    TaskManager.shared.setUpStatusData { result in
+      switch result {
+      case .success(let taskInfo):
+        self.detailData = taskInfo
+        self.getPhoto()
+        self.setUpall()
+      case .failure(let error):
+        print(error.localizedDescription)
+      }
+    }
+  }
+  
+  func setUpall() {
     setUpListener()
     setUpBtn()
     setUpStar()
     setUpTable()
     setUpPicker()
     setUpTextField()
-    
+    infoTableView.reloadData()
   }
   
   let myLocationManager = CLLocationManager()
   let polyline = GMSPolyline()
   let directionManager = MapManager.shared
+  
+  var reversePhoto = ""
   
   var destination = ""
   
@@ -46,6 +132,8 @@ class StartMissionViewController: UIViewController {
   var detailData: TaskInfo?
   
   var reference: CollectionReference?
+  
+  @IBOutlet weak var backBtn: UIButton!
   
   private var messageListener: ListenerRegistration?
   
@@ -62,12 +150,11 @@ class StartMissionViewController: UIViewController {
   @IBOutlet weak var giveUpBtn: UIButton!
   
   @IBAction func finishAct(_ sender: Any) {
-    NotificationCenter.default.post(name: Notification.Name("finishTask"), object: nil)
     guard let taskData = self.detailData,
       let status = UserManager.shared.currentUserInfo?.status,
       let judge = judgeTextView.text else { return }
-    var owner = ""
-    var judgerOwner = ""
+      var owner = ""
+      var judgerOwner = ""
     if status == 1 {
       owner = "ownerOK"
       judgerOwner = taskData.missionTaker
@@ -79,7 +166,7 @@ class StartMissionViewController: UIViewController {
     let group = DispatchGroup()
     
     group.enter()
-        group.enter()
+    group.enter()
 //        group.enter()
 //    
 //        TaskManager.shared.updateJudge(owner: judgerOwner, classified: taskData.classfied, judge: judge, star: starView.rating) { (result) in
@@ -91,7 +178,9 @@ class StartMissionViewController: UIViewController {
 //          }
 //        }
     
-        TaskManager.shared.taskUpdateData(uid: taskData.uid, status: true, identity: owner)  { (result) in
+    
+//  這邊再處理ownerOK 或者 takerOK
+        TaskManager.shared.taskUpdateData(uid: taskData.uid, status: true, identity: owner) {(result) in
           switch result {
           case .success:
             group.leave()
@@ -132,7 +221,12 @@ class StartMissionViewController: UIViewController {
       
       let controller = UIAlertController(title: "恭喜", message: "等待對方完成", preferredStyle: .alert)
       let okAction = UIAlertAction(title: "ok", style: .default) { _ in
-        self.dismiss(animated: true, completion: nil)
+        
+        NotificationCenter.default.post(name: Notification.Name("finishTask"), object: nil)
+        
+        let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
+             
+        self.view.window?.rootViewController = mapView
       }
       controller.addAction(okAction)
       self.present(controller, animated: true, completion: nil)
@@ -142,6 +236,9 @@ class StartMissionViewController: UIViewController {
       self.giveUpBtn.isEnabled = false
       NotificationCenter.default.post(name: Notification.Name("finishSelf"), object: nil)
     }
+  }
+  @IBAction func backAct(_ sender: Any) {
+    self.dismiss(animated: true, completion: nil)
   }
   
   @IBAction func giveUpAct(_ sender: Any) {
@@ -160,6 +257,8 @@ class StartMissionViewController: UIViewController {
       taskInfo.status = 0
       taskInfo.ownerOK = false
       taskInfo.takerOK = false
+      
+      //如果是owner要刪除任務並且把雙方的status射程0
       if user.status == 1 {
         
         group.enter()
@@ -182,6 +281,7 @@ class StartMissionViewController: UIViewController {
           }
         }
       } else {
+        //如果是taker要把任務重置並且把自己的status射程0
         self.destination = taskInfo.uid
         TaskManager.shared.updateWholeTask(task: taskInfo, uid: taskInfo.uid) { result in
           switch result {
@@ -229,7 +329,6 @@ class StartMissionViewController: UIViewController {
     controller.addAction(okAction)
     controller.addAction(cancelAct)
     self.present(controller, animated: true, completion: nil)
-    
   }
   
   func setUpTable() {
@@ -259,9 +358,10 @@ class StartMissionViewController: UIViewController {
     giveUpBtn.layer.shadowOpacity = 0.4
     giveUpBtn.layer.shadowColor = UIColor.black.cgColor
     giveUpBtn.layer.shadowOffset = CGSize(width: 3, height: 3)
+    backBtn.layer.cornerRadius = backBtn.bounds.width / 2
     
     guard let task = detailData,
-      let status = UserManager.shared.currentUserInfo?.status else { return }
+         let status = UserManager.shared.currentUserInfo?.status else { return }
     
     if status == 1 && task.ownerOK {
       finishBtn.isEnabled = false
@@ -335,25 +435,42 @@ class StartMissionViewController: UIViewController {
             TaskManager.shared.showAlert(title: "注意", message: "對方已完成任務", viewController: strongSelf)
           } else { }
       
-          if taskData.takerAskFriend  && taskData.ownerAskFriend {
+          if taskData.takerAskFriend && taskData.ownerAskFriend && !taskData.isFrirndsNow{
             
-            let chatRoomID = UUID().uuidString
-            
-            TaskManager.shared.createChatRoom(chatRoomID: chatRoomID) { result in
-              switch result {
-              case .success:
-                print("ChatRoomOK")
-                UserManager.shared.updatefreinds(ownerUid: taskData.uid, takerUid: taskData.missionTaker, chatRoomID: chatRoomID) { result in
+            if !taskData.isFrirndsNow {
+              if status == 1 {
+                let chatRoomID = UUID().uuidString
+                
+                TaskManager.shared.createChatRoom(chatRoomID: chatRoomID) { result in
                   switch result {
                   case .success:
-                    print("yes")
-                    LKProgressHUD.dismiss()
+                    print("ChatRoomOK")
+                    UserManager.shared.updatefreinds(ownerUid: taskData.uid, takerUid: taskData.missionTaker, chatRoomID: chatRoomID) { result in
+                      switch result {
+                      case .success:
+                        LKProgressHUD.dismiss()
+                      case .failure:
+                        print("no")
+                      }
+                    }
+                    
+                    var newTask = taskData
+                    
+                    newTask.isFrirndsNow = true
+                    
+                    TaskManager.shared.updateWholeTask(task: newTask, uid: taskData.uid) { result in
+                      switch result {
+                      case .success:
+                        print("ya")
+                      case .failure:
+                        print("error")
+                      }
+                    }
+                    
                   case .failure:
                     print("no")
                   }
                 }
-              case .failure:
-                print("no")
               }
             }
           } else { }
@@ -410,10 +527,10 @@ class StartMissionViewController: UIViewController {
   func finishMissionAlert(title: String, message: String, viewController: UIViewController) {
     let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
     let okAction = UIAlertAction(title: "ok", style: .default) { [weak self]_ in
-      
+      NotificationCenter.default.post(name: Notification.Name("finishTask"), object: nil)
       guard let strongSelf = self else { return }
       guard let task = strongSelf.detailData,
-        let  currentUserStatus = UserManager.shared.currentUserInfo?.status else { return }
+           let  currentUserStatus = UserManager.shared.currentUserInfo?.status else { return }
       
       LKProgressHUD.show(controller: strongSelf)
       
@@ -481,7 +598,6 @@ class StartMissionViewController: UIViewController {
         
         let sender = PushNotificationSender()
         sender.sendPushNotification(to: strongSelf.destination, body: "對方任務完成")
-        NotificationCenter.default.post(name: Notification.Name("finishTask"), object: nil)
         LKProgressHUD.dismiss()
         let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
         
@@ -491,6 +607,16 @@ class StartMissionViewController: UIViewController {
     
     controller.addAction(okAction)
     viewController.present(controller, animated: true, completion: nil)
+  }
+  
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    
+    if segue.identifier == "chat" {
+      guard let chatVC = segue.destination as? ChatViewController,
+           let taskInfo = detailData else { return }
+      chatVC.detailData = taskInfo
+      chatVC.receiverPhoto = reversePhoto
+    }
   }
 }
 

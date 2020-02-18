@@ -16,7 +16,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="BMy-qS-A1H">
-                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
+                                <rect key="frame" x="0.0" y="148.5" width="414" height="713.5"/>
                                 <color key="backgroundColor" red="0.82744532820000005" green="0.82744556670000002" blue="0.82744413610000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             </tableView>
                         </subviews>
@@ -29,7 +29,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="JxO-Ka-psd"/>
                     </view>
-                    <navigationItem key="navigationItem" title="任務申請者" largeTitleDisplayMode="never" id="pRe-Td-Ao2"/>
+                    <navigationItem key="navigationItem" title="任務申請者" largeTitleDisplayMode="always" id="pRe-Td-Ao2"/>
                     <connections>
                         <outlet property="requesterTable" destination="BMy-qS-A1H" id="oTZ-nV-nmk"/>
                     </connections>
@@ -43,8 +43,8 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="80H-jY-dEV" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="UpZ-Sn-8cp">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="UpZ-Sn-8cp">
+                        <rect key="frame" x="0.0" y="44" width="414" height="104.5"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>

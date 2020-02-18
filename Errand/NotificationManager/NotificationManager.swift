@@ -6,13 +6,12 @@
 //  Copyright © 2020 Jim. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import Firebase
+import Foundation
 import FirebaseFirestore
 import FirebaseMessaging
-import UIKit
 import UserNotifications
-
 
 class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCenterDelegate {
   
@@ -55,8 +54,33 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
   
   func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
       print("apple")
+    
+    guard let userInfo = response.notification.request.content.userInfo as? [String: Any] else { return }
+    guard let info = userInfo["aps"] as? [String: Any],
+         let message = info["alert"] as? [String: Any],
+         let  body = message["body"] as? String else { return }
+    
+    if body != "您已被拒絕" {
       NotificationCenter.default.post(name: Notification.Name("popVC"), object: nil)
+    } 
+
+    if body == "任務接受成功" {
+      NotificationCenter.default.post(name: Notification.Name("reloadUser"), object: nil)
+//      guard let uid = Auth.auth().currentUser?.uid else {
+//        NotificationCenter.default.post(name: Notification.Name("reloadUser"), object: nil)
+//        return }
+//
+//      UserManager.shared.readData(uid: uid) { result in
+//        switch result {
+//        case .success:
+//          NotificationCenter.default.post(name: Notification.Name("reloadUser"), object: nil)
+//        case .failure:
+//          print("error")
+//        }
+//      }
+    }
+    
+    NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
       completionHandler()
   }
 }
-
