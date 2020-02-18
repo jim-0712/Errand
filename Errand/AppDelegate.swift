@@ -31,6 +31,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
         print(error)
         return
       }
+      guard let uid = Auth.auth().currentUser?.uid else { return }
+      UserDefaults.standard.set(uid, forKey: "uid")
       NotificationCenter.default.post(name: Notification.Name("userInfo"), object: nil)
     }
   }

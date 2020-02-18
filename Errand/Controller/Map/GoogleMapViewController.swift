@@ -30,6 +30,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
       LKProgressHUD.show(controller: self)
       //      refreshBtn.isEnabled = true
     }
+    NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
     setUpView()
     changeConstraints()
     setUpLocation()
@@ -46,7 +47,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   
   @objc func reGetUserInfo() {
     loadUserInfo()
-    NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
   }
   
   func loadUserInfo() {
@@ -94,6 +94,10 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   @IBOutlet weak var checkDetailBtn: UIButton!
   
   @IBOutlet weak var backBtn: UIButton!
+  
+  @IBOutlet weak var backgroundView: UIView!
+  
+  @IBOutlet weak var radarBackView: UIView!
   
   @IBOutlet weak var searchView: UIView!
   
@@ -242,6 +246,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     categoryCollection.register(nibCell, forCellWithReuseIdentifier: "category")
     categoryCollection.delegate = self
     categoryCollection.dataSource = self
+    categoryCollection.backgroundColor = .clear
   }
   
   func setUpView() {
@@ -250,6 +255,8 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     pageView.layer.shadowOpacity = 0.2
     searchBtn.layer.shadowOpacity = 0.5
     searchView.layer.shadowOpacity = 0.5
+    backgroundView.layer.shadowOpacity = 0.5
+    radarBackView.layer.shadowOpacity = 0.5
     checkDetailBtn.layer.borderWidth = 1.0
     arrangeTextField.layer.shadowOpacity = 0.5
     checkDetailBtn.layer.borderColor = UIColor.G1?.cgColor
@@ -257,9 +264,15 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     pageView.layer.cornerRadius = pageView.bounds.height / 10
     searchBtn.layer.cornerRadius = searchBtn.bounds.height / 10
     searchView.layer.cornerRadius = searchView.bounds.height / 10
+    radarBackView.layer.cornerRadius = radarBackView.bounds.width / 2
+    backgroundView.layer.cornerRadius = backgroundView.bounds.width / 2
     pageView.layer.shadowOffset = CGSize(width: 3, height: 3)
     searchBtn.layer.shadowOffset = CGSize(width: 3, height: 3)
     searchView.layer.shadowOffset = CGSize(width: 3, height: 3)
+    backgroundView.layer.shadowOffset = .zero
+    radarBackView.layer.shadowOffset = .zero
+    backgroundView.backgroundColor = .white
+    radarBackView.backgroundColor = .white
     checkDetailBtn.layer.cornerRadius = checkDetailBtn.bounds.height / 4
     arrangeTextField.layer.shadowOffset = CGSize(width: 3, height: 3)
     taskPersonPhoto.layer.cornerRadius = taskPersonPhoto.bounds.width / 2
@@ -296,6 +309,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     guard let center = myLocationManager.location?.coordinate else { return }
     let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 17)
     googleMapView.camera = myArrange
+    googleMapView.animate(to: myArrange)
   }
   
   func checkLocationAuth() {

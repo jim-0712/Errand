@@ -37,7 +37,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
     setUpSetting()
     setUpall()
   }
-  
+
   func setUpall() {
     setUp()
     setUpBtn()
@@ -147,7 +147,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   @IBAction func editBackAct(_ sender: Any) {
     self.dismiss(animated: true, completion: nil)
   }
-  
   
   @IBAction func postAct(_ sender: Any) {
     

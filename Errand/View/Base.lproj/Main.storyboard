@@ -6,11 +6,6 @@
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="setofont.ttf">
-            <string>SetoFont</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -27,9 +22,9 @@
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="WND-Ps-keZ"/>
                                     <constraint firstAttribute="height" constant="40" id="Yrn-Gv-50r"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="SetoFont" family="SetoFont" pointSize="24"/>
+                                <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="18"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="  f  Facebook"/>
+                                <state key="normal" title="        f  Facebook"/>
                                 <connections>
                                     <action selector="fbLoginAct:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ctc-Fy-38b"/>
                                 </connections>
@@ -41,9 +36,9 @@
                                     <constraint firstAttribute="height" constant="40" id="4t4-kc-Vrh"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="Dbl-r4-3z2"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="SetoFont" family="SetoFont" pointSize="24"/>
+                                <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="18"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="  G  Google">
+                                <state key="normal" title="         G  Google">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
@@ -51,12 +46,12 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ERRAND" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CiG-ri-uZW">
-                                <rect key="frame" x="132" y="64" width="150" height="50"/>
+                                <rect key="frame" x="115.5" y="64" width="183.5" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="2Oy-No-CcP"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="150" id="mbm-nW-Q9i"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="SetoFont" family="SetoFont" pointSize="45"/>
+                                <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="45"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -67,7 +62,7 @@
                                     <constraint firstAttribute="height" constant="40" id="1ue-ms-9Jh"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="kEB-dU-w7q"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="SetoFont" family="SetoFont" pointSize="24"/>
+                                <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="18"/>
                                 <state key="normal" title="Visitors">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -84,7 +79,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" red="0.99962252380000005" green="0.81914860010000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <constraints>
                             <constraint firstItem="CiG-ri-uZW" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="DdA-eq-c0m"/>
                             <constraint firstItem="4aw-tP-mdE" firstAttribute="top" secondItem="p7Z-eB-DUq" secondAttribute="bottom" constant="30" id="KnZ-CE-ps9"/>

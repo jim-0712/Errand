@@ -47,10 +47,24 @@ class PersonalViewController: UIViewController {
       
       setUpTableView()
       self.navigationController?.navigationBar.prefersLargeTitles = true
+//      guard let uid = Auth.auth().currentUser.uid else { return }
+//      UserManager.shared.readData(uid: uid) { result in
+//
+//        switch result {
+//        case .success(let info):
+//          self.personPhoto
+//        case
+//        }
+//      }
       imagePickerController.delegate = self
       imagePickerController.allowsEditing = true
       imagePickerController.mediaTypes = [kUTTypeImage as String]
     }
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
   }
   
   @IBOutlet weak var settingBtn: UIButton!
@@ -211,7 +225,8 @@ extension PersonalViewController: UITableViewDataSource, UITableViewDelegate {
       let email = UserManager.shared.currentUserInfo?.email,
       let aboutMe = UserManager.shared.currentUserInfo?.about,
       let star = UserManager.shared.currentUserInfo?.totalStar,
-      let taskCount = UserManager.shared.currentUserInfo?.taskCount else { return UITableViewCell() }
+      let taskCount = UserManager.shared.currentUserInfo?.taskCount,
+      let photo = UserManager.shared.currentUserInfo?.photo else { return UITableViewCell() }
     
     if taskCount == 0 {
       averageStar = 0.0
@@ -225,7 +240,7 @@ extension PersonalViewController: UITableViewDataSource, UITableViewDelegate {
       
       guard let cell = tableView.dequeueReusableCell(withIdentifier: "personPhoto", for: indexPath) as? PhotoTableViewCell else { return UITableViewCell() }
       
-      cell.setUpView(personPhoto: personPhoto, nickName: name, email: email)
+      cell.setUpView(personPhoto: photo, nickName: name, email: email)
       cell.choosePhotoBtn.addTarget(self, action: #selector(pickImage), for: .touchUpInside)
       
       return cell

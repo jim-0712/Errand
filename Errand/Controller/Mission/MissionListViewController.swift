@@ -19,7 +19,6 @@ class MissionListViewController: UIViewController {
     LKProgressHUD.show(controller: self)
     setUpSearch()
     setUp()
-    getTaskData()
     setUpindicatorView()
     
     NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("postMission"), object: nil)
@@ -30,17 +29,26 @@ class MissionListViewController: UIViewController {
     
     NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("finishSelf"), object: nil)
     
+    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("getMissionList"), object: nil)
+  
   }
+  
+  var currentBtnSelect = false
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     setUpBtn()
-//    setUpindicatorView()
+    getTaskData()
     startAnimate(sender: allMissionBtn)
+    NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
   }
   
   @objc func reloadTable() {
-    getTaskData()
+    if currentBtnSelect {
+       getMissionStartData()
+    } else {
+       getTaskData()
+    }
   }
   
    var indicatorCon: NSLayoutConstraint?
@@ -106,11 +114,6 @@ class MissionListViewController: UIViewController {
   }
   
   func startAnimate(sender: UIButton) {
-
-//    UIView.animate(withDuration: 0.2) {
-//      self.indicatorView.frame.origin.x = sender.frame.origin.x
-//    }
-//
     let move = UIViewPropertyAnimator(duration: 0.1, curve: .easeInOut) {
       self.indicatorCon?.isActive = false
       self.indicatorCon = self.indicatorView.centerXAnchor.constraint(equalTo: sender.centerXAnchor)
@@ -140,6 +143,7 @@ class MissionListViewController: UIViewController {
   @IBOutlet weak var btnStackView: UIStackView!
   
   @IBAction func allMissionAct(_ sender: UIButton) {
+    currentBtnSelect = false
     LKProgressHUD.show(controller: self)
     getTaskData()
     UserManager.shared.checkDetailBtn = !UserManager.shared.checkDetailBtn
@@ -147,6 +151,7 @@ class MissionListViewController: UIViewController {
   }
   
   @IBAction func currentMission(_ sender: UIButton) {
+    currentBtnSelect = true
     UserManager.shared.checkDetailBtn = !UserManager.shared.checkDetailBtn
     startAnimate(sender: sender)
     getMissionStartData()
@@ -218,31 +223,32 @@ class MissionListViewController: UIViewController {
     if UserManager.shared.currentUserInfo?.status == 0 {
       performSegue(withIdentifier: "post", sender: nil)
     } else if UserManager.shared.currentUserInfo?.status == 1 {
-      guard let editVC = storyboard?.instantiateViewController(identifier: "post") as? PostMissionViewController,
-           let status = UserManager.shared.currentUserInfo?.status else { return }
-      if status == 1 {
-        editVC.isEditing = true
-      } else {
-        editVC.isEditing = false
+      
+      LKProgressHUD.show(controller: self)
+      TaskManager.shared.setUpStatusData { result in
+        
+        switch result {
+        case .success(let taskInfo):
+          
+          if taskInfo.missionTaker.isEmpty {
+            TaskManager.shared.showAlert(title: "警告", message: "任務已被接受，不能隨意更改", viewController: self)
+          } else {
+            guard let editVC = self.storyboard?.instantiateViewController(identifier: "post") as? PostMissionViewController,
+                 let status = UserManager.shared.currentUserInfo?.status else { return }
+            if status == 1 {
+              editVC.isEditing = true
+            } else {
+              editVC.isEditing = false
+            }
+             self.present(editVC, animated: true, completion: nil)
+          }
+        case .failure:
+          print("error")
+        }
       }
-      self.present(editVC, animated: true, completion: nil)
     } else {
-      presentAlert(viewController: self)
+      TaskManager.shared.showAlert(title: "任務進行中", message: "請完成當前任務", viewController: self)
     }
-  }
-  
-  func presentAlert(viewController: UIViewController) {
-    
-//    let controller = UIAlertController(title: "任務進行中", message: "請完成當前任務", preferredStyle: .alert)
-//    let okAction = UIAlertAction(title: "OK", style: .default) { _ in
-//
-//      guard let goingVc = self.storyboard?.instantiateViewController(identifier: "going") as? CheckRequesterViewController else { return }
-//
-////      goingVc.missionData = self.missionStartData
-//      self.show(goingVc, sender: nil)
-//    }
-//    controller.addAction(okAction)
-//    present(controller, animated: true, completion: nil)
   }
   
   func setUpSearch() {
@@ -302,7 +308,7 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
   
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
      if UserManager.shared.currentUserInfo?.status != 0 {
-       presentAlert(viewController: self)
+      TaskManager.shared.showAlert(title: "任務進行中", message: "請完成當前任務", viewController: self)
      }
   }
 
@@ -379,6 +385,8 @@ extension MissionListViewController: DetailManager {
         break
       }
     }
+    
+    self.timeString = TaskManager.shared.timeConverter(time: time)
     
     guard let data = detailData else { return }
     if data.status == 0 {

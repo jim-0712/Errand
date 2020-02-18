@@ -51,7 +51,7 @@
                                     <constraint firstAttribute="height" constant="40" id="guK-KK-HFS"/>
                                 </constraints>
                                 <color key="tintColor" red="0.43175899979999999" green="0.70942586659999995" blue="0.7372590899" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <state key="normal" image="computer"/>
+                                <state key="normal" image="speech-bubble"/>
                                 <connections>
                                     <action selector="chatAct:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="btZ-j7-lqP"/>
                                 </connections>
@@ -151,9 +151,9 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="computer" width="512" height="512"/>
         <image name="friend" width="512" height="512"/>
         <image name="money" width="32" height="32"/>
+        <image name="speech-bubble" width="512" height="512"/>
         <image name="tasks" width="64" height="64"/>
         <image name="writer" width="64" height="64"/>
     </resources>

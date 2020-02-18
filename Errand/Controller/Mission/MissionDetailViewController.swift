@@ -104,7 +104,7 @@ class MissionDetailViewController: UIViewController {
       UserManager.shared.readData(uid: uid) {result in
         
         switch result {
-          
+            
         case .success(let dataReturn):
           UserManager.shared.isPostTask = dataReturn.onTask
           UserManager.shared.currentUserInfo = dataReturn
@@ -243,7 +243,7 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     guard let data = detailData,
-      let time = self.receiveTime else { return UITableViewCell() }
+         let time = self.receiveTime else { return UITableViewCell() }
     
     if indexPath.row == 0 {
       
@@ -263,7 +263,7 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
         cell.setUp(title: missionDetail[indexPath.row], content: "\(data.money)")
         
       default:
-        cell.setUp(title: "\(missionDetail[indexPath.row])元", content: time)
+        cell.setUp(title: "\(missionDetail[indexPath.row])", content: time)
       }
       
       return cell

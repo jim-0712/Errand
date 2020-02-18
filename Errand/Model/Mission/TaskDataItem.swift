@@ -86,6 +86,8 @@ struct TaskInfo {
   
   var chatRoom: String
   
+  var isFrirndsNow: Bool
+  
   var isComplete: Bool
   
   var star: Double
@@ -140,7 +142,9 @@ struct TaskInfo {
                
                "ownerAskFriend": ownerAskFriend,
                
-               "takerAskFriend": takerAskFriend
+               "takerAskFriend": takerAskFriend,
+               
+               "isFrirndsNow": isFrirndsNow
     ]
   }
 }
