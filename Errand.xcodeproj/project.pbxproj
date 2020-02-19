@@ -51,7 +51,6 @@
 		FB5F5BCE23DB2639003B9ABC /* AddLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F5BCD23DB2639003B9ABC /* AddLocationViewController.swift */; };
 		FB5F5BD023DB2847003B9ABC /* setofont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB5F5BCF23DB2847003B9ABC /* setofont.ttf */; };
 		FB6365FE23E2B975008555BC /* MissionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6365FD23E2B975008555BC /* MissionDetailViewController.swift */; };
-		FB63660123E2CF6E008555BC /* MissionDetailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB63660023E2CF6E008555BC /* MissionDetailCollectionViewCell.swift */; };
 		FB63660323E31E67008555BC /* KingFisherWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB63660223E31E67008555BC /* KingFisherWrapper.swift */; };
 		FB63664823E3CF15008555BC /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB63664723E3CF15008555BC /* TabBarViewController.swift */; };
 		FB63664B23E3ED77008555BC /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB63664A23E3ED77008555BC /* NetworkExtension.framework */; };
@@ -90,6 +89,8 @@
 		FBEC726223FA376400A6AF86 /* FriendsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBEC726023FA376400A6AF86 /* FriendsTableViewCell.xib */; };
 		FBEC726423FA664800A6AF86 /* FriendChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEC726323FA664800A6AF86 /* FriendChatViewController.swift */; };
 		FBF24FC923FCEB2D002A56A4 /* SignOutTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF24FC823FCEB2D002A56A4 /* SignOutTableViewCell.swift */; };
+		FBF24FCF23FD9C39002A56A4 /* MissionDetailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF24FCD23FD9C39002A56A4 /* MissionDetailCollectionViewCell.swift */; };
+		FBF24FD023FD9C39002A56A4 /* MissionDetailCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBF24FCE23FD9C39002A56A4 /* MissionDetailCollectionViewCell.xib */; };
 		FBF7AB5823D56F5D004B521A /* GoogleMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF7AB5723D56F5D004B521A /* GoogleMapViewController.swift */; };
 		FBF7AB5B23D58AE2004B521A /* MapDataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF7AB5A23D58AE2004B521A /* MapDataItem.swift */; };
 		FBF7AB5D23D590E7004B521A /* MapManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF7AB5C23D590E7004B521A /* MapManager.swift */; };
@@ -169,7 +170,6 @@
 		FB5F5BCD23DB2639003B9ABC /* AddLocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLocationViewController.swift; sourceTree = "<group>"; };
 		FB5F5BCF23DB2847003B9ABC /* setofont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = setofont.ttf; sourceTree = "<group>"; };
 		FB6365FD23E2B975008555BC /* MissionDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionDetailViewController.swift; sourceTree = "<group>"; };
-		FB63660023E2CF6E008555BC /* MissionDetailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionDetailCollectionViewCell.swift; sourceTree = "<group>"; };
 		FB63660223E31E67008555BC /* KingFisherWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KingFisherWrapper.swift; sourceTree = "<group>"; };
 		FB63664723E3CF15008555BC /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		FB63664A23E3ED77008555BC /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
@@ -208,6 +208,8 @@
 		FBEC726023FA376400A6AF86 /* FriendsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FriendsTableViewCell.xib; sourceTree = "<group>"; };
 		FBEC726323FA664800A6AF86 /* FriendChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendChatViewController.swift; sourceTree = "<group>"; };
 		FBF24FC823FCEB2D002A56A4 /* SignOutTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignOutTableViewCell.swift; sourceTree = "<group>"; };
+		FBF24FCD23FD9C39002A56A4 /* MissionDetailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionDetailCollectionViewCell.swift; sourceTree = "<group>"; };
+		FBF24FCE23FD9C39002A56A4 /* MissionDetailCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MissionDetailCollectionViewCell.xib; sourceTree = "<group>"; };
 		FBF7AB5723D56F5D004B521A /* GoogleMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleMapViewController.swift; sourceTree = "<group>"; };
 		FBF7AB5A23D58AE2004B521A /* MapDataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapDataItem.swift; sourceTree = "<group>"; };
 		FBF7AB5C23D590E7004B521A /* MapManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapManager.swift; sourceTree = "<group>"; };
@@ -513,12 +515,13 @@
 		FB6365FF23E2CF45008555BC /* MissionDetail */ = {
 			isa = PBXGroup;
 			children = (
-				FB63660023E2CF6E008555BC /* MissionDetailCollectionViewCell.swift */,
 				FB63664E23E3FC1B008555BC /* MissionDetailTableViewCell.swift */,
 				FB638D7823E53FE900030CB2 /* MissionContentTableViewCell.swift */,
 				FB638D7A23E5557B00030CB2 /* MissionPersonTableViewCell.swift */,
 				FB69553623F1461D0049DB14 /* StartMissionTableViewCell.swift */,
 				FB69553723F1461D0049DB14 /* StartMissionTableViewCell.xib */,
+				FBF24FCD23FD9C39002A56A4 /* MissionDetailCollectionViewCell.swift */,
+				FBF24FCE23FD9C39002A56A4 /* MissionDetailCollectionViewCell.xib */,
 			);
 			path = MissionDetail;
 			sourceTree = "<group>";
@@ -737,6 +740,7 @@
 				FB752ABB23D5DFB200BF3852 /* PermanentMarker.ttf in Resources */,
 				FB638DCA23E71D0C00030CB2 /* Map.storyboard in Resources */,
 				FB69553923F1461D0049DB14 /* StartMissionTableViewCell.xib in Resources */,
+				FBF24FD023FD9C39002A56A4 /* MissionDetailCollectionViewCell.xib in Resources */,
 				FB387C1C23CEEF0F00B6D8C4 /* Assets.xcassets in Resources */,
 				FB5F5BD023DB2847003B9ABC /* setofont.ttf in Resources */,
 				FB53F31D23EB21890041C49D /* PhotoTableViewCell.xib in Resources */,
@@ -940,11 +944,11 @@
 				FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */,
 				FB638D7F23E56FC000030CB2 /* CategoryCollectionViewCell.swift in Sources */,
 				FB69553323F001350049DB14 /* Message.swift in Sources */,
+				FBF24FCF23FD9C39002A56A4 /* MissionDetailCollectionViewCell.swift in Sources */,
 				FB69553223F001350049DB14 /* DatabaseRepresentation.swift in Sources */,
 				FB53F31723EAAFC20041C49D /* RequesterTableViewCell.swift in Sources */,
 				FB387C5323CF323600B6D8C4 /* UserInfoViewController.swift in Sources */,
 				FB387C1423CEEF0E00B6D8C4 /* HomePageViewController.swift in Sources */,
-				FB63660123E2CF6E008555BC /* MissionDetailCollectionViewCell.swift in Sources */,
 				FB638DD223E8913800030CB2 /* PhotoCollectionViewCell.swift in Sources */,
 				FB53F33323EBFE290041C49D /* WhiteSpace.swift in Sources */,
 				FB5F5BCE23DB2639003B9ABC /* AddLocationViewController.swift in Sources */,

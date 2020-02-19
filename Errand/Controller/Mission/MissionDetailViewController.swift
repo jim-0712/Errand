@@ -101,11 +101,7 @@ class MissionDetailViewController: UIViewController {
   
   @IBOutlet weak var takeMissionBtn: UIButton!
   
-  @IBOutlet weak var pageControl: UIPageControl!
-  
   @IBOutlet weak var detailTableView: UITableView!
-  
-  @IBOutlet weak var taskViewCollectionView: UICollectionView!
   
   @IBOutlet weak var backBtn: UIButton!
   
@@ -329,16 +325,41 @@ class MissionDetailViewController: UIViewController {
   
   let missionDetail = ["任務內容", "懸賞價格", "發布時間", "任務細節"]
   
+  let pageControl = UIPageControl()
+  
   let fullSize = UIScreen.main.bounds.size
   
   func setUp() {
-    taskViewCollectionView.delegate = self
-    taskViewCollectionView.dataSource = self
+    testcollection.delegate = self
+    testcollection.dataSource = self
     detailTableView.delegate = self
     detailTableView.dataSource = self
     detailTableView.rowHeight = UITableView.automaticDimension
     detailTableView.register(UINib(nibName: "StartMissionTableViewCell", bundle: nil), forCellReuseIdentifier: "startMission")
+    testcollection.register(UINib(nibName: "MissionDetailCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "detail")
+    headerView.addSubview(testcollection)
+    detailTableView.tableHeaderView = headerView
+    
   }
+  
+  
+  var testcollection :UICollectionView = {
+    let layout = UICollectionViewFlowLayout()
+    let collection = UICollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300), collectionViewLayout: layout)
+    layout.scrollDirection = .horizontal
+    collection.translatesAutoresizingMaskIntoConstraints = false
+    collection.register(MissionDetailCollectionViewCell.self, forCellWithReuseIdentifier: "detail")
+    collection.backgroundColor = .red
+    return collection
+  }()
+  
+  let headerView: UIView = {
+    let header = UIView()
+    header.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300)
+    header.backgroundColor = .pink
+    return header
+  }()
+  
   // swiftlint:disable cyclomatic_complexity
   func setUpListener() {
     guard let data = detailData else { return }
@@ -359,7 +380,7 @@ class MissionDetailViewController: UIViewController {
           strongSelf.detailData = dataReturn
           
           guard let taskData = strongSelf.detailData,
-               let status = UserManager.shared.currentUserInfo?.status else { return }
+            let status = UserManager.shared.currentUserInfo?.status else { return }
           
           if taskData.takerOK && taskData.ownerOK {
             
@@ -369,7 +390,7 @@ class MissionDetailViewController: UIViewController {
           } else if status == 2 && taskData.ownerOK {
             TaskManager.shared.showAlert(title: "注意", message: "對方已完成任務", viewController: strongSelf)
           } else { }
-  
+          
         case .failure:
           print("error")
         }
@@ -454,12 +475,12 @@ class MissionDetailViewController: UIViewController {
         LKProgressHUD.dismiss()
         
         guard let judgeVC = strongSelf.storyboard?.instantiateViewController(identifier: "judge") as? JudgeMissionViewController,
-             let taskInfo = strongSelf.detailData else { return }
+          let taskInfo = strongSelf.detailData else { return }
         
         judgeVC.detailData = taskInfo
         NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
         strongSelf.present(judgeVC, animated: true, completion: nil)
- 
+        
       }
     }
     
@@ -537,12 +558,20 @@ class MissionDetailViewController: UIViewController {
   func setUppageControll() {
     
     guard let data = detailData else { return }
+    self.headerView.addSubview(pageControl)
+    pageControl.translatesAutoresizingMaskIntoConstraints = false
     pageControl.currentPage = 0
     pageControl.layer.cornerRadius = 10
     pageControl.pageIndicatorTintColor = .lightGray
     pageControl.numberOfPages = data.taskPhoto.count
     pageControl.currentPageIndicatorTintColor = .black
     pageControl.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+    NSLayoutConstraint.activate([
+      pageControl.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: 0),
+      pageControl.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 0),
+      pageControl.heightAnchor.constraint(equalToConstant: 30),
+      pageControl.widthAnchor.constraint(equalToConstant: 100)
+    ])
   }
   
   func getPhoto() {
@@ -595,8 +624,14 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
     let width = scrollView.frame.width
     let horizontalCenter = width / 2
     pageControl.currentPage = Int(offSet + horizontalCenter) / Int(width)
+    
+    testcollection.alpha = 1 - scrollView.bounds.origin.y / 300
+    
+    if scrollView.bounds.origin.y < 0 {
+      print("2")
+    }
   }
-  
+
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     guard let data = detailData else { return 0 }
     return data.taskPhoto.count
@@ -616,16 +651,14 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
     if typeManager.count > 1 {
       
       cell.detailImage.isHidden = true
-      cell.playBtn.addTarget(self, action: #selector(videoPlay(sender:)), for: .touchUpInside)
       guard let video = URL(string: data.taskPhoto[indexPath.row]) else { return UICollectionViewCell() }
       let player = AVPlayer(url: video)
       let playerLayer = AVPlayerLayer(player: player)
       playerLayer.frame = cell.contentView.bounds
       cell.layer.addSublayer(playerLayer)
-      cell.playBtn.isHidden = false
       
     } else {
-      cell.playBtn.isHidden = true
+      
       cell.detailImage.isHidden = false
       guard let layers = cell.layer.sublayers else { return UICollectionViewCell() }
       for layer in layers {
@@ -648,7 +681,7 @@ extension MissionDetailViewController: UICollectionViewDelegateFlowLayout {
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     
-    return CGSize(width: UIScreen.main.bounds.width, height: 350)
+    return CGSize(width: UIScreen.main.bounds.width, height: 300)
   }
 }
 
@@ -661,7 +694,7 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     guard let data = detailData,
-         let time = self.receiveTime else { return UITableViewCell() }
+      let time = self.receiveTime else { return UITableViewCell() }
     
     if indexPath.row == 0 {
       
