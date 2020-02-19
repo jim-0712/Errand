@@ -48,6 +48,7 @@ class StartMissionTableViewCell: UITableViewCell {
   @IBOutlet weak var pageView: UIView!
   
   func setUp(ownerImage: String, author: String, classified: String, price: Int) {
+    missionOwnerImage.layer.cornerRadius = missionOwnerImage.bounds.width / 2
     missionOwnerImage.loadImage(ownerImage, placeHolder: UIImage(named: "photographer"))
     authorLabel.text = author
     classifiedLabel.text = classified

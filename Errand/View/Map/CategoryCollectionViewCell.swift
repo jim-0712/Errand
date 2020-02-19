@@ -16,16 +16,6 @@ class CategoryCollectionViewCell: UICollectionViewCell {
   
     }
   
-  override var isSelected: Bool {
-      didSet {
-        layer.borderColor = isSelected ? UIColor.black.cgColor : UIColor.white.cgColor
-        
-        self.contentView.backgroundColor = isSelected ? UIColor(red: 246.9/255.0, green: 212.0/255.0, blue: 95.0/255.0, alpha: 1.0) :  UIColor.G1
-      
-        layer.borderWidth = isSelected ? 1.0 : 0.0
-      }
-  }
-  
   @IBOutlet weak var colorBlock: UIView!
   
   @IBOutlet weak var groupLabel: UILabel!

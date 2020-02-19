@@ -40,7 +40,9 @@ class MissionListViewController: UIViewController {
     setUpBtn()
     getTaskData()
     startAnimate(sender: allMissionBtn)
-    NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+      NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
+    }
   }
   
   @objc func reloadTable() {
@@ -230,7 +232,7 @@ class MissionListViewController: UIViewController {
         switch result {
         case .success(let taskInfo):
           
-          if taskInfo.missionTaker.isEmpty {
+          if taskInfo.missionTaker != "" {
             TaskManager.shared.showAlert(title: "警告", message: "任務已被接受，不能隨意更改", viewController: self)
           } else {
             guard let editVC = self.storyboard?.instantiateViewController(identifier: "post") as? PostMissionViewController,

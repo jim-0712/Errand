@@ -123,18 +123,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
       pretitle = title
       prebody = body
     }
-    
-//    let state = application.applicationState
-//
-//    if state == .active {
-////      backGroundNoti(title: pretitle, body: prebody)
-//      print("1")
-//    } else if state == .inactive {
-//      print("2")
-//    } else {
-//      print("3")
-//    }
-    
     completionHandler(.newData)
   }
   
@@ -143,10 +131,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     if let conversationVC = storyboard.instantiateViewController(withIdentifier: "detailViewController") as? MissionDetailViewController,
       let tabBarController = self.window?.rootViewController as? TabBarViewController,
       let navController = tabBarController.selectedViewController as? UINavigationController {
-      tabBarController.dismiss(animated: true) {
-        conversationVC.modalPresentationStyle = .fullScreen
-        tabBarController.present(conversationVC, animated: true, completion: nil)
-      }
+      tabBarController.presentedViewController?.dismiss(animated: true, completion: {
+        tabBarController.dismiss(animated: true) {
+          UserManager.shared.currentUserInfo = nil
+          conversationVC.modalPresentationStyle = .fullScreen
+          conversationVC.isMissionON = true
+          tabBarController.present(conversationVC, animated: true, completion: nil)
+        }
+      })
     }
   }
   

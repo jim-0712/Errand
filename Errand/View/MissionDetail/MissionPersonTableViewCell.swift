@@ -28,7 +28,7 @@ class MissionPersonTableViewCell: UITableViewCell {
   
   func setUp(personURL: String, name: String) {
     
-    personImage.layer.cornerRadius = personImage.bounds.width / 2
+    personImage.layer.cornerRadius = personImage.bounds.height / 3
     
     personImage.loadImage(personURL, placeHolder: UIImage(named: "photographer"))
     

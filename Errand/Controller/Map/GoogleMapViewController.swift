@@ -23,6 +23,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     NotificationCenter.default.addObserver(self, selector: #selector(reGetUserInfo), name: Notification.Name("update"), object: nil)
     
     
+    
     if UserManager.shared.isTourist {
       
       //      refreshBtn.isEnabled = false
@@ -37,6 +38,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     setUpLocation()
     checkLocationAuth()
     setupCollectin()
+    judge[0] = true
     
   }
   
@@ -107,6 +109,8 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   @IBOutlet weak var arrangeTextField: UITextField!
   
   @IBOutlet weak var searchBtn: UIButton!
+  
+  var judge = [Bool](repeating: false, count: 9)
   
   @IBAction func radarAct(_ sender: Any) {
     isSearch = !isSearch
@@ -438,6 +442,16 @@ extension GoogleMapViewController: UICollectionViewDelegate, UICollectionViewDat
     
     cell.setUpContent(label: TaskManager.shared.taskClassified[indexPath.row].title, color: TaskManager.shared.taskClassified[indexPath.row].color)
     
+    if judge[indexPath.row] {
+      cell.contentView.backgroundColor = UIColor(red: 246.9/255.0, green: 212.0/255.0, blue: 95.0/255.0, alpha: 1.0)
+      cell.layer.borderWidth =  1.0
+      cell.layer.borderColor = UIColor.black.cgColor
+    } else {
+      cell.contentView.backgroundColor = UIColor.G1
+      cell.layer.borderWidth =  0.0
+      cell.layer.borderColor = UIColor.white.cgColor
+    }
+    
     return cell
   }
   
@@ -471,6 +485,10 @@ extension GoogleMapViewController: UICollectionViewDelegate, UICollectionViewDat
         }
       }
     }
+    
+    judge = [Bool](repeating: false, count: 9)
+    judge[indexPath.row] = true
+    self.categoryCollection.reloadData()
   }
 }
 

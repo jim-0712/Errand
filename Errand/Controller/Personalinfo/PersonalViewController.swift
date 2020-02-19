@@ -63,7 +63,7 @@ class PersonalViewController: UIViewController {
     readJudge()
     totalStar = 0
     totaltaskCount = 0
-    NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
+    NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
   }
   
   func readJudge() {

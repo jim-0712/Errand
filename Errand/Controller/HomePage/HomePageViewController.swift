@@ -217,7 +217,7 @@ class ViewController: UIViewController {
     } else if isFB {
       guard let photoBack = UserManager.shared.FBData?.image,
            let name = UserManager.shared.FBData?.name else { return }
-      self.photo = "\(photoBack) + \(size)"
+      self.photo = "\(photoBack)\(size)"
       self.name = name
     } else {
       guard let userImage = Auth.auth().currentUser?.photoURL?.absoluteString else { return }

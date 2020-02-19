@@ -92,6 +92,11 @@ struct TaskInfo {
   
   var star: Double
   
+  var ownerJudge: Bool
+  
+  var takerJudge: Bool
+  
+  
   var toDict: [String: Any] {
     
     return [   "email": email,
@@ -144,7 +149,11 @@ struct TaskInfo {
                
                "takerAskFriend": takerAskFriend,
                
-               "isFrirndsNow": isFrirndsNow
+               "isFrirndsNow": isFrirndsNow,
+               
+               "ownerJudge": ownerJudge,
+               
+               "takerJudge": takerJudge
     ]
   }
 }

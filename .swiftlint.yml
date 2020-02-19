@@ -15,3 +15,9 @@ file_length:
 type_body_length:
   - 500 # warning
   - 700 # error
+max_length: # warning and error
+  warning: 100
+  error: 200
+cyclomatic_complexity:
+ignores_case_statements: true
+

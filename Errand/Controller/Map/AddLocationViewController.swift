@@ -39,11 +39,6 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
   
   @IBOutlet weak var addLocationMap: GMSMapView!
   
-  @IBAction func cancelAct(_ sender: Any) {
-    
-    self.dismiss(animated: true, completion: nil)
-  }
-  
   @IBAction func checkThePosition(_ sender: Any) {
     
     let lat = "\(finalLat)"
@@ -96,7 +91,7 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
       
       strongSelf.delegate?.locationReturn(viewController: strongSelf, lat: lat, long: long)
       
-      strongSelf.dismiss(animated: true, completion: nil)
+      strongSelf.navigationController?.popViewController(animated: true)
     }
     
     controller.addAction(okAction)
