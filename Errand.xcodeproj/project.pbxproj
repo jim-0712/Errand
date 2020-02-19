@@ -83,12 +83,13 @@
 		FB9A2C0023D0729400553D97 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB9A2BFF23D0729400553D97 /* MapKit.framework */; };
 		FBA557F723ED17A400521B89 /* RequesterRateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA557F623ED17A400521B89 /* RequesterRateTableViewCell.swift */; };
 		FBA557F923ED580100521B89 /* UIcolorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA557F823ED580100521B89 /* UIcolorExtension.swift */; };
-		FBA557FB23ED6D0C00521B89 /* StartMissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA557FA23ED6D0C00521B89 /* StartMissionViewController.swift */; };
+		FBA557FB23ED6D0C00521B89 /* JudgeMissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA557FA23ED6D0C00521B89 /* JudgeMissionViewController.swift */; };
 		FBA557FE23EE54B500521B89 /* Chat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FBA557FD23EE54B500521B89 /* Chat.storyboard */; };
 		FBA5580123EE554F00521B89 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA5580023EE554F00521B89 /* ChatViewController.swift */; };
 		FBEC726123FA376400A6AF86 /* FriendsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEC725F23FA376400A6AF86 /* FriendsTableViewCell.swift */; };
 		FBEC726223FA376400A6AF86 /* FriendsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBEC726023FA376400A6AF86 /* FriendsTableViewCell.xib */; };
 		FBEC726423FA664800A6AF86 /* FriendChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEC726323FA664800A6AF86 /* FriendChatViewController.swift */; };
+		FBF24FC923FCEB2D002A56A4 /* SignOutTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF24FC823FCEB2D002A56A4 /* SignOutTableViewCell.swift */; };
 		FBF7AB5823D56F5D004B521A /* GoogleMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF7AB5723D56F5D004B521A /* GoogleMapViewController.swift */; };
 		FBF7AB5B23D58AE2004B521A /* MapDataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF7AB5A23D58AE2004B521A /* MapDataItem.swift */; };
 		FBF7AB5D23D590E7004B521A /* MapManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF7AB5C23D590E7004B521A /* MapManager.swift */; };
@@ -200,12 +201,13 @@
 		FB9A2BFF23D0729400553D97 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		FBA557F623ED17A400521B89 /* RequesterRateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequesterRateTableViewCell.swift; sourceTree = "<group>"; };
 		FBA557F823ED580100521B89 /* UIcolorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIcolorExtension.swift; sourceTree = "<group>"; };
-		FBA557FA23ED6D0C00521B89 /* StartMissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartMissionViewController.swift; sourceTree = "<group>"; };
+		FBA557FA23ED6D0C00521B89 /* JudgeMissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JudgeMissionViewController.swift; sourceTree = "<group>"; };
 		FBA557FD23EE54B500521B89 /* Chat.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Chat.storyboard; sourceTree = "<group>"; };
 		FBA5580023EE554F00521B89 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		FBEC725F23FA376400A6AF86 /* FriendsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsTableViewCell.swift; sourceTree = "<group>"; };
 		FBEC726023FA376400A6AF86 /* FriendsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FriendsTableViewCell.xib; sourceTree = "<group>"; };
 		FBEC726323FA664800A6AF86 /* FriendChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendChatViewController.swift; sourceTree = "<group>"; };
+		FBF24FC823FCEB2D002A56A4 /* SignOutTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignOutTableViewCell.swift; sourceTree = "<group>"; };
 		FBF7AB5723D56F5D004B521A /* GoogleMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleMapViewController.swift; sourceTree = "<group>"; };
 		FBF7AB5A23D58AE2004B521A /* MapDataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapDataItem.swift; sourceTree = "<group>"; };
 		FBF7AB5C23D590E7004B521A /* MapManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapManager.swift; sourceTree = "<group>"; };
@@ -503,6 +505,7 @@
 				FB53F32A23EBCE220041C49D /* PersonAboutTableViewCell.swift */,
 				FB53F32B23EBCE220041C49D /* PersonAboutTableViewCell.xib */,
 				FB53F32E23EBD5230041C49D /* PersonRateTableViewCell.swift */,
+				FBF24FC823FCEB2D002A56A4 /* SignOutTableViewCell.swift */,
 			);
 			path = personInfo;
 			sourceTree = "<group>";
@@ -575,7 +578,7 @@
 				FB24EC0E23D96B8500FA3F02 /* PostMissionViewController.swift */,
 				FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */,
 				FB6365FD23E2B975008555BC /* MissionDetailViewController.swift */,
-				FBA557FA23ED6D0C00521B89 /* StartMissionViewController.swift */,
+				FBA557FA23ED6D0C00521B89 /* JudgeMissionViewController.swift */,
 			);
 			path = Mission;
 			sourceTree = "<group>";
@@ -965,6 +968,7 @@
 				FB9A2BFE23D068FF00553D97 /* MissionListViewController.swift in Sources */,
 				FB53F31C23EB21890041C49D /* PhotoTableViewCell.swift in Sources */,
 				FB6365FE23E2B975008555BC /* MissionDetailViewController.swift in Sources */,
+				FBF24FC923FCEB2D002A56A4 /* SignOutTableViewCell.swift in Sources */,
 				FB69552C23F000BE0049DB14 /* UIView+Additions.swift in Sources */,
 				FB638DD023E7ECA400030CB2 /* DoubleExtension.swift in Sources */,
 				FB4BF7B423E288D600C4C05A /* ListTableViewCell.swift in Sources */,
@@ -979,7 +983,7 @@
 				FBEC726423FA664800A6AF86 /* FriendChatViewController.swift in Sources */,
 				FBF7AB5D23D590E7004B521A /* MapManager.swift in Sources */,
 				FB63660323E31E67008555BC /* KingFisherWrapper.swift in Sources */,
-				FBA557FB23ED6D0C00521B89 /* StartMissionViewController.swift in Sources */,
+				FBA557FB23ED6D0C00521B89 /* JudgeMissionViewController.swift in Sources */,
 				FB387C4D23CF098F00B6D8C4 /* JGProgressHUDWrapper.swift in Sources */,
 				FBF7AB5B23D58AE2004B521A /* MapDataItem.swift in Sources */,
 				FB69553523F0055B0049DB14 /* AppSettings.swift in Sources */,

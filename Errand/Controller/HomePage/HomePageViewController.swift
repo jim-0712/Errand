@@ -81,23 +81,39 @@ class ViewController: UIViewController {
                 
                 UserDefaults.standard.set(uid, forKey: "uid")
                 
-                strongSelf.createDataBase(isApple: false, isFB: true) { result in
-                  
+                UserManager.shared.readData(uid: uid) { result in
                   switch result {
+                  case .success:
                     
-                  case .success(let success):
-                    
-                    LKProgressHUD.dismiss()
-                    UserManager.shared.isTourist = false
-                    
-                    LKProgressHUD.showSuccess(text: success, controller: strongSelf)
-                    
-                    strongSelf.gotoMap(viewController: strongSelf)
+                  UserDefaults.standard.set(true, forKey: "login")
+                   strongSelf.gotoMap(viewController: strongSelf)
                     
                   case .failure(let error):
-                    
-                    LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
-                    
+                   
+                    if error.localizedDescription == "The operation couldn’t be completed. (Errand.RegiError error 3.)" {
+                      
+                      strongSelf.createDataBase(isApple: false, isFB: true) { result in
+
+                        switch result {
+
+                        case .success(let success):
+
+                          LKProgressHUD.dismiss()
+                          UserManager.shared.isTourist = false
+
+                          LKProgressHUD.showSuccess(text: success, controller: strongSelf)
+
+                          strongSelf.gotoMap(viewController: strongSelf)
+
+                        case .failure(let error):
+
+                          LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
+
+                        }
+                      }
+                    } else {
+                      print("error")
+                    }
                   }
                 }
                 
@@ -133,8 +149,6 @@ class ViewController: UIViewController {
     visitorBtn.layer.cornerRadius = visitorBtn.bounds.height / 10
     GIDSignIn.sharedInstance()?.presentingViewController = self
 //    logoLabel.transform = CGAffineTransform(a: 1.0, b: -0.15, c: 0, d: 0.7, tx: 0, ty: 10)
-//    let backView = backgroundManager.setUpView(view: self.view)
-//    self.view.layer.insertSublayer(backView, at: 0)
   }
   
   func setUpAppleBtn() {
@@ -154,40 +168,60 @@ class ViewController: UIViewController {
     
     UserManager.shared.isTourist = false
     
-    self.createDataBase(isApple: false, isFB: false) { [weak self] result in
-        
-        guard let strongSelf = self else { return }
-        
-        switch result {
-          
-        case .success(let success):
-          
-          UserManager.shared.isTourist = false
-          UserManager.shared.updatefcmToken()
-          LKProgressHUD.showSuccess(text: success, controller: strongSelf)
+    guard let uid = Auth.auth().currentUser?.uid else { return }
     
-          strongSelf.gotoMap(viewController: strongSelf)
+    UserManager.shared.readData(uid: uid) { result in
+      switch result {
+      case .success:
+        UserDefaults.standard.set(true, forKey: "login")
+        self.gotoMap(viewController: self)
+      case .failure(let error):
+        
+        if error.localizedDescription == "The operation couldn’t be completed. (Errand.RegiError error 3.)" {
           
-        case .failure(let error):
+          self.createDataBase(isApple: false, isFB: false) { [weak self] result in
+
+                 guard let strongSelf = self else { return }
+
+                 switch result {
+
+                 case .success(let success):
+
+                   UserManager.shared.isTourist = false
+                   UserManager.shared.updatefcmToken()
+                   LKProgressHUD.showSuccess(text: success, controller: strongSelf)
+
+                   strongSelf.gotoMap(viewController: strongSelf)
+
+                 case .failure(let error):
+
+                   LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
+
+                 }
+               }
           
-          LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
-          
+        } else {
+          print(error.localizedDescription)
         }
+        
       }
+    }
   }
   
   func createDataBase(isApple: Bool, isFB: Bool, completion: @escaping (Result<String, Error>) -> Void) {
+    
+    let size = "?width=400&height=400"
     
     if isApple {
       self.photo = ""
     } else if isFB {
       guard let photoBack = UserManager.shared.FBData?.image,
-        let name = UserManager.shared.FBData?.name else { return }
-      self.photo = "\(photoBack)"
+           let name = UserManager.shared.FBData?.name else { return }
+      self.photo = "\(photoBack) + \(size)"
       self.name = name
     } else {
-      
-      self.photo = ""
+      guard let userImage = Auth.auth().currentUser?.photoURL?.absoluteString else { return }
+      self.photo = "\(userImage + size)"
       self.name = "使用者"
     }
     

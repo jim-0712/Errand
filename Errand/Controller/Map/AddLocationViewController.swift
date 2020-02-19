@@ -60,6 +60,8 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
         
         strongSelf.addressFinal = address.results[0].formattedAddress
         
+        TaskManager.shared.address = address.results[0].formattedAddress
+        
         DispatchQueue.main.async {
           
           strongSelf.alertCome(lat: strongSelf.finalLat, long: strongSelf.finalLong)

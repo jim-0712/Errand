@@ -362,15 +362,15 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
     if segue.identifier == "detail" {
       
       guard let detailVC = segue.destination as? MissionDetailViewController,
-           let time = self.timeString else { return }
+           let time = self.timeString,
+           let userStatus = UserManager.shared.currentUserInfo?.status else { return }
       detailVC.detailData = detailData
       detailVC.receiveTime = time
-    } else if segue.identifier == "startMission"{
-      
-      guard let detailVC = segue.destination as? StartMissionViewController,
-           let time = self.timeString else { return }
-      detailVC.detailData = detailData
-      detailVC.receiveTime = time
+      if detailData?.missionTaker != "" {
+        detailVC.isMissionON = true
+      } else {
+        detailVC.isMissionON = false
+      }
     }
   }
 }
@@ -387,13 +387,7 @@ extension MissionListViewController: DetailManager {
     }
     
     self.timeString = TaskManager.shared.timeConverter(time: time)
-    
-    guard let data = detailData else { return }
-    if data.status == 0 {
-     self.performSegue(withIdentifier: "detail", sender: nil)
-    } else {
-      self.performSegue(withIdentifier: "startMission", sender: nil)
-    }
+    self.performSegue(withIdentifier: "detail", sender: nil)
   }
 }
 

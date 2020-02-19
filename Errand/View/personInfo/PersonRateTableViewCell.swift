@@ -21,12 +21,14 @@ class PersonRateTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    
+  
+  @IBOutlet weak var newUserLabel: UILabel!
+  
   @IBOutlet weak var detailLabel: UILabel!
   
   @IBOutlet weak var starView: CosmosView!
   
-  func setUp(averageStar: Double, titleLabel: String) {
+  func setUp(isFirst: Bool, averageStar: Double, titleLabel: String) {
     
     starView.settings.updateOnTouch = false
     starView.rating = averageStar
@@ -35,5 +37,13 @@ class PersonRateTableViewCell: UITableViewCell {
     starView.settings.emptyImage = UIImage(named: "star-2")?.withRenderingMode(.alwaysOriginal)
     starView.settings.filledImage = UIImage(named: "star-3")?.withRenderingMode(.alwaysOriginal)
     detailLabel.text = titleLabel
+    
+    if isFirst {
+      newUserLabel.isHidden = false
+      starView.isHidden = true
+    } else {
+      newUserLabel.isHidden = true
+      starView.isHidden = false
+    }
   }
 }

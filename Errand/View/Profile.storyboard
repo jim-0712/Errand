@@ -50,6 +50,15 @@
                                                         <constraint firstAttribute="height" constant="1" id="U3x-uX-pOh"/>
                                                     </constraints>
                                                 </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="此用戶為新用戶" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yNy-jx-SyC">
+                                                    <rect key="frame" x="88" y="53" width="300" height="24"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="300" id="pkQ-lK-jjN"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="Oml-k9-2Zg" secondAttribute="trailing" constant="16" id="2qr-kL-9tY"/>
@@ -57,6 +66,8 @@
                                                 <constraint firstAttribute="bottom" secondItem="Oml-k9-2Zg" secondAttribute="bottom" id="5E2-7u-zaC"/>
                                                 <constraint firstItem="Oml-k9-2Zg" firstAttribute="leading" secondItem="aMd-6g-oKI" secondAttribute="leading" constant="16" id="7T5-h6-oSa"/>
                                                 <constraint firstItem="ikN-dc-JbI" firstAttribute="top" secondItem="aMd-6g-oKI" secondAttribute="top" constant="30" id="DI9-Mm-btn"/>
+                                                <constraint firstItem="yNy-jx-SyC" firstAttribute="centerY" secondItem="dbA-L7-DhR" secondAttribute="centerY" constant="-5" id="Kzp-Uz-zjO"/>
+                                                <constraint firstItem="yNy-jx-SyC" firstAttribute="leading" secondItem="ikN-dc-JbI" secondAttribute="trailing" constant="30" id="MNN-yC-DSi"/>
                                                 <constraint firstItem="dbA-L7-DhR" firstAttribute="leading" secondItem="ikN-dc-JbI" secondAttribute="trailing" constant="30" id="kiD-ZQ-qd9"/>
                                                 <constraint firstItem="ikN-dc-JbI" firstAttribute="leading" secondItem="aMd-6g-oKI" secondAttribute="leading" constant="16" id="uUL-lB-0vi"/>
                                                 <constraint firstItem="dbA-L7-DhR" firstAttribute="centerY" secondItem="ikN-dc-JbI" secondAttribute="centerY" constant="6" id="xsv-TG-le3"/>
@@ -64,7 +75,37 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="detailLabel" destination="ikN-dc-JbI" id="wu6-yr-207"/>
+                                            <outlet property="newUserLabel" destination="yNy-jx-SyC" id="lzT-MD-UwA"/>
                                             <outlet property="starView" destination="dbA-L7-DhR" id="TMA-Ue-gSt"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="signOut" rowHeight="138" id="iZZ-S7-7Tb" customClass="SignOutTableViewCell" customModule="Errand" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="156" width="414" height="138"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="iZZ-S7-7Tb" id="8d4-7x-uPE">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="138"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZAH-83-tj7">
+                                                    <rect key="frame" x="191.5" y="30" width="31" height="78"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="40" id="h8O-eK-aVu"/>
+                                                    </constraints>
+                                                    <color key="tintColor" red="0.88201671839999995" green="0.24870911239999999" blue="0.14890477060000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                    <state key="normal" title="登出"/>
+                                                    <connections>
+                                                        <action selector="tapOnSignOut:" destination="iZZ-S7-7Tb" eventType="touchUpInside" id="c34-HN-Jg0"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="ZAH-83-tj7" secondAttribute="bottom" constant="30" id="ClW-YM-0Vf"/>
+                                                <constraint firstItem="ZAH-83-tj7" firstAttribute="centerX" secondItem="8d4-7x-uPE" secondAttribute="centerX" id="cd4-rv-wpJ"/>
+                                                <constraint firstItem="ZAH-83-tj7" firstAttribute="top" secondItem="8d4-7x-uPE" secondAttribute="top" constant="30" id="m7W-he-Oht"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="signOutBtn" destination="ZAH-83-tj7" id="yph-jh-7SU"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

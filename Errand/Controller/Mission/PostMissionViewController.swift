@@ -37,6 +37,17 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
     setUpSetting()
     setUpall()
   }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    if TaskManager.shared.address == "" {
+      pinImage.isHidden = true
+      plusBtn.isHidden = true
+    } else {
+      pinImage.isHidden = false
+      pinImage.isHidden = true
+    }
+  }
 
   func setUpall() {
     setUp()
@@ -96,6 +107,10 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
     LKProgressHUD.dismiss()
   }
   
+  @IBOutlet weak var pinImage: UIImageView!
+  
+  @IBOutlet weak var plusBtn: UIButton!
+  
   @IBOutlet weak var photoCollectionView: UICollectionView!
   
   @IBOutlet weak var photoUploadText: UILabel!
@@ -119,6 +134,8 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   @IBOutlet weak var postBtn: UIButton!
   
   @IBOutlet weak var stackNTDView: UIStackView!
+  
+  @IBOutlet weak var addressLabel: UILabel!
   
   let imagePickerController = UIImagePickerController()
   

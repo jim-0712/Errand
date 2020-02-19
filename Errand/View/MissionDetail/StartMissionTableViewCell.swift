@@ -23,7 +23,9 @@ class StartMissionTableViewCell: UITableViewCell {
   
   var tapOnButton: (() -> Void)?
   
-  var tapAddFriend: (() -> Void)?
+  var tapReprt: (() -> Void)?
+  
+  var tapOnNavi: (() -> Void)?
   
   @IBOutlet weak var missionOwnerImage: UIImageView!
   
@@ -49,7 +51,7 @@ class StartMissionTableViewCell: UITableViewCell {
     missionOwnerImage.loadImage(ownerImage, placeHolder: UIImage(named: "photographer"))
     authorLabel.text = author
     classifiedLabel.text = classified
-    priceLabel.text = "\(price)元"
+    priceLabel.text = "導航請按此"
     pageView.layer.cornerRadius = pageView.bounds.height / 10
     pageView.layer.shadowOpacity = 0.3
     pageView.layer.shadowOffset = CGSize(width: 3, height: 3)
@@ -64,7 +66,10 @@ class StartMissionTableViewCell: UITableViewCell {
   
   @IBAction func addFriends(_ sender: Any) {
     
-    self.tapAddFriend?()
+    self.tapReprt?()
   }
   
+  @IBAction func tapNavi(_ sender: Any) {
+    self.tapOnNavi?()
+  }
 }

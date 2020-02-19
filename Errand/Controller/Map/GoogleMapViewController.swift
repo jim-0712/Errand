@@ -18,9 +18,10 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     
     NotificationCenter.default.addObserver(self, selector: #selector(reGetUserInfo), name: Notification.Name("postMission"), object: nil)
     
-    NotificationCenter.default.addObserver(self, selector: #selector(reGetUserInfo), name: Notification.Name("finishTask"), object: nil)
-    
     NotificationCenter.default.addObserver(self, selector: #selector(reGetUserInfo), name: Notification.Name("reloadUser"), object: nil)
+
+    NotificationCenter.default.addObserver(self, selector: #selector(reGetUserInfo), name: Notification.Name("update"), object: nil)
+    
     
     if UserManager.shared.isTourist {
       

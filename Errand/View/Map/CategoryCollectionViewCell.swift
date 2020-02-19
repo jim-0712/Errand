@@ -20,7 +20,7 @@ class CategoryCollectionViewCell: UICollectionViewCell {
       didSet {
         layer.borderColor = isSelected ? UIColor.black.cgColor : UIColor.white.cgColor
         
-        self.contentView.backgroundColor = isSelected ? UIColor(red: 246.9/255.0, green: 212.0/255.0, blue: 95.0/255.0, alpha: 1.0) :  UIColor(red: 230.0/255.0, green: 230.0/255.0, blue: 230.0/255.0, alpha: 1.0)
+        self.contentView.backgroundColor = isSelected ? UIColor(red: 246.9/255.0, green: 212.0/255.0, blue: 95.0/255.0, alpha: 1.0) :  UIColor.G1
       
         layer.borderWidth = isSelected ? 1.0 : 0.0
       }

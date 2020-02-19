@@ -140,7 +140,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
   
   @objc func perFormPushVC() {
     let storyboard = UIStoryboard(name: "Mission", bundle: nil)
-    if let conversationVC = storyboard.instantiateViewController(withIdentifier: "startMission") as? StartMissionViewController,
+    if let conversationVC = storyboard.instantiateViewController(withIdentifier: "detailViewController") as? MissionDetailViewController,
       let tabBarController = self.window?.rootViewController as? TabBarViewController,
       let navController = tabBarController.selectedViewController as? UINavigationController {
       tabBarController.dismiss(animated: true) {
