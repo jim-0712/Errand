@@ -16,20 +16,29 @@
                 <rect key="frame" x="0.0" y="0.0" width="385" height="350"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kBV-A7-PRQ">
+                        <rect key="frame" x="0.0" y="0.0" width="385" height="340"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    </view>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="AnH-QF-M7K">
-                        <rect key="frame" x="0.0" y="0.0" width="385" height="350"/>
+                        <rect key="frame" x="0.0" y="0.0" width="385" height="340"/>
                     </imageView>
                 </subviews>
             </view>
             <constraints>
+                <constraint firstItem="kBV-A7-PRQ" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="6yu-1O-79h"/>
                 <constraint firstAttribute="trailing" secondItem="AnH-QF-M7K" secondAttribute="trailing" id="Hz4-WO-0er"/>
                 <constraint firstItem="AnH-QF-M7K" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="JXb-ic-Qkh"/>
                 <constraint firstItem="AnH-QF-M7K" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="XZc-cz-tSR"/>
-                <constraint firstAttribute="bottom" secondItem="AnH-QF-M7K" secondAttribute="bottom" id="itV-qV-Dob"/>
+                <constraint firstItem="kBV-A7-PRQ" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="dpW-5a-6Mc"/>
+                <constraint firstAttribute="bottom" secondItem="AnH-QF-M7K" secondAttribute="bottom" constant="10" id="itV-qV-Dob"/>
+                <constraint firstAttribute="bottom" secondItem="kBV-A7-PRQ" secondAttribute="bottom" constant="10" id="nRG-h8-b4H"/>
+                <constraint firstAttribute="trailing" secondItem="kBV-A7-PRQ" secondAttribute="trailing" id="tKL-mi-kay"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <size key="customSize" width="385" height="350"/>
             <connections>
+                <outlet property="backView" destination="kBV-A7-PRQ" id="D83-Tm-TIs"/>
                 <outlet property="detailImage" destination="AnH-QF-M7K" id="npm-56-ai0"/>
             </connections>
             <point key="canvasLocation" x="374.63768115942031" y="216.96428571428569"/>

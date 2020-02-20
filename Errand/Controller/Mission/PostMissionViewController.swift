@@ -272,7 +272,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   group.notify(queue: DispatchQueue.main) {
   print("ya")
   TaskManager.shared.address = ""
-  LKProgressHUD.dismiss()
   self.createDataBase()
   }
 }
@@ -315,6 +314,7 @@ func createDataBase() {
           
           NotificationCenter.default.post(name: Notification.Name("postMission"), object: nil)
           UserManager.shared.currentUserInfo?.status = 1
+          LKProgressHUD.dismiss()
           strongSelf.showAlert(viewController: strongSelf)
           
         case .failure(let error):

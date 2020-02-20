@@ -305,12 +305,6 @@ class MissionListViewController: UIViewController {
 }
 
 extension MissionListViewController: UITableViewDataSource, UITableViewDelegate {
-  
-  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-     if UserManager.shared.currentUserInfo?.status != 0 {
-      TaskManager.shared.showAlert(title: "任務進行中", message: "請完成當前任務", viewController: self)
-     }
-  }
 
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     if shouldShowSearchResults {

@@ -45,6 +45,7 @@ class MissionDetailViewController: UIViewController {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    self.navigationController?.setToolbarHidden(true, animated: true)
     NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
   }
   
@@ -85,7 +86,22 @@ class MissionDetailViewController: UIViewController {
         }
         
       case .failure(let error):
-        print(error.localizedDescription)
+        let handler = error.localizedDescription.components(separatedBy: "MissionError")
+        
+        if handler.count > 1 {
+          
+          let alert = UIAlertController(title: "注意", message: "本次任務已完成", preferredStyle: .alert)
+          let okAction = UIAlertAction(title: "ok", style: .default) { _ in
+            let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
+            
+            self.view.window?.rootViewController = mapView
+          }
+          alert.addAction(okAction)
+          self.present(alert, animated: true, completion: nil)
+          
+        } else {
+          print(error.localizedDescription)
+        }
       }
     }
   }
@@ -302,11 +318,12 @@ class MissionDetailViewController: UIViewController {
       case .success:
         
         NotificationCenter.default.post(name: Notification.Name("takeMission"), object: nil)
-        
+
         let sender = PushNotificationSender()
         sender.sendPushNotification(to: taskInfo.fcmToken, body: "趕快開啟查看")
-        
         strongSelf.setUpBtnEnable()
+        strongSelf.dismiss(animated: true, completion: nil)
+        
         LKProgressHUD.dismiss()
         
       case .failure(let error):
@@ -346,21 +363,20 @@ class MissionDetailViewController: UIViewController {
     
   }
     
-  var testcollection: UICollectionView = {
+  lazy var testcollection: UICollectionView = {
     let layout = UICollectionViewFlowLayout()
-    let collection = UICollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300), collectionViewLayout: layout)
+    let collection = UICollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 325), collectionViewLayout: layout)
     layout.scrollDirection = .horizontal
     collection.translatesAutoresizingMaskIntoConstraints = false
     collection.showsVerticalScrollIndicator = false
     collection.showsHorizontalScrollIndicator = false
-    collection.register(MissionDetailCollectionViewCell.self, forCellWithReuseIdentifier: "detail")
     collection.backgroundColor = .red
     return collection
   }()
   
   let headerView: UIView = {
     let header = UIView()
-    header.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300)
+    header.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 325)
     header.backgroundColor = .pink
     return header
   }()
@@ -521,28 +537,35 @@ class MissionDetailViewController: UIViewController {
   
   func setUpBtnEnable() {
     
-    guard let user = UserManager.shared.currentUserInfo?.status else { return }
-    let state = UserManager.shared.checkDetailBtn
+    guard let user = UserManager.shared.currentUserInfo,
+         let ontask = UserManager.shared.currentUserInfo?.onTask,
+         let task = detailData else { return }
     
-    if user == 1 && state || user == 2 && state {
-      
+    var isRequseter = false
+    
+    
+    for count in 0 ..< task.requester.count {
+      if task.requester[count] == user.uid {
+        isRequseter = true
+      }
+    }
+    
+    if isRequseter {
       takeMissionBtn.backgroundColor = .lightGray
-      takeMissionBtn.setTitle("任務進行中", for: .normal)
+      takeMissionBtn.setTitle("您已申請此任務", for: .normal)
       takeMissionBtn.tintColor = .black
       takeMissionBtn.isEnabled = false
-      
-    } else if user == 1 && !state || user == 2 && !state {
-      
+    } else if user.status == 1  || user.status == 2 {
       takeMissionBtn.backgroundColor = .lightGray
       takeMissionBtn.setTitle("請先完成當前任務", for: .normal)
       takeMissionBtn.tintColor = .black
       takeMissionBtn.isEnabled = false
+      
     } else {
       takeMissionBtn.backgroundColor = UIColor(red: 246.0/255.0, green: 212/255.0, blue: 95/255.0, alpha: 1.0)
       takeMissionBtn.setTitle("接受任務", for: .normal)
       takeMissionBtn.tintColor = .black
       takeMissionBtn.isEnabled = true
-      
     }
   }
   
@@ -573,7 +596,7 @@ class MissionDetailViewController: UIViewController {
     pageControl.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
     NSLayoutConstraint.activate([
       pageControl.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: 0),
-      pageControl.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 0),
+      pageControl.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -10),
       pageControl.heightAnchor.constraint(equalToConstant: 30),
       pageControl.widthAnchor.constraint(equalToConstant: 100)
     ])
@@ -611,10 +634,12 @@ class MissionDetailViewController: UIViewController {
     if segue.identifier == "chat" {
       guard let chatVC = segue.destination as? ChatViewController,
         let taskInfo = detailData else { return }
+      self.navigationController?.setToolbarHidden(false, animated: false)
       chatVC.detailData = taskInfo
       chatVC.receiverPhoto = reversePhoto
     }
   }
+
 }
 
 extension MissionDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -625,11 +650,12 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
     let horizontalCenter = width / 2
     pageControl.currentPage = Int(offSet + horizontalCenter) / Int(width)
     
-    testcollection.alpha = 1 - scrollView.bounds.origin.y / 300
+    testcollection.alpha = 1 - scrollView.bounds.origin.y / 325
     
-    if scrollView.bounds.origin.y < 0 {
-      print("2")
-    }
+//    detailTableView.tableHeaderView?.frame.size.height = 325 - scrollView.contentOffset.y
+//
+////    headerView.frame.origin = CGPoint(x: 0, y: 0)
+    
   }
 
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -686,8 +712,9 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
 extension MissionDetailViewController: UICollectionViewDelegateFlowLayout {
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+ 
+      return CGSize(width: UIScreen.main.bounds.width, height: 325)
     
-    return CGSize(width: UIScreen.main.bounds.width, height: 300)
   }
 }
 

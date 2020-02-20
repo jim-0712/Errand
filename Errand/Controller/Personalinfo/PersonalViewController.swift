@@ -54,27 +54,52 @@ class PersonalViewController: UIViewController {
     if UserManager.shared.isTourist {
       UserManager.shared.goToSign(viewController: self)
     } else {
-      setUpNavigationItem()
-      setUpTableView()
-      guard let photoNow = UserManager.shared.currentUserInfo?.photo else { return }
-      personPhoto = photoNow
-      cornerView.layer.cornerRadius = cornerView.bounds.width / 2
-      imagePickerController.delegate = self
-      imagePickerController.allowsEditing = true
-      imagePickerController.mediaTypes = [kUTTypeImage as String]
+      
+      LKProgressHUD.show(controller: self)
+      
+      guard let uid = Auth.auth().currentUser?.uid else { return }
+      
+      UserManager.shared.readData(uid: uid) { result in
+        
+        switch result {
+        case .success:
+          
+          self.setUpNavigationItem()
+          self.setUpTableView()
+          self.setUpBackView()
+          guard let photoNow = UserManager.shared.currentUserInfo?.photo else { return }
+          self.personPhoto = photoNow
+          self.imagePickerController.delegate = self
+          self.imagePickerController.allowsEditing = true
+          self.imagePickerController.mediaTypes = [kUTTypeImage as String]
+          self.readJudge()
+          self.totalStar = 0
+          self.totaltaskCount = 0
+          NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
+          
+        case .failure:
+          print("error")
+        }
+      }
     }
   }
   
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    readJudge()
-    totalStar = 0
-    totaltaskCount = 0
-    NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
+//  override func viewWillAppear(_ animated: Bool) {
+//    super.viewWillAppear(animated)
+//    readJudge()
+//    totalStar = 0
+//    totaltaskCount = 0
+//    NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
+//  }
+  
+  func setUpBackView() {
+    
+    cornerView.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 500, y: 220, width: 1000, height: 2000)
+    cornerView.layer.cornerRadius = cornerView.bounds.width / 2
+    
   }
   
   func setUpNavigationItem() {
-    
     settingOff = UIBarButtonItem(image: UIImage(named: "wheel-2"), style: .plain, target: self, action: #selector(tapSet))
     settingOn = UIBarButtonItem(image: UIImage(named: "tick"), style: .plain, target: self, action: #selector(tapSet))
     self.navigationItem.rightBarButtonItems = [self.settingOff]
@@ -157,6 +182,8 @@ class PersonalViewController: UIViewController {
         
         self.totaltaskCount = judgeData.count
         
+        LKProgressHUD.dismiss()
+        
         self.infoTableView.reloadData()
         
       case .failure:
@@ -166,12 +193,9 @@ class PersonalViewController: UIViewController {
   }
   
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    
-      cornerView.bounds.origin.y += scrollView.bounds.origin.y
-//      print(cornerView.bounds.origin.y)
-      self.view.layoutIfNeeded()
+    cornerView.frame.origin.y = 220 - scrollView.contentOffset.y
   }
-  
+
   @IBOutlet weak var infoTableView: UITableView!
   
   func setUpTableView() {

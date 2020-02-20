@@ -464,6 +464,8 @@ class TaskManager {
           completion(.failure(FireBaseUpdateError.updateError))
         }
       }
+    } else if userInfo.status == 0 {
+      completion(.failure(MissionError.completeMission))
     }
   }
   

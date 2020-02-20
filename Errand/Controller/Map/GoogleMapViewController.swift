@@ -22,8 +22,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
 
     NotificationCenter.default.addObserver(self, selector: #selector(reGetUserInfo), name: Notification.Name("update"), object: nil)
     
-    
-    
     if UserManager.shared.isTourist {
       
       //      refreshBtn.isEnabled = false
@@ -32,7 +30,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
       LKProgressHUD.show(controller: self)
       //      refreshBtn.isEnabled = true
     }
-    NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
     setUpView()
     changeConstraints()
     setUpLocation()

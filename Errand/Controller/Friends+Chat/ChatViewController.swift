@@ -20,6 +20,7 @@ class ChatViewController: MessagesViewController {
   
   private var messages: [Message] = []
   private var messageListener: ListenerRegistration?
+
   
   private let db = Firestore.firestore()
   private var reference: CollectionReference?
@@ -27,6 +28,7 @@ class ChatViewController: MessagesViewController {
   private let storage = Storage.storage().reference()
   
   override func viewDidLoad() {
+
     super.viewDidLoad()
     setUpListener()
     setUpMessage()
