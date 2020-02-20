@@ -28,7 +28,7 @@
                     </label>
                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Nk6-Xy-v5t">
                         <rect key="frame" x="116" y="16" width="395" height="200"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="200" id="6y7-8K-jIj"/>
                         </constraints>
@@ -38,13 +38,13 @@
                     </textView>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GL5-2u-yY5">
                         <rect key="frame" x="16" y="240" width="495" height="1"/>
-                        <color key="backgroundColor" red="0.72941176470000002" green="0.73000001910000001" blue="0.73000001910000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="1" id="SlD-tU-YKi"/>
                         </constraints>
                     </view>
                 </subviews>
-                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstItem="Nk6-Xy-v5t" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="16" id="5tM-vu-69h"/>
                     <constraint firstItem="L5e-P7-lK9" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="30" id="8Bo-5y-e6t"/>
@@ -57,6 +57,7 @@
                     <constraint firstItem="GL5-2u-yY5" firstAttribute="top" secondItem="Nk6-Xy-v5t" secondAttribute="bottom" constant="24" id="uvc-Lj-Qeq"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="contTextView" destination="Nk6-Xy-v5t" id="0eB-LP-CpF"/>

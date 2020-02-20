@@ -42,16 +42,23 @@ class PersonalViewController: UIViewController {
   
   let profileDetail = ["暱稱", "歷史評分", "關於我"]
   
+  var settingOn: UIBarButtonItem!
+  
+  var settingOff: UIBarButtonItem!
+  
+  @IBOutlet weak var cornerView: UIView!
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
     if UserManager.shared.isTourist {
       UserManager.shared.goToSign(viewController: self)
     } else {
+      setUpNavigationItem()
       setUpTableView()
-      self.navigationController?.navigationBar.prefersLargeTitles = true
       guard let photoNow = UserManager.shared.currentUserInfo?.photo else { return }
       personPhoto = photoNow
+      cornerView.layer.cornerRadius = cornerView.bounds.width / 2
       imagePickerController.delegate = self
       imagePickerController.allowsEditing = true
       imagePickerController.mediaTypes = [kUTTypeImage as String]
@@ -66,46 +73,24 @@ class PersonalViewController: UIViewController {
     NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
   }
   
-  func readJudge() {
+  func setUpNavigationItem() {
     
-    guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
+    settingOff = UIBarButtonItem(image: UIImage(named: "wheel-2"), style: .plain, target: self, action: #selector(tapSet))
+    settingOn = UIBarButtonItem(image: UIImage(named: "tick"), style: .plain, target: self, action: #selector(tapSet))
+    self.navigationItem.rightBarButtonItems = [self.settingOff]
     
-    TaskManager.shared.readJudgeData(uid: uid) { result in
-      
-      switch result {
-      case .success(let judgeData):
-        
-        for count in 0 ..< judgeData.count {
-          
-          self.totalStar += judgeData[count].star
-        }
-        
-        self.totaltaskCount = judgeData.count
-        
-        self.infoTableView.reloadData()
-        
-      case .failure:
-        print("error")
-      }
-    }
   }
   
-  @IBOutlet weak var settingBtn: UIButton!
-  
-  @IBOutlet weak var infoTableView: UITableView!
-  
-  @IBAction func tapSetting(_ sender: Any) {
+  @objc func tapSet() {
     
     if !isSetting {
-      
-      settingBtn.setImage(UIImage(named: "checked"), for: .normal)
+      self.navigationItem.setRightBarButtonItems([self.settingOn], animated: false)
       isSetting = !isSetting
       infoTableView.reloadData()
       
     } else {
-      
-      settingBtn.setImage(UIImage(named: "wheel-2"), for: .normal)
-      
+      self.navigationItem.setRightBarButtonItems([self.settingOff], animated: false)
+
       if isName && isAbout {
         
         isUpload = true
@@ -155,6 +140,39 @@ class PersonalViewController: UIViewController {
     }
     
   }
+  
+  func readJudge() {
+    
+    guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
+    
+    TaskManager.shared.readJudgeData(uid: uid) { result in
+      
+      switch result {
+      case .success(let judgeData):
+        
+        for count in 0 ..< judgeData.count {
+          
+          self.totalStar += judgeData[count].star
+        }
+        
+        self.totaltaskCount = judgeData.count
+        
+        self.infoTableView.reloadData()
+        
+      case .failure:
+        print("error")
+      }
+    }
+  }
+  
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    
+      cornerView.bounds.origin.y += scrollView.bounds.origin.y
+      print(cornerView.bounds.origin.y)
+      self.view.layoutIfNeeded()
+  }
+  
+  @IBOutlet weak var infoTableView: UITableView!
   
   func setUpTableView() {
     infoTableView.delegate = self

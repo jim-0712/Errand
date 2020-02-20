@@ -38,15 +38,17 @@ class MissionDetailViewController: UIViewController {
       takeMissionBtn.isHidden = false
       setUpBtnEnable()
     }
-    print("no")
     setUpData()
-    print("ya")
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
   }
   
   func setUpData() {
     guard let userInfo = UserManager.shared.currentUserInfo else {
       backBtn.isHidden = false
-      NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
       guard let uid = Auth.auth().currentUser?.uid else { return }
       UserManager.shared.readData(uid: uid) { result in
         switch result {
@@ -341,13 +343,14 @@ class MissionDetailViewController: UIViewController {
     detailTableView.tableHeaderView = headerView
     
   }
-  
-  
+    
   var testcollection :UICollectionView = {
     let layout = UICollectionViewFlowLayout()
     let collection = UICollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300), collectionViewLayout: layout)
     layout.scrollDirection = .horizontal
     collection.translatesAutoresizingMaskIntoConstraints = false
+    collection.showsVerticalScrollIndicator = false
+    collection.showsHorizontalScrollIndicator = false
     collection.register(MissionDetailCollectionViewCell.self, forCellWithReuseIdentifier: "detail")
     collection.backgroundColor = .red
     return collection
@@ -819,5 +822,18 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
     } else {
       return 60
     }
+  }
+  
+  func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    let spring = UISpringTimingParameters(dampingRatio: 0.5, initialVelocity: CGVector(dx: 1.0, dy: 0.2))
+    let animator = UIViewPropertyAnimator(duration: 1.0, timingParameters: spring)
+          cell.alpha = 0
+          cell.transform = CGAffineTransform(translationX: 0, y: 100 * 0.6)
+          animator.addAnimations {
+              cell.alpha = 1
+              cell.transform = .identity
+            self.detailTableView.layoutIfNeeded()
+          }
+          animator.startAnimation(afterDelay: 0.1 * Double(indexPath.item))
   }
 }

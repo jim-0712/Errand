@@ -40,9 +40,7 @@ class MissionListViewController: UIViewController {
     setUpBtn()
     getTaskData()
     startAnimate(sender: allMissionBtn)
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-      NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
-    }
+    NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
   }
   
   @objc func reloadTable() {
