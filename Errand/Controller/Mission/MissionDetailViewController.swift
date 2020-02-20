@@ -24,6 +24,8 @@ class MissionDetailViewController: UIViewController {
   
   let myLocationManager = CLLocationManager()
   
+   var plaverLooper: AVPlayerLooper?
+  
   let dbF = Firestore.firestore()
   
   override func viewDidLoad() {
@@ -344,7 +346,7 @@ class MissionDetailViewController: UIViewController {
     
   }
     
-  var testcollection :UICollectionView = {
+  var testcollection: UICollectionView = {
     let layout = UICollectionViewFlowLayout()
     let collection = UICollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300), collectionViewLayout: layout)
     layout.scrollDirection = .horizontal
@@ -603,12 +605,7 @@ class MissionDetailViewController: UIViewController {
       }
     }
   }
-  
-  @objc func videoPlay(sender: UIButton) {
-    guard let layer = sender.superview?.layer as? AVPlayerLayer else { return }
-    layer.player?.play()
-  }
-  
+
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     
     if segue.identifier == "chat" {
@@ -655,10 +652,16 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
       
       cell.detailImage.isHidden = true
       guard let video = URL(string: data.taskPhoto[indexPath.row]) else { return UICollectionViewCell() }
-      let player = AVPlayer(url: video)
-      let playerLayer = AVPlayerLayer(player: player)
-      playerLayer.frame = cell.contentView.bounds
-      cell.layer.addSublayer(playerLayer)
+      
+         let playQueue = AVQueuePlayer()
+         let platItem = AVPlayerItem(url: video)
+         plaverLooper = AVPlayerLooper(player: playQueue, templateItem: platItem)
+         let playerLayer = AVPlayerLayer(player: playQueue)
+      
+         playerLayer.frame = cell.contentView.bounds
+         cell.layer.addSublayer(playerLayer)
+        
+         playQueue.play()
       
     } else {
       

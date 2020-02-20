@@ -168,7 +168,7 @@ class PersonalViewController: UIViewController {
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
     
       cornerView.bounds.origin.y += scrollView.bounds.origin.y
-      print(cornerView.bounds.origin.y)
+//      print(cornerView.bounds.origin.y)
       self.view.layoutIfNeeded()
   }
   

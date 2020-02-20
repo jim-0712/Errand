@@ -16,7 +16,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g5Y-tv-qGn">
-                                <rect key="frame" x="-293" y="250" width="1000" height="1000"/>
+                                <rect key="frame" x="-293" y="220" width="1000" height="1000"/>
                                 <color key="backgroundColor" red="0.99982446430000005" green="0.87507677080000001" blue="0.40111619230000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="1000" id="1n2-Ua-s0u"/>
@@ -124,28 +124,14 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pgN-7W-haf">
-                                <rect key="frame" x="364" y="108" width="30" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="cqP-cT-4ya"/>
-                                    <constraint firstAttribute="width" constant="30" id="pg4-qx-Iqb"/>
-                                </constraints>
-                                <state key="normal" image="wheel-2"/>
-                                <state key="selected" image="checked"/>
-                                <connections>
-                                    <action selector="tapSetting:" destination="gM3-Eo-3gK" eventType="touchUpInside" id="osg-3k-ZUc"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="pgN-7W-haf" firstAttribute="top" secondItem="Vy0-yV-f8n" secondAttribute="top" constant="20" id="B7m-IV-McD"/>
                             <constraint firstItem="WRD-j4-AQ8" firstAttribute="top" secondItem="Vy0-yV-f8n" secondAttribute="top" id="QKq-14-EpF"/>
-                            <constraint firstItem="g5Y-tv-qGn" firstAttribute="top" secondItem="ibq-cf-2iN" secondAttribute="top" constant="250" id="RTQ-FX-tXj"/>
+                            <constraint firstItem="g5Y-tv-qGn" firstAttribute="top" secondItem="ibq-cf-2iN" secondAttribute="top" constant="220" id="RTQ-FX-tXj"/>
                             <constraint firstItem="Vy0-yV-f8n" firstAttribute="trailing" secondItem="WRD-j4-AQ8" secondAttribute="trailing" id="gLh-fn-pHU"/>
                             <constraint firstItem="WRD-j4-AQ8" firstAttribute="leading" secondItem="Vy0-yV-f8n" secondAttribute="leading" id="jZb-Zm-qFu"/>
                             <constraint firstItem="g5Y-tv-qGn" firstAttribute="centerX" secondItem="Vy0-yV-f8n" secondAttribute="centerX" id="rzo-Jo-v8k"/>
-                            <constraint firstItem="Vy0-yV-f8n" firstAttribute="trailing" secondItem="pgN-7W-haf" secondAttribute="trailing" constant="20" id="uW5-Pm-vvQ"/>
                             <constraint firstAttribute="bottom" secondItem="WRD-j4-AQ8" secondAttribute="bottom" id="xQb-GH-jyF"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Vy0-yV-f8n"/>
@@ -154,7 +140,6 @@
                     <connections>
                         <outlet property="cornerView" destination="g5Y-tv-qGn" id="TBA-du-mim"/>
                         <outlet property="infoTableView" destination="WRD-j4-AQ8" id="xMn-7a-JVN"/>
-                        <outlet property="settingBtn" destination="pgN-7W-haf" id="1lT-8R-hmM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TCV-bn-aLR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -180,8 +165,4 @@
             <point key="canvasLocation" x="2957.971014492754" y="1612.5"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="checked" width="512" height="512"/>
-        <image name="wheel-2" width="28" height="28"/>
-    </resources>
 </document>

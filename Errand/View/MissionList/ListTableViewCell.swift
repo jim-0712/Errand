@@ -11,7 +11,7 @@ import Kingfisher
 
 protocol DetailManager: AnyObject {
   
-  func detailData(tableViewCell: ListTableViewCell, nickName: String, time: Int)
+  func detailData(tableViewCell: ListTableViewCell, uid: String, time: Int)
 }
 
 class ListTableViewCell: UITableViewCell {
@@ -46,6 +46,8 @@ class ListTableViewCell: UITableViewCell {
   var timeStorage = 1
   
   var author: String?
+  
+  var uid = ""
   
   func setUp(missionImage: String, author: String, missionLabel: String, priceTimeInt: [Int], time: String) {
     
@@ -82,9 +84,7 @@ class ListTableViewCell: UITableViewCell {
   
   @IBAction func seeDetailAction(_ sender: Any) {
     
-    guard let author = self.author else { return }
-    
-    self.delegate?.detailData(tableViewCell: self, nickName: author, time: self.timeStorage)
+    self.delegate?.detailData(tableViewCell: self, uid: uid, time: self.timeStorage)
   }
   
 }

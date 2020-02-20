@@ -340,6 +340,8 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
     
     cell.setUp(missionImage: missionText[1], author: data.nickname, missionLabel: missionText[0], priceTimeInt: priceAndTimeInt, time: time)
     
+    cell.uid = data.uid
+    
     return cell
   }
   
@@ -377,10 +379,10 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
 
 extension MissionListViewController: DetailManager {
   
-  func detailData(tableViewCell: ListTableViewCell, nickName: String, time: Int) {
+  func detailData(tableViewCell: ListTableViewCell, uid: String, time: Int) {
     
     for count in 0 ..< taskDataReturn.count {
-      if taskDataReturn[count].time == time && taskDataReturn[count].nickname == nickName {
+      if taskDataReturn[count].time == time && taskDataReturn[count].uid == uid {
         self.detailData = taskDataReturn[count]
         break
       }

@@ -183,8 +183,11 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
       
     } else {
       
-      for count in 0 ..< luke.count {
+      for _ in 0 ..< luke.count {
         group.enter()
+      }
+      
+      for count in 0 ..< luke.count {
         let id = UUID().uuidString
         if let image = luke[count] as? UIImage {
           guard let imageData = image.pngData() else {
@@ -220,7 +223,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
           })
           
         } else {
-        group.enter()
         
         let id = UUID().uuidString
         
