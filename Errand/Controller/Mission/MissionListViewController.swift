@@ -40,7 +40,7 @@ class MissionListViewController: UIViewController {
     setUpBtn()
     getTaskData()
     startAnimate(sender: allMissionBtn)
-    NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
+    NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
   }
   
   @objc func reloadTable() {
@@ -230,7 +230,7 @@ class MissionListViewController: UIViewController {
         switch result {
         case .success(let taskInfo):
           
-          if taskInfo.missionTaker.isEmpty {
+          if taskInfo.missionTaker != "" {
             TaskManager.shared.showAlert(title: "警告", message: "任務已被接受，不能隨意更改", viewController: self)
           } else {
             guard let editVC = self.storyboard?.instantiateViewController(identifier: "post") as? PostMissionViewController,
@@ -362,15 +362,15 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
     if segue.identifier == "detail" {
       
       guard let detailVC = segue.destination as? MissionDetailViewController,
-           let time = self.timeString else { return }
+           let time = self.timeString,
+           let userStatus = UserManager.shared.currentUserInfo?.status else { return }
       detailVC.detailData = detailData
       detailVC.receiveTime = time
-    } else if segue.identifier == "startMission"{
-      
-      guard let detailVC = segue.destination as? StartMissionViewController,
-           let time = self.timeString else { return }
-      detailVC.detailData = detailData
-      detailVC.receiveTime = time
+      if detailData?.missionTaker != "" {
+        detailVC.isMissionON = true
+      } else {
+        detailVC.isMissionON = false
+      }
     }
   }
 }
@@ -387,13 +387,7 @@ extension MissionListViewController: DetailManager {
     }
     
     self.timeString = TaskManager.shared.timeConverter(time: time)
-    
-    guard let data = detailData else { return }
-    if data.status == 0 {
-     self.performSegue(withIdentifier: "detail", sender: nil)
-    } else {
-      self.performSegue(withIdentifier: "startMission", sender: nil)
-    }
+    self.performSegue(withIdentifier: "detail", sender: nil)
   }
 }
 

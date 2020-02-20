@@ -44,6 +44,8 @@ enum RegiError: Error {
   
   case registSuccess
   
+  case notFirstRegi
+  
 }
 
 struct AccountInfo {

@@ -195,18 +195,26 @@ class UserManager {
         
       } else {
         guard let quary = querySnapshot else {return }
-
-        self.dataParser(quary: quary) { result in
+        
+        if quary.documents.count == 0 {
           
-          switch result {
-          case .success(let accountInfo):
-            self.currentUserInfo = accountInfo
-            print(accountInfo)
+          completion(.failure(RegiError.notFirstRegi))
+          
+        } else {
+          
+          self.dataParser(quary: quary) { result in
             
-            completion(.success(accountInfo))
-          case .failure:
-            print("error")
+            switch result {
+            case .success(let accountInfo):
+              self.currentUserInfo = accountInfo
+              print(accountInfo)
+              
+              completion(.success(accountInfo))
+            case .failure:
+              print("error")
+            }
           }
+          
         }
       }
     }

@@ -29,6 +29,8 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   
   var statusOneData: TaskInfo?
   
+  var judge = [Bool](repeating: false, count: 8)
+  
   var isEdit = false
   
   override func viewDidLoad() {
@@ -36,6 +38,19 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
     LKProgressHUD.show(controller: self)
     setUpSetting()
     setUpall()
+    judge[0] = true
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    if TaskManager.shared.address == "" {
+      pinImage.isHidden = false
+      plusBtn.isHidden = false
+    } else {
+      pinImage.isHidden = true
+      plusBtn.isHidden = true
+      addressLabel.text = TaskManager.shared.address
+    }
   }
 
   func setUpall() {
@@ -96,6 +111,10 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
     LKProgressHUD.dismiss()
   }
   
+  @IBOutlet weak var pinImage: UIImageView!
+  
+  @IBOutlet weak var plusBtn: UIButton!
+  
   @IBOutlet weak var photoCollectionView: UICollectionView!
   
   @IBOutlet weak var photoUploadText: UILabel!
@@ -120,6 +139,8 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   
   @IBOutlet weak var stackNTDView: UIStackView!
   
+  @IBOutlet weak var addressLabel: UILabel!
+  
   let imagePickerController = UIImagePickerController()
   
   let backgroundManager = BackgroundManager.shared
@@ -140,6 +161,8 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   
   var long: Double?
   
+  var plaverLooper: AVPlayerLooper?
+  
   let screenwidth = UIScreen.main.bounds.width
   
   let screenheight = UIScreen.main.bounds.height
@@ -151,6 +174,8 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   @IBAction func postAct(_ sender: Any) {
     
     LKProgressHUD.show(controller: self)
+    
+    self.fileURL = []
     
     let group: DispatchGroup = DispatchGroup()
     
@@ -244,6 +269,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   }
   group.notify(queue: DispatchQueue.main) {
   print("ya")
+  TaskManager.shared.address = ""
   LKProgressHUD.dismiss()
   self.createDataBase()
   }
@@ -309,24 +335,13 @@ func createDataBase() {
     }
   }
   
-  let imageFromCameraAction = UIAlertAction(title: "相機", style: .default) { (_) in
-    
-    if UIImagePickerController.isSourceTypeAvailable(.camera) {
-      self.imagePickerController.sourceType = .camera
-      self.present(self.imagePickerController, animated: true, completion: nil)
-    }
-  }
-  
   let cancelAction = UIAlertAction(title: "取消", style: .cancel) { (_) in
     imagePickerAlertController.dismiss(animated: true, completion: nil)
   }
   
   imagePickerAlertController.addAction(imageFromLibAction)
-  imagePickerAlertController.addAction(imageFromCameraAction)
   imagePickerAlertController.addAction(cancelAction)
-  
   present(imagePickerAlertController, animated: true, completion: nil)
-  
 }
 
 func setUpCollectionView() {
@@ -410,9 +425,16 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
       
       cell.setUpContent(label: TaskManager.shared.taskClassified[indexPath.row + 1].title, color: TaskManager.shared.taskClassified[indexPath.row + 1].color)
       
-      if indexPath.row == 0 {
-        cell.isSelected = true
+      if judge[indexPath.row] {
+        cell.contentView.backgroundColor = UIColor(red: 246.9/255.0, green: 212.0/255.0, blue: 95.0/255.0, alpha: 1.0)
+        cell.layer.borderWidth =  1.0
+        cell.layer.borderColor = UIColor.clear.cgColor
+      } else {
+        cell.contentView.backgroundColor = UIColor.white
+        cell.layer.borderWidth =  0.0
+        cell.layer.borderColor = UIColor.white.cgColor
       }
+      
       return cell
       
     } else {
@@ -421,6 +443,13 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
       
       cell.delegate = self
       if luke.count == 0 {
+        guard let layers = cell.layer.sublayers else { return UICollectionViewCell() }
+        for layer in layers {
+          if let avPlayerLayer = layer as? AVPlayerLayer {
+            avPlayerLayer.removeFromSuperlayer()
+          }
+        }
+        
         cell.indexRow = 0
         cell.deleteBtn.isHidden = true
         cell.backgroundColor = .white
@@ -451,12 +480,17 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
         cell.deleteBtn.isHidden = false
         cell.photoImageView.isHidden = true
         guard let video = luke[indexPath.row] as? URL else { return UICollectionViewCell() }
+      
         let player = AVPlayer(url: video)
-        let playerLayer = AVPlayerLayer(player: player)
+        let playQueue = AVQueuePlayer()
+        let platItem = AVPlayerItem(url: video)
+        plaverLooper = AVPlayerLooper(player: playQueue, templateItem: platItem)
+        let playerLayer = AVPlayerLayer(player: playQueue)
+     
         playerLayer.frame = cell.contentView.bounds
         cell.layer.addSublayer(playerLayer)
-        
-        player.play()
+       
+        playQueue.play()
         return cell
         
       } else {
@@ -473,6 +507,9 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
     
     if collectionView == self.missionGroupCollectionView {
       selectIndex = indexPath.row
+      judge = [Bool](repeating: false, count: 8)
+      judge[indexPath.row] = true
+      missionGroupCollectionView.reloadData()
     }
   }
   
@@ -506,11 +543,13 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
     if let pickedImage = info[.originalImage ] as? UIImage {
       luke.append(pickedImage)
       self.fileType.append(0)
+      self.fileURL.append("0")
       LKProgressHUD.dismiss()
     } else {
       if let videoURL = info[.mediaURL ] as? NSURL {
         luke.append(videoURL)
         self.fileType.append(1)
+        self.fileURL.append("0")
         LKProgressHUD.dismiss()
       }      
     }

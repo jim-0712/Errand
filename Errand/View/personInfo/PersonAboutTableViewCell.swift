@@ -37,7 +37,7 @@ class PersonAboutTableViewCell: UITableViewCell {
     detailLabel.text = titleLabel
     contTextView.text = content
     contTextView.isEditable = isSetting
-    contTextView.layer.borderColor = isSetting ? UIColor(red: 204.0/255.0, green: 204.0/255.0, blue: 204.0/255.0, alpha: 1.0).cgColor : UIColor.white.cgColor
+    contTextView.layer.borderColor = isSetting ? UIColor(red: 204.0/255.0, green: 204.0/255.0, blue: 204.0/255.0, alpha: 1.0).cgColor : UIColor.clear.cgColor
     
     contTextView.layer.borderWidth = 1.0
     

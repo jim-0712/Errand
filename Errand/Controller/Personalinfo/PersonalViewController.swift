@@ -34,9 +34,19 @@ class PersonalViewController: UIViewController {
   
   var averageStar = 0.0
   
+  var totaltaskCount = 0
+  
+  var totalStar = 0.0
+  
   var trigger = false
   
   let profileDetail = ["暱稱", "歷史評分", "關於我"]
+  
+  var settingOn: UIBarButtonItem!
+  
+  var settingOff: UIBarButtonItem!
+  
+  @IBOutlet weak var cornerView: UIView!
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -44,18 +54,11 @@ class PersonalViewController: UIViewController {
     if UserManager.shared.isTourist {
       UserManager.shared.goToSign(viewController: self)
     } else {
-      
+      setUpNavigationItem()
       setUpTableView()
-      self.navigationController?.navigationBar.prefersLargeTitles = true
-//      guard let uid = Auth.auth().currentUser.uid else { return }
-//      UserManager.shared.readData(uid: uid) { result in
-//
-//        switch result {
-//        case .success(let info):
-//          self.personPhoto
-//        case
-//        }
-//      }
+      guard let photoNow = UserManager.shared.currentUserInfo?.photo else { return }
+      personPhoto = photoNow
+      cornerView.layer.cornerRadius = cornerView.bounds.width / 2
       imagePickerController.delegate = self
       imagePickerController.allowsEditing = true
       imagePickerController.mediaTypes = [kUTTypeImage as String]
@@ -64,25 +67,30 @@ class PersonalViewController: UIViewController {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
+    readJudge()
+    totalStar = 0
+    totaltaskCount = 0
+    NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
   }
   
-  @IBOutlet weak var settingBtn: UIButton!
+  func setUpNavigationItem() {
+    
+    settingOff = UIBarButtonItem(image: UIImage(named: "wheel-2"), style: .plain, target: self, action: #selector(tapSet))
+    settingOn = UIBarButtonItem(image: UIImage(named: "tick"), style: .plain, target: self, action: #selector(tapSet))
+    self.navigationItem.rightBarButtonItems = [self.settingOff]
+    
+  }
   
-  @IBOutlet weak var infoTableView: UITableView!
-  
-  @IBAction func tapSetting(_ sender: Any) {
+  @objc func tapSet() {
     
     if !isSetting {
-      
-      settingBtn.setImage(UIImage(named: "checked"), for: .normal)
+      self.navigationItem.setRightBarButtonItems([self.settingOn], animated: false)
       isSetting = !isSetting
       infoTableView.reloadData()
       
     } else {
-      
-      settingBtn.setImage(UIImage(named: "wheel-2"), for: .normal)
-      
+      self.navigationItem.setRightBarButtonItems([self.settingOff], animated: false)
+
       if isName && isAbout {
         
         isUpload = true
@@ -133,6 +141,39 @@ class PersonalViewController: UIViewController {
     
   }
   
+  func readJudge() {
+    
+    guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
+    
+    TaskManager.shared.readJudgeData(uid: uid) { result in
+      
+      switch result {
+      case .success(let judgeData):
+        
+        for count in 0 ..< judgeData.count {
+          
+          self.totalStar += judgeData[count].star
+        }
+        
+        self.totaltaskCount = judgeData.count
+        
+        self.infoTableView.reloadData()
+        
+      case .failure:
+        print("error")
+      }
+    }
+  }
+  
+  func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    
+      cornerView.bounds.origin.y += scrollView.bounds.origin.y
+      print(cornerView.bounds.origin.y)
+      self.view.layoutIfNeeded()
+  }
+  
+  @IBOutlet weak var infoTableView: UITableView!
+  
   func setUpTableView() {
     infoTableView.delegate = self
     infoTableView.dataSource = self
@@ -147,6 +188,31 @@ class PersonalViewController: UIViewController {
     let controller = UIAlertController(title: "錯誤", message: "姓名不能有空白", preferredStyle: .alert)
     let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
     controller.addAction(okAction)
+    self.present(controller, animated: true, completion: nil)
+  }
+  
+  func logoutAlert() {
+    let controller = UIAlertController(title: "注意", message: "您真的要登出嗎？", preferredStyle: .alert)
+    let okAction = UIAlertAction(title: "ok", style: .default) { _ in
+      
+      do {
+        try Auth.auth().signOut()
+        
+      } catch {
+        print("Error")
+      }
+      let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "main") as? ViewController
+      
+      UserManager.shared.isTourist = true
+      
+      UserDefaults.standard.removeObject(forKey: "login")
+      
+      self.view.window?.rootViewController = signInVC
+    }
+    
+    let cancelAction = UIAlertAction(title: "cancal", style: .cancel, handler: nil)
+    controller.addAction(okAction)
+    controller.addAction(cancelAction)
     self.present(controller, animated: true, completion: nil)
   }
 }
@@ -195,6 +261,7 @@ extension PersonalViewController: UIImagePickerControllerDelegate, UINavigationC
                   
                 case .success:
                   strongSelf.personPhoto = urlBack.absoluteString
+                  NotificationCenter.default.post(name: Notification.Name("update"), object: nil)
                   strongSelf.infoTableView.reloadData()
                   LKProgressHUD.dismiss()
                   LKProgressHUD.showSuccess(text: "Success", controller: strongSelf)
@@ -216,7 +283,7 @@ extension PersonalViewController: UIImagePickerControllerDelegate, UINavigationC
 extension PersonalViewController: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     
-    return 4
+    return 5
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -224,15 +291,7 @@ extension PersonalViewController: UITableViewDataSource, UITableViewDelegate {
     guard let name = UserManager.shared.currentUserInfo?.nickname,
       let email = UserManager.shared.currentUserInfo?.email,
       let aboutMe = UserManager.shared.currentUserInfo?.about,
-      let star = UserManager.shared.currentUserInfo?.totalStar,
-      let taskCount = UserManager.shared.currentUserInfo?.taskCount,
-      let photo = UserManager.shared.currentUserInfo?.photo else { return UITableViewCell() }
-    
-    if taskCount == 0 {
-      averageStar = 0.0
-    } else {
-      averageStar = star / Double(taskCount)
-    }
+      let star = UserManager.shared.currentUserInfo?.totalStar else { return UITableViewCell() }
     
     let data = [name, aboutMe]
     
@@ -240,7 +299,7 @@ extension PersonalViewController: UITableViewDataSource, UITableViewDelegate {
       
       guard let cell = tableView.dequeueReusableCell(withIdentifier: "personPhoto", for: indexPath) as? PhotoTableViewCell else { return UITableViewCell() }
       
-      cell.setUpView(personPhoto: photo, nickName: name, email: email)
+      cell.setUpView(personPhoto: personPhoto, nickName: name, email: email)
       cell.choosePhotoBtn.addTarget(self, action: #selector(pickImage), for: .touchUpInside)
       
       return cell
@@ -256,15 +315,33 @@ extension PersonalViewController: UITableViewDataSource, UITableViewDelegate {
       
       guard let cell = tableView.dequeueReusableCell(withIdentifier: "personRate", for: indexPath) as? PersonRateTableViewCell else { return UITableViewCell() }
       
-      cell.setUp(averageStar: averageStar, titleLabel: profileDetail[1])
+      cell.newUserLabel.isHidden = true
+    
+      if totaltaskCount == 0 {
+        
+        cell.setUp(isFirst: true, averageStar: averageStar, titleLabel: profileDetail[1])
+        
+      } else {
+        averageStar = (totalStar - star) / Double(totaltaskCount)
+        cell.setUp(isFirst: false, averageStar: averageStar, titleLabel: profileDetail[1])
+      }
+
       return cell
-    } else {
+    } else if indexPath.row == 3 {
       
       guard let cell = tableView.dequeueReusableCell(withIdentifier: "personAbout", for: indexPath) as? PersonAboutTableViewCell else { return UITableViewCell() }
       
       cell.delegate = self
       cell.setUpView(isSetting: isSetting, titleLabel: profileDetail[2], content: data[1])
       
+      return cell
+    } else {
+      
+      guard let cell = tableView.dequeueReusableCell(withIdentifier: "signOut", for: indexPath) as? SignOutTableViewCell else { return UITableViewCell()  }
+      
+      cell.taponSignOut = {
+        self.logoutAlert()
+      }
       return cell
     }
   }

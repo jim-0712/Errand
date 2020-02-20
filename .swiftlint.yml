@@ -10,8 +10,14 @@ identifier_name:
     - url
     - app
 file_length:
-  warning: 500
-  error: 800
+  warning: 1000
+  error: 1200
 type_body_length:
   - 500 # warning
   - 700 # error
+max_length: # warning and error
+  warning: 100
+  error: 200
+cyclomatic_complexity:
+ignores_case_statements: true
+

@@ -16,7 +16,6 @@ class RequesterViewController: UIViewController {
     
     //      NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("acceptRequester"), object: nil)
     //      NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("refuseRequester"), object: nil)
-    
     navigationController?.navigationItem.largeTitleDisplayMode = .always
   }
   
@@ -76,6 +75,7 @@ var userInfo = [AccountInfo]() {
       DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
         LKProgressHUD.dismiss()
       }
+      refreshControl.endRefreshing()
       requesterTable.reloadData()
     } else {
       LKProgressHUD.dismiss()
