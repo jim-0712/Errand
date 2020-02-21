@@ -11,11 +11,16 @@ import UIKit
 
 class RequesterViewController: UIViewController {
   
+  @IBOutlet weak var noRequesterLabel: UILabel!
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    //      NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("acceptRequester"), object: nil)
-    //      NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("refuseRequester"), object: nil)
+    
+    
+    
+//          NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("acceptRequester"), object: nil)
+//          NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("refuseRequester"), object: nil)
     navigationController?.navigationItem.largeTitleDisplayMode = .always
   }
   
@@ -51,18 +56,24 @@ class RequesterViewController: UIViewController {
 
 override func viewWillAppear(_ animated: Bool) {
   super.viewWillAppear(animated)
+  setUpTable()
   
-  if UserManager.shared.currentUserInfo?.status == 0 {
+  if UserManager.shared.isTourist {
     
-    showAlert(title: "注意", message: "當前沒有任務", viewController: self)
+    UserManager.shared.goToSign(viewController: self)
+    
+  } else if UserManager.shared.currentUserInfo?.status == 0 {
+    
+    noRequesterLabel.text = "當前沒有任務                                        趕快去新增任務吧"
+    requesterTable.backgroundColor = .clear
     
   } else if  UserManager.shared.currentUserInfo?.status == 2 {
     
-    showTaskAlert(title: "注意", message: "任務進行中", viewController: self)
-    
+    noRequesterLabel.text = "當前您是任務接受者，沒有申請者"
+    requesterTable.backgroundColor = .clear
   } else {
-    
-    setUpTable()
+    noRequesterLabel.text = "正在搜尋申請者中"
+    requesterTable.backgroundColor = .clear
     readRequester()
   }
   NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
@@ -71,14 +82,9 @@ override func viewWillAppear(_ animated: Bool) {
 var userInfo = [AccountInfo]() {
   didSet {
     if userInfo.isEmpty {
-      LKProgressHUD.show(controller: self)
-      DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-        LKProgressHUD.dismiss()
-      }
       refreshControl.endRefreshing()
-      requesterTable.reloadData()
     } else {
-      LKProgressHUD.dismiss()
+      requesterTable.backgroundColor = .white
       refreshControl.endRefreshing()
       requesterTable.reloadData()
     }

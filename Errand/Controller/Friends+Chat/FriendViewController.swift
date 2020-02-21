@@ -14,10 +14,22 @@ class FriendViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+      
+      if UserManager.shared.isTourist {
+        UserManager.shared.goToSign(viewController: self)
+      } else {
         setUpTable()
-        getFriend()
+      }
     }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    friendListTable.backgroundColor = .clear
+    
+    getFriend()
+  }
+  
+  var refreshControl: UIRefreshControl!
   
   var friend = [Friends]()
   
@@ -30,12 +42,12 @@ class FriendViewController: UIViewController {
   var friendInfo = [AccountInfo]() {
      didSet {
        if friend.isEmpty {
-         LKProgressHUD.show(controller: self)
-         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-           LKProgressHUD.dismiss()
-          }
+        refreshControl.endRefreshing()
+        noFreindsLabel.text = "您目前沒有好友                    請趕快完成第一個任務加好友吧"
+        friendListTable.backgroundColor = .clear
          } else {
-         LKProgressHUD.dismiss()
+         friendListTable.backgroundColor = .white
+         refreshControl.endRefreshing()
          friendListTable.reloadData()
          }
        }
@@ -43,20 +55,30 @@ class FriendViewController: UIViewController {
   
   @IBOutlet weak var friendListTable: UITableView!
   
+  @IBOutlet weak var noFreindsLabel: UILabel!
+  
   func setUpTable() {
     NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
+    friendListTable.isHidden = false
     friendListTable.delegate = self
     friendListTable.dataSource = self
     friendListTable.separatorStyle = .none
+    refreshControl = UIRefreshControl()
+    friendListTable.addSubview(refreshControl)
+    refreshControl.addTarget(self, action: #selector(getFriend), for: .valueChanged)
     friendListTable.rowHeight = UITableView.automaticDimension
     friendListTable.register(UINib(nibName: "FriendsTableViewCell", bundle: nil), forCellReuseIdentifier: "friends")
   }
   
-  func getFriend() {
+  @objc func getFriend() {
     
     UserManager.shared.getFriends { result in
       switch result {
       case .success(let friends):
+        
+        if friends.count == 0 {
+          self.friendInfo = []
+        }
         for count in 0 ..< friends.count {
           UserManager.shared.getPhoto(nameRef: friends[count].nameREF) { result in
             switch result {

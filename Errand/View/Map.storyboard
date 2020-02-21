@@ -213,7 +213,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lc5-i9-Os8">
-                                <rect key="frame" x="339" y="158" width="60" height="60"/>
+                                <rect key="frame" x="344" y="158" width="60" height="60"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="60" id="1JR-cR-9XC"/>
@@ -221,7 +221,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Gi-x0-fkI" userLabel="Radar">
-                                <rect key="frame" x="349" y="168" width="40" height="40"/>
+                                <rect key="frame" x="354" y="168" width="40" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="1VG-g9-IAV"/>
                                     <constraint firstAttribute="width" constant="40" id="AIp-vd-nUm"/>
@@ -232,7 +232,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ycq-9C-cG8">
-                                <rect key="frame" x="224" y="158" width="180" height="120"/>
+                                <rect key="frame" x="229" y="158" width="180" height="120"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="範圍" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rm6-de-LED">
                                         <rect key="frame" x="12" y="36" width="38" height="24"/>
@@ -295,7 +295,6 @@
                             <constraint firstItem="ycq-9C-cG8" firstAttribute="top" secondItem="Zga-Kp-aCC" secondAttribute="bottom" constant="15" id="4vc-SA-bd2"/>
                             <constraint firstItem="Zga-Kp-aCC" firstAttribute="top" secondItem="Oie-lJ-Dco" secondAttribute="top" constant="5" id="7Mi-ow-JIs"/>
                             <constraint firstItem="Zga-Kp-aCC" firstAttribute="leading" secondItem="Oie-lJ-Dco" secondAttribute="leading" id="CCf-X7-cOS"/>
-                            <constraint firstItem="1Gi-x0-fkI" firstAttribute="centerX" secondItem="lc5-i9-Os8" secondAttribute="centerX" id="Fng-N2-pRI"/>
                             <constraint firstItem="Oie-lJ-Dco" firstAttribute="trailing" secondItem="ndZ-ac-h8M" secondAttribute="trailing" id="Gt9-M6-Xt1"/>
                             <constraint firstItem="Yhu-3k-KT3" firstAttribute="leading" secondItem="Oie-lJ-Dco" secondAttribute="leading" id="SlR-av-pSN"/>
                             <constraint firstItem="1Gi-x0-fkI" firstAttribute="centerY" secondItem="lc5-i9-Os8" secondAttribute="centerY" id="UaT-us-I5I"/>
@@ -303,14 +302,15 @@
                             <constraint firstItem="Yhu-3k-KT3" firstAttribute="bottom" secondItem="Oie-lJ-Dco" secondAttribute="bottom" id="bT4-fC-3qL"/>
                             <constraint firstItem="Zga-Kp-aCC" firstAttribute="trailing" secondItem="Oie-lJ-Dco" secondAttribute="trailing" id="cge-Cf-G9V"/>
                             <constraint firstItem="Oie-lJ-Dco" firstAttribute="trailing" secondItem="bui-Bu-Mro" secondAttribute="trailing" constant="10" id="ct8-07-nZE"/>
+                            <constraint firstItem="1Gi-x0-fkI" firstAttribute="centerX" secondItem="lc5-i9-Os8" secondAttribute="centerX" id="dzh-G6-EcK"/>
                             <constraint firstItem="ndZ-ac-h8M" firstAttribute="leading" secondItem="Oie-lJ-Dco" secondAttribute="leading" id="fgZ-ua-4xp"/>
                             <constraint firstItem="Yhu-3k-KT3" firstAttribute="top" secondItem="ndZ-ac-h8M" secondAttribute="bottom" id="pmW-Ns-5ym"/>
-                            <constraint firstItem="Oie-lJ-Dco" firstAttribute="trailing" secondItem="ycq-9C-cG8" secondAttribute="trailing" constant="10" id="rAk-M6-x3g"/>
+                            <constraint firstItem="Oie-lJ-Dco" firstAttribute="trailing" secondItem="ycq-9C-cG8" secondAttribute="trailing" constant="5" id="rAk-M6-x3g"/>
                             <constraint firstItem="lc5-i9-Os8" firstAttribute="top" secondItem="Zga-Kp-aCC" secondAttribute="bottom" constant="15" id="rUo-v5-bLK"/>
                             <constraint firstItem="Oie-lJ-Dco" firstAttribute="trailing" secondItem="Yhu-3k-KT3" secondAttribute="trailing" id="sDS-zm-DQl"/>
                             <constraint firstItem="ndZ-ac-h8M" firstAttribute="top" secondItem="Oie-lJ-Dco" secondAttribute="top" id="sgA-4X-IZZ"/>
                             <constraint firstItem="k61-8X-Nxm" firstAttribute="centerY" secondItem="bui-Bu-Mro" secondAttribute="centerY" id="ss7-8J-w09"/>
-                            <constraint firstItem="Oie-lJ-Dco" firstAttribute="trailing" secondItem="lc5-i9-Os8" secondAttribute="trailing" constant="15" id="umd-Zb-yJb"/>
+                            <constraint firstItem="Oie-lJ-Dco" firstAttribute="trailing" secondItem="lc5-i9-Os8" secondAttribute="trailing" constant="10" id="umd-Zb-yJb"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Oie-lJ-Dco"/>
                     </view>

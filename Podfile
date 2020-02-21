@@ -24,8 +24,7 @@ target 'Errand' do
   pod ‘GoogleMaps’
   pod ‘GooglePlaces’
   pod "Alamofire"
-  pod 'Fabric', '~> 1.10.2'
-  pod 'Crashlytics', '~> 3.14.0'
+  pod 'ProgressHUD'
   pod "Refreshable"
   pod "Cosmos"
   pod 'MessageKit'

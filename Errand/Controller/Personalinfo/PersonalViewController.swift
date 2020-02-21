@@ -28,13 +28,17 @@ class PersonalViewController: UIViewController {
   
   var isUpload = true
   
-  var name = ""
+  var name = "遊客"
   
-  var about = ""
+  var about = "無"
+  
+  var minusStar = 0.0
   
   var averageStar = 0.0
   
   var totaltaskCount = 0
+  
+  var email = "遊客"
   
   var totalStar = 0.0
   
@@ -52,58 +56,33 @@ class PersonalViewController: UIViewController {
     super.viewDidLoad()
     
     if UserManager.shared.isTourist {
-      UserManager.shared.goToSign(viewController: self)
+      setUpTableView()
     } else {
-      
-      LKProgressHUD.show(controller: self)
-      
-      guard let uid = Auth.auth().currentUser?.uid else { return }
-      
-      UserManager.shared.readData(uid: uid) { result in
-        
-        switch result {
-        case .success:
-          
-          self.setUpNavigationItem()
-          self.setUpTableView()
-          self.setUpBackView()
-          guard let photoNow = UserManager.shared.currentUserInfo?.photo else { return }
-          self.personPhoto = photoNow
-          self.imagePickerController.delegate = self
-          self.imagePickerController.allowsEditing = true
-          self.imagePickerController.mediaTypes = [kUTTypeImage as String]
-          self.readJudge()
-          self.totalStar = 0
-          self.totaltaskCount = 0
-          NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
-          
-        case .failure:
-          print("error")
-        }
-      }
+      setUpNavigationItem()
+      setUpTableView()
+      guard let photoNow = UserManager.shared.currentUserInfo?.photo else { return }
+      personPhoto = photoNow
+      imagePickerController.delegate = self
+      imagePickerController.allowsEditing = true
+      imagePickerController.mediaTypes = [kUTTypeImage as String]
+      readJudge()
+      totalStar = 0
+      totaltaskCount = 0
     }
   }
   
-//  override func viewWillAppear(_ animated: Bool) {
-//    super.viewWillAppear(animated)
-//    readJudge()
-//    totalStar = 0
-//    totaltaskCount = 0
-//    NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
-//  }
-  
-  func setUpBackView() {
-    
+  override func viewWillLayoutSubviews() {
+    super.viewWillLayoutSubviews()
     cornerView.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 500, y: 220, width: 1000, height: 2000)
     cornerView.layer.cornerRadius = cornerView.bounds.width / 2
-    
   }
   
   func setUpNavigationItem() {
-    settingOff = UIBarButtonItem(image: UIImage(named: "wheel-2"), style: .plain, target: self, action: #selector(tapSet))
-    settingOn = UIBarButtonItem(image: UIImage(named: "tick"), style: .plain, target: self, action: #selector(tapSet))
+    settingOff = UIBarButtonItem(title: "編輯", style: .plain, target: self, action: #selector(tapSet))
+    settingOn = UIBarButtonItem(image: UIImage(named: "tick-2"), style: .plain, target: self, action: #selector(tapSet))
+    settingOn.tintColor = .black
+    settingOff.tintColor = .black
     self.navigationItem.rightBarButtonItems = [self.settingOff]
-    
   }
   
   @objc func tapSet() {
@@ -312,16 +291,33 @@ extension PersonalViewController: UITableViewDataSource, UITableViewDelegate {
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
-    guard let name = UserManager.shared.currentUserInfo?.nickname,
-      let email = UserManager.shared.currentUserInfo?.email,
-      let aboutMe = UserManager.shared.currentUserInfo?.about,
-      let star = UserManager.shared.currentUserInfo?.totalStar else { return UITableViewCell() }
+    let tourist = UserManager.shared.isTourist
     
-    let data = [name, aboutMe]
+    if !tourist {
+      
+      guard let name = UserManager.shared.currentUserInfo?.nickname,
+           let email = UserManager.shared.currentUserInfo?.email,
+           let aboutMe = UserManager.shared.currentUserInfo?.about,
+           let star = UserManager.shared.currentUserInfo?.totalStar else { return UITableViewCell() }
+      
+      self.name = name
+      self.about = aboutMe
+      self.email = email
+      self.minusStar = star
+    }
+      
+    
+    let data = [name, self.about]
     
     if indexPath.row == 0 {
       
       guard let cell = tableView.dequeueReusableCell(withIdentifier: "personPhoto", for: indexPath) as? PhotoTableViewCell else { return UITableViewCell() }
+      
+      if tourist {
+        cell.choosePhotoBtn.isHidden = true
+      } else {
+        cell.choosePhotoBtn.isHidden = false
+      }
       
       cell.setUpView(personPhoto: personPhoto, nickName: name, email: email)
       cell.choosePhotoBtn.addTarget(self, action: #selector(pickImage), for: .touchUpInside)
@@ -346,7 +342,7 @@ extension PersonalViewController: UITableViewDataSource, UITableViewDelegate {
         cell.setUp(isFirst: true, averageStar: averageStar, titleLabel: profileDetail[1])
         
       } else {
-        averageStar = (totalStar - star) / Double(totaltaskCount)
+        averageStar = (totalStar - minusStar) / Double(totaltaskCount)
         cell.setUp(isFirst: false, averageStar: averageStar, titleLabel: profileDetail[1])
       }
 
@@ -363,8 +359,23 @@ extension PersonalViewController: UITableViewDataSource, UITableViewDelegate {
       
       guard let cell = tableView.dequeueReusableCell(withIdentifier: "signOut", for: indexPath) as? SignOutTableViewCell else { return UITableViewCell()  }
       
+      if tourist {
+        cell.signOutBtn.setTitle("登入", for: .normal)
+      } else {
+        cell.signOutBtn.setTitle("登出", for: .normal)
+      }
+      
       cell.taponSignOut = {
-        self.logoutAlert()
+        
+        if tourist {
+          
+          let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "main") as? ViewController
+          
+          self.view.window?.rootViewController = signInVC
+          
+        } else {
+          self.logoutAlert()
+        }
       }
       return cell
     }

@@ -15,8 +15,7 @@ class MissionListViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    LKProgressHUD.show(controller: self)
+  
     setUpSearch()
     setUp()
     setUpindicatorView()
@@ -32,6 +31,12 @@ class MissionListViewController: UIViewController {
     NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("getMissionList"), object: nil)
   
   }
+  
+  override func viewDidAppear(_ animated: Bool) {
+    guard let VC = self.view.window?.rootViewController as? TabBarViewController else { return }
+    LKProgressHUD.show(controller: VC)
+  }
+  
   
   var currentBtnSelect = false
   
@@ -72,7 +77,7 @@ class MissionListViewController: UIViewController {
                strongSelf.taskDataReturn = dataReturn
                
              case .failure(let error):
-               
+               LKProgressHUD.dismiss()
                LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
              }
            }
@@ -92,12 +97,12 @@ class MissionListViewController: UIViewController {
           strongSelf.taskDataReturn = dataReturn
           
         case .failure(let error):
-          
+          LKProgressHUD.dismiss()
           LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
         }
       }
     } else {
-      
+      LKProgressHUD.dismiss()
       showAlert(title: "注意", message: "當前沒有進行中任務")
       return
     }
@@ -144,7 +149,7 @@ class MissionListViewController: UIViewController {
   
   @IBAction func allMissionAct(_ sender: UIButton) {
     currentBtnSelect = false
-    LKProgressHUD.show(controller: self)
+    preventTap()
     getTaskData()
     UserManager.shared.checkDetailBtn = !UserManager.shared.checkDetailBtn
     startAnimate(sender: sender)
@@ -152,9 +157,15 @@ class MissionListViewController: UIViewController {
   
   @IBAction func currentMission(_ sender: UIButton) {
     currentBtnSelect = true
+    preventTap()
     UserManager.shared.checkDetailBtn = !UserManager.shared.checkDetailBtn
     startAnimate(sender: sender)
     getMissionStartData()
+  }
+  
+  func preventTap() {
+    guard let VC = self.view.window?.rootViewController as? TabBarViewController else { return }
+    LKProgressHUD.show(controller: VC)
   }
   
   let indicatorView = UIView()
@@ -208,7 +219,7 @@ class MissionListViewController: UIViewController {
     didSet {
       if taskDataReturn.isEmpty {
         self.postMissionBtn.isHidden = true
-        LKProgressHUD.show(controller: self)
+        LKProgressHUD.dismiss()
       } else {
         DispatchQueue.main.async {
           self.postMissionBtn.isHidden = false
@@ -224,7 +235,12 @@ class MissionListViewController: UIViewController {
   @IBOutlet weak var postMissionBtn: UIButton!
   
   @IBAction func postMissionBtn(_ sender: Any) {
-    if UserManager.shared.currentUserInfo?.status == 0 {
+    
+    if UserManager.shared.isTourist {
+      
+      UserManager.shared.goToSignOrStay(viewController: self)
+      
+    }else if UserManager.shared.currentUserInfo?.status == 0 {
       performSegue(withIdentifier: "post", sender: nil)
     } else if UserManager.shared.currentUserInfo?.status == 1 {
       
@@ -269,6 +285,7 @@ class MissionListViewController: UIViewController {
   }
   
   func getTaskData() {
+
     TaskManager.shared.readData { [weak self] result in
       guard let strongSelf = self else { return }
       switch result {
@@ -280,6 +297,7 @@ class MissionListViewController: UIViewController {
         LKProgressHUD.dismiss()
         
       case .failure(let error):
+        LKProgressHUD.dismiss()
         LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
       }
     }

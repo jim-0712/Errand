@@ -426,6 +426,7 @@ class MissionDetailViewController: UIViewController {
     }
   }
   // swiftlint:enable cyclomatic_complexity
+  
   func finishMissionAlert(title: String, message: String, viewController: UIViewController) {
     let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
     let okAction = UIAlertAction(title: "ok", style: .default) { [weak self]_ in
@@ -545,11 +546,9 @@ class MissionDetailViewController: UIViewController {
   func setUpBtnEnable() {
     
     guard let user = UserManager.shared.currentUserInfo,
-         let ontask = UserManager.shared.currentUserInfo?.onTask,
          let task = detailData else { return }
     
     var isRequseter = false
-    
     
     for count in 0 ..< task.requester.count {
       if task.requester[count] == user.uid {
@@ -557,7 +556,10 @@ class MissionDetailViewController: UIViewController {
       }
     }
     
-    if isRequseter {
+    if UserManager.shared.isTourist {
+      
+      UserManager.shared.goToSignOrStay(viewController: self)
+    } else if isRequseter {
       takeMissionBtn.backgroundColor = .lightGray
       takeMissionBtn.setTitle("您已申請此任務", for: .normal)
       takeMissionBtn.tintColor = .black
@@ -749,8 +751,7 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
       } else {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "startMission", for: indexPath) as? StartMissionTableViewCell,
-          let taskData = detailData,
-          let status = UserManager.shared.currentUserInfo?.status else { return UITableViewCell() }
+          let taskData = detailData else { return UITableViewCell() }
         
         let classified = TaskManager.shared.filterClassified(classified: taskData.classfied + 1)
         

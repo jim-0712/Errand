@@ -11,7 +11,7 @@ import FirebaseAuth
 import GoogleMaps
 import CoreLocation
 
-class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
+class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDelegate {
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -19,15 +19,19 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     NotificationCenter.default.addObserver(self, selector: #selector(reGetUserInfo), name: Notification.Name("postMission"), object: nil)
     
     NotificationCenter.default.addObserver(self, selector: #selector(reGetUserInfo), name: Notification.Name("reloadUser"), object: nil)
-
+    
     NotificationCenter.default.addObserver(self, selector: #selector(reGetUserInfo), name: Notification.Name("update"), object: nil)
+    
+    arrangeTextField.delegate = self
     
     if UserManager.shared.isTourist {
       
       //      refreshBtn.isEnabled = false
       
     } else {
-      LKProgressHUD.show(controller: self)
+      
+      //      guard let VC = self.view.window?.rootViewController as? TabBarViewController else { return }
+      //      LKProgressHUD.show(controller: VC)
       //      refreshBtn.isEnabled = true
     }
     setUpView()
@@ -43,6 +47,11 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     super.viewWillAppear(animated)
     loadUserInfo()
     getTaskData()
+  }
+  
+  override func viewDidAppear(_ animated: Bool) {
+    guard let VC = self.view.window?.rootViewController as? TabBarViewController else { return }
+    LKProgressHUD.show(controller: VC)
   }
   
   @objc func reGetUserInfo() {
@@ -116,6 +125,8 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   
   @IBAction func dismissSearchAct(_ sender: Any) {
     isSearch = !isSearch
+    self.view.endEditing(true)
+    self.resignFirstResponder()
     searchView.isHidden = isSearch
   }
   
@@ -173,7 +184,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
     
     performSegue(withIdentifier: "Mapdetail", sender: nil)
   }
-
+  
   var currentClassified = 0
   
   var finalLat: Double = 0.0
@@ -224,7 +235,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   }
   
   func getTaskData() {
-
+    
     TaskManager.shared.readData { [weak self] result in
       
       guard let strongSelf = self else { return }
@@ -289,7 +300,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   func setUpLocation() {
     
     guard let lat = myLocationManager.location?.coordinate.latitude,
-         let long = myLocationManager.location?.coordinate.longitude else { return }
+      let long = myLocationManager.location?.coordinate.longitude else { return }
     
     finalLat = lat
     finalLong = long
@@ -317,7 +328,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate {
   func checkLocationAuth() {
     
     switch CLLocationManager.authorizationStatus() {
-    
+      
     case .authorizedWhenInUse:
       
       centerViewOnUserLocation()
@@ -387,7 +398,7 @@ extension GoogleMapViewController: GMSMapViewDelegate {
   
   func mapView(_ mapView: GMSMapView, didTapInfoWindowOf marker: GMSMarker) {
     
-//    isTapOnContent = !isTapOnContent
+    //    isTapOnContent = !isTapOnContent
     
     isTapOnContent = true
     
@@ -396,7 +407,7 @@ extension GoogleMapViewController: GMSMapViewDelegate {
       let lat = myLocationManager.location?.coordinate.latitude,
       let long = myLocationManager.location?.coordinate.longitude else { return }
     
-      let classifiedReturn = TaskManager.shared.filterClassifiedToInt(task: classified) - 1
+    let classifiedReturn = TaskManager.shared.filterClassifiedToInt(task: classified) - 1
     
     for count in 0 ..< taskDataReturn.count {
       

@@ -186,6 +186,27 @@ class UserManager {
     viewController.present(alert, animated: true, completion: nil)
   }
   
+  func goToSignOrStay(viewController: UIViewController) {
+    let alert = UIAlertController(title: "注意", message: "請先登入享有功能", preferredStyle: UIAlertController.Style.alert)
+       
+    let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
+       
+       let action = UIAlertAction(title: "OK", style: .default) { (_) in
+         
+         let storyboard = UIStoryboard(name: "Main", bundle: nil)
+         
+         let goViewController = storyboard.instantiateViewController(withIdentifier: "main")
+         
+         viewController.view.window?.rootViewController = goViewController
+       }
+       
+       alert.addAction(action)
+       
+       alert.addAction(cancelAction)
+       
+       viewController.present(alert, animated: true, completion: nil)
+  }
+  
   func readData(uid: String, completion: @escaping ((Result<AccountInfo, Error>) -> Void)) {
     
     dbF.collection("Users").whereField("uid", isEqualTo: uid).getDocuments { (querySnapshot, err) in

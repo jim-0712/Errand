@@ -15,6 +15,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="您目前沒有好友                    請趕快完成第一個任務加好友吧" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y6S-dD-iJO">
+                                <rect key="frame" x="50" y="444" width="314" height="62"/>
+                                <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="22"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="8Qy-U2-vwd">
                                 <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -22,7 +28,11 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="y6S-dD-iJO" firstAttribute="centerX" secondItem="9iv-Ph-C30" secondAttribute="centerX" id="2Ax-bu-HtP"/>
+                            <constraint firstItem="y6S-dD-iJO" firstAttribute="centerY" secondItem="9iv-Ph-C30" secondAttribute="centerY" id="HEh-0V-STD"/>
+                            <constraint firstAttribute="trailing" secondItem="y6S-dD-iJO" secondAttribute="trailing" constant="50" id="XDV-UN-geV"/>
                             <constraint firstItem="9iv-Ph-C30" firstAttribute="bottom" secondItem="8Qy-U2-vwd" secondAttribute="bottom" id="fEp-2Q-prg"/>
+                            <constraint firstItem="y6S-dD-iJO" firstAttribute="leading" secondItem="fZu-d4-lYz" secondAttribute="leading" constant="50" id="fec-d0-ACU"/>
                             <constraint firstItem="8Qy-U2-vwd" firstAttribute="leading" secondItem="9iv-Ph-C30" secondAttribute="leading" id="idy-6B-fug"/>
                             <constraint firstItem="9iv-Ph-C30" firstAttribute="trailing" secondItem="8Qy-U2-vwd" secondAttribute="trailing" id="kEE-tS-4sY"/>
                             <constraint firstItem="8Qy-U2-vwd" firstAttribute="top" secondItem="9iv-Ph-C30" secondAttribute="top" id="ueK-78-Zjm"/>
@@ -32,6 +42,7 @@
                     <navigationItem key="navigationItem" title="好友列表" id="qXJ-6d-Foe"/>
                     <connections>
                         <outlet property="friendListTable" destination="8Qy-U2-vwd" id="RP4-4e-gto"/>
+                        <outlet property="noFreindsLabel" destination="y6S-dD-iJO" id="ezh-Ki-G3k"/>
                         <segue destination="GVJ-pG-glb" kind="show" identifier="friendChat" id="Pmc-xG-tDy"/>
                     </connections>
                 </viewController>
