@@ -179,7 +179,11 @@ class MissionListViewController: UIViewController {
     didSet {
       if taskDataReturn.isEmpty {
         self.postMissionBtn.isHidden = true
-        LKProgressHUD.dismiss()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+          LKProgressHUD.dismiss()
+          self.refreshControl.endRefreshing()
+        }
         self.taskListTable.reloadData()
       } else {
         DispatchQueue.main.async {
@@ -224,7 +228,7 @@ class MissionListViewController: UIViewController {
       performSegue(withIdentifier: "post", sender: nil)
     } else if UserManager.shared.currentUserInfo?.status == 1 {
       
-      LKProgressHUD.show(controller: self)
+//      LKProgressHUD.show(controller: self)
       TaskManager.shared.setUpStatusData { result in
         
         switch result {

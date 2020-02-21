@@ -24,7 +24,9 @@ class MissionDetailViewController: UIViewController {
   
   let myLocationManager = CLLocationManager()
   
-   var plaverLooper: AVPlayerLooper?
+  var plaverLooper: AVPlayerLooper?
+  
+  var isNavi = false
   
   let dbF = Firestore.firestore()
   
@@ -41,6 +43,11 @@ class MissionDetailViewController: UIViewController {
       setUpBtnEnable()
     }
     setUpData()
+    if isNavi {
+      backBtn.isHidden = false
+    } else {
+      backBtn.isHidden = true
+    }
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -70,7 +77,7 @@ class MissionDetailViewController: UIViewController {
     } else {
       self.callTaskData()
     }
-    //    backBtn.isHidden = true
+    backBtn.isHidden = true
   }
   
   func callTaskData() {

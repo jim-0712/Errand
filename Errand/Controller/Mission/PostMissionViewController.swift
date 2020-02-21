@@ -35,7 +35,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    LKProgressHUD.show(controller: self)
     setUpSetting()
     setUpall()
     judge[0] = true
@@ -70,6 +69,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate {
     
     if isEditing {
       editBackBtn.isHidden = false
+      LKProgressHUD.show(controller: self)
       TaskManager.shared.setUpStatusData { result in
         switch result {
         case .success(let taskInfo):
@@ -366,6 +366,7 @@ func setUpBtn() {
   postBtn.layer.cornerRadius = postBtn.bounds.height / 8
   if isEditing {
     postBtn.isEnabled = true
+    postBtn.setTitle("修改完成", for: .normal)
   } else {
     postBtn.isEnabled = false
   }
@@ -607,7 +608,7 @@ extension PostMissionViewController: UploadDataManager {
         self.present(self.imagePickerController, animated: true, completion: nil)
       }
     }
-    
+
     let imageFromCameraAction = UIAlertAction(title: "相機", style: .default) { (_) in
       if UIImagePickerController.isSourceTypeAvailable(.camera) {
         self.imagePickerController.sourceType = .camera

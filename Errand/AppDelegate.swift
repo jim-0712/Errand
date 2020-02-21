@@ -133,15 +133,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
       let navController = tabBarController.selectedViewController as? UINavigationController {
       
       if tabBarController.presentedViewController == nil {
+        tabBarController.dismiss(animated: true) {
         conversationVC.modalPresentationStyle = .fullScreen
         conversationVC.isMissionON = true
+        conversationVC.isNavi = true
         tabBarController.present(conversationVC, animated: true, completion: nil)
-        
+        }
       } else {
         tabBarController.presentedViewController?.dismiss(animated: true, completion: {
           tabBarController.dismiss(animated: true) {
             UserManager.shared.currentUserInfo = nil
             conversationVC.modalPresentationStyle = .fullScreen
+            conversationVC.isNavi = true
             conversationVC.isMissionON = true
             tabBarController.present(conversationVC, animated: true, completion: nil)
           }

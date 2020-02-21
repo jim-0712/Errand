@@ -188,7 +188,7 @@
                         <outlet property="currentBtn" destination="SdY-QC-ykr" id="PyQ-XY-0Vj"/>
                         <outlet property="postMissionBtn" destination="lbZ-XW-AdV" id="ame-Wp-jmi"/>
                         <outlet property="taskListTable" destination="hiW-yp-QIs" id="j33-uB-Qlu"/>
-                        <segue destination="gg9-hF-MfY" kind="showDetail" identifier="detail" id="NZZ-pD-LDK"/>
+                        <segue destination="gg9-hF-MfY" kind="show" identifier="detail" id="NZZ-pD-LDK"/>
                         <segue destination="aZU-mc-oHp" kind="show" identifier="post" id="tUj-f1-BdP"/>
                     </connections>
                 </viewController>
@@ -351,11 +351,11 @@
             <objects>
                 <viewController storyboardIdentifier="detailViewController" id="gg9-hF-MfY" customClass="MissionDetailViewController" customModule="Errand" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="dHb-61-10x">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4Fc-N0-dCj">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="718"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="684"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="missionDetail" rowHeight="66" id="ybf-Fl-gDP" customClass="MissionDetailTableViewCell" customModule="Errand" customModuleProvider="target">
@@ -532,7 +532,7 @@
                                 </prototypes>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mhk-5s-rgX">
-                                <rect key="frame" x="57" y="738" width="300" height="50"/>
+                                <rect key="frame" x="57" y="792" width="300" height="50"/>
                                 <color key="backgroundColor" red="0.99180322889999994" green="0.82671695950000001" blue="0.26249000430000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="300" id="9qh-CG-Txg"/>
@@ -544,7 +544,7 @@
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="6en-vb-tbh">
-                                <rect key="frame" x="47" y="738" width="320" height="50"/>
+                                <rect key="frame" x="47" y="792" width="320" height="50"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Oda-56-REi">
                                         <rect key="frame" x="0.0" y="0.0" width="150" height="50"/>
@@ -579,7 +579,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hEK-bo-55A">
-                                <rect key="frame" x="10" y="5" width="40" height="40"/>
+                                <rect key="frame" x="10" y="93" width="40" height="40"/>
                                 <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="40" id="5kQ-lH-IzM"/>
@@ -598,7 +598,7 @@
                             <constraint firstItem="4Fc-N0-dCj" firstAttribute="leading" secondItem="X5n-q1-gM7" secondAttribute="leading" id="7MQ-LW-XA2"/>
                             <constraint firstItem="X5n-q1-gM7" firstAttribute="trailing" secondItem="4Fc-N0-dCj" secondAttribute="trailing" id="GKa-e4-vbH"/>
                             <constraint firstItem="6en-vb-tbh" firstAttribute="centerX" secondItem="X5n-q1-gM7" secondAttribute="centerX" id="QE2-qZ-cFe"/>
-                            <constraint firstItem="4Fc-N0-dCj" firstAttribute="top" secondItem="dHb-61-10x" secondAttribute="top" id="XsZ-iG-jVd"/>
+                            <constraint firstItem="4Fc-N0-dCj" firstAttribute="top" secondItem="X5n-q1-gM7" secondAttribute="top" id="XsZ-iG-jVd"/>
                             <constraint firstItem="X5n-q1-gM7" firstAttribute="bottom" secondItem="mhk-5s-rgX" secondAttribute="bottom" constant="20" id="bG0-sU-213"/>
                             <constraint firstItem="hEK-bo-55A" firstAttribute="top" secondItem="X5n-q1-gM7" secondAttribute="top" constant="5" id="daO-hi-40b"/>
                             <constraint firstItem="hEK-bo-55A" firstAttribute="leading" secondItem="X5n-q1-gM7" secondAttribute="leading" constant="10" id="naq-nP-7rD"/>
