@@ -32,18 +32,16 @@ class MissionListViewController: UIViewController {
   
   }
   
-  override func viewDidAppear(_ animated: Bool) {
-    guard let VC = self.view.window?.rootViewController as? TabBarViewController else { return }
-    LKProgressHUD.show(controller: VC)
-  }
-  
-  
   var currentBtnSelect = false
+  
+  @IBOutlet weak var searchingLabel: UILabel!
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    setUpBtn()
+    searchingLabel.isHidden = true
     getTaskData()
+    currentBtnSelect = false
+    setUpBtn()
     startAnimate(sender: allMissionBtn)
     NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
   }
@@ -103,19 +101,10 @@ class MissionListViewController: UIViewController {
       }
     } else {
       LKProgressHUD.dismiss()
-      showAlert(title: "注意", message: "當前沒有進行中任務")
+      SwiftMes.shared.showErrorMessage(body: "當前沒有任務", seconds: 1.0)
+      taskDataReturn = []
       return
     }
-  }
-  
-  func showAlert(title: String, message: String) {
-    let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-    let okAction = UIAlertAction(title: "OK", style: .default) { _ in
-      
-      self.startAnimate(sender: self.allMissionBtn)
-    }
-    controller.addAction(okAction)
-    self.present(controller, animated: true, completion: nil)
   }
   
   func startAnimate(sender: UIButton) {
@@ -154,18 +143,22 @@ class MissionListViewController: UIViewController {
     UserManager.shared.checkDetailBtn = !UserManager.shared.checkDetailBtn
     startAnimate(sender: sender)
   }
-  
+//  SwiftMes.shared.showErrorMessage(body: "當前沒有任務", seconds: 1.0)
   @IBAction func currentMission(_ sender: UIButton) {
-    currentBtnSelect = true
-    preventTap()
-    UserManager.shared.checkDetailBtn = !UserManager.shared.checkDetailBtn
     startAnimate(sender: sender)
+    currentBtnSelect = true
+    UserManager.shared.checkDetailBtn = !UserManager.shared.checkDetailBtn
+    if UserManager.shared.currentUserInfo?.status == 0 {
+      
+    } else {
+      preventTap()
+    }
     getMissionStartData()
   }
   
   func preventTap() {
-    guard let VC = self.view.window?.rootViewController as? TabBarViewController else { return }
-    LKProgressHUD.show(controller: VC)
+    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
+    LKProgressHUD.show(controller: tabVC)
   }
   
   let indicatorView = UIView()
@@ -180,6 +173,7 @@ class MissionListViewController: UIViewController {
   
   var shouldShowSearchResults = false {
     didSet {
+
       self.taskListTable.reloadData()
     }
   }
@@ -191,7 +185,7 @@ class MissionListViewController: UIViewController {
       if taskDataReturn.isEmpty {
         self.postMissionBtn.isHidden = true
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
           LKProgressHUD.dismiss()
           self.refreshControl.endRefreshing()
         }
@@ -240,7 +234,7 @@ class MissionListViewController: UIViewController {
       
       UserManager.shared.goToSignOrStay(viewController: self)
       
-    }else if UserManager.shared.currentUserInfo?.status == 0 {
+    } else if UserManager.shared.currentUserInfo?.status == 0 {
       performSegue(withIdentifier: "post", sender: nil)
     } else if UserManager.shared.currentUserInfo?.status == 1 {
       
@@ -363,8 +357,8 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
   
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
     
-    let spring = UISpringTimingParameters(dampingRatio: 0.5, initialVelocity: CGVector(dx: 1.0, dy: 0.2))
-    let animator = UIViewPropertyAnimator(duration: 1.0, timingParameters: spring)
+    let spring = UISpringTimingParameters(dampingRatio: 0.6, initialVelocity: CGVector(dx: 1.0, dy: 0.2))
+    let animator = UIViewPropertyAnimator(duration: 0.8, timingParameters: spring)
           cell.alpha = 0
           cell.transform = CGAffineTransform(translationX: 0, y: 100 * 0.6)
           animator.addAnimations {
@@ -372,7 +366,7 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
               cell.transform = .identity
             self.taskListTable.layoutIfNeeded()
           }
-          animator.startAnimation(afterDelay: 0.3 * Double(indexPath.item))
+          animator.startAnimation(afterDelay: 0.1 * Double(indexPath.item))
   }
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -416,6 +410,7 @@ extension MissionListViewController: UISearchBarDelegate {
   }
   
   func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+    searchingLabel.isHidden = true
     shouldShowSearchResults = false
   }
   
@@ -433,12 +428,20 @@ extension MissionListViewController: UISearchResultsUpdating {
     
     guard let searchString = searchCustom.searchBar.text else { return }
     
+    searchingLabel.isHidden = true
+    
     self.filteredArray = taskDataReturn.filter({ (info) -> Bool in
       
       let nickname = info.nickname
       let isMatch = nickname.localizedCaseInsensitiveContains(searchString)
       return isMatch
     })
-    taskListTable.reloadData()
+    
+    if filteredArray.count == 0 && shouldShowSearchResults {
+      searchingLabel.isHidden = false
+    } else {
+      searchingLabel.isHidden = true
+      taskListTable.reloadData()
+    }
   }
 }

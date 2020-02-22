@@ -45,13 +45,17 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    loadUserInfo()
+    if UserManager.shared.isTourist {
+      
+    } else {
+      loadUserInfo()
+    }
     getTaskData()
   }
   
   override func viewDidAppear(_ animated: Bool) {
-    guard let VC = self.view.window?.rootViewController as? TabBarViewController else { return }
-    LKProgressHUD.show(controller: VC)
+    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
+    LKProgressHUD.show(controller: tabVC)
   }
   
   @objc func reGetUserInfo() {
@@ -73,7 +77,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
           UserManager.shared.currentUserInfo = dataReturn
           NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
         case .failure:
-          
+          LKProgressHUD.dismiss()
           return
         }
       }
@@ -209,6 +213,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   
   var taskDataReturn = [TaskInfo]() {
     didSet {
+      LKProgressHUD.dismiss()
       addAnnotation()
     }
   }
@@ -248,7 +253,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
         TaskManager.shared.taskData = []
         
       case .failure(let error):
-        
+        LKProgressHUD.dismiss()
         LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
       }
     }

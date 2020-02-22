@@ -33,6 +33,8 @@ class MissionDetailViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    navigationItem.leftBarButtonItem?.tintColor = .black
+    
     if isMissionON {
       missionStackView.isHidden = false
       takeMissionBtn.isHidden = true
@@ -372,7 +374,7 @@ class MissionDetailViewController: UIViewController {
     
   lazy var testcollection: UICollectionView = {
     let layout = UICollectionViewFlowLayout()
-    let collection = UICollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 325), collectionViewLayout: layout)
+    let collection = UICollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300), collectionViewLayout: layout)
     layout.scrollDirection = .horizontal
     collection.translatesAutoresizingMaskIntoConstraints = false
     collection.showsVerticalScrollIndicator = false
@@ -383,7 +385,7 @@ class MissionDetailViewController: UIViewController {
   
   let headerView: UIView = {
     let header = UIView()
-    header.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 325)
+    header.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300)
     header.backgroundColor = .pink
     return header
   }()
@@ -659,7 +661,7 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
     let horizontalCenter = width / 2
     pageControl.currentPage = Int(offSet + horizontalCenter) / Int(width)
     
-    testcollection.alpha = 1 - scrollView.bounds.origin.y / 325
+//    testcollection.alpha = 1 - scrollView.bounds.origin.y / 300
     
 //    detailTableView.tableHeaderView?.frame.size.height = 325 - scrollView.contentOffset.y
 //
@@ -722,7 +724,7 @@ extension MissionDetailViewController: UICollectionViewDelegateFlowLayout {
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
  
-      return CGSize(width: UIScreen.main.bounds.width, height: 325)
+      return CGSize(width: UIScreen.main.bounds.width, height: 300)
     
   }
 }
@@ -858,20 +860,21 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
     } else if indexPath.row == 0 {
       return 90
     } else {
-      return 60
+      return 50
     }
   }
   
-  func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-    let spring = UISpringTimingParameters(dampingRatio: 0.5, initialVelocity: CGVector(dx: 1.0, dy: 0.2))
+   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+     
+     let spring = UISpringTimingParameters(dampingRatio: 0.7, initialVelocity: CGVector(dx: 1.0, dy: 0.2))
     let animator = UIViewPropertyAnimator(duration: 1.0, timingParameters: spring)
-          cell.alpha = 0
-          cell.transform = CGAffineTransform(translationX: 0, y: 100 * 0.6)
-          animator.addAnimations {
-              cell.alpha = 1
-              cell.transform = .identity
-            self.detailTableView.layoutIfNeeded()
-          }
-          animator.startAnimation(afterDelay: 0.1 * Double(indexPath.item))
-  }
+           cell.alpha = 0
+           cell.transform = CGAffineTransform(translationX: 0, y: 100 * 0.6)
+           animator.addAnimations {
+               cell.alpha = 1
+               cell.transform = .identity
+             self.detailTableView.layoutIfNeeded()
+           }
+           animator.startAnimation(afterDelay: 0.1 * Double(indexPath.item))
+   }
 }

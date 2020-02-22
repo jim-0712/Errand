@@ -349,6 +349,9 @@ PODS:
   - Protobuf (3.11.3)
   - Refreshable (1.2.0)
   - SwiftLint (0.38.0)
+  - SwiftMessages (7.0.1):
+    - SwiftMessages/App (= 7.0.1)
+  - SwiftMessages/App (7.0.1)
 
 DEPENDENCIES:
   - Alamofire
@@ -373,6 +376,7 @@ DEPENDENCIES:
   - ProgressHUD
   - Refreshable
   - SwiftLint
+  - SwiftMessages
 
 SPEC REPOS:
   trunk:
@@ -420,6 +424,7 @@ SPEC REPOS:
     - Protobuf
     - Refreshable
     - SwiftLint
+    - SwiftMessages
 
 SPEC CHECKSUMS:
   abseil: 18063d773f5366ff8736a050fe035a28f635fd27
@@ -466,7 +471,8 @@ SPEC CHECKSUMS:
   Protobuf: 0e94afe3b47cb11876eb6aee296638711a24bf75
   Refreshable: 0f76b6d198178e6cd2823a553fbf4e84a3dba527
   SwiftLint: 4105f061f9812b214568b736dab580ab2c73a582
+  SwiftMessages: b577dc7043be8b299857ab35bb663dbff6483bd0
 
-PODFILE CHECKSUM: 992c3432f7391d298d91f06c5e7af55d5dc79342
+PODFILE CHECKSUM: a2ca2168b15decae0c99586888f44ea37c0baeaf
 
 COCOAPODS: 1.8.4

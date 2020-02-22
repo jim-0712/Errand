@@ -16,17 +16,27 @@ class FriendViewController: UIViewController {
         super.viewDidLoad()
       
       if UserManager.shared.isTourist {
-        UserManager.shared.goToSign(viewController: self)
+        noFreindsLabel.text = "趕快去個人頁登入享有好友吧"
+        friendListTable.backgroundColor = .clear
       } else {
+        noFreindsLabel.text = "搜尋好友中"
         setUpTable()
       }
     }
   
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    friendListTable.backgroundColor = .clear
-    
-    getFriend()
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    if UserManager.shared.isTourist {
+      friendListTable.backgroundColor = .clear
+    } else {
+      getFriend()
+      preventTap()
+    }
+  }
+  
+  func preventTap() {
+    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
+    LKProgressHUD.show(controller: tabVC)
   }
   
   var refreshControl: UIRefreshControl!
@@ -43,9 +53,11 @@ class FriendViewController: UIViewController {
      didSet {
        if friend.isEmpty {
         refreshControl.endRefreshing()
+        LKProgressHUD.dismiss()
         noFreindsLabel.text = "您目前沒有好友                    請趕快完成第一個任務加好友吧"
         friendListTable.backgroundColor = .clear
          } else {
+         LKProgressHUD.dismiss()
          friendListTable.backgroundColor = .white
          refreshControl.endRefreshing()
          friendListTable.reloadData()
@@ -78,6 +90,7 @@ class FriendViewController: UIViewController {
         
         if friends.count == 0 {
           self.friendInfo = []
+          LKProgressHUD.dismiss()
         }
         for count in 0 ..< friends.count {
           UserManager.shared.getPhoto(nameRef: friends[count].nameREF) { result in
@@ -89,12 +102,14 @@ class FriendViewController: UIViewController {
                  self.friendInfo = self.friendsData
               }
             case .failure:
+              LKProgressHUD.dismiss()
               print("error")
             }
           }
         }
         self.friend = friends
       case .failure:
+        LKProgressHUD.dismiss()
         print("error")
       }
     }

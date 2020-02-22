@@ -57,6 +57,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     
     NotificationCenter.default.addObserver(self, selector: #selector(perFormPushVC), name: Notification.Name("popVC"), object: nil)
     
+    NotificationCenter.default.addObserver(self, selector: #selector(lkprogressShowHudeTab), name: Notification.Name("test"), object: nil)
+    
     FirebaseApp.configure()
     
     GMSServices.provideAPIKey("AIzaSyBbTnBn0MHPMnioaL4y68Da3d41JlaSY-g")
@@ -151,6 +153,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
         })
       }
     }
+  }
+  
+ @objc func lkprogressShowHudeTab() {
+  
+  guard let tabBar = self.window?.rootViewController as? TabBarViewController  else{ return }
+  
+  LKProgressHUD.show(controller: tabBar)
+    
   }
   
   func backGroundNoti(title: String, body: String) {

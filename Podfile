@@ -30,6 +30,7 @@ target 'Errand' do
   pod 'MessageKit'
   pod 'KMPlaceholderTextView', '~> 1.4.0'
   pod 'MarqueeLabel'
+  pod 'SwiftMessages'
 
   target 'ErrandTests' do
     inherit! :search_paths

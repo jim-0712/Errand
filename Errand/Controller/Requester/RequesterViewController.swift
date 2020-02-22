@@ -27,32 +27,6 @@ class RequesterViewController: UIViewController {
   @objc func reload() {
     readRequester()
   }
-  
-  func showMapAlert(title: String, message: String, viewController: UIViewController) {
-    let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-    let okAction = UIAlertAction(title: "ok", style: .default) { _ in
-      let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
-      self.view.window?.rootViewController = mapView
-    }
-    controller.addAction(okAction)
-    viewController.present(controller, animated: true, completion: nil)
-  }
-  
-  func showTaskAlert(title: String, message: String, viewController: UIViewController) {
-    let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-    let okAction = UIAlertAction(title: "ok", style: .default) { _ in
-      let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
-      self.view.window?.rootViewController = mapView
-//      if let conversationVC = UIStoryboard.init(name: "Mission", bundle: nil).instantiateViewController(withIdentifier: "startMission") as? StartMissionViewController {
-//
-//        UserManager.shared.currentUserInfo = nil
-//        conversationVC.modalPresentationStyle = .fullScreen
-//        viewController.present(conversationVC, animated: true, completion: nil)
-//      }
-    }
-  controller.addAction(okAction)
-  viewController.present(controller, animated: true, completion: nil)
-}
 
 override func viewWillAppear(_ animated: Bool) {
   super.viewWillAppear(animated)
@@ -60,7 +34,7 @@ override func viewWillAppear(_ animated: Bool) {
   
   if UserManager.shared.isTourist {
     
-    UserManager.shared.goToSign(viewController: self)
+    noRequesterLabel.text = "請先去個人頁登入享有功能"
     
   } else if UserManager.shared.currentUserInfo?.status == 0 {
     
@@ -76,14 +50,31 @@ override func viewWillAppear(_ animated: Bool) {
     requesterTable.backgroundColor = .clear
     readRequester()
   }
-  NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
+  NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
 }
+  
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    if UserManager.shared.isTourist {
+      
+    } else if UserManager.shared.currentUserInfo?.status != 0 {
+      preventTap()
+    }
+  }
+  
+  func preventTap() {
+    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
+    LKProgressHUD.show(controller: tabVC)
+  }
 
 var userInfo = [AccountInfo]() {
   didSet {
     if userInfo.isEmpty {
+      LKProgressHUD.dismiss()
+      noRequesterLabel.text = "目前沒有申請者"
       refreshControl.endRefreshing()
     } else {
+      LKProgressHUD.dismiss()
       requesterTable.backgroundColor = .white
       refreshControl.endRefreshing()
       requesterTable.reloadData()
@@ -144,10 +135,12 @@ func readRequester() {
       
       if taskCount.count == 0 {
         strongSelf.userInfo = []
+        LKProgressHUD.dismiss()
         strongSelf.showAlert(title: "注意", message: "您當前沒有任務", viewController: strongSelf)
         
       } else if taskCount[0].status == 1 {
         strongSelf.userInfo = []
+        LKProgressHUD.dismiss()
         strongSelf.showAlert(title: "注意", message: "任務進行中", viewController: strongSelf)
       } else {
         
@@ -207,7 +200,7 @@ func checkRequest(viewController: UIViewController, indexInt: Int) {
   requesterInfo.requsterInfoData = self.userInfo[indexInt]
   
   self.show(requesterInfo, sender: nil)
-}
+  }
 }
 
 extension RequesterViewController: UITableViewDelegate, UITableViewDataSource {

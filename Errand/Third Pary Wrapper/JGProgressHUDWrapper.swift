@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import ProgressHUD
 import JGProgressHUD
 
 class LKProgressHUD {
@@ -17,12 +16,6 @@ class LKProgressHUD {
     private init() { }
 
     let hud = JGProgressHUD(style: .dark)
-  
-    let hudd = ProgressHUD()
-  
-  static func jimTest() {
-    ProgressHUD.show()
-  }
 
   static func showSuccess(text: String, controller: UIViewController) {
 

@@ -16,6 +16,8 @@ class TaskManager {
   
   static let shared = TaskManager()
   
+  private init() {}
+  
   let dbF = Firestore.firestore()
   
   let database = Database.database().reference()

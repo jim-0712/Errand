@@ -48,6 +48,7 @@
 		FB53F32D23EBCE220041C49D /* PersonAboutTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB53F32B23EBCE220041C49D /* PersonAboutTableViewCell.xib */; };
 		FB53F33023EBD5230041C49D /* PersonRateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB53F32E23EBD5230041C49D /* PersonRateTableViewCell.swift */; };
 		FB53F33323EBFE290041C49D /* WhiteSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB53F33223EBFE290041C49D /* WhiteSpace.swift */; };
+		FB5C00C62400E3F40036CD87 /* SwiftMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5C00C52400E3F40036CD87 /* SwiftMessage.swift */; };
 		FB5F5BCE23DB2639003B9ABC /* AddLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F5BCD23DB2639003B9ABC /* AddLocationViewController.swift */; };
 		FB5F5BD023DB2847003B9ABC /* setofont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB5F5BCF23DB2847003B9ABC /* setofont.ttf */; };
 		FB6365FE23E2B975008555BC /* MissionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6365FD23E2B975008555BC /* MissionDetailViewController.swift */; };
@@ -167,6 +168,7 @@
 		FB53F32B23EBCE220041C49D /* PersonAboutTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PersonAboutTableViewCell.xib; sourceTree = "<group>"; };
 		FB53F32E23EBD5230041C49D /* PersonRateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonRateTableViewCell.swift; sourceTree = "<group>"; };
 		FB53F33223EBFE290041C49D /* WhiteSpace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiteSpace.swift; sourceTree = "<group>"; };
+		FB5C00C52400E3F40036CD87 /* SwiftMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftMessage.swift; sourceTree = "<group>"; };
 		FB5F5BCD23DB2639003B9ABC /* AddLocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddLocationViewController.swift; sourceTree = "<group>"; };
 		FB5F5BCF23DB2847003B9ABC /* setofont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = setofont.ttf; sourceTree = "<group>"; };
 		FB6365FD23E2B975008555BC /* MissionDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionDetailViewController.swift; sourceTree = "<group>"; };
@@ -429,8 +431,9 @@
 		FB387C4B23CF065100B6D8C4 /* Third Pary Wrapper */ = {
 			isa = PBXGroup;
 			children = (
-				FB387C4C23CF098F00B6D8C4 /* JGProgressHUDWrapper.swift */,
 				FB63660223E31E67008555BC /* KingFisherWrapper.swift */,
+				FB387C4C23CF098F00B6D8C4 /* JGProgressHUDWrapper.swift */,
+				FB5C00C52400E3F40036CD87 /* SwiftMessage.swift */,
 			);
 			path = "Third Pary Wrapper";
 			sourceTree = "<group>";
@@ -948,6 +951,7 @@
 				FB69553223F001350049DB14 /* DatabaseRepresentation.swift in Sources */,
 				FB53F31723EAAFC20041C49D /* RequesterTableViewCell.swift in Sources */,
 				FB387C5323CF323600B6D8C4 /* UserInfoViewController.swift in Sources */,
+				FB5C00C62400E3F40036CD87 /* SwiftMessage.swift in Sources */,
 				FB387C1423CEEF0E00B6D8C4 /* HomePageViewController.swift in Sources */,
 				FB638DD223E8913800030CB2 /* PhotoCollectionViewCell.swift in Sources */,
 				FB53F33323EBFE290041C49D /* WhiteSpace.swift in Sources */,

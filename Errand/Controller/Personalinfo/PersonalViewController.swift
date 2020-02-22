@@ -56,6 +56,7 @@ class PersonalViewController: UIViewController {
     super.viewDidLoad()
     
     if UserManager.shared.isTourist {
+      
       setUpTableView()
     } else {
       setUpNavigationItem()
@@ -73,8 +74,14 @@ class PersonalViewController: UIViewController {
   
   override func viewWillLayoutSubviews() {
     super.viewWillLayoutSubviews()
+    NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
     cornerView.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 500, y: 220, width: 1000, height: 2000)
     cornerView.layer.cornerRadius = cornerView.bounds.width / 2
+  }
+  
+  func preventTap() {
+    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
+    LKProgressHUD.show(controller: tabVC)
   }
   
   func setUpNavigationItem() {
@@ -117,7 +124,7 @@ class PersonalViewController: UIViewController {
       
       if isUpload {
         
-        LKProgressHUD.show(controller: self)
+        self.preventTap()
         
         UserManager.shared.updateUserInfo { [weak self] result in
           
@@ -136,7 +143,7 @@ class PersonalViewController: UIViewController {
             strongSelf.infoTableView.reloadData()
             
           case .failure(let error):
-            
+            LKProgressHUD.dismiss()
             LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
           }
         }
@@ -224,7 +231,7 @@ extension PersonalViewController: UIImagePickerControllerDelegate, UINavigationC
   
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
     
-    LKProgressHUD.show(controller: self)
+    preventTap()
     
     let id = UUID().uuidString
     
@@ -306,7 +313,7 @@ extension PersonalViewController: UITableViewDataSource, UITableViewDelegate {
       self.minusStar = star
     }
       
-    
+    LKProgressHUD.dismiss()
     let data = [name, self.about]
     
     if indexPath.row == 0 {

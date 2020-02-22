@@ -45,5 +45,11 @@ class PersonRateTableViewCell: UITableViewCell {
       newUserLabel.isHidden = true
       starView.isHidden = false
     }
+    
+    if UserManager.shared.isTourist {
+      newUserLabel.text = "遊客"
+    } else {
+      newUserLabel.text = "此用戶為新用戶"
+    }
   }
 }
