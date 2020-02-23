@@ -29,8 +29,8 @@ class FriendViewController: UIViewController {
     if UserManager.shared.isTourist {
       friendListTable.backgroundColor = .clear
     } else {
-      getFriend()
       preventTap()
+      getFriend()
     }
   }
   
@@ -101,6 +101,7 @@ class FriendViewController: UIViewController {
               if self.friendsData.count == friends.count {
                  self.friendInfo = self.friendsData
               }
+              LKProgressHUD.dismiss()
             case .failure:
               LKProgressHUD.dismiss()
               print("error")

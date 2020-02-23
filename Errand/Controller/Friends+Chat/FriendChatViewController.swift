@@ -36,8 +36,14 @@ class FriendChatViewController: MessagesViewController {
       preSetUp()
       setUpListener()
       setUpMessage()
-
-    }
+      navigationItem.setHidesBackButton(true, animated: true)
+      navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(backToList))
+      }
+      
+      @objc func backToList() {
+        self.navigationController?.popViewController(animated: true)
+        NotificationCenter.default.post(name: Notification.Name("test"), object: nil)
+      }
   
     var selfSender: String?
   
@@ -80,7 +86,6 @@ class FriendChatViewController: MessagesViewController {
     }
     
     private func save(_ message: Message) {
-      print(message.representation)
       reference?.addDocument(data: message.representation) { error in
         if let eccc = error {
           print("Error sending message: \(eccc.localizedDescription)")

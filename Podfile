@@ -24,7 +24,6 @@ target 'Errand' do
   pod ‘GoogleMaps’
   pod ‘GooglePlaces’
   pod "Alamofire"
-  pod 'ProgressHUD'
   pod "Refreshable"
   pod "Cosmos"
   pod 'MessageKit'

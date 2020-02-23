@@ -129,6 +129,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
   }
   
   @objc func perFormPushVC() {
+    
+    guard let uid = Auth.auth().currentUser?.uid else { return }
+    
+    UserManager.shared.readData(uid: uid) { result in
+      switch result {
+      case .success:
+        self.gotoDetail()
+      case .failure:
+        print("error")
+      }
+    }
+  }
+  
+  func gotoDetail() {
     let storyboard = UIStoryboard(name: "Mission", bundle: nil)
     if let conversationVC = storyboard.instantiateViewController(withIdentifier: "detailViewController") as? MissionDetailViewController,
       let tabBarController = self.window?.rootViewController as? TabBarViewController,
@@ -137,6 +151,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
       if tabBarController.presentedViewController == nil {
         tabBarController.dismiss(animated: true) {
         conversationVC.modalPresentationStyle = .fullScreen
+        UserManager.shared.currentUserInfo?.status = 2
         conversationVC.isMissionON = true
         conversationVC.isNavi = true
         tabBarController.present(conversationVC, animated: true, completion: nil)
@@ -157,7 +172,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
   
  @objc func lkprogressShowHudeTab() {
   
-  guard let tabBar = self.window?.rootViewController as? TabBarViewController  else{ return }
+  guard let tabBar = self.window?.rootViewController as? TabBarViewController  else { return }
   
   LKProgressHUD.show(controller: tabBar)
     

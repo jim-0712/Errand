@@ -49,6 +49,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       
     } else {
       loadUserInfo()
+      NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
     }
     getTaskData()
   }
@@ -75,7 +76,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
           LKProgressHUD.dismiss()
           UserManager.shared.isPostTask = dataReturn.onTask
           UserManager.shared.currentUserInfo = dataReturn
-          NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
         case .failure:
           LKProgressHUD.dismiss()
           return

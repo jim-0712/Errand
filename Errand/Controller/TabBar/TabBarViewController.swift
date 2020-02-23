@@ -103,6 +103,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     viewControllers = tabs.map({ $0.controller() })
     
     delegate = self
+ 
   }
   
   let notiView = UIView()

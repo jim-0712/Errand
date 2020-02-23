@@ -364,7 +364,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4Fc-N0-dCj">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4Fc-N0-dCj">
                                 <rect key="frame" x="0.0" y="88" width="414" height="684"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
@@ -466,16 +466,17 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="asdasdasdasdasdsadasd" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FMY-g3-OEG">
-                                                    <rect key="frame" x="134" y="8" width="264" height="163"/>
+                                                    <rect key="frame" x="134" y="14" width="264" height="157"/>
                                                     <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="19"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="FMY-g3-OEG" firstAttribute="top" secondItem="nR6-0Z-o3T" secondAttribute="top" constant="8" id="12w-4d-fMg"/>
+                                                <constraint firstItem="FMY-g3-OEG" firstAttribute="top" secondItem="nR6-0Z-o3T" secondAttribute="top" constant="14" id="12w-4d-fMg"/>
                                                 <constraint firstAttribute="trailing" secondItem="yEQ-5O-LC2" secondAttribute="trailing" id="83j-ms-cE2"/>
                                                 <constraint firstItem="ycj-Cx-cc0" firstAttribute="centerY" secondItem="ldW-q2-sFy" secondAttribute="centerY" id="EqF-Hx-TDm"/>
+                                                <constraint firstItem="yEQ-5O-LC2" firstAttribute="top" secondItem="FMY-g3-OEG" secondAttribute="bottom" constant="8" id="Rrz-OM-4DE"/>
                                                 <constraint firstItem="ldW-q2-sFy" firstAttribute="top" secondItem="nR6-0Z-o3T" secondAttribute="top" constant="12" id="SeW-pi-a2S"/>
                                                 <constraint firstItem="ycj-Cx-cc0" firstAttribute="leading" secondItem="ldW-q2-sFy" secondAttribute="trailing" constant="8" id="UKG-Tk-Lpx"/>
                                                 <constraint firstAttribute="trailing" secondItem="FMY-g3-OEG" secondAttribute="trailing" constant="16" id="XqV-j6-YAB"/>
@@ -483,7 +484,6 @@
                                                 <constraint firstItem="ldW-q2-sFy" firstAttribute="leading" secondItem="nR6-0Z-o3T" secondAttribute="leadingMargin" id="gZa-cu-HVx"/>
                                                 <constraint firstItem="FMY-g3-OEG" firstAttribute="leading" secondItem="ycj-Cx-cc0" secondAttribute="trailing" constant="20" id="kyb-Dk-OVT"/>
                                                 <constraint firstAttribute="bottom" secondItem="yEQ-5O-LC2" secondAttribute="bottom" id="mwd-WS-0aE"/>
-                                                <constraint firstItem="yEQ-5O-LC2" firstAttribute="top" secondItem="FMY-g3-OEG" secondAttribute="bottom" constant="8" id="wam-HU-BE9"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>

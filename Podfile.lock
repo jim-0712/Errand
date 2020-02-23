@@ -345,7 +345,6 @@ PODS:
     - nanopb/encode (= 0.3.9011)
   - nanopb/decode (0.3.9011)
   - nanopb/encode (0.3.9011)
-  - ProgressHUD (2.70)
   - Protobuf (3.11.3)
   - Refreshable (1.2.0)
   - SwiftLint (0.38.0)
@@ -373,7 +372,6 @@ DEPENDENCIES:
   - KMPlaceholderTextView (~> 1.4.0)
   - MarqueeLabel
   - MessageKit
-  - ProgressHUD
   - Refreshable
   - SwiftLint
   - SwiftMessages
@@ -420,7 +418,6 @@ SPEC REPOS:
     - MarqueeLabel
     - MessageKit
     - nanopb
-    - ProgressHUD
     - Protobuf
     - Refreshable
     - SwiftLint
@@ -467,12 +464,11 @@ SPEC CHECKSUMS:
   MarqueeLabel: f762aa681ae201f66c1d511858b171f75d83013a
   MessageKit: e892a9ca49ebe6d82684d3a93ad84021fa23e2c6
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
-  ProgressHUD: e603e8b8622c47d8818b9fb38b3cfe9d3e7ca421
   Protobuf: 0e94afe3b47cb11876eb6aee296638711a24bf75
   Refreshable: 0f76b6d198178e6cd2823a553fbf4e84a3dba527
   SwiftLint: 4105f061f9812b214568b736dab580ab2c73a582
   SwiftMessages: b577dc7043be8b299857ab35bb663dbff6483bd0
 
-PODFILE CHECKSUM: a2ca2168b15decae0c99586888f44ea37c0baeaf
+PODFILE CHECKSUM: 1f38a4fbc769a639d8ee3d506a5c6047c5cb4c06
 
 COCOAPODS: 1.8.4

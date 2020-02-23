@@ -331,8 +331,14 @@ class MissionDetailViewController: UIViewController {
         let sender = PushNotificationSender()
         sender.sendPushNotification(to: taskInfo.fcmToken, body: "趕快開啟查看")
         strongSelf.setUpBtnEnable()
-        strongSelf.dismiss(animated: true, completion: nil)
         
+        let controller = UIAlertController(title: "恭喜", message: "您已申請", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "ok", style: .default) { (_) in
+          self?.navigationController?.popViewController(animated: true)
+        }
+        controller.addAction(okAction)
+        strongSelf.present(controller, animated: true, completion: nil)
+      
         LKProgressHUD.dismiss()
         
       case .failure(let error):
@@ -341,7 +347,6 @@ class MissionDetailViewController: UIViewController {
         
       }
     }
-    
   }
   var receiveTime: String?
   
@@ -502,11 +507,11 @@ class MissionDetailViewController: UIViewController {
       group.notify(queue: DispatchQueue.main) {
         
         let sender = PushNotificationSender()
-        sender.sendPushNotification(to: strongSelf.destination, body: "對方任務完成")
+        sender.sendPushNotification(to: strongSelf.destination, body: "任務完成")
         LKProgressHUD.dismiss()
         
         guard let judgeVC = strongSelf.storyboard?.instantiateViewController(identifier: "judge") as? JudgeMissionViewController,
-          let taskInfo = strongSelf.detailData else { return }
+             let taskInfo = strongSelf.detailData else { return }
         
         judgeVC.detailData = taskInfo
         NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
@@ -645,7 +650,7 @@ class MissionDetailViewController: UIViewController {
     if segue.identifier == "chat" {
       guard let chatVC = segue.destination as? ChatViewController,
         let taskInfo = detailData else { return }
-      self.navigationController?.setToolbarHidden(false, animated: false)
+     
       chatVC.detailData = taskInfo
       chatVC.receiverPhoto = reversePhoto
     }
@@ -853,21 +858,23 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
     }
   }
   
-  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    
-    if isMissionON && indexPath.row == 0 {
-      return 170
-    } else if indexPath.row == 0 {
-      return 90
-    } else {
-      return 50
-    }
-  }
+//  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//
+//    if isMissionON && indexPath.row == 0 {
+//      return 170
+//    } else if indexPath.row == 0 {
+//      return 90
+//    } else if indexPath.row == 3 {
+//      return 170
+//    } else {
+//      return 50
+//    }
+//  }
   
    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
      
-     let spring = UISpringTimingParameters(dampingRatio: 0.7, initialVelocity: CGVector(dx: 1.0, dy: 0.2))
-    let animator = UIViewPropertyAnimator(duration: 1.0, timingParameters: spring)
+    let spring = UISpringTimingParameters(dampingRatio: 0.7, initialVelocity: CGVector(dx: 1.0, dy: 0.2))
+    let animator = UIViewPropertyAnimator(duration: 0.5, timingParameters: spring)
            cell.alpha = 0
            cell.transform = CGAffineTransform(translationX: 0, y: 100 * 0.6)
            animator.addAnimations {
@@ -875,6 +882,6 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
                cell.transform = .identity
              self.detailTableView.layoutIfNeeded()
            }
-           animator.startAnimation(afterDelay: 0.1 * Double(indexPath.item))
+           animator.startAnimation(afterDelay: 0.05 * Double(indexPath.item))
    }
 }

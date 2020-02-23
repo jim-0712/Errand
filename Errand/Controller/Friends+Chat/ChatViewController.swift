@@ -10,6 +10,7 @@ import UIKit
 import Photos
 import Firebase
 import MessageKit
+import SwiftMessages
 import Kingfisher
 import InputBarAccessoryView
 import FirebaseFirestore
@@ -21,8 +22,8 @@ class ChatViewController: MessagesViewController {
   private var messages: [Message] = []
   private var messageListener: ListenerRegistration?
 
-  
   private let db = Firestore.firestore()
+  
   private var reference: CollectionReference?
   
   private let storage = Storage.storage().reference()
@@ -34,7 +35,7 @@ class ChatViewController: MessagesViewController {
     setUpMessage()
     preSetUp()
   }
-  
+ 
   func setUpListener() {
     guard let data = detailData else { return }
     reference = db.collection(["Chatrooms", data.chatRoom, "thread"].joined(separator: "/"))
@@ -83,13 +84,9 @@ class ChatViewController: MessagesViewController {
     messagesCollectionView.messagesDataSource = self
     messagesCollectionView.messagesLayoutDelegate = self
     messagesCollectionView.messagesDisplayDelegate = self
-    messagesCollectionView.delegate = self
-    messagesCollectionView.dataSource = self
- 
   }
   
   private func save(_ message: Message) {
-    print(message.representation)
     reference?.addDocument(data: message.representation) { error in
       if let eccc = error {
         print("Error sending message: \(eccc.localizedDescription)")
@@ -175,7 +172,7 @@ extension ChatViewController: MessagesDataSource {
 extension ChatViewController: MessagesLayoutDelegate {
   
   func avatarSize(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGSize {
-    return CGSize(width: 20, height: 20)
+    return CGSize(width: 100, height: 100)
   }
   
   func footerViewSize(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGSize {
