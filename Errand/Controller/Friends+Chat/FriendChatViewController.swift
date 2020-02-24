@@ -25,7 +25,7 @@ class FriendChatViewController: MessagesViewController {
   private var messages: [Message] = []
   private var messageListener: ListenerRegistration?
   
-  private let db = Firestore.firestore()
+  private let dbF = Firestore.firestore()
     private var reference: CollectionReference?
     
     private let storage = Storage.storage().reference()
@@ -61,7 +61,7 @@ class FriendChatViewController: MessagesViewController {
     
     func setUpListener() {
       guard let chatRoom = chatRoom else { return }
-      reference = db.collection(["Chatrooms", chatRoom.chatRoomID, "thread"].joined(separator: "/"))
+      reference = dbF.collection(["Chatrooms", chatRoom.chatRoomID, "thread"].joined(separator: "/"))
       messageListener = reference?.addSnapshotListener { querySnapshot, error in
         guard let snapshot = querySnapshot else {
           print("Error listening for channel updates: \(error?.localizedDescription ?? "No error")")
@@ -103,7 +103,7 @@ class FriendChatViewController: MessagesViewController {
       messages.append(message)
       messages.sort()
       
-      let isLatestMessage = messages.index(of: message) == (messages.count - 1)
+      let isLatestMessage = messages.firstIndex(of: message) == (messages.count - 1)
       let shouldScrollToBottom = messagesCollectionView.isAtBottom && isLatestMessage
       
       messagesCollectionView.reloadData()

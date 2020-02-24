@@ -36,7 +36,21 @@ class SwiftMes {
     view.configureTheme(.warning)
     view.configureDropShadow()
     var config = SwiftMessages.Config()
-    config.presentationStyle = .bottom
+    config.presentationStyle = .top
+    config.duration = .seconds(seconds: seconds)
+    config.interactiveHide = false
+    config.preferredStatusBarStyle = .lightContent
+    SwiftMessages.show(config: config, view: view)
+  }
+  
+  func showSuccessMessage(body: String, seconds: Double) {
+    let view = MessageView.viewFromNib(layout: .cardView)
+    view.configureContent(title: "成功", body: body)
+    view.button?.isHidden = true
+    view.configureTheme(.success)
+    view.configureDropShadow()
+    var config = SwiftMessages.Config()
+    config.presentationStyle = .center
     config.duration = .seconds(seconds: seconds)
     config.interactiveHide = false
     config.preferredStatusBarStyle = .lightContent

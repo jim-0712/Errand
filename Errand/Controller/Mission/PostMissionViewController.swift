@@ -34,6 +34,12 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
   
   var isEdit = false
   
+  @IBOutlet weak var giveUpBtn: UIButton!
+  
+  @IBOutlet weak var fixBtn: UIButton!
+  
+  @IBOutlet weak var editMissionStackView: UIStackView!
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     setUpSetting()
@@ -83,6 +89,8 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
     
     if isEditing {
       editBackBtn.isHidden = false
+      postBtn.isHidden = true
+      editMissionStackView.isHidden = false
       LKProgressHUD.show(controller: self)
       TaskManager.shared.setUpStatusData { result in
         switch result {
@@ -96,6 +104,8 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
       }
     } else {
       editBackBtn.isHidden = true
+      postBtn.isHidden = false
+      editMissionStackView.isHidden = true
       LKProgressHUD.dismiss()
     }
   }
@@ -187,6 +197,59 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
   
   @IBAction func postAct(_ sender: Any) {
     
+    postMissionAct()
+    
+  }
+  @IBAction func fixAct(_ sender: Any) {
+    postMissionAct()
+    
+  }
+  @IBAction func deleteAct(_ sender: Any) {
+    
+    guard let uid = Auth.auth().currentUser?.uid else { return }
+    
+    let group = DispatchGroup()
+    
+    group.enter()
+    group.enter()
+    
+    TaskManager.shared.deleteTask(uid: uid) { result in
+      switch result {
+      case .success:
+        group.leave()
+      case .failure:
+        group.leave()
+        print("delete Fail")
+      }
+    }
+    
+    UserManager.shared.updateData(status: 0) { result in
+      switch result {
+      case .success:
+        group.leave()
+      case .failure:
+        group.leave()
+        print("delete Fail")
+      }
+    }
+    
+    group.notify(queue: DispatchQueue.main) {
+      UserManager.shared.currentUserInfo?.status = 0
+      LKProgressHUD.dismiss()
+      SwiftMes.shared.showSuccessMessage(body: "恭喜刪除 返回任務頁面中", seconds: 2.0)
+      DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        self.dismiss(animated: true, completion: nil)
+      }
+    }
+  }
+  
+  func preventTap() {
+    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
+    LKProgressHUD.show(controller: tabVC)
+  }
+  
+  func postMissionAct() {
+    
     guard let price = priceTextField.text,
       let content = missionContentTextView.text else { return }
     
@@ -196,11 +259,11 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
       SwiftMes.shared.showErrorMessage(body: "價錢不得為空", seconds: 1.0)
     } else if addressLabel.text == "" {
       SwiftMes.shared.showErrorMessage(body: "地址不能為空", seconds: 1.0)
-    }  else if content.isEmpty {
+    } else if content.isEmpty {
       SwiftMes.shared.showErrorMessage(body: "描述內容不得為空", seconds: 1.0)
     } else {
       
-      LKProgressHUD.show(controller: self)
+      self.preventTap()
       
       self.fileURL = []
       
@@ -302,6 +365,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
         self.createDataBase()
       }
     }
+    
   }
   
   func createDataBase() {
@@ -343,8 +407,12 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
             NotificationCenter.default.post(name: Notification.Name("postMission"), object: nil)
             UserManager.shared.currentUserInfo?.status = 1
             LKProgressHUD.dismiss()
-            strongSelf.showAlert(viewController: strongSelf)
-            
+            SwiftMes.shared.showSuccessMessage(body: "返回任務頁面中", seconds: 2.0)
+//            strongSelf.showAlert(viewController: strongSelf)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+              strongSelf.navigationController?.popViewController(animated: true)
+              strongSelf.dismiss(animated: true, completion: nil)
+            }
           case .failure(let error):
             
             LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
@@ -392,6 +460,8 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
   
   func setUpBtn() {
     postBtn.layer.cornerRadius = postBtn.bounds.height / 8
+    fixBtn.layer.cornerRadius = postBtn.bounds.height / 8
+    giveUpBtn.layer.cornerRadius = postBtn.bounds.height / 8
     if isEditing {
       postBtn.isEnabled = true
       postBtn.setTitle("修改完成", for: .normal)
@@ -514,7 +584,6 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
         cell.photoImageView.isHidden = true
         guard let video = luke[indexPath.row] as? URL else { return UICollectionViewCell() }
         
-        let player = AVPlayer(url: video)
         let playQueue = AVQueuePlayer()
         let platItem = AVPlayerItem(url: video)
         plaverLooper = AVPlayerLooper(player: playQueue, templateItem: platItem)

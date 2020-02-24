@@ -49,6 +49,7 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
   
   func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
     print("hellooooooo")
+    NotificationCenter.default.post(name: Notification.Name("reloadUser"), object: nil)
     completionHandler([.badge, .sound, .alert])
   }
   

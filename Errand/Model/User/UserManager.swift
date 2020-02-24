@@ -241,7 +241,7 @@ class UserManager {
     }
   }
   
-  func dataParser(quary: QuerySnapshot, completion: @escaping (Result<AccountInfo, Error>) -> Void){
+  func dataParser(quary: QuerySnapshot, completion: @escaping (Result<AccountInfo, Error>) -> Void) {
     
     guard let onTask = quary.documents.first?.data()["onTask"] as? Bool,
       let email = quary.documents.first?.data()["email"] as? String,
@@ -288,7 +288,7 @@ class UserManager {
     }
   }
   
-  func updateUserInfo(completion: @escaping (Result<String, Error>) -> Void) {
+  func updateUserInfo(completion: @escaping (Result<AccountInfo, Error>) -> Void) {
     guard let data = currentUserInfo else { return }
     dbF.collection("Users").whereField("uid", isEqualTo: data.uid).getDocuments { (querySnapshot, error) in
       if let querySnapshot = querySnapshot {
@@ -309,7 +309,7 @@ class UserManager {
                 
                 strongSelf.currentUserInfo = dataReturn
                 
-                completion(.success("Success"))
+                completion(.success(dataReturn))
                 
               case .failure:
                 
@@ -319,6 +319,46 @@ class UserManager {
             
           }
         })
+      }
+    }
+  }
+  
+  func updateReverseUid(uid: String, completion: @escaping (Result<String, Error>) -> Void) {
+      
+    UserManager.shared.readData(uid: uid) { result in
+      switch result {
+      case .success(var  reverseInfo):
+        
+        var isBlack = false
+        guard let currentuid = Auth.auth().currentUser?.uid else { return }
+        
+        for info in reverseInfo.blacklist {
+          if info == currentuid {
+            isBlack = true
+            break
+          }
+        }
+        
+        if isBlack {
+          
+          completion(.success("Good"))
+  
+        } else {
+          
+          reverseInfo.blacklist.append(currentuid)
+          self.currentUserInfo = reverseInfo
+          
+            UserManager.shared.updateUserInfo { result in
+              switch result {
+              case .success:
+                completion(.success("Success"))
+              case .failure:
+                completion(.failure(FireBaseUpdateError.updateError))
+              }
+            }
+        }
+      case .failure:
+        completion(.failure(FireBaseUpdateError.updateError))
       }
     }
   }

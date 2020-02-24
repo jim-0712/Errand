@@ -20,7 +20,11 @@ class MissionDetailViewController: UIViewController {
   
   var isMissionON = false
   
+  var alreadyReport = false
+  
   var destination = ""
+  
+  var reverse = ""
   
   let myLocationManager = CLLocationManager()
   
@@ -65,7 +69,33 @@ class MissionDetailViewController: UIViewController {
       UserManager.shared.readData(uid: uid) { result in
         switch result {
         case .success:
-          self.callTaskData()
+          
+          guard let auth = Auth.auth().currentUser else {
+            SwiftMes.shared.showWarningMessage(body: "請先登入", seconds: 1.0)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+              let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "main") as? ViewController
+              
+              UserManager.shared.isTourist = true
+              
+              UserDefaults.standard.removeObject(forKey: "login")
+              
+              self.view.window?.rootViewController = signInVC
+            }
+            return
+          }
+          
+          guard let status = UserManager.shared.currentUserInfo?.status else { return }
+          
+          if status == 0 {
+            SwiftMes.shared.showSuccessMessage(body: "該任務已經完成", seconds: 1.0)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+              let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
+                   
+                   self.view.window?.rootViewController = mapView
+            }
+          } else {
+            self.callTaskData()
+          }
         case .failure:
           print("error")
         }
@@ -235,13 +265,10 @@ class MissionDetailViewController: UIViewController {
     guard let taskData = self.detailData,
       let status = UserManager.shared.currentUserInfo?.status else { return }
     var owner = ""
-    var judgerOwner = ""
     if status == 1 {
       owner = "ownerOK"
-      judgerOwner = taskData.missionTaker
     } else {
       owner = "takerOK"
-      judgerOwner = taskData.uid
     }
     
     let group = DispatchGroup()
@@ -327,7 +354,7 @@ class MissionDetailViewController: UIViewController {
       case .success:
         
         NotificationCenter.default.post(name: Notification.Name("takeMission"), object: nil)
-
+        
         let sender = PushNotificationSender()
         sender.sendPushNotification(to: taskInfo.fcmToken, body: "趕快開啟查看")
         strongSelf.setUpBtnEnable()
@@ -338,7 +365,7 @@ class MissionDetailViewController: UIViewController {
         }
         controller.addAction(okAction)
         strongSelf.present(controller, animated: true, completion: nil)
-      
+        
         LKProgressHUD.dismiss()
         
       case .failure(let error):
@@ -376,7 +403,7 @@ class MissionDetailViewController: UIViewController {
     detailTableView.tableHeaderView = headerView
     
   }
-    
+  
   lazy var testcollection: UICollectionView = {
     let layout = UICollectionViewFlowLayout()
     let collection = UICollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300), collectionViewLayout: layout)
@@ -395,7 +422,6 @@ class MissionDetailViewController: UIViewController {
     return header
   }()
   
-  // swiftlint:disable cyclomatic_complexity
   func setUpListener() {
     guard let data = detailData else { return }
     dbF.collection("Tasks").document(data.uid).addSnapshotListener { querySnapshot, error in
@@ -432,7 +458,6 @@ class MissionDetailViewController: UIViewController {
       }
     }
   }
-  // swiftlint:enable cyclomatic_complexity
   
   func finishMissionAlert(title: String, message: String, viewController: UIViewController) {
     let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -511,7 +536,7 @@ class MissionDetailViewController: UIViewController {
         LKProgressHUD.dismiss()
         
         guard let judgeVC = strongSelf.storyboard?.instantiateViewController(identifier: "judge") as? JudgeMissionViewController,
-             let taskInfo = strongSelf.detailData else { return }
+          let taskInfo = strongSelf.detailData else { return }
         
         judgeVC.detailData = taskInfo
         NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
@@ -553,7 +578,7 @@ class MissionDetailViewController: UIViewController {
   func setUpBtnEnable() {
     
     guard let user = UserManager.shared.currentUserInfo,
-         let task = detailData else { return }
+      let task = detailData else { return }
     
     var isRequseter = false
     
@@ -599,8 +624,12 @@ class MissionDetailViewController: UIViewController {
     giveUpmissionBtn.layer.cornerRadius = takeMissionBtn.bounds.height / 5
   }
   
+  func preventTap() {
+    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
+    LKProgressHUD.show(controller: tabVC)
+  }
+  
   func setUppageControll() {
-    
     guard let data = detailData else { return }
     self.headerView.addSubview(pageControl)
     pageControl.translatesAutoresizingMaskIntoConstraints = false
@@ -644,18 +673,17 @@ class MissionDetailViewController: UIViewController {
       }
     }
   }
-
+  
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     
     if segue.identifier == "chat" {
       guard let chatVC = segue.destination as? ChatViewController,
         let taskInfo = detailData else { return }
-     
+      
       chatVC.detailData = taskInfo
       chatVC.receiverPhoto = reversePhoto
     }
   }
-
 }
 
 extension MissionDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -665,15 +693,8 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
     let width = scrollView.frame.width
     let horizontalCenter = width / 2
     pageControl.currentPage = Int(offSet + horizontalCenter) / Int(width)
-    
-//    testcollection.alpha = 1 - scrollView.bounds.origin.y / 300
-    
-//    detailTableView.tableHeaderView?.frame.size.height = 325 - scrollView.contentOffset.y
-//
-////    headerView.frame.origin = CGPoint(x: 0, y: 0)
-    
   }
-
+  
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     guard let data = detailData else { return 0 }
     return data.taskPhoto.count
@@ -695,15 +716,15 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
       cell.detailImage.isHidden = true
       guard let video = URL(string: data.taskPhoto[indexPath.row]) else { return UICollectionViewCell() }
       
-         let playQueue = AVQueuePlayer()
-         let platItem = AVPlayerItem(url: video)
-         plaverLooper = AVPlayerLooper(player: playQueue, templateItem: platItem)
-         let playerLayer = AVPlayerLayer(player: playQueue)
+      let playQueue = AVQueuePlayer()
+      let platItem = AVPlayerItem(url: video)
+      plaverLooper = AVPlayerLooper(player: playQueue, templateItem: platItem)
+      let playerLayer = AVPlayerLayer(player: playQueue)
       
-         playerLayer.frame = cell.contentView.bounds
-         cell.layer.addSublayer(playerLayer)
-        
-         playQueue.play()
+      playerLayer.frame = cell.contentView.bounds
+      cell.layer.addSublayer(playerLayer)
+      
+      playQueue.play()
       
     } else {
       
@@ -728,8 +749,8 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
 extension MissionDetailViewController: UICollectionViewDelegateFlowLayout {
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
- 
-      return CGSize(width: UIScreen.main.bounds.width, height: 300)
+    
+    return CGSize(width: UIScreen.main.bounds.width, height: 300)
     
   }
 }
@@ -739,11 +760,12 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return 4
   }
-  
+  // swiftlint:disable cyclomatic_complexity
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     guard let data = detailData,
-      let time = self.receiveTime else { return UITableViewCell() }
+      let time = self.receiveTime,
+      let user = UserManager.shared.currentUserInfo else { return UITableViewCell() }
     
     if indexPath.row == 0 {
       
@@ -764,6 +786,20 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
         
         cell.setUp(ownerImage: taskData.personPhoto, author: taskData.nickname, classified: classified[0], price: taskData.money)
         
+        var compare = ""
+        
+        if user.status == 1 {
+          compare = taskData.missionTaker
+        } else {
+          compare = taskData.uid
+        }
+        
+        for badMan in user.blacklist {
+          if badMan == compare {
+            alreadyReport = true
+          }
+        }
+        
         cell.tapReprt = {
           
           let alert = UIAlertController(title: "檢舉系統", message: "請選擇要做的行動", preferredStyle: .actionSheet)
@@ -777,23 +813,53 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
             guard var userInfo = UserManager.shared.currentUserInfo,
               let taskInfo = strongSelf.detailData else { return }
             
-            LKProgressHUD.show(controller: strongSelf)
-            
-            if userInfo.status == 1 {
-              userInfo.blacklist.append(taskInfo.missionTaker)
+            if strongSelf.alreadyReport {
+              SwiftMes.shared.showWarningMessage(body: "該用戶已在黑名單", seconds: 1.5)
             } else {
-              userInfo.blacklist.append(taskInfo.uid)
-            }
-            UserManager.shared.currentUserInfo = userInfo
-            
-            UserManager.shared.updateUserInfo { result in
+ 
+              strongSelf.preventTap()
               
-              switch result {
-              case .success:
-                print("yes")
+              let group = DispatchGroup()
+              group.enter()
+              group.enter()
+              
+              if userInfo.status == 1 {
+                userInfo.blacklist.append(taskInfo.missionTaker)
+                strongSelf.reverse = taskInfo.missionTaker
+              } else {
+                userInfo.blacklist.append(taskInfo.uid)
+                strongSelf.reverse = taskInfo.uid
+              }
+              
+              UserManager.shared.currentUserInfo = userInfo
+              var realUser = userInfo
+              
+              UserManager.shared.updateUserInfo { result in
+                
+                switch result {
+                case .success(let realUserInfo):
+                  print("yes")
+                  realUser = realUserInfo
+                  group.leave()
+                case .failure:
+                  group.leave()
+                  print("no")
+                }
+              }
+              
+              UserManager.shared.updateReverseUid(uid: strongSelf.reverse) { result in
+                switch result {
+                case .success:
+                  group.leave()
+                case .failure:
+                  group.leave()
+                  print("error")
+                }
+              }
+              
+              group.notify(queue: DispatchQueue.main) {
+                UserManager.shared.currentUserInfo = realUser
                 LKProgressHUD.dismiss()
-              case .failure:
-                print("no")
               }
             }
           }
@@ -857,31 +923,18 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
       return cell
     }
   }
-  
-//  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//
-//    if isMissionON && indexPath.row == 0 {
-//      return 170
-//    } else if indexPath.row == 0 {
-//      return 90
-//    } else if indexPath.row == 3 {
-//      return 170
-//    } else {
-//      return 50
-//    }
-//  }
-  
-   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-     
+  // swiftlint:enable cyclomatic_complexity
+  func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    
     let spring = UISpringTimingParameters(dampingRatio: 0.7, initialVelocity: CGVector(dx: 1.0, dy: 0.2))
     let animator = UIViewPropertyAnimator(duration: 0.5, timingParameters: spring)
-           cell.alpha = 0
-           cell.transform = CGAffineTransform(translationX: 0, y: 100 * 0.6)
-           animator.addAnimations {
-               cell.alpha = 1
-               cell.transform = .identity
-             self.detailTableView.layoutIfNeeded()
-           }
-           animator.startAnimation(afterDelay: 0.05 * Double(indexPath.item))
-   }
+    cell.alpha = 0
+    cell.transform = CGAffineTransform(translationX: 0, y: 100 * 0.6)
+    animator.addAnimations {
+      cell.alpha = 1
+      cell.transform = .identity
+      self.detailTableView.layoutIfNeeded()
+    }
+    animator.startAnimation(afterDelay: 0.05 * Double(indexPath.item))
+  }
 }

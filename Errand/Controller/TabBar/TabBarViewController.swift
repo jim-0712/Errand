@@ -52,34 +52,34 @@ private enum Tab {
     case .map:
       return UITabBarItem(
         title: nil,
-        image: UIImage.init(named: "earth"),
-        selectedImage: UIImage.init(named: "earth_2")
+        image: UIImage.init(named: "pin_0"),
+        selectedImage: UIImage.init(named: "pin_1")
       )
       
     case .missionList:
       return UITabBarItem(
         title: nil,
-        image: UIImage.init(named: "list"),
-        selectedImage: UIImage.init(named: "list_2")
+        image: UIImage.init(named: "list_0"),
+        selectedImage: UIImage.init(named: "list_1")
       )
     case .profile:
       return UITabBarItem(
         title: nil,
-        image: UIImage.init(named: "id_card"),
-        selectedImage: UIImage.init(named: "id_card_2")
+        image: UIImage.init(named: "id-card_0"),
+        selectedImage: UIImage.init(named: "id-card_1")
       )
     case .requester:
       return UITabBarItem(
         title: nil,
-        image: UIImage.init(named: "question"),
-        selectedImage: UIImage.init(named: "question_2")
+        image: UIImage.init(named: "user_0"),
+        selectedImage: UIImage.init(named: "user_1")
       )
       
     case .friend:
       return UITabBarItem(
         title: nil,
-        image: UIImage.init(named: "chat"),
-        selectedImage: UIImage.init(named: "chat_2")
+        image: UIImage.init(named: "bubble_0"),
+        selectedImage: UIImage.init(named: "bubble_1")
       )
     }
   }

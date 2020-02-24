@@ -8,15 +8,12 @@
 
 import UIKit
 
-
 class RequesterViewController: UIViewController {
   
   @IBOutlet weak var noRequesterLabel: UILabel!
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    
     
     NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("acceptRequester"), object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("refuseRequester"), object: nil)
@@ -136,17 +133,18 @@ class RequesterViewController: UIViewController {
         if taskCount.count == 0 {
           strongSelf.userInfo = []
           LKProgressHUD.dismiss()
-          SwiftMes.shared.showErrorMessage(body: "您當前沒有任務", seconds: 1.0)
-          
+          SwiftMes.shared.showWarningMessage(body: "您當前沒有任務", seconds: 1.0)
         } else if taskCount[0].status == 1 {
           strongSelf.userInfo = []
+          strongSelf.requesterTable.reloadData()
           LKProgressHUD.dismiss()
-          SwiftMes.shared.showErrorMessage(body: "任務進行中", seconds: 1.0)
+          SwiftMes.shared.showWarningMessage(body: "任務進行中", seconds: 1.0)
         } else {
           
           if taskCount[0].requester.count == 0 {
             
             strongSelf.userInfo = []
+            strongSelf.requesterTable.reloadData()
           } else {
             
             for count in 0 ..< taskCount[0].requester.count {

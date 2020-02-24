@@ -285,7 +285,21 @@ class MissionListViewController: UIViewController {
       switch result {
       case .success(let taskData):
         
-        strongSelf.taskDataReturn = taskData
+        guard let userBlackList = UserManager.shared.currentUserInfo?.blacklist else { return }
+        
+        let filterData = taskData.filter { taskInfo in
+          var isMatch = false
+          for badMan in userBlackList {
+            if badMan == taskInfo.uid {
+              isMatch =  true
+            } else {
+              isMatch =  false
+            }
+          }
+          if isMatch { return false } else { return true}
+        }
+        
+        strongSelf.taskDataReturn = filterData
         strongSelf.postMissionBtn.isHidden = false
         TaskManager.shared.taskData = []
         LKProgressHUD.dismiss()
@@ -374,8 +388,7 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
     if segue.identifier == "detail" {
       
       guard let detailVC = segue.destination as? MissionDetailViewController,
-           let time = self.timeString,
-           let userStatus = UserManager.shared.currentUserInfo?.status else { return }
+           let time = self.timeString else { return }
       detailVC.detailData = detailData
       detailVC.receiveTime = time
       if detailData?.missionTaker != "" {
