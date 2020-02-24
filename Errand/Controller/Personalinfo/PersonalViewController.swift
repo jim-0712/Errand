@@ -28,13 +28,17 @@ class PersonalViewController: UIViewController {
   
   var isUpload = true
   
-  var name = ""
+  var name = "遊客"
   
-  var about = ""
+  var about = "無"
+  
+  var minusStar = 0.0
   
   var averageStar = 0.0
   
   var totaltaskCount = 0
+  
+  var email = "遊客"
   
   var totalStar = 0.0
   
@@ -52,33 +56,40 @@ class PersonalViewController: UIViewController {
     super.viewDidLoad()
     
     if UserManager.shared.isTourist {
-      UserManager.shared.goToSign(viewController: self)
+      
+      setUpTableView()
     } else {
       setUpNavigationItem()
       setUpTableView()
       guard let photoNow = UserManager.shared.currentUserInfo?.photo else { return }
       personPhoto = photoNow
-      cornerView.layer.cornerRadius = cornerView.bounds.width / 2
       imagePickerController.delegate = self
       imagePickerController.allowsEditing = true
       imagePickerController.mediaTypes = [kUTTypeImage as String]
+      readJudge()
+      totalStar = 0
+      totaltaskCount = 0
     }
   }
   
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    readJudge()
-    totalStar = 0
-    totaltaskCount = 0
+  override func viewWillLayoutSubviews() {
+    super.viewWillLayoutSubviews()
     NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
+    cornerView.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 500, y: 220, width: 1000, height: 2000)
+    cornerView.layer.cornerRadius = cornerView.bounds.width / 2
+  }
+  
+  func preventTap() {
+    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
+    LKProgressHUD.show(controller: tabVC)
   }
   
   func setUpNavigationItem() {
-    
-    settingOff = UIBarButtonItem(image: UIImage(named: "wheel-2"), style: .plain, target: self, action: #selector(tapSet))
-    settingOn = UIBarButtonItem(image: UIImage(named: "tick"), style: .plain, target: self, action: #selector(tapSet))
+    settingOff = UIBarButtonItem(title: "編輯", style: .plain, target: self, action: #selector(tapSet))
+    settingOn = UIBarButtonItem(image: UIImage(named: "tick-2"), style: .plain, target: self, action: #selector(tapSet))
+    settingOn.tintColor = .black
+    settingOff.tintColor = .black
     self.navigationItem.rightBarButtonItems = [self.settingOff]
-    
   }
   
   @objc func tapSet() {
@@ -113,7 +124,7 @@ class PersonalViewController: UIViewController {
       
       if isUpload {
         
-        LKProgressHUD.show(controller: self)
+        self.preventTap()
         
         UserManager.shared.updateUserInfo { [weak self] result in
           
@@ -132,7 +143,7 @@ class PersonalViewController: UIViewController {
             strongSelf.infoTableView.reloadData()
             
           case .failure(let error):
-            
+            LKProgressHUD.dismiss()
             LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
           }
         }
@@ -157,6 +168,8 @@ class PersonalViewController: UIViewController {
         
         self.totaltaskCount = judgeData.count
         
+        LKProgressHUD.dismiss()
+        
         self.infoTableView.reloadData()
         
       case .failure:
@@ -166,12 +179,9 @@ class PersonalViewController: UIViewController {
   }
   
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    
-      cornerView.bounds.origin.y += scrollView.bounds.origin.y
-//      print(cornerView.bounds.origin.y)
-      self.view.layoutIfNeeded()
+    cornerView.frame.origin.y = 220 - scrollView.contentOffset.y
   }
-  
+
   @IBOutlet weak var infoTableView: UITableView!
   
   func setUpTableView() {
@@ -221,7 +231,7 @@ extension PersonalViewController: UIImagePickerControllerDelegate, UINavigationC
   
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
     
-    LKProgressHUD.show(controller: self)
+    preventTap()
     
     let id = UUID().uuidString
     
@@ -288,16 +298,33 @@ extension PersonalViewController: UITableViewDataSource, UITableViewDelegate {
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
-    guard let name = UserManager.shared.currentUserInfo?.nickname,
-      let email = UserManager.shared.currentUserInfo?.email,
-      let aboutMe = UserManager.shared.currentUserInfo?.about,
-      let star = UserManager.shared.currentUserInfo?.totalStar else { return UITableViewCell() }
+    let tourist = UserManager.shared.isTourist
     
-    let data = [name, aboutMe]
+    if !tourist {
+      
+      guard let name = UserManager.shared.currentUserInfo?.nickname,
+           let email = UserManager.shared.currentUserInfo?.email,
+           let aboutMe = UserManager.shared.currentUserInfo?.about,
+           let star = UserManager.shared.currentUserInfo?.totalStar else { return UITableViewCell() }
+      
+      self.name = name
+      self.about = aboutMe
+      self.email = email
+      self.minusStar = star
+    }
+      
+    LKProgressHUD.dismiss()
+    let data = [name, self.about]
     
     if indexPath.row == 0 {
       
       guard let cell = tableView.dequeueReusableCell(withIdentifier: "personPhoto", for: indexPath) as? PhotoTableViewCell else { return UITableViewCell() }
+      
+      if tourist {
+        cell.choosePhotoBtn.isHidden = true
+      } else {
+        cell.choosePhotoBtn.isHidden = false
+      }
       
       cell.setUpView(personPhoto: personPhoto, nickName: name, email: email)
       cell.choosePhotoBtn.addTarget(self, action: #selector(pickImage), for: .touchUpInside)
@@ -322,7 +349,7 @@ extension PersonalViewController: UITableViewDataSource, UITableViewDelegate {
         cell.setUp(isFirst: true, averageStar: averageStar, titleLabel: profileDetail[1])
         
       } else {
-        averageStar = (totalStar - star) / Double(totaltaskCount)
+        averageStar = (totalStar - minusStar) / Double(totaltaskCount)
         cell.setUp(isFirst: false, averageStar: averageStar, titleLabel: profileDetail[1])
       }
 
@@ -339,8 +366,23 @@ extension PersonalViewController: UITableViewDataSource, UITableViewDelegate {
       
       guard let cell = tableView.dequeueReusableCell(withIdentifier: "signOut", for: indexPath) as? SignOutTableViewCell else { return UITableViewCell()  }
       
+      if tourist {
+        cell.signOutBtn.setTitle("登入", for: .normal)
+      } else {
+        cell.signOutBtn.setTitle("登出", for: .normal)
+      }
+      
       cell.taponSignOut = {
-        self.logoutAlert()
+        
+        if tourist {
+          
+          let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "main") as? ViewController
+          
+          self.view.window?.rootViewController = signInVC
+          
+        } else {
+          self.logoutAlert()
+        }
       }
       return cell
     }

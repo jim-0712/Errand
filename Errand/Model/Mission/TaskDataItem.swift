@@ -95,8 +95,7 @@ struct TaskInfo {
   var ownerJudge: Bool
   
   var takerJudge: Bool
-  
-  
+
   var toDict: [String: Any] {
     
     return [   "email": email,

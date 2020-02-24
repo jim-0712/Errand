@@ -49,6 +49,7 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
   
   func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
     print("hellooooooo")
+    NotificationCenter.default.post(name: Notification.Name("reloadUser"), object: nil)
     completionHandler([.badge, .sound, .alert])
   }
   
@@ -64,7 +65,7 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
       NotificationCenter.default.post(name: Notification.Name("popVC"), object: nil)
     } 
 
-    if body == "任務接受成功" {
+    if body == "任務接受成功" || body == "任務完成" {
       NotificationCenter.default.post(name: Notification.Name("reloadUser"), object: nil)
 //      guard let uid = Auth.auth().currentUser?.uid else {
 //        NotificationCenter.default.post(name: Notification.Name("reloadUser"), object: nil)

@@ -17,3 +17,8 @@ enum FireBaseDownloadError: Error {
   
   case downloadError
 }
+
+enum MissionError: Error {
+  
+  case completeMission
+}

@@ -6,6 +6,11 @@
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="setofont.ttf">
+            <string>SetoFont</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -29,14 +34,14 @@
                                 </constraints>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EPt-eE-bb8">
-                                <rect key="frame" x="0.0" y="603" width="414" height="60"/>
+                                <rect key="frame" x="0.0" y="606" width="414" height="60"/>
                                 <color key="backgroundColor" red="0.10216107219999999" green="0.15977656840000001" blue="0.24314689640000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="IAx-2C-WNL"/>
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p7Z-eB-DUq">
-                                <rect key="frame" x="107" y="333" width="200" height="40"/>
+                                <rect key="frame" x="107" y="283" width="200" height="40"/>
                                 <color key="backgroundColor" red="0.23137254901960785" green="0.34901960784313724" blue="0.59607843137254901" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="WND-Ps-keZ"/>
@@ -44,13 +49,13 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="18"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="        f  Facebook"/>
+                                <state key="normal" title="          Facebook"/>
                                 <connections>
                                     <action selector="fbLoginAct:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ctc-Fy-38b"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4aw-tP-mdE">
-                                <rect key="frame" x="107" y="403" width="200" height="40"/>
+                                <rect key="frame" x="107" y="353" width="200" height="40"/>
                                 <color key="backgroundColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="4t4-kc-Vrh"/>
@@ -58,7 +63,7 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="18"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="         G  Google">
+                                <state key="normal" title="           Google">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
@@ -66,18 +71,18 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ERRAND" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CiG-ri-uZW">
-                                <rect key="frame" x="115.5" y="84" width="183.5" height="50"/>
+                                <rect key="frame" x="132" y="84" width="150" height="50"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="2Oy-No-CcP"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="150" id="mbm-nW-Q9i"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="45"/>
+                                <fontDescription key="fontDescription" name="SetoFont" family="SetoFont" pointSize="45"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ijz-ko-HvP">
-                                <rect key="frame" x="107" y="543" width="200" height="40"/>
+                                <rect key="frame" x="107" y="493" width="200" height="40"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="1ue-ms-9Jh"/>
@@ -92,7 +97,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zJy-HG-Q1l">
-                                <rect key="frame" x="107" y="473" width="200" height="40"/>
+                                <rect key="frame" x="107" y="423" width="200" height="40"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="Wqo-Ls-g9A"/>
@@ -103,6 +108,7 @@
                         <color key="backgroundColor" red="0.1020161882" green="0.1606125534" blue="0.24301019309999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Lcn-N1-hyQ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="AlI-tK-Cea"/>
+                            <constraint firstItem="uTZ-15-Ijq" firstAttribute="top" secondItem="EPt-eE-bb8" secondAttribute="bottom" constant="180" id="CXf-7L-LDW"/>
                             <constraint firstItem="CiG-ri-uZW" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="40" id="DdA-eq-c0m"/>
                             <constraint firstItem="uTZ-15-Ijq" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="H6K-e0-Vwx"/>
                             <constraint firstAttribute="bottom" secondItem="Lcn-N1-hyQ" secondAttribute="bottom" constant="-15" id="JlI-a4-yWB"/>
@@ -115,10 +121,9 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="EPt-eE-bb8" secondAttribute="trailing" id="dqB-UZ-HWB"/>
                             <constraint firstAttribute="trailing" secondItem="uTZ-15-Ijq" secondAttribute="trailing" id="fYD-Wc-brU"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Lcn-N1-hyQ" secondAttribute="trailing" id="goP-I4-d9w"/>
-                            <constraint firstItem="p7Z-eB-DUq" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" constant="-100" id="hJL-Ic-kGM"/>
+                            <constraint firstItem="p7Z-eB-DUq" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" constant="-150" id="hJL-Ic-kGM"/>
                             <constraint firstItem="zJy-HG-Q1l" firstAttribute="top" secondItem="4aw-tP-mdE" secondAttribute="bottom" constant="30" id="m21-Wh-NiX"/>
                             <constraint firstItem="ijz-ko-HvP" firstAttribute="top" secondItem="zJy-HG-Q1l" secondAttribute="bottom" constant="30" id="m4o-mI-aAK"/>
-                            <constraint firstItem="EPt-eE-bb8" firstAttribute="top" secondItem="ijz-ko-HvP" secondAttribute="bottom" constant="20" id="m6E-FJ-sDP"/>
                             <constraint firstItem="EPt-eE-bb8" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="yCg-66-ovt"/>
                             <constraint firstItem="ijz-ko-HvP" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="zLM-0W-eh6"/>
                         </constraints>

@@ -9,15 +9,36 @@
 import UIKit
 import Firebase
 
-
 class FriendViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+      
+      if UserManager.shared.isTourist {
+        noFreindsLabel.text = "趕快去個人頁登入享有好友吧"
+        friendListTable.backgroundColor = .clear
+      } else {
+        noFreindsLabel.text = "搜尋好友中"
         setUpTable()
-        getFriend()
+      }
     }
+  
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    if UserManager.shared.isTourist {
+      friendListTable.backgroundColor = .clear
+    } else {
+      preventTap()
+      getFriend()
+    }
+  }
+  
+  func preventTap() {
+    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
+    LKProgressHUD.show(controller: tabVC)
+  }
+  
+  var refreshControl: UIRefreshControl!
   
   var friend = [Friends]()
   
@@ -30,12 +51,14 @@ class FriendViewController: UIViewController {
   var friendInfo = [AccountInfo]() {
      didSet {
        if friend.isEmpty {
-         LKProgressHUD.show(controller: self)
-         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-           LKProgressHUD.dismiss()
-          }
+        refreshControl.endRefreshing()
+        LKProgressHUD.dismiss()
+        noFreindsLabel.text = "您目前沒有好友                    請趕快完成第一個任務加好友吧"
+        friendListTable.backgroundColor = .clear
          } else {
          LKProgressHUD.dismiss()
+         friendListTable.backgroundColor = .white
+         refreshControl.endRefreshing()
          friendListTable.reloadData()
          }
        }
@@ -43,20 +66,31 @@ class FriendViewController: UIViewController {
   
   @IBOutlet weak var friendListTable: UITableView!
   
+  @IBOutlet weak var noFreindsLabel: UILabel!
+  
   func setUpTable() {
     NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
+    friendListTable.isHidden = false
     friendListTable.delegate = self
     friendListTable.dataSource = self
     friendListTable.separatorStyle = .none
+    refreshControl = UIRefreshControl()
+    friendListTable.addSubview(refreshControl)
+    refreshControl.addTarget(self, action: #selector(getFriend), for: .valueChanged)
     friendListTable.rowHeight = UITableView.automaticDimension
     friendListTable.register(UINib(nibName: "FriendsTableViewCell", bundle: nil), forCellReuseIdentifier: "friends")
   }
   
-  func getFriend() {
+  @objc func getFriend() {
     
     UserManager.shared.getFriends { result in
       switch result {
       case .success(let friends):
+        
+        if friends.count == 0 {
+          self.friendInfo = []
+          LKProgressHUD.dismiss()
+        }
         for count in 0 ..< friends.count {
           UserManager.shared.getPhoto(nameRef: friends[count].nameREF) { result in
             switch result {
@@ -66,13 +100,16 @@ class FriendViewController: UIViewController {
               if self.friendsData.count == friends.count {
                  self.friendInfo = self.friendsData
               }
+              LKProgressHUD.dismiss()
             case .failure:
+              LKProgressHUD.dismiss()
               print("error")
             }
           }
         }
         self.friend = friends
       case .failure:
+        LKProgressHUD.dismiss()
         print("error")
       }
     }

@@ -49,6 +49,8 @@ class RequesterTableViewCell: UITableViewCell {
     
     self.index = index
     
+    self.contentView.backgroundColor = UIColor.LG1
+    
     personBtn.layer.borderColor = UIColor.G1?.cgColor
     
     personBtn.layer.borderWidth = 1.0

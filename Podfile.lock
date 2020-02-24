@@ -171,9 +171,6 @@ PODS:
     - BoringSSL-GRPC/Interface (= 0.0.3)
   - BoringSSL-GRPC/Interface (0.0.3)
   - Cosmos (21.0.0)
-  - Crashlytics (3.14.0):
-    - Fabric (~> 1.10.2)
-  - Fabric (1.10.2)
   - FBSDKCoreKit (5.13.1):
     - FBSDKCoreKit/Basics (= 5.13.1)
     - FBSDKCoreKit/Core (= 5.13.1)
@@ -351,12 +348,13 @@ PODS:
   - Protobuf (3.11.3)
   - Refreshable (1.2.0)
   - SwiftLint (0.38.0)
+  - SwiftMessages (7.0.1):
+    - SwiftMessages/App (= 7.0.1)
+  - SwiftMessages/App (7.0.1)
 
 DEPENDENCIES:
   - Alamofire
   - Cosmos
-  - Crashlytics (~> 3.14.0)
-  - Fabric (~> 1.10.2)
   - FBSDKLoginKit
   - Firebase/Analytics
   - Firebase/Auth
@@ -376,6 +374,7 @@ DEPENDENCIES:
   - MessageKit
   - Refreshable
   - SwiftLint
+  - SwiftMessages
 
 SPEC REPOS:
   trunk:
@@ -384,8 +383,6 @@ SPEC REPOS:
     - AppAuth
     - BoringSSL-GRPC
     - Cosmos
-    - Crashlytics
-    - Fabric
     - FBSDKCoreKit
     - FBSDKLoginKit
     - Firebase
@@ -424,6 +421,7 @@ SPEC REPOS:
     - Protobuf
     - Refreshable
     - SwiftLint
+    - SwiftMessages
 
 SPEC CHECKSUMS:
   abseil: 18063d773f5366ff8736a050fe035a28f635fd27
@@ -431,8 +429,6 @@ SPEC CHECKSUMS:
   AppAuth: 73574f3013a1e65b9601a3ddc8b3158cce68c09d
   BoringSSL-GRPC: db8764df3204ccea016e1c8dd15d9a9ad63ff318
   Cosmos: 3dfb6e4ba48bd48b8c9aa2a77048ae11ed114f96
-  Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
-  Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
   FBSDKCoreKit: 8fb98209109fb684937f05d534305edb18c20207
   FBSDKLoginKit: c7c6ffd9ca9ea45aee32361840af040ad8f6706a
   Firebase: 0219bb4782eb1406f1b9b0628a2e625484ce910d
@@ -471,7 +467,8 @@ SPEC CHECKSUMS:
   Protobuf: 0e94afe3b47cb11876eb6aee296638711a24bf75
   Refreshable: 0f76b6d198178e6cd2823a553fbf4e84a3dba527
   SwiftLint: 4105f061f9812b214568b736dab580ab2c73a582
+  SwiftMessages: b577dc7043be8b299857ab35bb663dbff6483bd0
 
-PODFILE CHECKSUM: 7a771350c77b42550f0764a5525f4199f278cf2f
+PODFILE CHECKSUM: 1f38a4fbc769a639d8ee3d506a5c6047c5cb4c06
 
 COCOAPODS: 1.8.4

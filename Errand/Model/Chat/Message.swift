@@ -86,8 +86,6 @@ struct Message: MessageType {
       return nil
     }
     
-    
-    
     id = document.documentID
     
     self.photo = photo

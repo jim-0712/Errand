@@ -43,7 +43,7 @@ class StartMissionTableViewCell: UITableViewCell {
   
   @IBOutlet weak var chatBtn: UIButton!
   
-  @IBOutlet weak var addFriendBtn: UIButton!
+  @IBOutlet weak var reportBtn: UIButton!
   
   @IBOutlet weak var pageView: UIView!
   
@@ -65,7 +65,7 @@ class StartMissionTableViewCell: UITableViewCell {
     self.tapOnButton?()
   }
   
-  @IBAction func addFriends(_ sender: Any) {
+  @IBAction func reportAct(_ sender: Any) {
     
     self.tapReprt?()
   }

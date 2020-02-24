@@ -277,6 +277,8 @@ class ViewController: UIViewController {
   fileprivate var currentNonce: String?
   
  @objc func startSignInWithAppleFlow() {
+  
+  LKProgressHUD.show(controller: self)
     let nonce = randomNonceString()
     currentNonce = nonce
     let appleIDProvider = ASAuthorizationAppleIDProvider()
@@ -342,6 +344,7 @@ extension ViewController: ASAuthorizationControllerDelegate, ASAuthorizationCont
               
               UserManager.shared.isTourist = false
               UserManager.shared.updatefcmToken()
+              LKProgressHUD.dismiss()
               LKProgressHUD.showSuccess(text: success, controller: strongSelf)
         
               strongSelf.gotoMap(viewController: strongSelf)
@@ -364,7 +367,8 @@ extension ViewController: ASAuthorizationControllerDelegate, ASAuthorizationCont
   func gotoMap(viewController: UIViewController) {
     
     guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? TabBarViewController else { return }
-        viewController.present(mapVc, animated: true, completion: nil)
+        self.view.window?.rootViewController = mapVc
+//        viewController.present(mapVc, animated: true, completion: nil)
     }
   
 }

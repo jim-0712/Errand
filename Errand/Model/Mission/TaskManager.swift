@@ -16,6 +16,8 @@ class TaskManager {
   
   static let shared = TaskManager()
   
+  private init() {}
+  
   let dbF = Firestore.firestore()
   
   let database = Database.database().reference()
@@ -464,6 +466,8 @@ class TaskManager {
           completion(.failure(FireBaseUpdateError.updateError))
         }
       }
+    } else if userInfo.status == 0 {
+      completion(.failure(MissionError.completeMission))
     }
   }
   

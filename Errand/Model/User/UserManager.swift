@@ -186,6 +186,27 @@ class UserManager {
     viewController.present(alert, animated: true, completion: nil)
   }
   
+  func goToSignOrStay(viewController: UIViewController) {
+    let alert = UIAlertController(title: "注意", message: "請先登入享有功能", preferredStyle: UIAlertController.Style.alert)
+       
+    let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
+       
+       let action = UIAlertAction(title: "OK", style: .default) { (_) in
+         
+         let storyboard = UIStoryboard(name: "Main", bundle: nil)
+         
+         let goViewController = storyboard.instantiateViewController(withIdentifier: "main")
+         
+         viewController.view.window?.rootViewController = goViewController
+       }
+       
+       alert.addAction(action)
+       
+       alert.addAction(cancelAction)
+       
+       viewController.present(alert, animated: true, completion: nil)
+  }
+  
   func readData(uid: String, completion: @escaping ((Result<AccountInfo, Error>) -> Void)) {
     
     dbF.collection("Users").whereField("uid", isEqualTo: uid).getDocuments { (querySnapshot, err) in
@@ -220,7 +241,7 @@ class UserManager {
     }
   }
   
-  func dataParser(quary: QuerySnapshot, completion: @escaping (Result<AccountInfo, Error>) -> Void){
+  func dataParser(quary: QuerySnapshot, completion: @escaping (Result<AccountInfo, Error>) -> Void) {
     
     guard let onTask = quary.documents.first?.data()["onTask"] as? Bool,
       let email = quary.documents.first?.data()["email"] as? String,
@@ -267,7 +288,7 @@ class UserManager {
     }
   }
   
-  func updateUserInfo(completion: @escaping (Result<String, Error>) -> Void) {
+  func updateUserInfo(completion: @escaping (Result<AccountInfo, Error>) -> Void) {
     guard let data = currentUserInfo else { return }
     dbF.collection("Users").whereField("uid", isEqualTo: data.uid).getDocuments { (querySnapshot, error) in
       if let querySnapshot = querySnapshot {
@@ -288,7 +309,7 @@ class UserManager {
                 
                 strongSelf.currentUserInfo = dataReturn
                 
-                completion(.success("Success"))
+                completion(.success(dataReturn))
                 
               case .failure:
                 
@@ -298,6 +319,46 @@ class UserManager {
             
           }
         })
+      }
+    }
+  }
+  
+  func updateReverseUid(uid: String, completion: @escaping (Result<String, Error>) -> Void) {
+      
+    UserManager.shared.readData(uid: uid) { result in
+      switch result {
+      case .success(var  reverseInfo):
+        
+        var isBlack = false
+        guard let currentuid = Auth.auth().currentUser?.uid else { return }
+        
+        for info in reverseInfo.blacklist {
+          if info == currentuid {
+            isBlack = true
+            break
+          }
+        }
+        
+        if isBlack {
+          
+          completion(.success("Good"))
+  
+        } else {
+          
+          reverseInfo.blacklist.append(currentuid)
+          self.currentUserInfo = reverseInfo
+          
+            UserManager.shared.updateUserInfo { result in
+              switch result {
+              case .success:
+                completion(.success("Success"))
+              case .failure:
+                completion(.failure(FireBaseUpdateError.updateError))
+              }
+            }
+        }
+      case .failure:
+        completion(.failure(FireBaseUpdateError.updateError))
       }
     }
   }

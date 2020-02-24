@@ -15,15 +15,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g5Y-tv-qGn">
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g5Y-tv-qGn">
                                 <rect key="frame" x="-293" y="220" width="1000" height="1000"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.99982446430000005" green="0.87507677080000001" blue="0.40111619230000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="1000" id="1n2-Ua-s0u"/>
-                                    <constraint firstAttribute="height" constant="1000" id="dIj-6A-fhv"/>
-                                </constraints>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="WRD-j4-AQ8">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="WRD-j4-AQ8">
                                 <rect key="frame" x="0.0" y="88" width="414" height="808"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
@@ -128,10 +125,8 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
                             <constraint firstItem="WRD-j4-AQ8" firstAttribute="top" secondItem="Vy0-yV-f8n" secondAttribute="top" id="QKq-14-EpF"/>
-                            <constraint firstItem="g5Y-tv-qGn" firstAttribute="top" secondItem="ibq-cf-2iN" secondAttribute="top" constant="220" id="RTQ-FX-tXj"/>
                             <constraint firstItem="Vy0-yV-f8n" firstAttribute="trailing" secondItem="WRD-j4-AQ8" secondAttribute="trailing" id="gLh-fn-pHU"/>
                             <constraint firstItem="WRD-j4-AQ8" firstAttribute="leading" secondItem="Vy0-yV-f8n" secondAttribute="leading" id="jZb-Zm-qFu"/>
-                            <constraint firstItem="g5Y-tv-qGn" firstAttribute="centerX" secondItem="Vy0-yV-f8n" secondAttribute="centerX" id="rzo-Jo-v8k"/>
                             <constraint firstAttribute="bottom" secondItem="WRD-j4-AQ8" secondAttribute="bottom" id="xQb-GH-jyF"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Vy0-yV-f8n"/>

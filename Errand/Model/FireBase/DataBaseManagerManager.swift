@@ -27,7 +27,7 @@ class DataBaseManager {
     let task: [String] = []
     
     guard let token = UserDefaults.standard.value(forKey: "fcmToken") as? String,
-         let uid = UserDefaults.standard.value(forKey: "uid") as? String  else {
+         let uid = Auth.auth().currentUser?.uid  else {
           
           return
     }
