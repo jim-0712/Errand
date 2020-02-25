@@ -59,6 +59,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     
     NotificationCenter.default.addObserver(self, selector: #selector(lkprogressShowHudeTab), name: Notification.Name("test"), object: nil)
     
+    NotificationCenter.default.addObserver(self, selector: #selector(backToRootRefuse), name: Notification.Name("refusePOP"), object: nil)
+    
+     NotificationCenter.default.addObserver(self, selector: #selector(jumpOut), name: Notification.Name("giveUpCome"), object: nil)
+    
     FirebaseApp.configure()
     
     GMSServices.provideAPIKey("AIzaSyBbTnBn0MHPMnioaL4y68Da3d41JlaSY-g")
@@ -111,7 +115,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
   }
   
   func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-
+    
     if let info = userInfo["aps"] as? [String: Any] {
       guard (info["alert"] as? [String: Any]) != nil else { return }
     }
@@ -132,24 +136,54 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     }
   }
   
-  func gotoDetail() {
+  @objc func backToRootRefuse () {
     let storyboard = UIStoryboard(name: "Mission", bundle: nil)
-    if let conversationVC = storyboard.instantiateViewController(withIdentifier: "detailViewController") as? MissionDetailViewController,
+    guard let tabBarController = self.window?.rootViewController as? TabBarViewController,
+      let navi = tabBarController.selectedViewController as? UINavigationController else {
+        
+        return
+    }
+    tabBarController.dismiss(animated: true)
+  }
+  
+  @objc func jumpOut() {
+    
+    guard let tabBarController = self.window?.rootViewController as? TabBarViewController,
+      let navi = tabBarController.selectedViewController as? UINavigationController else {
+        
+        return
+    }
+    
+    if navi.visibleViewController is MissionDetailViewController == true {
+      
+      guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? TabBarViewController else { return }
+        self.window?.rootViewController = mapVc
+    }
+  }
+  
+  func gotoDetail() {
+    
+    let storyboard = UIStoryboard(name: "Mission", bundle: nil)
+    
+    guard let conversationVC = storyboard.instantiateViewController(withIdentifier: "detailViewController") as? MissionDetailViewController,
       let tabBarController = self.window?.rootViewController as? TabBarViewController,
-      let navi = tabBarController.selectedViewController as? UINavigationController {
+      let navi = tabBarController.selectedViewController as? UINavigationController else {
+        
+        return
+    }
+    
+    if navi.visibleViewController is MissionDetailViewController == false {
       
       if tabBarController.presentedViewController == nil {
         tabBarController.dismiss(animated: true) {
-        navi.popViewController(animated: true)
-        conversationVC.modalPresentationStyle = .fullScreen
-        UserManager.shared.currentUserInfo?.status = 2
-        conversationVC.isMissionON = true
-        conversationVC.isNavi = true
-        tabBarController.present(conversationVC, animated: true, completion: nil)
+          //        navi.popViewController(animated: true)
+          conversationVC.modalPresentationStyle = .fullScreen
+          UserManager.shared.currentUserInfo?.status = 2
+          conversationVC.isMissionON = true
+          conversationVC.isNavi = true
+          tabBarController.present(conversationVC, animated: true, completion: nil)
         }
-      }
-//      else if tabBarController.presentedViewController as? MissionDetailViewController != nil {}
-      else {
+      } else {
         tabBarController.presentedViewController?.dismiss(animated: true, completion: {
           tabBarController.dismiss(animated: true) {
             UserManager.shared.currentUserInfo = nil
@@ -163,11 +197,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     }
   }
   
- @objc func lkprogressShowHudeTab() {
-  
-  guard let tabBar = self.window?.rootViewController as? TabBarViewController  else { return }
-  
-  LKProgressHUD.show(controller: tabBar)
+  @objc func lkprogressShowHudeTab() {
+    
+    guard let tabBar = self.window?.rootViewController as? TabBarViewController  else { return }
+    
+    LKProgressHUD.show(controller: tabBar)
     
   }
   
@@ -188,7 +222,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
   }
   
   lazy var persistentContainer: NSPersistentContainer = {
-  
+    
     let container = NSPersistentContainer(name: "Errand")
     container.loadPersistentStores(completionHandler: { (_, error) in
       if let error = error as NSError? {

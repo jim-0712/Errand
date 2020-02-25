@@ -41,8 +41,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
   @IBOutlet weak var editMissionStackView: UIStackView!
   
   @IBOutlet weak var changeAddressBtn: UIButton!
-  
-  
+
   @IBAction func changeAddressAct(_ sender: Any) {
     
     performSegue(withIdentifier: "addlocation", sender: nil)
@@ -55,6 +54,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
     judge[0] = true
     navigationItem.setHidesBackButton(true, animated: true)
     navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(backToList))
+    navigationItem.leftBarButtonItem?.tintColor = .black
   }
   
   @objc func backToList() {
@@ -132,7 +132,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
     
     for count in 0 ..< taskInfo.taskPhoto.count {
       
-      let seperate = taskInfo.taskPhoto[count].components(separatedBy: "png")
+      let seperate = taskInfo.taskPhoto[count].components(separatedBy: "jpeg")
       
       if seperate.count > 1 {
         guard let url = URL(string: fileURL[count]) else { return }
@@ -293,10 +293,10 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
         for count in 0 ..< luke.count {
           let id = UUID().uuidString
           if let image = luke[count] as? UIImage {
-            guard let imageData = image.pngData() else {
+            guard let imageData = image.jpegData(compressionQuality: 0.5) else {
               group.leave()
               return }
-            let storageRef = Storage.storage().reference().child("TaskFinder").child("\(id).png")
+            let storageRef = Storage.storage().reference().child("TaskFinder").child("\(id).jpeg")
             
             storageRef.putData(imageData, metadata: nil, completion: { [weak self] (_, error) in
               

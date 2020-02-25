@@ -80,7 +80,7 @@ class PersonalViewController: UIViewController {
     cornerView.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 500, y: 340, width: 1000, height: 2000)
     cornerView.backgroundColor = UIColor.white
     backgroundImageView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 1000)
-    backgroundImageView.image = UIImage(named: "Minimal-Solar")
+    backgroundImageView.image = UIImage(named: "Ice")
     backgroundImageView.contentMode = .scaleAspectFill
     cornerView.layer.cornerRadius = cornerView.bounds.width / 2
   }

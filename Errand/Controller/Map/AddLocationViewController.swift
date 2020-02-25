@@ -78,12 +78,15 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
   }
   
   func setUp() {
-    
+    confirmLocation.layer.cornerRadius = confirmLocation.bounds.height / 2
     addLocationMap.delegate = self
     myLocationManager.delegate = self
+    addLocationMap.isMyLocationEnabled = true
+    myLocationManager.startUpdatingLocation()
     guard let center = myLocationManager.location?.coordinate else { return }
-    let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 18)
+    let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 17)
     addLocationMap.camera = myArrange
+    addLocationMap.animate(to: myArrange)
     finalLat = center.latitude
     finalLong = center.longitude
   }

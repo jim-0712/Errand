@@ -264,6 +264,24 @@ class UserManager {
         document?.reference.updateData(["status": status ], completion: { (error) in
           
           if error != nil {
+            completion(.failure(FireBaseUpdateError.updateError))
+          } else {
+            completion(.success("Update Success"))
+          }
+        })
+      }
+    }
+  }
+  
+  func updateStatus(uid: String, status: Int, completion: @escaping (Result<String, Error>) -> Void) {
+    
+    dbF.collection("Users").whereField("uid", isEqualTo: uid).getDocuments { (querySnapshot, error) in
+      if let querySnapshot = querySnapshot {
+        let document = querySnapshot.documents.first
+        
+        document?.reference.updateData(["status": status], completion: { (error) in
+          
+          if error != nil {
             
             completion(.failure(FireBaseUpdateError.updateError))
             
@@ -348,28 +366,6 @@ class UserManager {
         }
       case .failure:
         completion(.failure(FireBaseUpdateError.updateError))
-      }
-    }
-  }
-  
-  func updateStatus(uid: String, status: Int, completion: @escaping (Result<String, Error>) -> Void) {
-    
-    dbF.collection("Users").whereField("uid", isEqualTo: uid).getDocuments { (querySnapshot, error) in
-      if let querySnapshot = querySnapshot {
-        let document = querySnapshot.documents.first
-        
-        document?.reference.updateData(["status": status ], completion: { (error) in
-          
-          if error != nil {
-            
-            completion(.failure(FireBaseUpdateError.updateError))
-            
-          } else {
-            
-            completion(.success("Update Success"))
-            
-          }
-        })
       }
     }
   }

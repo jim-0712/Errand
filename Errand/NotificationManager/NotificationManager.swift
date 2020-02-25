@@ -49,6 +49,17 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
   
   func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
     print("hellooooooo")
+    
+    guard let userInfo = notification.request.content.userInfo as? [String: Any] else { return }
+    guard let info = userInfo["aps"] as? [String: Any],
+         let message = info["alert"] as? [String: Any],
+         let  body = message["body"] as? String else { return }
+    
+    if body == "對方放棄任務" {
+      
+      NotificationCenter.default.post(name: Notification.Name("giveUpCome"), object: nil)
+    }
+    
     NotificationCenter.default.post(name: Notification.Name("reloadUser"), object: nil)
     completionHandler([.badge, .sound, .alert])
   }
@@ -61,7 +72,7 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
          let message = info["alert"] as? [String: Any],
          let  body = message["body"] as? String else { return }
     
-    if body != "您已被拒絕" {
+    if body != "您已被拒絕" && body != "對方放棄任務" {
       NotificationCenter.default.post(name: Notification.Name("popVC"), object: nil)
     } 
 
@@ -79,6 +90,10 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
 //          print("error")
 //        }
 //      }
+    }
+    
+    if body == "對方放棄任務" {
+      NotificationCenter.default.post(name: Notification.Name("refusePOP"), object: nil)
     }
     
     NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)

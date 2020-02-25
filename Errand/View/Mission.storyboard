@@ -3,6 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -1036,12 +1037,16 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jxM-FY-JVo">
-                                <rect key="frame" x="187" y="836" width="40" height="40"/>
+                                <rect key="frame" x="107" y="826" width="200" height="40"/>
+                                <color key="backgroundColor" name="Y1"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="0YZ-jz-u02"/>
-                                    <constraint firstAttribute="width" constant="40" id="PYH-Ek-j08"/>
+                                    <constraint firstAttribute="width" constant="200" id="PYH-Ek-j08"/>
                                 </constraints>
-                                <state key="normal" image="right"/>
+                                <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="17"/>
+                                <state key="normal" title="確認地點">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
                                 <connections>
                                     <action selector="checkThePosition:" destination="LvE-sN-bhs" eventType="touchUpInside" id="hSS-1a-hNa"/>
                                 </connections>
@@ -1062,7 +1067,7 @@
                             <constraint firstItem="fWR-Kt-8Sf" firstAttribute="centerY" secondItem="njz-sq-3kI" secondAttribute="centerY" id="MnE-9w-HYG"/>
                             <constraint firstItem="njz-sq-3kI" firstAttribute="trailing" secondItem="r77-h2-eT1" secondAttribute="trailing" id="WPG-ye-fXk"/>
                             <constraint firstItem="r77-h2-eT1" firstAttribute="top" secondItem="njz-sq-3kI" secondAttribute="top" id="aBz-U9-w4h"/>
-                            <constraint firstAttribute="bottom" secondItem="jxM-FY-JVo" secondAttribute="bottom" constant="20" id="jSv-vK-2f0"/>
+                            <constraint firstAttribute="bottom" secondItem="jxM-FY-JVo" secondAttribute="bottom" constant="30" id="jSv-vK-2f0"/>
                             <constraint firstItem="fWR-Kt-8Sf" firstAttribute="centerX" secondItem="njz-sq-3kI" secondAttribute="centerX" id="lbY-IS-6A2"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="njz-sq-3kI"/>
@@ -1106,7 +1111,9 @@
         <image name="marker" width="512" height="512"/>
         <image name="pin" width="512" height="512"/>
         <image name="plus-icon" width="512" height="512"/>
-        <image name="right" width="512" height="512"/>
         <image name="stop" width="512" height="512"/>
+        <namedColor name="Y1">
+            <color red="1" green="0.82300001382827759" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        </namedColor>
     </resources>
 </document>

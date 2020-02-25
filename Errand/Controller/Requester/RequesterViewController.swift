@@ -40,7 +40,7 @@ class RequesterViewController: UIViewController {
       
     } else if UserManager.shared.currentUserInfo?.status == 2 {
       
-      noRequesterLabel.text = "當前您是任務接受者    沒有申請者"
+      noRequesterLabel.text = "當前您是任務接受者      沒有申請者"
       //    requesterTable.backgroundColor = .clear
     } else {
       noRequesterLabel.text = ""

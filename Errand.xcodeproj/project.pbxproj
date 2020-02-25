@@ -10,6 +10,8 @@
 		35D6F10C7FD31F054E953DEB /* Pods_Errand.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE91492BEFF455014401A8A6 /* Pods_Errand.framework */; };
 		40EA5FF204EA3BECE8D92AF4 /* Pods_Errand_ErrandUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A85AAEF02EB4115272C07D69 /* Pods_Errand_ErrandUITests.framework */; };
 		CBC2C481F6F57033AC62AEB1 /* Pods_ErrandTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 608A5BF50BFFACEF7C1D807F /* Pods_ErrandTests.framework */; };
+		FB0749D92405943F001751A2 /* HistoryJudgeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB0749D72405943F001751A2 /* HistoryJudgeTableViewCell.swift */; };
+		FB0749DA2405943F001751A2 /* HistoryJudgeTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB0749D82405943F001751A2 /* HistoryJudgeTableViewCell.xib */; };
 		FB24EC0F23D96B8500FA3F02 /* PostMissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24EC0E23D96B8500FA3F02 /* PostMissionViewController.swift */; };
 		FB24EC1223D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24EC1123D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift */; };
 		FB24EC1423D9B19300FA3F02 /* CustomeColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24EC1323D9B19300FA3F02 /* CustomeColor.swift */; };
@@ -130,6 +132,8 @@
 		BE91492BEFF455014401A8A6 /* Pods_Errand.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Errand.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F10FE434B9C4A84CFF81C162 /* Pods-Errand.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Errand.debug.xcconfig"; path = "Target Support Files/Pods-Errand/Pods-Errand.debug.xcconfig"; sourceTree = "<group>"; };
 		F997A91DF0A4410BFFBEDA80 /* Pods-Errand-ErrandUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Errand-ErrandUITests.debug.xcconfig"; path = "Target Support Files/Pods-Errand-ErrandUITests/Pods-Errand-ErrandUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		FB0749D72405943F001751A2 /* HistoryJudgeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryJudgeTableViewCell.swift; sourceTree = "<group>"; };
+		FB0749D82405943F001751A2 /* HistoryJudgeTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HistoryJudgeTableViewCell.xib; sourceTree = "<group>"; };
 		FB24EC0E23D96B8500FA3F02 /* PostMissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostMissionViewController.swift; sourceTree = "<group>"; };
 		FB24EC1123D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionGroupCollectionViewCell.swift; sourceTree = "<group>"; };
 		FB24EC1323D9B19300FA3F02 /* CustomeColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomeColor.swift; sourceTree = "<group>"; };
@@ -284,6 +288,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		FB0749D624059415001751A2 /* HistoryJudge */ = {
+			isa = PBXGroup;
+			children = (
+				FB0749D72405943F001751A2 /* HistoryJudgeTableViewCell.swift */,
+				FB0749D82405943F001751A2 /* HistoryJudgeTableViewCell.xib */,
+			);
+			path = HistoryJudge;
+			sourceTree = "<group>";
+		};
 		FB24EC0D23D96A0400FA3F02 /* TabBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -390,6 +403,7 @@
 		FB387C4523CEF5BB00B6D8C4 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				FB0749D624059415001751A2 /* HistoryJudge */,
 				FBEC725E23FA374300A6AF86 /* Friend */,
 				FBA557F523ED177E00521B89 /* Requester */,
 				FB53F31923EB20610041C49D /* personInfo */,
@@ -765,6 +779,7 @@
 				FB638D8023E56FC000030CB2 /* CategoryCollectionViewCell.xib in Resources */,
 				FB387C1723CEEF0E00B6D8C4 /* Main.storyboard in Resources */,
 				FB53F32D23EBCE220041C49D /* PersonAboutTableViewCell.xib in Resources */,
+				FB0749DA2405943F001751A2 /* HistoryJudgeTableViewCell.xib in Resources */,
 				FB69552423EFA1AB0049DB14 /* GoogleService-Info.plist in Resources */,
 				FB387C5823CF551A00B6D8C4 /* Content.storyboard in Resources */,
 				FB638DCC23E71D2800030CB2 /* Mission.storyboard in Resources */,
@@ -1005,6 +1020,7 @@
 				FBF7AB5823D56F5D004B521A /* GoogleMapViewController.swift in Sources */,
 				FBEC726423FA664800A6AF86 /* FriendChatViewController.swift in Sources */,
 				FBF7AB5D23D590E7004B521A /* MapManager.swift in Sources */,
+				FB0749D92405943F001751A2 /* HistoryJudgeTableViewCell.swift in Sources */,
 				FB63660323E31E67008555BC /* KingFisherWrapper.swift in Sources */,
 				FBA557FB23ED6D0C00521B89 /* JudgeMissionViewController.swift in Sources */,
 				FBBCEE9B2404190B0068410C /* PersonInfoViewController.swift in Sources */,

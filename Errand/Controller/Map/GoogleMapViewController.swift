@@ -23,17 +23,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
     NotificationCenter.default.addObserver(self, selector: #selector(reGetUserInfo), name: Notification.Name("update"), object: nil)
     
     arrangeTextField.delegate = self
-    
-    if UserManager.shared.isTourist {
-      
-      //      refreshBtn.isEnabled = false
-      
-    } else {
-      
-      //      guard let VC = self.view.window?.rootViewController as? TabBarViewController else { return }
-      //      LKProgressHUD.show(controller: VC)
-      //      refreshBtn.isEnabled = true
-    }
+
     setUpView()
     changeConstraints()
     setUpLocation()
@@ -59,6 +49,11 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
     LKProgressHUD.show(controller: tabVC)
   }
   
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    taskPersonPhoto.layer.cornerRadius = taskPersonPhoto.bounds.width / 2
+  }
+  
   @objc func reGetUserInfo() {
     loadUserInfo()
   }
@@ -73,10 +68,9 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
           
         case .success(let dataReturn):
           
-          LKProgressHUD.dismiss()
           UserManager.shared.isPostTask = dataReturn.onTask
           UserManager.shared.currentUserInfo = dataReturn
-          NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
+          LKProgressHUD.dismiss()
         case .failure:
           LKProgressHUD.dismiss()
           return
@@ -104,7 +98,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       }
     }
   }
-  
   
   @IBOutlet weak var googleMapView: GMSMapView!
   
@@ -447,6 +440,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       guard let detailVC = segue.destination as? MissionDetailViewController else { return }
       detailVC.modalPresentationStyle = .fullScreen
       detailVC.detailData = specificData[0]
+      detailVC.isNavi = true
       detailVC.receiveTime =  TaskManager.shared.timeConverter(time: specificData[0].time)
     }
   }
@@ -455,8 +449,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
 extension GoogleMapViewController: GMSMapViewDelegate {
   
   func mapView(_ mapView: GMSMapView, didTapInfoWindowOf marker: GMSMarker) {
-    
-    //    isTapOnContent = !isTapOnContent
     
     isTapOnContent = true
     

@@ -45,8 +45,12 @@ class ViewController: UIViewController {
   @IBOutlet weak var appleView: UIView!
   
   func preventTap() {
-    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
-    LKProgressHUD.show(controller: tabVC)
+    
+    guard let rootVC = self.view.window?.rootViewController else {
+      
+      return
+    }
+    LKProgressHUD.show(controller: rootVC)
   }
   
   @IBAction func visitorAct(_ sender: Any) {
@@ -60,8 +64,6 @@ class ViewController: UIViewController {
   
   @IBAction func fbLoginAct(_ sender: Any) {
     
-    self.preventTap()
-    
     UserManager.shared.fbLogin(controller: self) { [weak self] result in
       
       guard let strongSelf = self else { return }
@@ -70,38 +72,40 @@ class ViewController: UIViewController {
         
       case .success(let accessToken):
         
-        strongSelf.preventTap()
-        
         UserManager.shared.loginFireBaseWithFB(accesstoken: accessToken, controller: strongSelf) { result in
           
+          strongSelf.preventTap()
+          
           switch result {
-            
+
           case .success:
-            
+
             UserManager.shared.loadFBProfile(controller: strongSelf) { result in
               
+              strongSelf.preventTap()
+
               switch result {
-                
+
               case .success:
-                
+
                 UserManager.shared.isTourist = false
-                
+
                 guard let uid = Auth.auth().currentUser?.uid else { return }
-                
+
                 UserDefaults.standard.set(uid, forKey: "uid")
-                
+
                 UserManager.shared.readData(uid: uid) { result in
                   switch result {
                   case .success:
-                    
+
                   UserDefaults.standard.set(true, forKey: "login")
                   LKProgressHUD.dismiss()
                    strongSelf.gotoMap(viewController: strongSelf)
-                    
+
                   case .failure(let error):
-                   
+
                     if error.localizedDescription == "The operation couldn’t be completed. (Errand.RegiError error 3.)" {
-                      
+
                       strongSelf.createDataBase(isApple: false, isFB: true) { result in
 
                         switch result {
@@ -126,16 +130,16 @@ class ViewController: UIViewController {
                     }
                   }
                 }
-                
+
               case .failure(let error):
-                
+
                 LKProgressHUD.dismiss()
                 LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
               }
             }
-            
+
           case .failure(let error):
-            
+
             LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
           }
         }
@@ -145,7 +149,7 @@ class ViewController: UIViewController {
       }
     }
   }
-  
+    
   let appleButton: ASAuthorizationAppleIDButton = {
     let button = ASAuthorizationAppleIDButton()
     button.addTarget(self, action: #selector(startSignInWithAppleFlow), for: .touchUpInside)
@@ -158,7 +162,6 @@ class ViewController: UIViewController {
     googleLoginBtn.layer.cornerRadius = googleLoginBtn.bounds.height / 10
     visitorBtn.layer.cornerRadius = visitorBtn.bounds.height / 10
     GIDSignIn.sharedInstance()?.presentingViewController = self
-//    logoLabel.transform = CGAffineTransform(a: 1.0, b: -0.15, c: 0, d: 0.7, tx: 0, ty: 10)
   }
   
   func setUpAppleBtn() {
