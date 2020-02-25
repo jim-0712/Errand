@@ -63,53 +63,60 @@ class MissionDetailViewController: UIViewController {
   }
   
   func setUpData() {
-    guard let userInfo = UserManager.shared.currentUserInfo else {
-      backBtn.isHidden = false
-      guard let uid = Auth.auth().currentUser?.uid else { return }
-      UserManager.shared.readData(uid: uid) { result in
-        switch result {
-        case .success:
-          
-          guard let auth = Auth.auth().currentUser else {
-            SwiftMes.shared.showWarningMessage(body: "請先登入", seconds: 1.0)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-              let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "main") as? ViewController
-              
-              UserManager.shared.isTourist = true
-              
-              UserDefaults.standard.removeObject(forKey: "login")
-              
-              self.view.window?.rootViewController = signInVC
-            }
-            return
-          }
-          
-          guard let status = UserManager.shared.currentUserInfo?.status else { return }
-          
-          if status == 0 {
-            SwiftMes.shared.showSuccessMessage(body: "該任務已經完成", seconds: 1.0)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-              let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
-                   
-                   self.view.window?.rootViewController = mapView
-            }
-          } else {
-            self.callTaskData()
-          }
-        case .failure:
-          print("error")
-        }
-      }
-      return
-    }
-    NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
     
-    if userInfo.status == 0 {
+    if UserManager.shared.isTourist {
+      missionStackView.isHidden = true
       setUpall()
+      
     } else {
-      self.callTaskData()
+      guard let userInfo = UserManager.shared.currentUserInfo else {
+        backBtn.isHidden = false
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        UserManager.shared.readData(uid: uid) { result in
+          switch result {
+          case .success:
+            
+            guard let auth = Auth.auth().currentUser else {
+              SwiftMes.shared.showWarningMessage(body: "請先登入", seconds: 1.0)
+              DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "main") as? ViewController
+                
+                UserManager.shared.isTourist = true
+                
+                UserDefaults.standard.removeObject(forKey: "login")
+                
+                self.view.window?.rootViewController = signInVC
+              }
+              return
+            }
+            
+            guard let status = UserManager.shared.currentUserInfo?.status else { return }
+            
+            if status == 0 {
+              SwiftMes.shared.showSuccessMessage(body: "該任務已經完成", seconds: 1.0)
+              DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
+                     
+                     self.view.window?.rootViewController = mapView
+              }
+            } else {
+              self.callTaskData()
+            }
+          case .failure:
+            print("error")
+          }
+        }
+        return
+      }
+      NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
+      
+      if userInfo.status == 0 {
+        setUpall()
+      } else {
+        self.callTaskData()
+      }
+      backBtn.isHidden = true
     }
-    backBtn.isHidden = true
   }
   
   func callTaskData() {
@@ -411,7 +418,6 @@ class MissionDetailViewController: UIViewController {
     collection.translatesAutoresizingMaskIntoConstraints = false
     collection.showsVerticalScrollIndicator = false
     collection.showsHorizontalScrollIndicator = false
-    collection.backgroundColor = .red
     return collection
   }()
   
@@ -577,6 +583,14 @@ class MissionDetailViewController: UIViewController {
   
   func setUpBtnEnable() {
     
+    if UserManager.shared.isTourist {
+      takeMissionBtn.isHidden = false
+      takeMissionBtn.backgroundColor = .lightGray
+      takeMissionBtn.setTitle("請先登入", for: .normal)
+      takeMissionBtn.tintColor = .black
+      takeMissionBtn.isEnabled = false
+    }
+    
     guard let user = UserManager.shared.currentUserInfo,
       let task = detailData else { return }
     
@@ -592,6 +606,7 @@ class MissionDetailViewController: UIViewController {
       
       UserManager.shared.goToSignOrStay(viewController: self)
     } else if isRequseter {
+      takeMissionBtn.isHidden = false
       takeMissionBtn.backgroundColor = .lightGray
       takeMissionBtn.setTitle("您已申請此任務", for: .normal)
       takeMissionBtn.tintColor = .black
@@ -707,13 +722,14 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "detail", for: indexPath) as? MissionDetailCollectionViewCell,
-      let data = detailData else { return UICollectionViewCell() }
+        let data = detailData else { return UICollectionViewCell() }
     
     let typeManager = data.taskPhoto[indexPath.row].components(separatedBy: "mov")
     
     if typeManager.count > 1 {
       
       cell.detailImage.isHidden = true
+      cell.backView.backgroundColor = UIColor.black
       guard let video = URL(string: data.taskPhoto[indexPath.row]) else { return UICollectionViewCell() }
       
       let playQueue = AVQueuePlayer()
@@ -722,6 +738,7 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
       let playerLayer = AVPlayerLayer(player: playQueue)
       
       playerLayer.frame = cell.contentView.bounds
+//      playerLayer.frame = CGRect(x: 0, y: 0, width: 385, height: 300)
       cell.layer.addSublayer(playerLayer)
       
       playQueue.play()
@@ -735,7 +752,7 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
           avPlayerLayer.removeFromSuperlayer()
         }
       }
-      cell.detailImage.loadImage(data.taskPhoto[indexPath.row])
+      cell.detailImage.loadImage(data.taskPhoto[indexPath.row] ,placeHolder: UIImage(named: "Image_PlaceHolder") )
       cell.detailImage.contentMode = .scaleAspectFill
     }
     return cell
@@ -764,8 +781,7 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     guard let data = detailData,
-      let time = self.receiveTime,
-      let user = UserManager.shared.currentUserInfo else { return UITableViewCell() }
+      let time = self.receiveTime else { return UITableViewCell() }
     
     if indexPath.row == 0 {
       
@@ -786,26 +802,29 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
         
         cell.setUp(ownerImage: taskData.personPhoto, author: taskData.nickname, classified: classified[0], price: taskData.money)
         
-        var compare = ""
-        
-        if user.status == 1 {
-          compare = taskData.missionTaker
-        } else {
-          compare = taskData.uid
-        }
-        
-        for badMan in user.blacklist {
-          if badMan == compare {
-            alreadyReport = true
+        cell.tapReprt = { [weak self] in
+          
+          guard let user = UserManager.shared.currentUserInfo,
+               let strongSelf = self else { return }
+          
+          var compare = ""
+          
+          if user.status == 1 {
+            compare = taskData.missionTaker
+          } else {
+            compare = taskData.uid
           }
-        }
-        
-        cell.tapReprt = {
+          
+          for badMan in user.blacklist {
+            if badMan == compare {
+              strongSelf.alreadyReport = true
+            }
+          }
           
           let alert = UIAlertController(title: "檢舉系統", message: "請選擇要做的行動", preferredStyle: .actionSheet)
           
           let report = UIAlertAction(title: "檢舉", style: .default) { _ in
-            LKProgressHUD.showSuccess(text: "系統已到您的通知", controller: self)
+            LKProgressHUD.showSuccess(text: "系統已到您的通知", controller: strongSelf)
           }
           let blackList = UIAlertAction(title: "加入黑名單", style: .default) { [weak self] _ in
             
@@ -869,17 +888,21 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
           alert.addAction(blackList)
           alert.addAction(cancelAction)
           
-          self.present(alert, animated: true, completion: nil)
+          strongSelf.present(alert, animated: true, completion: nil)
         }
         
-        cell.tapOnButton = {
+        cell.tapOnButton = { [weak self ] in
           
-          self.performSegue(withIdentifier: "chat", sender: nil)
+          guard let strongSelf = self else { return }
+          
+          strongSelf.performSegue(withIdentifier: "chat", sender: nil)
         }
         
-        cell.tapOnNavi = {
-          guard let originalLocation = self.myLocationManager.location?.coordinate,
-            let taskInfo = self.detailData else { return }
+        cell.tapOnNavi = { [weak self ]in
+          
+           guard let strongSelf = self else { return }
+          guard let originalLocation = strongSelf.myLocationManager.location?.coordinate,
+            let taskInfo = strongSelf.detailData else { return }
           
           let originCor = "\(originalLocation.latitude),\(originalLocation.longitude)"
           let destination = "\(taskInfo.lat),\(taskInfo.long)"

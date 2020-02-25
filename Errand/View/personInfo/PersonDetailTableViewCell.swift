@@ -28,7 +28,7 @@ class PersonDetailTableViewCell: UITableViewCell {
   
   @IBOutlet weak var detailLabel: UILabel!
   
-  @IBOutlet weak var contentText: UITextField!
+  @IBOutlet weak var contentText: UITextView!
   
   @IBOutlet weak var botLineView: UIView!
   
@@ -38,14 +38,15 @@ class PersonDetailTableViewCell: UITableViewCell {
     contentText.delegate = self
     detailLabel.text = detailTitle
     contentText.text = content
-    contentText.isEnabled = isSetting ? true : false
-    contentText.borderStyle = isSetting ? .roundedRect : .none
+    contentText.isEditable = isSetting ? true : false
+    contentText.layer.borderColor = isSetting ? UIColor.lightGray.cgColor : UIColor.clear.cgColor
+    contentText.layer.cornerRadius = contentText.bounds.width / 25
+    contentText.layer.borderWidth = 1.0
   }
 }
 
-extension PersonDetailTableViewCell: UITextFieldDelegate {
-  func textFieldDidEndEditing(_ textField: UITextField) {
-    
-    self.delegate?.changeName(tableViewCell: self, name: textField.text, isEdit: false)
+extension PersonDetailTableViewCell: UITextViewDelegate {
+  func textViewDidEndEditing(_ textView: UITextView) {
+    self.delegate?.changeName(tableViewCell: self, name: textView.text, isEdit: false)
   }
 }

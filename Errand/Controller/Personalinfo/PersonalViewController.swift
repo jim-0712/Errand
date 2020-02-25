@@ -52,6 +52,8 @@ class PersonalViewController: UIViewController {
   
   @IBOutlet weak var cornerView: UIView!
   
+  @IBOutlet weak var backgroundImageView: UIImageView!
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -75,7 +77,11 @@ class PersonalViewController: UIViewController {
   override func viewWillLayoutSubviews() {
     super.viewWillLayoutSubviews()
     NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
-    cornerView.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 500, y: 220, width: 1000, height: 2000)
+    cornerView.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 500, y: 340, width: 1000, height: 2000)
+    cornerView.backgroundColor = UIColor.white
+    backgroundImageView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 1000)
+    backgroundImageView.image = UIImage(named: "Minimal-Solar")
+    backgroundImageView.contentMode = .scaleAspectFill
     cornerView.layer.cornerRadius = cornerView.bounds.width / 2
   }
   
@@ -179,7 +185,7 @@ class PersonalViewController: UIViewController {
   }
   
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    cornerView.frame.origin.y = 220 - scrollView.contentOffset.y
+    cornerView.frame.origin.y = 340 - scrollView.contentOffset.y
   }
 
   @IBOutlet weak var infoTableView: UITableView!
@@ -203,7 +209,9 @@ class PersonalViewController: UIViewController {
   
   func logoutAlert() {
     let controller = UIAlertController(title: "注意", message: "您真的要登出嗎？", preferredStyle: .alert)
-    let okAction = UIAlertAction(title: "ok", style: .default) { _ in
+    let okAction = UIAlertAction(title: "ok", style: .default) { [weak self] _ in
+      
+      guard let strongSelf = self else { return }
       
       do {
         try Auth.auth().signOut()
@@ -215,9 +223,11 @@ class PersonalViewController: UIViewController {
       
       UserManager.shared.isTourist = true
       
+      UserManager.shared.currentUserInfo = nil
+      
       UserDefaults.standard.removeObject(forKey: "login")
       
-      self.view.window?.rootViewController = signInVC
+      strongSelf.view.window?.rootViewController = signInVC
     }
     
     let cancelAction = UIAlertAction(title: "cancal", style: .cancel, handler: nil)
@@ -372,16 +382,17 @@ extension PersonalViewController: UITableViewDataSource, UITableViewDelegate {
         cell.signOutBtn.setTitle("登出", for: .normal)
       }
       
-      cell.taponSignOut = {
+      cell.taponSignOut = { [weak self] in
+        guard let strongSelf = self else { return }
         
         if tourist {
           
           let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "main") as? ViewController
           
-          self.view.window?.rootViewController = signInVC
+          strongSelf.view.window?.rootViewController = signInVC
           
         } else {
-          self.logoutAlert()
+          strongSelf.logoutAlert()
         }
       }
       return cell

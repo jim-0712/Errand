@@ -37,11 +37,11 @@ class PersonAboutTableViewCell: UITableViewCell {
     detailLabel.text = titleLabel
     contTextView.text = content
     contTextView.isEditable = isSetting
-    contTextView.layer.borderColor = isSetting ? UIColor.darkGray.cgColor : UIColor.clear.cgColor
-    
+    contTextView.layer.borderColor = isSetting ? UIColor.lightGray.cgColor : UIColor.clear.cgColor
+    contTextView.layer.cornerRadius = contTextView.bounds.width / 25
     contTextView.layer.borderWidth = 1.0
     
-    contentView.layer.cornerRadius = contentView.bounds.height / 10
+    contentView.layer.cornerRadius = contentView.bounds.height / 6
   }
 }
 

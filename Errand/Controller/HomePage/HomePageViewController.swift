@@ -44,6 +44,11 @@ class ViewController: UIViewController {
   
   @IBOutlet weak var appleView: UIView!
   
+  func preventTap() {
+    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
+    LKProgressHUD.show(controller: tabVC)
+  }
+  
   @IBAction func visitorAct(_ sender: Any) {
     UserManager.shared.isTourist = true
     gotoMap(viewController: self)
@@ -55,21 +60,25 @@ class ViewController: UIViewController {
   
   @IBAction func fbLoginAct(_ sender: Any) {
     
-    UserManager.shared.fbLogin(controller: self) { result in
+    self.preventTap()
+    
+    UserManager.shared.fbLogin(controller: self) { [weak self] result in
+      
+      guard let strongSelf = self else { return }
       
       switch result {
         
       case .success(let accessToken):
         
-        UserManager.shared.loginFireBaseWithFB(accesstoken: accessToken, controller: self) { result in
+        strongSelf.preventTap()
+        
+        UserManager.shared.loginFireBaseWithFB(accesstoken: accessToken, controller: strongSelf) { result in
           
           switch result {
             
           case .success:
             
-            UserManager.shared.loadFBProfile(controller: self) { [weak self] result in
-              
-              guard let strongSelf = self else { return }
+            UserManager.shared.loadFBProfile(controller: strongSelf) { result in
               
               switch result {
                 
@@ -86,6 +95,7 @@ class ViewController: UIViewController {
                   case .success:
                     
                   UserDefaults.standard.set(true, forKey: "login")
+                  LKProgressHUD.dismiss()
                    strongSelf.gotoMap(viewController: strongSelf)
                     
                   case .failure(let error):
@@ -126,12 +136,12 @@ class ViewController: UIViewController {
             
           case .failure(let error):
             
-            LKProgressHUD.showFailure(text: error.localizedDescription, controller: self)
+            LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
           }
         }
       case .failure(let error):
         
-        LKProgressHUD.showFailure(text: error.localizedDescription, controller: self)
+        LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
       }
     }
   }
@@ -166,22 +176,23 @@ class ViewController: UIViewController {
   
   @objc func goToUserInfo () {
     
+    self.preventTap()
+    
     UserManager.shared.isTourist = false
     
     guard let uid = Auth.auth().currentUser?.uid else { return }
     
-    UserManager.shared.readData(uid: uid) { result in
+    UserManager.shared.readData(uid: uid) { [weak self] result in
+      guard let strongSelf = self else { return }
       switch result {
       case .success:
         UserDefaults.standard.set(true, forKey: "login")
-        self.gotoMap(viewController: self)
+        strongSelf.gotoMap(viewController: strongSelf)
       case .failure(let error):
         
         if error.localizedDescription == "The operation couldn’t be completed. (Errand.RegiError error 3.)" {
           
-          self.createDataBase(isApple: false, isFB: false) { [weak self] result in
-
-                 guard let strongSelf = self else { return }
+          strongSelf.createDataBase(isApple: false, isFB: false) { result in
 
                  switch result {
 
@@ -189,8 +200,9 @@ class ViewController: UIViewController {
 
                    UserManager.shared.isTourist = false
                    UserManager.shared.updatefcmToken()
+                   LKProgressHUD.dismiss()
                    LKProgressHUD.showSuccess(text: success, controller: strongSelf)
-
+                   
                    strongSelf.gotoMap(viewController: strongSelf)
 
                  case .failure(let error):
@@ -278,7 +290,6 @@ class ViewController: UIViewController {
   
  @objc func startSignInWithAppleFlow() {
   
-  LKProgressHUD.show(controller: self)
     let nonce = randomNonceString()
     currentNonce = nonce
     let appleIDProvider = ASAuthorizationAppleIDProvider()

@@ -16,7 +16,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    NotificationCenter.default.addObserver(self, selector: #selector(reGetUserInfo), name: Notification.Name("postMission"), object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(loadUser), name: Notification.Name("postMission"), object: nil)
     
     NotificationCenter.default.addObserver(self, selector: #selector(reGetUserInfo), name: Notification.Name("reloadUser"), object: nil)
     
@@ -49,7 +49,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       
     } else {
       loadUserInfo()
-      NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
     }
     getTaskData()
   }
@@ -76,6 +75,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
           LKProgressHUD.dismiss()
           UserManager.shared.isPostTask = dataReturn.onTask
           UserManager.shared.currentUserInfo = dataReturn
+          NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
         case .failure:
           LKProgressHUD.dismiss()
           return
@@ -83,6 +83,27 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       }
     }
   }
+  
+  @objc func loadUser() {
+    if let uid = Auth.auth().currentUser?.uid {
+      
+      UserManager.shared.readData(uid: uid) { result in
+        
+        switch result {
+          
+        case .success(let dataReturn):
+          
+          LKProgressHUD.dismiss()
+          UserManager.shared.isPostTask = dataReturn.onTask
+          UserManager.shared.currentUserInfo = dataReturn
+        case .failure:
+          LKProgressHUD.dismiss()
+          return
+        }
+      }
+    }
+  }
+  
   
   @IBOutlet weak var googleMapView: GMSMapView!
   
@@ -120,11 +141,16 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   
   @IBOutlet weak var searchBtn: UIButton!
   
+  var isLocation = false
+  
   var judge = [Bool](repeating: false, count: 9)
   
   @IBAction func radarAct(_ sender: Any) {
-    isSearch = !isSearch
-    searchView.isHidden = isSearch
+    if CLLocationManager.locationServicesEnabled() {
+      checkLocationAuth()
+    } else {
+      alertOpen()
+    }
   }
   
   @IBAction func dismissSearchAct(_ sender: Any) {
@@ -268,7 +294,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   }
   
   func setUpView() {
-    isSearch = true
+    isSearch = false
     searchView.isHidden = isSearch
     pageView.layer.shadowOpacity = 0.2
     searchBtn.layer.shadowOpacity = 0.5
@@ -297,9 +323,18 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   }
   
   @IBAction func reloadLocation(_ sender: Any) {
-    guard let center = myLocationManager.location?.coordinate else { return }
-    let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 17)
-    googleMapView.camera = myArrange
+    
+    if CLLocationManager.locationServicesEnabled() {
+      checkLocationAuth()
+    } else {
+      alertOpen()
+    }
+    
+    if isLocation {
+      guard let center = myLocationManager.location?.coordinate else { return }
+      let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 17)
+      googleMapView.camera = myArrange
+    }
   }
   
   func setUpLocation() {
@@ -316,10 +351,15 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   }
   
   func checkLocationService() {
-    if CLLocationManager.locationServicesEnabled() {
-      checkLocationAuth()
+    
+    if UserManager.shared.isTourist {
+      
     } else {
-      alertOpen()
+      if CLLocationManager.locationServicesEnabled() {
+        checkLocationAuth()
+      } else {
+        alertOpen()
+      }
     }
   }
   
@@ -339,10 +379,14 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       centerViewOnUserLocation()
       googleMapView.isMyLocationEnabled = true
       myLocationManager.startUpdatingLocation()
+      isSearch = !isSearch
+      searchView.isHidden = isSearch
+      isLocation = true
       
     case .denied:
       
-      alertOpen()
+//      alertOpen()
+      SwiftMes.shared.showWarningMessage(body: "請至 設定 > 隱私權 > 定位服務 開啟定位服務", seconds: 1.0)
       
     case .notDetermined:
       
@@ -353,10 +397,14 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       centerViewOnUserLocation()
       myLocationManager.startUpdatingLocation()
       googleMapView.isMyLocationEnabled = true
+      isSearch = !isSearch
+      searchView.isHidden = isSearch
+      isLocation = true
       
     case .restricted:
       
-      alertOpen()
+//      alertOpen()
+      SwiftMes.shared.showWarningMessage(body: "請至 設定 > 隱私權 > 定位服務 開啟定位服務", seconds: 1.0)
       
     default:
       

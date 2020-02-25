@@ -13,9 +13,10 @@ class FriendViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+      self.view.backgroundColor = .LG1
       
       if UserManager.shared.isTourist {
-        noFreindsLabel.text = "趕快去個人頁登入享有好友吧"
+        noFreindsLabel.text = "請先去個人頁登入享有好友"
         friendListTable.backgroundColor = .clear
       } else {
         noFreindsLabel.text = "搜尋好友中"
@@ -53,11 +54,11 @@ class FriendViewController: UIViewController {
        if friend.isEmpty {
         refreshControl.endRefreshing()
         LKProgressHUD.dismiss()
-        noFreindsLabel.text = "您目前沒有好友                    請趕快完成第一個任務加好友吧"
+        noFreindsLabel.text = "您目前沒有好友"
         friendListTable.backgroundColor = .clear
          } else {
          LKProgressHUD.dismiss()
-         friendListTable.backgroundColor = .white
+        friendListTable.backgroundColor = .LG1
          refreshControl.endRefreshing()
          friendListTable.reloadData()
          }
@@ -137,9 +138,10 @@ extension FriendViewController: UITableViewDelegate, UITableViewDataSource {
     
     cell.setUpCell(image: friendsPhoto[indexPath.row], nickName: friendInfo[indexPath.row].nickname, account: friendInfo[indexPath.row].email)
     
-    cell.tapOnButton = {
-      self.indexRow = indexPath.row
-      self.performSegue(withIdentifier: "friendChat", sender: nil)
+    cell.tapOnButton = { [weak self] in
+      guard let strongSelf = self else { return }
+      strongSelf.indexRow = indexPath.row
+      strongSelf.performSegue(withIdentifier: "friendChat", sender: nil)
     }
     return cell
   }

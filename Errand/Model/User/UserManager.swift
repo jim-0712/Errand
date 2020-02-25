@@ -20,6 +20,8 @@ class UserManager {
   
   var currentUserInfo: AccountInfo?
   
+  var isEditNameEmpty = false
+  
   var checkDetailBtn = false
   
   var isHideNavi = false
@@ -31,19 +33,6 @@ class UserManager {
   var FBData: FbData?
   
   private init() { }
-  
-  func registAccount(account: String, password: String, completion: @escaping (Result<String, Error>) -> Void) {
-    
-    Auth.auth().createUser(withEmail: account, password: password) { (_, error) in
-      
-      if error != nil {
-        
-        completion(Result.failure(RegiError.registFailed))
-      }
-      
-      completion(.success("ok"))
-    }
-  }
   
   func fbLogin(controller: UIViewController, completion: @escaping (Result<String, Error>) -> Void) {
     
@@ -484,5 +473,10 @@ class UserManager {
       
       completion(.success(dataReturn))
     }
+  }
+  
+  func preventTap(viewController: UIViewController) {
+    guard let tabVC = viewController.view.window?.rootViewController as? TabBarViewController else { return }
+    LKProgressHUD.show(controller: tabVC)
   }
 }

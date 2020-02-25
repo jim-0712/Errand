@@ -92,6 +92,7 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
       strongSelf.delegate?.locationReturn(viewController: strongSelf, lat: lat, long: long)
       
       strongSelf.navigationController?.popViewController(animated: true)
+      strongSelf.dismiss(animated: true, completion: nil)
     }
     
     controller.addAction(okAction)
