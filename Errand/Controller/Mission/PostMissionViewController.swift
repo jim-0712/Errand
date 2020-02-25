@@ -40,6 +40,14 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
   
   @IBOutlet weak var editMissionStackView: UIStackView!
   
+  @IBOutlet weak var changeAddressBtn: UIButton!
+  
+  
+  @IBAction func changeAddressAct(_ sender: Any) {
+    
+    performSegue(withIdentifier: "addlocation", sender: nil)
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     setUpSetting()
@@ -57,9 +65,11 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     if TaskManager.shared.address == "" {
+      changeAddressBtn.isHidden = true
       pinImage.isHidden = false
       plusBtn.isHidden = false
     } else {
+      changeAddressBtn.isHidden = false
       pinImage.isHidden = true
       plusBtn.isHidden = true
       addressLabel.text = TaskManager.shared.address

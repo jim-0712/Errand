@@ -38,6 +38,7 @@ class PersonDetailTableViewCell: UITableViewCell {
     contentText.delegate = self
     detailLabel.text = detailTitle
     contentText.text = content
+    contentText.isScrollEnabled = false
     contentText.isEditable = isSetting ? true : false
     contentText.layer.borderColor = isSetting ? UIColor.lightGray.cgColor : UIColor.clear.cgColor
     contentText.layer.cornerRadius = contentText.bounds.width / 25

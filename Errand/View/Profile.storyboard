@@ -176,6 +176,8 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6In-G7-jvU">
                                         <rect key="frame" x="0.0" y="0.0" width="207" height="50"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="19"/>
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="個人資訊"/>
                                         <connections>
                                             <action selector="personInfoAct:" destination="YTn-iA-6s5" eventType="touchUpInside" id="8Mj-79-BXa"/>
@@ -184,7 +186,9 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ke4-fQ-gDK">
                                         <rect key="frame" x="207" y="0.0" width="207" height="50"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="歷史任務"/>
+                                        <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="19"/>
+                                        <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="歷史評分"/>
                                         <connections>
                                             <action selector="historyMissionAct:" destination="YTn-iA-6s5" eventType="touchUpInside" id="AmD-7l-O4E"/>
                                         </connections>
@@ -284,6 +288,9 @@
                             <constraint firstAttribute="bottom" secondItem="h6O-cV-Txv" secondAttribute="bottom" id="o7F-QC-lpN"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="historyTableView" destination="h6O-cV-Txv" id="a0u-xD-imp"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1To-0v-yjM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

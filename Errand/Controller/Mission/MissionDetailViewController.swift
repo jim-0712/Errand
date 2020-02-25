@@ -343,6 +343,7 @@ class MissionDetailViewController: UIViewController {
   }
   
   @IBAction func backAct(_ sender: Any) {
+    NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
     self.dismiss(animated: true, completion: nil)
   }
   
@@ -452,11 +453,12 @@ class MissionDetailViewController: UIViewController {
           if taskData.takerOK && taskData.ownerOK {
             
             strongSelf.finishMissionAlert(title: "恭喜", message: "任務完成", viewController: strongSelf)
-          } else if status == 1 && taskData.takerOK {
-            TaskManager.shared.showAlert(title: "注意", message: "對方已完成任務", viewController: strongSelf)
-          } else if status == 2 && taskData.ownerOK {
-            TaskManager.shared.showAlert(title: "注意", message: "對方已完成任務", viewController: strongSelf)
-          } else { }
+          }
+//          else if status == 1 && taskData.takerOK {
+//            TaskManager.shared.showAlert(title: "注意", message: "對方已完成任務", viewController: strongSelf)
+//          } else if status == 2 && taskData.ownerOK {
+//            TaskManager.shared.showAlert(title: "注意", message: "對方已完成任務", viewController: strongSelf)
+//          } else { }
           
         case .failure:
           print("error")
@@ -752,7 +754,7 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
           avPlayerLayer.removeFromSuperlayer()
         }
       }
-      cell.detailImage.loadImage(data.taskPhoto[indexPath.row] ,placeHolder: UIImage(named: "Image_PlaceHolder") )
+      cell.detailImage.loadImage(data.taskPhoto[indexPath.row], placeHolder: UIImage(named: "Image_PlaceHolder") )
       cell.detailImage.contentMode = .scaleAspectFill
     }
     return cell

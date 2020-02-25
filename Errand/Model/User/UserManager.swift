@@ -479,4 +479,16 @@ class UserManager {
     guard let tabVC = viewController.view.window?.rootViewController as? TabBarViewController else { return }
     LKProgressHUD.show(controller: tabVC)
   }
+  
+//  func updateHistoryMission(owner: String, classified: Int, judge: String, star: Double, completion: @escaping (Result<String, Error>) -> Void) {
+//    
+//    guard let uid = Auth.auth().currentUser?.uid else { return }
+//    
+//    let info = JudgeInfo(owner: owner, judge: judge, star: star, classified: classified)
+//    
+//    dbF.collection("Users").document(uid).collection("History").addDocument(data: info.toDict) { _  in
+//      
+//      completion(Result.success("Success"))
+//    }
+//  }
 }

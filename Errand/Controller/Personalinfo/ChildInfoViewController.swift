@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class ChildInfoViewController: UIViewController {
 
@@ -72,6 +73,7 @@ class ChildInfoViewController: UIViewController {
     infoTableView.register(UINib(nibName: "PersonDetailTableViewCell", bundle: nil), forCellReuseIdentifier: "personDetail")
     infoTableView.register(UINib(nibName: "PersonAboutTableViewCell", bundle: nil), forCellReuseIdentifier: "personAbout")
     infoTableView.register(UINib(nibName: "PersonStarTableViewCell", bundle: nil), forCellReuseIdentifier: "rate")
+    infoTableView.register(UINib(nibName: "LogoutTableViewCell", bundle: nil), forCellReuseIdentifier: "logout")
   }
   
   func uploadData() {
@@ -84,6 +86,7 @@ class ChildInfoViewController: UIViewController {
       case .success:
         LKProgressHUD.dismiss()
         UserManager.shared.isEditNameEmpty = true
+         NotificationCenter.default.post(name: Notification.Name("CompleteEdit"), object: nil)
         strongSelf.infoTableView.reloadData()
       case .failure:
         print("error")
@@ -94,21 +97,16 @@ class ChildInfoViewController: UIViewController {
   func readJudge() {
     
     guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
-    
     TaskManager.shared.readJudgeData(uid: uid) { result in
-      
       switch result {
       case .success(let judgeData):
         
         for count in 0 ..< judgeData.count {
-          
           self.totalStar += judgeData[count].star
         }
         
         self.totaltaskCount = judgeData.count
-        
         LKProgressHUD.dismiss()
-        
         self.infoTableView.reloadData()
         
       case .failure:
@@ -117,11 +115,41 @@ class ChildInfoViewController: UIViewController {
     }
   }
   
+  func logout() {
+    
+    let controller = UIAlertController(title: "注意", message: "您真的要登出嗎？", preferredStyle: .alert)
+    let okAction = UIAlertAction(title: "ok", style: .default) { [weak self] _ in
+      
+      guard let strongSelf = self else { return }
+      
+      do {
+        try Auth.auth().signOut()
+        
+      } catch {
+        print("Error")
+      }
+      let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "main") as? ViewController
+      
+      UserManager.shared.isTourist = true
+      
+      UserManager.shared.currentUserInfo = nil
+      
+      UserDefaults.standard.removeObject(forKey: "login")
+      
+      strongSelf.view.window?.rootViewController = signInVC
+    }
+    
+    let cancelAction = UIAlertAction(title: "cancal", style: .cancel, handler: nil)
+    controller.addAction(okAction)
+    controller.addAction(cancelAction)
+    self.present(controller, animated: true, completion: nil)
+  }
+  
 }
 
 extension ChildInfoViewController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 3
+    return 4
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -166,13 +194,22 @@ extension ChildInfoViewController: UITableViewDelegate, UITableViewDataSource {
       }
 
       return cell
-    } else {
+    } else if indexPath.row == 2 {
       
       guard let cell = tableView.dequeueReusableCell(withIdentifier: "personAbout", for: indexPath) as? PersonAboutTableViewCell else { return UITableViewCell() }
       
       cell.setUpView(isSetting: isSetting, titleLabel: profileDetail[2], content: data[1])
       cell.delegate = self
       
+      return cell
+    } else {
+      guard let cell = tableView.dequeueReusableCell(withIdentifier: "logout", for: indexPath) as? LogoutTableViewCell else { return UITableViewCell() }
+      
+      cell.touchHandler = { [weak self] in
+        
+        guard let strongSelf = self else { return }
+        strongSelf.logout()
+      }
       return cell
     }
   }

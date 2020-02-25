@@ -136,17 +136,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     let storyboard = UIStoryboard(name: "Mission", bundle: nil)
     if let conversationVC = storyboard.instantiateViewController(withIdentifier: "detailViewController") as? MissionDetailViewController,
       let tabBarController = self.window?.rootViewController as? TabBarViewController,
-      let _ = tabBarController.selectedViewController as? UINavigationController {
+      let navi = tabBarController.selectedViewController as? UINavigationController {
       
       if tabBarController.presentedViewController == nil {
         tabBarController.dismiss(animated: true) {
+        navi.popViewController(animated: true)
         conversationVC.modalPresentationStyle = .fullScreen
         UserManager.shared.currentUserInfo?.status = 2
         conversationVC.isMissionON = true
         conversationVC.isNavi = true
         tabBarController.present(conversationVC, animated: true, completion: nil)
         }
-      } else {
+      }
+//      else if tabBarController.presentedViewController as? MissionDetailViewController != nil {}
+      else {
         tabBarController.presentedViewController?.dismiss(animated: true, completion: {
           tabBarController.dismiss(animated: true) {
             UserManager.shared.currentUserInfo = nil

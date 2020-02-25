@@ -21,6 +21,13 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     setUp()
+    navigationItem.setHidesBackButton(true, animated: true)
+    navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(backToList))
+    }
+  
+  @objc func backToList() {
+    self.navigationController?.popViewController(animated: true)
+    TaskManager.shared.address = ""
   }
   
   let myLocationManager = CLLocationManager()

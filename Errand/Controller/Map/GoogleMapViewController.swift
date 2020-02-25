@@ -18,7 +18,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
     
     NotificationCenter.default.addObserver(self, selector: #selector(loadUser), name: Notification.Name("postMission"), object: nil)
     
-    NotificationCenter.default.addObserver(self, selector: #selector(reGetUserInfo), name: Notification.Name("reloadUser"), object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(loadUser), name: Notification.Name("reloadUser"), object: nil)
     
     NotificationCenter.default.addObserver(self, selector: #selector(reGetUserInfo), name: Notification.Name("update"), object: nil)
     
@@ -37,8 +37,9 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
     setUpView()
     changeConstraints()
     setUpLocation()
-    checkLocationAuth()
+    checkLocationAuth(isRadar: false)
     setupCollectin()
+    searchView.isHidden = true
     judge[0] = true
     
   }
@@ -147,7 +148,8 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   
   @IBAction func radarAct(_ sender: Any) {
     if CLLocationManager.locationServicesEnabled() {
-      checkLocationAuth()
+      checkLocationAuth(isRadar: true)
+      
     } else {
       alertOpen()
     }
@@ -243,8 +245,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       addAnnotation()
     }
   }
-  //  let polyline = GMSPolyline()
-  
+
   var isTapOnContent: Bool = false
   
   func changeConstraints() {
@@ -325,7 +326,9 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   @IBAction func reloadLocation(_ sender: Any) {
     
     if CLLocationManager.locationServicesEnabled() {
-      checkLocationAuth()
+      checkLocationAuth(isRadar: false)
+      isSearch = !isSearch
+      searchView.isHidden = true
     } else {
       alertOpen()
     }
@@ -356,7 +359,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       
     } else {
       if CLLocationManager.locationServicesEnabled() {
-        checkLocationAuth()
+        checkLocationAuth(isRadar: false)
       } else {
         alertOpen()
       }
@@ -370,13 +373,15 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
     googleMapView.animate(to: myArrange)
   }
   
-  func checkLocationAuth() {
+  func checkLocationAuth(isRadar: Bool) {
     
     switch CLLocationManager.authorizationStatus() {
       
     case .authorizedWhenInUse:
       
-      centerViewOnUserLocation()
+      if !isRadar {
+        centerViewOnUserLocation()
+      }
       googleMapView.isMyLocationEnabled = true
       myLocationManager.startUpdatingLocation()
       isSearch = !isSearch
@@ -385,7 +390,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       
     case .denied:
       
-//      alertOpen()
       SwiftMes.shared.showWarningMessage(body: "請至 設定 > 隱私權 > 定位服務 開啟定位服務", seconds: 1.0)
       
     case .notDetermined:
@@ -394,7 +398,9 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       
     case .authorizedAlways:
       
-      centerViewOnUserLocation()
+      if !isRadar {
+        centerViewOnUserLocation()
+      }
       myLocationManager.startUpdatingLocation()
       googleMapView.isMyLocationEnabled = true
       isSearch = !isSearch
@@ -402,8 +408,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       isLocation = true
       
     case .restricted:
-      
-//      alertOpen()
+  
       SwiftMes.shared.showWarningMessage(body: "請至 設定 > 隱私權 > 定位服務 開啟定位服務", seconds: 1.0)
       
     default:
@@ -505,12 +510,8 @@ extension GoogleMapViewController: UICollectionViewDelegate, UICollectionViewDat
     
     if judge[indexPath.row] {
       cell.contentView.backgroundColor = UIColor(red: 246.9/255.0, green: 212.0/255.0, blue: 95.0/255.0, alpha: 1.0)
-      cell.layer.borderWidth =  1.0
-      cell.layer.borderColor = UIColor.black.cgColor
     } else {
       cell.contentView.backgroundColor = UIColor.G1
-      cell.layer.borderWidth =  0.0
-      cell.layer.borderColor = UIColor.white.cgColor
     }
     
     return cell

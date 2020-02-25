@@ -46,6 +46,10 @@ class PersonStarTableViewCell: UITableViewCell {
       starView.isHidden = false
     }
     
+    if averageStar == 0.01 {
+      newUserLabel.text = "尚未被評價"
+    }
+    
     if UserManager.shared.isTourist {
       newUserLabel.text = "遊客"
     } else {

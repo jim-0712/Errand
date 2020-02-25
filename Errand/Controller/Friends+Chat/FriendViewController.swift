@@ -59,6 +59,7 @@ class FriendViewController: UIViewController {
          } else {
          LKProgressHUD.dismiss()
         friendListTable.backgroundColor = .LG1
+        noFreindsLabel.text = ""
          refreshControl.endRefreshing()
          friendListTable.reloadData()
          }

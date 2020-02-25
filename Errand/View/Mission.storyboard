@@ -652,9 +652,23 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="by0-nl-JJr">
+                                        <rect key="frame" x="334" y="289" width="70" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="70" id="H17-25-zSs"/>
+                                            <constraint firstAttribute="height" constant="30" id="Y4s-RT-fXJ"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="15"/>
+                                        <color key="tintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="修改地址"/>
+                                        <connections>
+                                            <action selector="changeAddressAct:" destination="aZU-mc-oHp" eventType="touchUpInside" id="yGW-DP-OXH"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.92156231399999999" green="0.92156261210000001" blue="0.92156094310000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="by0-nl-JJr" secondAttribute="trailing" constant="10" id="iq9-1x-Z9M"/>
                                     <constraint firstAttribute="trailing" secondItem="5bd-LF-t49" secondAttribute="trailing" constant="20" id="kEJ-0J-oJI"/>
                                 </constraints>
                             </view>
@@ -884,7 +898,7 @@
                                 <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="24"/>
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="+">
-                                    <color key="titleColor" red="0.41618615390000002" green="0.76046198610000004" blue="0.78039598460000004" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
                                     <action selector="addLocationAct:" destination="aZU-mc-oHp" eventType="touchUpInside" id="zET-3i-o8f"/>
@@ -948,6 +962,7 @@
                             <constraint firstItem="h4z-y2-sq7" firstAttribute="leading" secondItem="1r9-bb-oOQ" secondAttribute="leading" constant="15" id="68o-mN-j86"/>
                             <constraint firstItem="kpx-27-Yrv" firstAttribute="centerY" secondItem="a9x-ED-orF" secondAttribute="centerY" id="6GE-QW-4Fj"/>
                             <constraint firstItem="tdw-AV-8LA" firstAttribute="centerX" secondItem="Pwr-cw-Vw6" secondAttribute="centerX" id="8xJ-XC-buT"/>
+                            <constraint firstItem="by0-nl-JJr" firstAttribute="centerY" secondItem="W8B-ub-5e0" secondAttribute="centerY" id="BYM-HW-8ol"/>
                             <constraint firstItem="73O-sU-iT5" firstAttribute="leading" secondItem="1r9-bb-oOQ" secondAttribute="leading" id="Dcc-Od-Qoz"/>
                             <constraint firstItem="W8B-ub-5e0" firstAttribute="leading" secondItem="1r9-bb-oOQ" secondAttribute="leading" constant="15" id="EaO-vw-5zy"/>
                             <constraint firstItem="Pwr-cw-Vw6" firstAttribute="leading" secondItem="1r9-bb-oOQ" secondAttribute="leading" constant="80" id="F9H-jW-Ty7"/>
@@ -984,6 +999,7 @@
                     <navigationItem key="navigationItem" title="發布任務" leftItemsSupplementBackButton="YES" id="15b-uA-Umd"/>
                     <connections>
                         <outlet property="addressLabel" destination="5bd-LF-t49" id="JaA-LY-ldV"/>
+                        <outlet property="changeAddressBtn" destination="by0-nl-JJr" id="Gju-wi-GMX"/>
                         <outlet property="chooseGroupText" destination="a9x-ED-orF" id="F8Y-2b-mr3"/>
                         <outlet property="editBackBtn" destination="kpx-27-Yrv" id="t9g-rX-PvL"/>
                         <outlet property="editMissionStackView" destination="tdw-AV-8LA" id="IMc-Ok-EGo"/>

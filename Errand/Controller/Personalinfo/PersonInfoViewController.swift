@@ -62,6 +62,12 @@ class PersonInfoViewController: UIViewController {
     setUpIndicatorView()
     setUpNavigationItem()
     historyContainer.alpha = 0.0
+    NotificationCenter.default.addObserver(self, selector: #selector(backToEdit), name: Notification.Name("CompleteEdit"), object: nil)
+  }
+  
+  @objc func backToEdit() {
+    self.navigationItem.setRightBarButtonItems([self.settingOff], animated: false)
+    isSetting = false
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -72,7 +78,8 @@ class PersonInfoViewController: UIViewController {
   
   func setUpBackPhoto() {
     backgroundImage.contentMode = .scaleAspectFill
-    backgroundImage.image = UIImage(named: "Space-Expedition")
+//    backgroundImage.image = UIImage(named: "Space-Expedition")
+//    37670
   }
   
   func setUpNavigationItem() {
@@ -139,7 +146,7 @@ class PersonInfoViewController: UIViewController {
   
   func setUpIndicatorView() {
     self.view.addSubview(indicatorView)
-    indicatorView.backgroundColor = .red
+    indicatorView.backgroundColor = .G1
     indicatorView.translatesAutoresizingMaskIntoConstraints = false
     indicatorCon = indicatorView.centerXAnchor.constraint(equalTo: personInfoBtn.centerXAnchor)
     

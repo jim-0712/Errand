@@ -90,6 +90,8 @@
 		FBBCEE9F240423EF0068410C /* ChildhistroyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBCEE9E240423EF0068410C /* ChildhistroyViewController.swift */; };
 		FBBCEEA224042EED0068410C /* PersonStarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBCEEA024042EED0068410C /* PersonStarTableViewCell.swift */; };
 		FBBCEEA324042EED0068410C /* PersonStarTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBBCEEA124042EED0068410C /* PersonStarTableViewCell.xib */; };
+		FBBCEEA62404B5C70068410C /* LogoutTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBCEEA42404B5C70068410C /* LogoutTableViewCell.swift */; };
+		FBBCEEA72404B5C70068410C /* LogoutTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBBCEEA52404B5C70068410C /* LogoutTableViewCell.xib */; };
 		FBEC726123FA376400A6AF86 /* FriendsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEC725F23FA376400A6AF86 /* FriendsTableViewCell.swift */; };
 		FBEC726223FA376400A6AF86 /* FriendsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBEC726023FA376400A6AF86 /* FriendsTableViewCell.xib */; };
 		FBEC726423FA664800A6AF86 /* FriendChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEC726323FA664800A6AF86 /* FriendChatViewController.swift */; };
@@ -214,6 +216,8 @@
 		FBBCEE9E240423EF0068410C /* ChildhistroyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildhistroyViewController.swift; sourceTree = "<group>"; };
 		FBBCEEA024042EED0068410C /* PersonStarTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonStarTableViewCell.swift; sourceTree = "<group>"; };
 		FBBCEEA124042EED0068410C /* PersonStarTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PersonStarTableViewCell.xib; sourceTree = "<group>"; };
+		FBBCEEA42404B5C70068410C /* LogoutTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutTableViewCell.swift; sourceTree = "<group>"; };
+		FBBCEEA52404B5C70068410C /* LogoutTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LogoutTableViewCell.xib; sourceTree = "<group>"; };
 		FBEC725F23FA376400A6AF86 /* FriendsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsTableViewCell.swift; sourceTree = "<group>"; };
 		FBEC726023FA376400A6AF86 /* FriendsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FriendsTableViewCell.xib; sourceTree = "<group>"; };
 		FBEC726323FA664800A6AF86 /* FriendChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendChatViewController.swift; sourceTree = "<group>"; };
@@ -515,6 +519,8 @@
 				FBF24FC823FCEB2D002A56A4 /* SignOutTableViewCell.swift */,
 				FBBCEEA024042EED0068410C /* PersonStarTableViewCell.swift */,
 				FBBCEEA124042EED0068410C /* PersonStarTableViewCell.xib */,
+				FBBCEEA42404B5C70068410C /* LogoutTableViewCell.swift */,
+				FBBCEEA52404B5C70068410C /* LogoutTableViewCell.xib */,
 			);
 			path = personInfo;
 			sourceTree = "<group>";
@@ -744,6 +750,7 @@
 				FB387C1F23CEEF0F00B6D8C4 /* LaunchScreen.storyboard in Resources */,
 				FB638DCE23E71D3500030CB2 /* Profile.storyboard in Resources */,
 				FB53F32323EBB42A0041C49D /* PersonDetailTableViewCell.xib in Resources */,
+				FBBCEEA72404B5C70068410C /* LogoutTableViewCell.xib in Resources */,
 				FB752ABB23D5DFB200BF3852 /* PermanentMarker.ttf in Resources */,
 				FB638DCA23E71D0C00030CB2 /* Map.storyboard in Resources */,
 				FB69553923F1461D0049DB14 /* StartMissionTableViewCell.xib in Resources */,
@@ -990,6 +997,7 @@
 				FB63664F23E3FC1B008555BC /* MissionDetailTableViewCell.swift in Sources */,
 				FB53F32C23EBCE220041C49D /* PersonAboutTableViewCell.swift in Sources */,
 				FBA557F723ED17A400521B89 /* RequesterRateTableViewCell.swift in Sources */,
+				FBBCEEA62404B5C70068410C /* LogoutTableViewCell.swift in Sources */,
 				FB69552D23F000BE0049DB14 /* UIImage+Additions.swift in Sources */,
 				FB387C1A23CEEF0E00B6D8C4 /* Errand.xcdatamodeld in Sources */,
 				FB69553123F001350049DB14 /* Channel.swift in Sources */,
