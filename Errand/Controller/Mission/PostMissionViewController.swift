@@ -40,6 +40,13 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
   
   @IBOutlet weak var editMissionStackView: UIStackView!
   
+  @IBOutlet weak var changeAddressBtn: UIButton!
+
+  @IBAction func changeAddressAct(_ sender: Any) {
+    
+    performSegue(withIdentifier: "addlocation", sender: nil)
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     setUpSetting()
@@ -47,6 +54,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
     judge[0] = true
     navigationItem.setHidesBackButton(true, animated: true)
     navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(backToList))
+    navigationItem.leftBarButtonItem?.tintColor = .black
   }
   
   @objc func backToList() {
@@ -57,9 +65,11 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     if TaskManager.shared.address == "" {
+      changeAddressBtn.isHidden = true
       pinImage.isHidden = false
       plusBtn.isHidden = false
     } else {
+      changeAddressBtn.isHidden = false
       pinImage.isHidden = true
       plusBtn.isHidden = true
       addressLabel.text = TaskManager.shared.address
@@ -121,12 +131,15 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
     missionContentTextView.text = taskInfo.detail
     
     for count in 0 ..< taskInfo.taskPhoto.count {
-      if fileType[count] == 0 {
+      
+      let seperate = taskInfo.taskPhoto[count].components(separatedBy: "jpeg")
+      
+      if seperate.count > 1 {
         guard let url = URL(string: fileURL[count]) else { return }
         guard let data = try? Data(contentsOf: url) else { return }
         guard let image = UIImage(data: data) else { return }
         luke.append(image)
-      } else if fileType[count] == 1 {
+      } else {
         guard let url = URL(string: fileURL[count]) else { return }
         luke.append(url as NSURL)
       }
@@ -236,7 +249,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
     group.notify(queue: DispatchQueue.main) {
       UserManager.shared.currentUserInfo?.status = 0
       LKProgressHUD.dismiss()
-      SwiftMes.shared.showSuccessMessage(body: "恭喜刪除 返回任務頁面中", seconds: 2.0)
+      SwiftMes.shared.showSuccessMessage(body: "恭喜刪除 返回任務頁面中", seconds: 1.7)
       DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
         self.dismiss(animated: true, completion: nil)
       }
@@ -280,10 +293,10 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
         for count in 0 ..< luke.count {
           let id = UUID().uuidString
           if let image = luke[count] as? UIImage {
-            guard let imageData = image.pngData() else {
+            guard let imageData = image.jpegData(compressionQuality: 0.5) else {
               group.leave()
               return }
-            let storageRef = Storage.storage().reference().child("TaskFinder").child("\(id).png")
+            let storageRef = Storage.storage().reference().child("TaskFinder").child("\(id).jpeg")
             
             storageRef.putData(imageData, metadata: nil, completion: { [weak self] (_, error) in
               
@@ -407,8 +420,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
             NotificationCenter.default.post(name: Notification.Name("postMission"), object: nil)
             UserManager.shared.currentUserInfo?.status = 1
             LKProgressHUD.dismiss()
-            SwiftMes.shared.showSuccessMessage(body: "返回任務頁面中", seconds: 2.0)
-//            strongSelf.showAlert(viewController: strongSelf)
+            SwiftMes.shared.showSuccessMessage(body: "返回任務頁面中", seconds: 1.7)
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
               strongSelf.navigationController?.popViewController(animated: true)
               strongSelf.dismiss(animated: true, completion: nil)
@@ -553,6 +565,7 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
         cell.deleteBtn.isHidden = true
         cell.backgroundColor = .white
         cell.addPhotoBtn.isHidden = false
+
         cell.contentView.backgroundColor = .white
         cell.photoImageView.isHidden = true
         return cell
@@ -596,6 +609,13 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
         return cell
         
       } else {
+        
+        guard let layers = cell.layer.sublayers else { return UICollectionViewCell() }
+        for layer in layers {
+          if let avPlayerLayer = layer as? AVPlayerLayer {
+            avPlayerLayer.removeFromSuperlayer()
+          }
+        }
         cell.contentView.backgroundColor = .white
         cell.indexRow = indexPath.row
         cell.deleteBtn.isHidden = true

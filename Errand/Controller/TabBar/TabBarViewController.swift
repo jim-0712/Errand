@@ -96,8 +96,6 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    NotificationCenter.default.addObserver(self, selector: #selector(setUpLabel), name: Notification.Name("onTask"), object: nil)
-    
     NotificationCenter.default.addObserver(self, selector: #selector(hideNoti), name: Notification.Name("hide"), object: nil)
     
     viewControllers = tabs.map({ $0.controller() })
@@ -149,7 +147,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     ])
   }
   
-  @objc func setUpLabel() {
+  @objc func setUpLabe() {
     
     guard let userStatus = UserManager.shared.currentUserInfo?.status else {
       self.showNotificationView(isON: false)
@@ -194,5 +192,9 @@ extension TabBarViewController {
     alert.isHidden = true
     notiView.isHidden = true
     lengthyLabel.isHidden = true
+    
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+      LKProgressHUD.dismiss()
+    }
   }
 }

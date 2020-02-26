@@ -13,6 +13,9 @@ class CheckRequesterViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    guard let requesterUid = requsterInfoData?.uid else { return }
+    calcJudge(uid: requesterUid)
+
     setUpTableView()
     readTask()
     self.tabBarController?.tabBar.barTintColor = UIColor.black
@@ -21,9 +24,17 @@ class CheckRequesterViewController: UIViewController {
   
   var averageStar = 0.0
   
+  var minusStar = 0.0
+  
+  var totaltaskCount = 0
+  
+  var totalStar = 0.0
+  
   var requsterInfoData: AccountInfo?
   
   var taskInfo: TaskInfo?
+  
+  var judgeInfo: JudgeInfo?
   
   let profileDetail = ["暱稱", "歷史評分", "關於我"]
   
@@ -54,6 +65,36 @@ class CheckRequesterViewController: UIViewController {
       case .failure(let error):
         
         print(error.localizedDescription)
+      }
+    }
+  }
+  
+  func calcJudge(uid: String) {
+    
+    TaskManager.shared.readJudgeData(uid: uid) { result in
+      
+      switch result {
+      case .success(let judgeData):
+        
+        var counter = 0
+        
+        for count in 0 ..< judgeData.count {
+          
+          if judgeData[count].star == -0.1 {
+            counter += 1
+          } else {
+            self.totalStar += judgeData[count].star
+          }
+        }
+        
+        self.totaltaskCount = judgeData.count - counter
+        
+        LKProgressHUD.dismiss()
+        
+        self.requesterInfo.reloadData()
+        
+      case .failure:
+        print("error")
       }
     }
   }
@@ -166,10 +207,10 @@ extension CheckRequesterViewController: UITableViewDelegate, UITableViewDataSour
     
     guard let infoData = requsterInfoData else { return UITableViewCell() }
     
-    if infoData.taskCount == 0 {
+    if totaltaskCount == 0 {
       averageStar = 0.0
     } else {
-      averageStar = infoData.totalStar / Double(infoData.taskCount)
+      averageStar = totalStar / Double(totaltaskCount)
     }
     
     if indexPath.row == 0 {

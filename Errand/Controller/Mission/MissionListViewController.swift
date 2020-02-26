@@ -58,7 +58,11 @@ class MissionListViewController: UIViewController {
   
   func getMissionStartData() {
     
-    guard let user = UserManager.shared.currentUserInfo else { return }
+    guard let user = UserManager.shared.currentUserInfo else {
+      LKProgressHUD.dismiss()
+      SwiftMes.shared.showWarningMessage(body: "當前沒有登入", seconds: 1.0)
+      taskDataReturn = []
+      return }
     
     if user.status == 1 {
       
@@ -193,6 +197,9 @@ class MissionListViewController: UIViewController {
       } else {
         DispatchQueue.main.async {
           self.postMissionBtn.isHidden = false
+          self.refreshControl.endRefreshing()
+          self.taskListTable.reloadData()
+          LKProgressHUD.dismiss()
           
           guard let status = UserManager.shared.currentUserInfo?.status else { return }
           if status == 0 || status == 1 {
@@ -200,9 +207,6 @@ class MissionListViewController: UIViewController {
           } else {
             self.postMissionBtn.isHidden = true
           }
-          self.refreshControl.endRefreshing()
-          self.taskListTable.reloadData()
-          LKProgressHUD.dismiss()
         }
       }
     }
@@ -284,25 +288,31 @@ class MissionListViewController: UIViewController {
       guard let strongSelf = self else { return }
       switch result {
       case .success(let taskData):
-        
-        guard let userBlackList = UserManager.shared.currentUserInfo?.blacklist else { return }
-        
-        let filterData = taskData.filter { taskInfo in
-          var isMatch = false
-          for badMan in userBlackList {
-            if badMan == taskInfo.uid {
-              isMatch =  true
-            } else {
-              isMatch =  false
+     
+        if UserManager.shared.isTourist {
+          
+          strongSelf.taskDataReturn = taskData
+          
+        } else {
+          guard let userBlackList = UserManager.shared.currentUserInfo?.blacklist else { return }
+          
+          let filterData = taskData.filter { taskInfo in
+            var isMatch = false
+            for badMan in userBlackList {
+              if badMan == taskInfo.uid {
+                isMatch =  true
+              } else {
+                isMatch =  false
+              }
             }
+            if isMatch { return false } else { return true}
           }
-          if isMatch { return false } else { return true}
+          
+          strongSelf.taskDataReturn = filterData
+          strongSelf.postMissionBtn.isHidden = false
+          TaskManager.shared.taskData = []
+          LKProgressHUD.dismiss()
         }
-        
-        strongSelf.taskDataReturn = filterData
-        strongSelf.postMissionBtn.isHidden = false
-        TaskManager.shared.taskData = []
-        LKProgressHUD.dismiss()
         
       case .failure(let error):
         LKProgressHUD.dismiss()

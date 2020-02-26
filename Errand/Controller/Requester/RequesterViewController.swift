@@ -14,6 +14,7 @@ class RequesterViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    self.view.backgroundColor = UIColor.LG1
     
     NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("acceptRequester"), object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("refuseRequester"), object: nil)
@@ -39,7 +40,7 @@ class RequesterViewController: UIViewController {
       
     } else if UserManager.shared.currentUserInfo?.status == 2 {
       
-      noRequesterLabel.text = "當前您是任務接受者    沒有申請者"
+      noRequesterLabel.text = "當前您是任務接受者      沒有申請者"
       //    requesterTable.backgroundColor = .clear
     } else {
       noRequesterLabel.text = ""
@@ -193,9 +194,9 @@ class RequesterViewController: UIViewController {
   
   func checkRequest(viewController: UIViewController, indexInt: Int) {
     
-    guard let requesterInfo = self.storyboard?.instantiateViewController(identifier: "requesterInfo") as? CheckRequesterViewController else { return }
+    guard let requesterInfo = storyboard?.instantiateViewController(identifier: "requesterInfo") as? CheckRequesterViewController          else { return }
     
-    requesterInfo.requsterInfoData = self.userInfo[indexInt]
+    requesterInfo.requsterInfoData = userInfo[indexInt]
     
     self.show(requesterInfo, sender: nil)
   }

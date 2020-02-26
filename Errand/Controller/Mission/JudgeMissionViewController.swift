@@ -30,7 +30,9 @@ class JudgeMissionViewController: UIViewController {
   
   var destination = ""
   
-  let judge = ["認真服務", "態度優良", "服務惡劣", "態度不佳"]
+  let judgeByOwner = ["認真服務", "態度優良", "服務惡劣", "態度不佳"]
+  
+  let judgeByRequester = ["給錢大方", "任務簡單", "吹毛求疵", "圖文不符"]
   
   let dbF = Firestore.firestore()
   
@@ -53,6 +55,27 @@ class JudgeMissionViewController: UIViewController {
   @IBOutlet weak var backView: UIView!
   
   @IBAction func backAct(_ sender: Any) {
+    
+    guard let taskData = self.detailData,
+         let status = UserManager.shared.currentUserInfo?.status,
+         let judge = judgeTextView.text else { return }
+    var judgerOwner = ""
+    if status == 1 {
+      judgerOwner = taskData.missionTaker
+    } else {
+      judgerOwner = taskData.uid
+    }
+    
+    TaskManager.shared.updateJudge(owner: judgerOwner, classified: taskData.classfied, judge: judge, star: -0.1 ) { (result) in
+      switch result {
+      case .success:
+        print("ok")
+      case .failure:
+        print("error")
+      }
+    }
+    
+    addFriendJudge(taskInfo: taskData)
     
     let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
     
@@ -115,7 +138,6 @@ class JudgeMissionViewController: UIViewController {
         switch result {
         case .success(let taskInfo):
           self.detailData = taskInfo
-          self.addFriendJudge(taskInfo: taskInfo)
           
         case .failure(let error):
           print(error.localizedDescription)
@@ -164,7 +186,7 @@ class JudgeMissionViewController: UIViewController {
                   print("ChatRoomOK")
                   UserManager.shared.updatefreinds(ownerUid: taskInfo.uid, takerUid: taskInfo.missionTaker, chatRoomID: chatRoomID) { result in
                     switch result {
-                    case .success:
+                      case .success:
                       LKProgressHUD.dismiss()
                     case .failure:
                       print("no")
@@ -219,6 +241,8 @@ class JudgeMissionViewController: UIViewController {
       }
     }
     
+    addFriendJudge(taskInfo: taskData)
+    
     let controller = UIAlertController(title: "恭喜", message: "已完成評分", preferredStyle: .alert)
     let okAction = UIAlertAction(title: "ok", style: .default) { _ in
       
@@ -231,7 +255,7 @@ class JudgeMissionViewController: UIViewController {
   }
   // swiftlint:enable cyclomatic_complexity
   func setUpTextField() {
-    judgeTextView.text = judge[0]
+    judgeTextView.text = judgeByOwner[0]
     judgeTextView.layer.cornerRadius = judgeTextView.bounds.width / 20
     judgeTextView.layer.shadowOpacity = 0.6
     judgeTextView.layer.shadowOffset = .zero
@@ -285,10 +309,24 @@ extension JudgeMissionViewController: UIPickerViewDelegate, UIPickerViewDataSour
   }
   
   func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-    return judge[row]
+    
+    guard let status = UserManager.shared.currentUserInfo?.status else { return "" }
+    
+    if status == 1 {
+      return judgeByOwner[row]
+    } else {
+      return judgeByRequester[row]
+    }
   }
   
   func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-    self.judgeTextView.text = judge[row]
+    
+    let status = UserManager.shared.currentUserInfo?.status
+    
+    if status == 1 {
+      self.judgeTextView.text = judgeByOwner[row]
+    } else {
+      self.judgeTextView.text = judgeByRequester[row]
+    }
   }
 }

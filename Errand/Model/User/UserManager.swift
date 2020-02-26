@@ -20,6 +20,8 @@ class UserManager {
   
   var currentUserInfo: AccountInfo?
   
+  var isEditNameEmpty = false
+  
   var checkDetailBtn = false
   
   var isHideNavi = false
@@ -31,19 +33,6 @@ class UserManager {
   var FBData: FbData?
   
   private init() { }
-  
-  func registAccount(account: String, password: String, completion: @escaping (Result<String, Error>) -> Void) {
-    
-    Auth.auth().createUser(withEmail: account, password: password) { (_, error) in
-      
-      if error != nil {
-        
-        completion(Result.failure(RegiError.registFailed))
-      }
-      
-      completion(.success("ok"))
-    }
-  }
   
   func fbLogin(controller: UIViewController, completion: @escaping (Result<String, Error>) -> Void) {
     
@@ -275,6 +264,24 @@ class UserManager {
         document?.reference.updateData(["status": status ], completion: { (error) in
           
           if error != nil {
+            completion(.failure(FireBaseUpdateError.updateError))
+          } else {
+            completion(.success("Update Success"))
+          }
+        })
+      }
+    }
+  }
+  
+  func updateStatus(uid: String, status: Int, completion: @escaping (Result<String, Error>) -> Void) {
+    
+    dbF.collection("Users").whereField("uid", isEqualTo: uid).getDocuments { (querySnapshot, error) in
+      if let querySnapshot = querySnapshot {
+        let document = querySnapshot.documents.first
+        
+        document?.reference.updateData(["status": status], completion: { (error) in
+          
+          if error != nil {
             
             completion(.failure(FireBaseUpdateError.updateError))
             
@@ -359,28 +366,6 @@ class UserManager {
         }
       case .failure:
         completion(.failure(FireBaseUpdateError.updateError))
-      }
-    }
-  }
-  
-  func updateStatus(uid: String, status: Int, completion: @escaping (Result<String, Error>) -> Void) {
-    
-    dbF.collection("Users").whereField("uid", isEqualTo: uid).getDocuments { (querySnapshot, error) in
-      if let querySnapshot = querySnapshot {
-        let document = querySnapshot.documents.first
-        
-        document?.reference.updateData(["status": status ], completion: { (error) in
-          
-          if error != nil {
-            
-            completion(.failure(FireBaseUpdateError.updateError))
-            
-          } else {
-            
-            completion(.success("Update Success"))
-            
-          }
-        })
       }
     }
   }
@@ -485,4 +470,21 @@ class UserManager {
       completion(.success(dataReturn))
     }
   }
+  
+  func preventTap(viewController: UIViewController) {
+    guard let tabVC = viewController.view.window?.rootViewController as? TabBarViewController else { return }
+    LKProgressHUD.show(controller: tabVC)
+  }
+  
+//  func updateHistoryMission(owner: String, classified: Int, judge: String, star: Double, completion: @escaping (Result<String, Error>) -> Void) {
+//    
+//    guard let uid = Auth.auth().currentUser?.uid else { return }
+//    
+//    let info = JudgeInfo(owner: owner, judge: judge, star: star, classified: classified)
+//    
+//    dbF.collection("Users").document(uid).collection("History").addDocument(data: info.toDict) { _  in
+//      
+//      completion(Result.success("Success"))
+//    }
+//  }
 }

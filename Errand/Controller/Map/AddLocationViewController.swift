@@ -21,6 +21,14 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     setUp()
+    navigationItem.setHidesBackButton(true, animated: true)
+    navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(backToList))
+    navigationItem.leftBarButtonItem?.tintColor = .black
+    }
+  
+  @objc func backToList() {
+    self.navigationController?.popViewController(animated: true)
+    TaskManager.shared.address = ""
   }
   
   let myLocationManager = CLLocationManager()
@@ -71,12 +79,15 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
   }
   
   func setUp() {
-    
+    confirmLocation.layer.cornerRadius = confirmLocation.bounds.height / 2
     addLocationMap.delegate = self
     myLocationManager.delegate = self
+    addLocationMap.isMyLocationEnabled = true
+    myLocationManager.startUpdatingLocation()
     guard let center = myLocationManager.location?.coordinate else { return }
-    let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 18)
+    let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 17)
     addLocationMap.camera = myArrange
+    addLocationMap.animate(to: myArrange)
     finalLat = center.latitude
     finalLong = center.longitude
   }
@@ -92,6 +103,7 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
       strongSelf.delegate?.locationReturn(viewController: strongSelf, lat: lat, long: long)
       
       strongSelf.navigationController?.popViewController(animated: true)
+      strongSelf.dismiss(animated: true, completion: nil)
     }
     
     controller.addAction(okAction)

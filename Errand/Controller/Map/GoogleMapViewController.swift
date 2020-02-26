@@ -16,29 +16,20 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    NotificationCenter.default.addObserver(self, selector: #selector(reGetUserInfo), name: Notification.Name("postMission"), object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(loadUser), name: Notification.Name("postMission"), object: nil)
     
-    NotificationCenter.default.addObserver(self, selector: #selector(reGetUserInfo), name: Notification.Name("reloadUser"), object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(loadUser), name: Notification.Name("reloadUser"), object: nil)
     
     NotificationCenter.default.addObserver(self, selector: #selector(reGetUserInfo), name: Notification.Name("update"), object: nil)
     
     arrangeTextField.delegate = self
-    
-    if UserManager.shared.isTourist {
-      
-      //      refreshBtn.isEnabled = false
-      
-    } else {
-      
-      //      guard let VC = self.view.window?.rootViewController as? TabBarViewController else { return }
-      //      LKProgressHUD.show(controller: VC)
-      //      refreshBtn.isEnabled = true
-    }
+
     setUpView()
     changeConstraints()
     setUpLocation()
-    checkLocationAuth()
+    checkLocationAuth(isRadar: false)
     setupCollectin()
+    searchView.isHidden = true
     judge[0] = true
     
   }
@@ -49,7 +40,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       
     } else {
       loadUserInfo()
-      NotificationCenter.default.post(name: Notification.Name("onTask"), object: nil)
     }
     getTaskData()
   }
@@ -59,12 +49,37 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
     LKProgressHUD.show(controller: tabVC)
   }
   
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    taskPersonPhoto.layer.cornerRadius = taskPersonPhoto.bounds.width / 2
+  }
+  
   @objc func reGetUserInfo() {
     loadUserInfo()
   }
   
   func loadUserInfo() {
     
+    if let uid = Auth.auth().currentUser?.uid {
+      
+      UserManager.shared.readData(uid: uid) { result in
+        
+        switch result {
+          
+        case .success(let dataReturn):
+          
+          UserManager.shared.isPostTask = dataReturn.onTask
+          UserManager.shared.currentUserInfo = dataReturn
+          LKProgressHUD.dismiss()
+        case .failure:
+          LKProgressHUD.dismiss()
+          return
+        }
+      }
+    }
+  }
+  
+  @objc func loadUser() {
     if let uid = Auth.auth().currentUser?.uid {
       
       UserManager.shared.readData(uid: uid) { result in
@@ -120,11 +135,17 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   
   @IBOutlet weak var searchBtn: UIButton!
   
+  var isLocation = false
+  
   var judge = [Bool](repeating: false, count: 9)
   
   @IBAction func radarAct(_ sender: Any) {
-    isSearch = !isSearch
-    searchView.isHidden = isSearch
+    if CLLocationManager.locationServicesEnabled() {
+      checkLocationAuth(isRadar: true)
+      
+    } else {
+      alertOpen()
+    }
   }
   
   @IBAction func dismissSearchAct(_ sender: Any) {
@@ -217,8 +238,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       addAnnotation()
     }
   }
-  //  let polyline = GMSPolyline()
-  
+
   var isTapOnContent: Bool = false
   
   func changeConstraints() {
@@ -268,7 +288,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   }
   
   func setUpView() {
-    isSearch = true
+    isSearch = false
     searchView.isHidden = isSearch
     pageView.layer.shadowOpacity = 0.2
     searchBtn.layer.shadowOpacity = 0.5
@@ -297,9 +317,20 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   }
   
   @IBAction func reloadLocation(_ sender: Any) {
-    guard let center = myLocationManager.location?.coordinate else { return }
-    let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 17)
-    googleMapView.camera = myArrange
+    
+    if CLLocationManager.locationServicesEnabled() {
+      checkLocationAuth(isRadar: false)
+      isSearch = !isSearch
+      searchView.isHidden = true
+    } else {
+      alertOpen()
+    }
+    
+    if isLocation {
+      guard let center = myLocationManager.location?.coordinate else { return }
+      let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 17)
+      googleMapView.camera = myArrange
+    }
   }
   
   func setUpLocation() {
@@ -316,10 +347,15 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   }
   
   func checkLocationService() {
-    if CLLocationManager.locationServicesEnabled() {
-      checkLocationAuth()
+    
+    if UserManager.shared.isTourist {
+      
     } else {
-      alertOpen()
+      if CLLocationManager.locationServicesEnabled() {
+        checkLocationAuth(isRadar: false)
+      } else {
+        alertOpen()
+      }
     }
   }
   
@@ -330,19 +366,24 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
     googleMapView.animate(to: myArrange)
   }
   
-  func checkLocationAuth() {
+  func checkLocationAuth(isRadar: Bool) {
     
     switch CLLocationManager.authorizationStatus() {
       
     case .authorizedWhenInUse:
       
-      centerViewOnUserLocation()
+      if !isRadar {
+        centerViewOnUserLocation()
+      }
       googleMapView.isMyLocationEnabled = true
       myLocationManager.startUpdatingLocation()
+      isSearch = !isSearch
+      searchView.isHidden = isSearch
+      isLocation = true
       
     case .denied:
       
-      alertOpen()
+      SwiftMes.shared.showWarningMessage(body: "請至 設定 > 隱私權 > 定位服務 開啟定位服務", seconds: 1.0)
       
     case .notDetermined:
       
@@ -350,13 +391,18 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       
     case .authorizedAlways:
       
-      centerViewOnUserLocation()
+      if !isRadar {
+        centerViewOnUserLocation()
+      }
       myLocationManager.startUpdatingLocation()
       googleMapView.isMyLocationEnabled = true
+      isSearch = !isSearch
+      searchView.isHidden = isSearch
+      isLocation = true
       
     case .restricted:
-      
-      alertOpen()
+  
+      SwiftMes.shared.showWarningMessage(body: "請至 設定 > 隱私權 > 定位服務 開啟定位服務", seconds: 1.0)
       
     default:
       
@@ -394,6 +440,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       guard let detailVC = segue.destination as? MissionDetailViewController else { return }
       detailVC.modalPresentationStyle = .fullScreen
       detailVC.detailData = specificData[0]
+      detailVC.isNavi = true
       detailVC.receiveTime =  TaskManager.shared.timeConverter(time: specificData[0].time)
     }
   }
@@ -402,8 +449,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
 extension GoogleMapViewController: GMSMapViewDelegate {
   
   func mapView(_ mapView: GMSMapView, didTapInfoWindowOf marker: GMSMarker) {
-    
-    //    isTapOnContent = !isTapOnContent
     
     isTapOnContent = true
     
@@ -457,12 +502,8 @@ extension GoogleMapViewController: UICollectionViewDelegate, UICollectionViewDat
     
     if judge[indexPath.row] {
       cell.contentView.backgroundColor = UIColor(red: 246.9/255.0, green: 212.0/255.0, blue: 95.0/255.0, alpha: 1.0)
-      cell.layer.borderWidth =  1.0
-      cell.layer.borderColor = UIColor.black.cgColor
     } else {
       cell.contentView.backgroundColor = UIColor.G1
-      cell.layer.borderWidth =  0.0
-      cell.layer.borderColor = UIColor.white.cgColor
     }
     
     return cell

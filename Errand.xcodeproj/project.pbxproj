@@ -10,6 +10,8 @@
 		35D6F10C7FD31F054E953DEB /* Pods_Errand.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE91492BEFF455014401A8A6 /* Pods_Errand.framework */; };
 		40EA5FF204EA3BECE8D92AF4 /* Pods_Errand_ErrandUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A85AAEF02EB4115272C07D69 /* Pods_Errand_ErrandUITests.framework */; };
 		CBC2C481F6F57033AC62AEB1 /* Pods_ErrandTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 608A5BF50BFFACEF7C1D807F /* Pods_ErrandTests.framework */; };
+		FB0749D92405943F001751A2 /* HistoryJudgeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB0749D72405943F001751A2 /* HistoryJudgeTableViewCell.swift */; };
+		FB0749DA2405943F001751A2 /* HistoryJudgeTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB0749D82405943F001751A2 /* HistoryJudgeTableViewCell.xib */; };
 		FB24EC0F23D96B8500FA3F02 /* PostMissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24EC0E23D96B8500FA3F02 /* PostMissionViewController.swift */; };
 		FB24EC1223D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24EC1123D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift */; };
 		FB24EC1423D9B19300FA3F02 /* CustomeColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24EC1323D9B19300FA3F02 /* CustomeColor.swift */; };
@@ -25,7 +27,6 @@
 		FB387C3523CEEF1000B6D8C4 /* ErrandUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB387C3423CEEF1000B6D8C4 /* ErrandUITests.swift */; };
 		FB387C4D23CF098F00B6D8C4 /* JGProgressHUDWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB387C4C23CF098F00B6D8C4 /* JGProgressHUDWrapper.swift */; };
 		FB387C5023CF0E8E00B6D8C4 /* RegisterItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB387C4F23CF0E8E00B6D8C4 /* RegisterItem.swift */; };
-		FB387C5323CF323600B6D8C4 /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB387C5223CF323600B6D8C4 /* UserInfoViewController.swift */; };
 		FB387C5623CF521D00B6D8C4 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB387C5523CF521D00B6D8C4 /* UserManager.swift */; };
 		FB387C5823CF551A00B6D8C4 /* Content.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB387C5723CF551A00B6D8C4 /* Content.storyboard */; };
 		FB4A50E123D6A8E60028BC82 /* PersonalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A50E023D6A8E60028BC82 /* PersonalViewController.swift */; };
@@ -86,6 +87,13 @@
 		FBA557FB23ED6D0C00521B89 /* JudgeMissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA557FA23ED6D0C00521B89 /* JudgeMissionViewController.swift */; };
 		FBA557FE23EE54B500521B89 /* Chat.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FBA557FD23EE54B500521B89 /* Chat.storyboard */; };
 		FBA5580123EE554F00521B89 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA5580023EE554F00521B89 /* ChatViewController.swift */; };
+		FBBCEE9B2404190B0068410C /* PersonInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBCEE9A2404190B0068410C /* PersonInfoViewController.swift */; };
+		FBBCEE9D240423D70068410C /* ChildInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBCEE9C240423D70068410C /* ChildInfoViewController.swift */; };
+		FBBCEE9F240423EF0068410C /* ChildhistroyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBCEE9E240423EF0068410C /* ChildhistroyViewController.swift */; };
+		FBBCEEA224042EED0068410C /* PersonStarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBCEEA024042EED0068410C /* PersonStarTableViewCell.swift */; };
+		FBBCEEA324042EED0068410C /* PersonStarTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBBCEEA124042EED0068410C /* PersonStarTableViewCell.xib */; };
+		FBBCEEA62404B5C70068410C /* LogoutTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBCEEA42404B5C70068410C /* LogoutTableViewCell.swift */; };
+		FBBCEEA72404B5C70068410C /* LogoutTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBBCEEA52404B5C70068410C /* LogoutTableViewCell.xib */; };
 		FBEC726123FA376400A6AF86 /* FriendsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEC725F23FA376400A6AF86 /* FriendsTableViewCell.swift */; };
 		FBEC726223FA376400A6AF86 /* FriendsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBEC726023FA376400A6AF86 /* FriendsTableViewCell.xib */; };
 		FBEC726423FA664800A6AF86 /* FriendChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEC726323FA664800A6AF86 /* FriendChatViewController.swift */; };
@@ -124,6 +132,8 @@
 		BE91492BEFF455014401A8A6 /* Pods_Errand.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Errand.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F10FE434B9C4A84CFF81C162 /* Pods-Errand.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Errand.debug.xcconfig"; path = "Target Support Files/Pods-Errand/Pods-Errand.debug.xcconfig"; sourceTree = "<group>"; };
 		F997A91DF0A4410BFFBEDA80 /* Pods-Errand-ErrandUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Errand-ErrandUITests.debug.xcconfig"; path = "Target Support Files/Pods-Errand-ErrandUITests/Pods-Errand-ErrandUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		FB0749D72405943F001751A2 /* HistoryJudgeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryJudgeTableViewCell.swift; sourceTree = "<group>"; };
+		FB0749D82405943F001751A2 /* HistoryJudgeTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HistoryJudgeTableViewCell.xib; sourceTree = "<group>"; };
 		FB24EC0E23D96B8500FA3F02 /* PostMissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostMissionViewController.swift; sourceTree = "<group>"; };
 		FB24EC1123D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionGroupCollectionViewCell.swift; sourceTree = "<group>"; };
 		FB24EC1323D9B19300FA3F02 /* CustomeColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomeColor.swift; sourceTree = "<group>"; };
@@ -145,7 +155,6 @@
 		FB387C3623CEEF1000B6D8C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FB387C4C23CF098F00B6D8C4 /* JGProgressHUDWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JGProgressHUDWrapper.swift; sourceTree = "<group>"; };
 		FB387C4F23CF0E8E00B6D8C4 /* RegisterItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterItem.swift; sourceTree = "<group>"; };
-		FB387C5223CF323600B6D8C4 /* UserInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoViewController.swift; sourceTree = "<group>"; };
 		FB387C5523CF521D00B6D8C4 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		FB387C5723CF551A00B6D8C4 /* Content.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Content.storyboard; sourceTree = "<group>"; };
 		FB4A50E023D6A8E60028BC82 /* PersonalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalViewController.swift; sourceTree = "<group>"; };
@@ -206,6 +215,13 @@
 		FBA557FA23ED6D0C00521B89 /* JudgeMissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JudgeMissionViewController.swift; sourceTree = "<group>"; };
 		FBA557FD23EE54B500521B89 /* Chat.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Chat.storyboard; sourceTree = "<group>"; };
 		FBA5580023EE554F00521B89 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		FBBCEE9A2404190B0068410C /* PersonInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonInfoViewController.swift; sourceTree = "<group>"; };
+		FBBCEE9C240423D70068410C /* ChildInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildInfoViewController.swift; sourceTree = "<group>"; };
+		FBBCEE9E240423EF0068410C /* ChildhistroyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildhistroyViewController.swift; sourceTree = "<group>"; };
+		FBBCEEA024042EED0068410C /* PersonStarTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonStarTableViewCell.swift; sourceTree = "<group>"; };
+		FBBCEEA124042EED0068410C /* PersonStarTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PersonStarTableViewCell.xib; sourceTree = "<group>"; };
+		FBBCEEA42404B5C70068410C /* LogoutTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutTableViewCell.swift; sourceTree = "<group>"; };
+		FBBCEEA52404B5C70068410C /* LogoutTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LogoutTableViewCell.xib; sourceTree = "<group>"; };
 		FBEC725F23FA376400A6AF86 /* FriendsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsTableViewCell.swift; sourceTree = "<group>"; };
 		FBEC726023FA376400A6AF86 /* FriendsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FriendsTableViewCell.xib; sourceTree = "<group>"; };
 		FBEC726323FA664800A6AF86 /* FriendChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendChatViewController.swift; sourceTree = "<group>"; };
@@ -270,6 +286,15 @@
 				608A5BF50BFFACEF7C1D807F /* Pods_ErrandTests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FB0749D624059415001751A2 /* HistoryJudge */ = {
+			isa = PBXGroup;
+			children = (
+				FB0749D72405943F001751A2 /* HistoryJudgeTableViewCell.swift */,
+				FB0749D82405943F001751A2 /* HistoryJudgeTableViewCell.xib */,
+			);
+			path = HistoryJudge;
 			sourceTree = "<group>";
 		};
 		FB24EC0D23D96A0400FA3F02 /* TabBar */ = {
@@ -370,7 +395,6 @@
 				FB4A50DF23D6A8C90028BC82 /* Personalinfo */,
 				FB9A2BFC23D068E200553D97 /* Mission */,
 				FB387C5923CF552A00B6D8C4 /* Map */,
-				FB387C4723CEFCA900B6D8C4 /* Register */,
 				FB387C4623CEF5C600B6D8C4 /* HomePage */,
 			);
 			path = Controller;
@@ -379,6 +403,7 @@
 		FB387C4523CEF5BB00B6D8C4 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				FB0749D624059415001751A2 /* HistoryJudge */,
 				FBEC725E23FA374300A6AF86 /* Friend */,
 				FBA557F523ED177E00521B89 /* Requester */,
 				FB53F31923EB20610041C49D /* personInfo */,
@@ -405,14 +430,6 @@
 				FB387C1323CEEF0E00B6D8C4 /* HomePageViewController.swift */,
 			);
 			path = HomePage;
-			sourceTree = "<group>";
-		};
-		FB387C4723CEFCA900B6D8C4 /* Register */ = {
-			isa = PBXGroup;
-			children = (
-				FB387C5223CF323600B6D8C4 /* UserInfoViewController.swift */,
-			);
-			path = Register;
 			sourceTree = "<group>";
 		};
 		FB387C4A23CF05FD00B6D8C4 /* Model */ = {
@@ -468,6 +485,9 @@
 			isa = PBXGroup;
 			children = (
 				FB4A50E023D6A8E60028BC82 /* PersonalViewController.swift */,
+				FBBCEE9A2404190B0068410C /* PersonInfoViewController.swift */,
+				FBBCEE9C240423D70068410C /* ChildInfoViewController.swift */,
+				FBBCEE9E240423EF0068410C /* ChildhistroyViewController.swift */,
 			);
 			path = Personalinfo;
 			sourceTree = "<group>";
@@ -511,6 +531,10 @@
 				FB53F32B23EBCE220041C49D /* PersonAboutTableViewCell.xib */,
 				FB53F32E23EBD5230041C49D /* PersonRateTableViewCell.swift */,
 				FBF24FC823FCEB2D002A56A4 /* SignOutTableViewCell.swift */,
+				FBBCEEA024042EED0068410C /* PersonStarTableViewCell.swift */,
+				FBBCEEA124042EED0068410C /* PersonStarTableViewCell.xib */,
+				FBBCEEA42404B5C70068410C /* LogoutTableViewCell.swift */,
+				FBBCEEA52404B5C70068410C /* LogoutTableViewCell.xib */,
 			);
 			path = personInfo;
 			sourceTree = "<group>";
@@ -740,9 +764,11 @@
 				FB387C1F23CEEF0F00B6D8C4 /* LaunchScreen.storyboard in Resources */,
 				FB638DCE23E71D3500030CB2 /* Profile.storyboard in Resources */,
 				FB53F32323EBB42A0041C49D /* PersonDetailTableViewCell.xib in Resources */,
+				FBBCEEA72404B5C70068410C /* LogoutTableViewCell.xib in Resources */,
 				FB752ABB23D5DFB200BF3852 /* PermanentMarker.ttf in Resources */,
 				FB638DCA23E71D0C00030CB2 /* Map.storyboard in Resources */,
 				FB69553923F1461D0049DB14 /* StartMissionTableViewCell.xib in Resources */,
+				FBBCEEA324042EED0068410C /* PersonStarTableViewCell.xib in Resources */,
 				FBF24FD023FD9C39002A56A4 /* MissionDetailCollectionViewCell.xib in Resources */,
 				FB387C1C23CEEF0F00B6D8C4 /* Assets.xcassets in Resources */,
 				FB5F5BD023DB2847003B9ABC /* setofont.ttf in Resources */,
@@ -753,6 +779,7 @@
 				FB638D8023E56FC000030CB2 /* CategoryCollectionViewCell.xib in Resources */,
 				FB387C1723CEEF0E00B6D8C4 /* Main.storyboard in Resources */,
 				FB53F32D23EBCE220041C49D /* PersonAboutTableViewCell.xib in Resources */,
+				FB0749DA2405943F001751A2 /* HistoryJudgeTableViewCell.xib in Resources */,
 				FB69552423EFA1AB0049DB14 /* GoogleService-Info.plist in Resources */,
 				FB387C5823CF551A00B6D8C4 /* Content.storyboard in Resources */,
 				FB638DCC23E71D2800030CB2 /* Mission.storyboard in Resources */,
@@ -950,13 +977,14 @@
 				FBF24FCF23FD9C39002A56A4 /* MissionDetailCollectionViewCell.swift in Sources */,
 				FB69553223F001350049DB14 /* DatabaseRepresentation.swift in Sources */,
 				FB53F31723EAAFC20041C49D /* RequesterTableViewCell.swift in Sources */,
-				FB387C5323CF323600B6D8C4 /* UserInfoViewController.swift in Sources */,
 				FB5C00C62400E3F40036CD87 /* SwiftMessage.swift in Sources */,
 				FB387C1423CEEF0E00B6D8C4 /* HomePageViewController.swift in Sources */,
+				FBBCEE9D240423D70068410C /* ChildInfoViewController.swift in Sources */,
 				FB638DD223E8913800030CB2 /* PhotoCollectionViewCell.swift in Sources */,
 				FB53F33323EBFE290041C49D /* WhiteSpace.swift in Sources */,
 				FB5F5BCE23DB2639003B9ABC /* AddLocationViewController.swift in Sources */,
 				FBA5580123EE554F00521B89 /* ChatViewController.swift in Sources */,
+				FBBCEEA224042EED0068410C /* PersonStarTableViewCell.swift in Sources */,
 				FB24EC1723DAB00F00FA3F02 /* TaskDataItem.swift in Sources */,
 				FB638D7B23E5557B00030CB2 /* MissionPersonTableViewCell.swift in Sources */,
 				FB69553823F1461D0049DB14 /* StartMissionTableViewCell.swift in Sources */,
@@ -976,6 +1004,7 @@
 				FB9A2BFE23D068FF00553D97 /* MissionListViewController.swift in Sources */,
 				FB53F31C23EB21890041C49D /* PhotoTableViewCell.swift in Sources */,
 				FB6365FE23E2B975008555BC /* MissionDetailViewController.swift in Sources */,
+				FBBCEE9F240423EF0068410C /* ChildhistroyViewController.swift in Sources */,
 				FBF24FC923FCEB2D002A56A4 /* SignOutTableViewCell.swift in Sources */,
 				FB69552C23F000BE0049DB14 /* UIView+Additions.swift in Sources */,
 				FB638DD023E7ECA400030CB2 /* DoubleExtension.swift in Sources */,
@@ -983,6 +1012,7 @@
 				FB63664F23E3FC1B008555BC /* MissionDetailTableViewCell.swift in Sources */,
 				FB53F32C23EBCE220041C49D /* PersonAboutTableViewCell.swift in Sources */,
 				FBA557F723ED17A400521B89 /* RequesterRateTableViewCell.swift in Sources */,
+				FBBCEEA62404B5C70068410C /* LogoutTableViewCell.swift in Sources */,
 				FB69552D23F000BE0049DB14 /* UIImage+Additions.swift in Sources */,
 				FB387C1A23CEEF0E00B6D8C4 /* Errand.xcdatamodeld in Sources */,
 				FB69553123F001350049DB14 /* Channel.swift in Sources */,
@@ -990,8 +1020,10 @@
 				FBF7AB5823D56F5D004B521A /* GoogleMapViewController.swift in Sources */,
 				FBEC726423FA664800A6AF86 /* FriendChatViewController.swift in Sources */,
 				FBF7AB5D23D590E7004B521A /* MapManager.swift in Sources */,
+				FB0749D92405943F001751A2 /* HistoryJudgeTableViewCell.swift in Sources */,
 				FB63660323E31E67008555BC /* KingFisherWrapper.swift in Sources */,
 				FBA557FB23ED6D0C00521B89 /* JudgeMissionViewController.swift in Sources */,
+				FBBCEE9B2404190B0068410C /* PersonInfoViewController.swift in Sources */,
 				FB387C4D23CF098F00B6D8C4 /* JGProgressHUDWrapper.swift in Sources */,
 				FBF7AB5B23D58AE2004B521A /* MapDataItem.swift in Sources */,
 				FB69553523F0055B0049DB14 /* AppSettings.swift in Sources */,
