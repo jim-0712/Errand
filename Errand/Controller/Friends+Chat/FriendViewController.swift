@@ -85,6 +85,8 @@ class FriendViewController: UIViewController {
   
   @objc func getFriend() {
     
+    self.friendsData = []
+    
     UserManager.shared.getFriends { result in
       switch result {
       case .success(let friends):

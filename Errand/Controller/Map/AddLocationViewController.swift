@@ -23,6 +23,7 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
     setUp()
     navigationItem.setHidesBackButton(true, animated: true)
     navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(backToList))
+    navigationItem.leftBarButtonItem?.tintColor = .black
     }
   
   @objc func backToList() {

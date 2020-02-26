@@ -50,6 +50,8 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
   func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
     print("hellooooooo")
     
+    NotificationCenter.default.post(name: Notification.Name("reloadUser"), object: nil)
+    
     guard let userInfo = notification.request.content.userInfo as? [String: Any] else { return }
     guard let info = userInfo["aps"] as? [String: Any],
          let message = info["alert"] as? [String: Any],
@@ -59,8 +61,6 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
       
       NotificationCenter.default.post(name: Notification.Name("giveUpCome"), object: nil)
     }
-    
-    NotificationCenter.default.post(name: Notification.Name("reloadUser"), object: nil)
     completionHandler([.badge, .sound, .alert])
   }
   

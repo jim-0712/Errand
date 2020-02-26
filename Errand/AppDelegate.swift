@@ -163,36 +163,59 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
   
   func gotoDetail() {
     
-    let storyboard = UIStoryboard(name: "Mission", bundle: nil)
+    guard let uid = Auth.auth().currentUser?.uid else { return }
     
-    guard let conversationVC = storyboard.instantiateViewController(withIdentifier: "detailViewController") as? MissionDetailViewController,
-      let tabBarController = self.window?.rootViewController as? TabBarViewController,
-      let navi = tabBarController.selectedViewController as? UINavigationController else {
-        
-        return
+    let group = DispatchGroup()
+    
+    group.enter()
+    
+    var status = 0
+    
+    UserManager.shared.readData(uid: uid) { result in
+      switch result {
+      case .success(let userInfo):
+        status = userInfo.status
+        group.leave()
+      case .failure:
+        print("error")
+      }
     }
     
-    if navi.visibleViewController is MissionDetailViewController == false {
+    group.notify(queue: DispatchQueue.main) {
       
-      if tabBarController.presentedViewController == nil {
-        tabBarController.dismiss(animated: true) {
-          //        navi.popViewController(animated: true)
-          conversationVC.modalPresentationStyle = .fullScreen
-          UserManager.shared.currentUserInfo?.status = 2
-          conversationVC.isMissionON = true
-          conversationVC.isNavi = true
-          tabBarController.present(conversationVC, animated: true, completion: nil)
+      if status != 0 {
+        let storyboard = UIStoryboard(name: "Mission", bundle: nil)
+        
+        guard let conversationVC = storyboard.instantiateViewController(withIdentifier: "detailViewController") as? MissionDetailViewController,
+          let tabBarController = self.window?.rootViewController as? TabBarViewController,
+          let navi = tabBarController.selectedViewController as? UINavigationController else {
+            
+            return
         }
-      } else {
-        tabBarController.presentedViewController?.dismiss(animated: true, completion: {
-          tabBarController.dismiss(animated: true) {
-            UserManager.shared.currentUserInfo = nil
-            conversationVC.modalPresentationStyle = .fullScreen
-            conversationVC.isNavi = true
-            conversationVC.isMissionON = true
-            tabBarController.present(conversationVC, animated: true, completion: nil)
+        
+        if navi.visibleViewController is MissionDetailViewController == false {
+          
+          if tabBarController.presentedViewController == nil {
+            tabBarController.dismiss(animated: true) {
+              //        navi.popViewController(animated: true)
+              conversationVC.modalPresentationStyle = .fullScreen
+              UserManager.shared.currentUserInfo?.status = 2
+              conversationVC.isMissionON = true
+              conversationVC.isNavi = true
+              tabBarController.present(conversationVC, animated: true, completion: nil)
+            }
+          } else {
+            tabBarController.presentedViewController?.dismiss(animated: true, completion: {
+              tabBarController.dismiss(animated: true) {
+                UserManager.shared.currentUserInfo = nil
+                conversationVC.modalPresentationStyle = .fullScreen
+                conversationVC.isNavi = true
+                conversationVC.isMissionON = true
+                tabBarController.present(conversationVC, animated: true, completion: nil)
+              }
+            })
           }
-        })
+        }
       }
     }
   }

@@ -194,9 +194,9 @@ class RequesterViewController: UIViewController {
   
   func checkRequest(viewController: UIViewController, indexInt: Int) {
     
-    guard let requesterInfo = self.storyboard?.instantiateViewController(identifier: "requesterInfo") as? CheckRequesterViewController else { return }
+    guard let requesterInfo = storyboard?.instantiateViewController(identifier: "requesterInfo") as? CheckRequesterViewController          else { return }
     
-    requesterInfo.requsterInfoData = self.userInfo[indexInt]
+    requesterInfo.requsterInfoData = userInfo[indexInt]
     
     self.show(requesterInfo, sender: nil)
   }

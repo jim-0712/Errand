@@ -487,11 +487,7 @@ class MissionDetailViewController: UIViewController {
             
             strongSelf.finishMissionAlert(title: "恭喜", message: "任務完成", viewController: strongSelf)
           }
-//          else if status == 1 && taskData.takerOK {
-//            TaskManager.shared.showAlert(title: "注意", message: "對方已完成任務", viewController: strongSelf)
-//          } else if status == 2 && taskData.ownerOK {
-//            TaskManager.shared.showAlert(title: "注意", message: "對方已完成任務", viewController: strongSelf)
-//          } else { }
+
           
         case .failure:
           print("error")
