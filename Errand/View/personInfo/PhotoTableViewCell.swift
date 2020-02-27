@@ -31,6 +31,7 @@ class PhotoTableViewCell: UITableViewCell {
   func setUpView(personPhoto: String, nickName: String, email: String) {
     personPhotoImage.loadImage(personPhoto, placeHolder: UIImage(named: "photographer"))
     personPhotoImage.layer.cornerRadius = personPhotoImage.bounds.width / 2
+    personPhotoImage.contentMode = .scaleAspectFill
     nickNameLabel.text = nickName
     emailLabel.text = email
   }

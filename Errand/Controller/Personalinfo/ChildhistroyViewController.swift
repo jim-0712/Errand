@@ -18,5 +18,4 @@ class ChildhistroyViewController: UIViewController {
     
   @IBOutlet weak var historyTableView: UITableView!
   
-
 }

@@ -32,6 +32,22 @@ class MissionDetailViewController: UIViewController {
   
   var isNavi = false
   
+  var receiveTime: String?
+  
+  var detailData: TaskInfo?
+  
+  var reversePhoto = ""
+  
+  var arrangementPhoto: [String] = []
+  
+  var arrangementVideo: [String] = []
+  
+  let missionDetail = ["任務內容", "懸賞價格", "發布時間", "任務細節"]
+  
+  let pageControl = UIPageControl()
+  
+  let fullSize = UIScreen.main.bounds.size
+  
   let dbF = Firestore.firestore()
   
   override func viewDidLoad() {
@@ -46,22 +62,28 @@ class MissionDetailViewController: UIViewController {
       takeMissionBtn.isHidden = false
       setUpBtnEnable()
     }
-    setUpData()
+    
     if isNavi {
       backBtn.isHidden = false
     } else {
       backBtn.isHidden = true
     }
-    
     navigationItem.setHidesBackButton(true, animated: true)
-      navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(backToList))
-      navigationItem.leftBarButtonItem?.tintColor = .black
-    }
+    navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(backToList))
+    navigationItem.leftBarButtonItem?.tintColor = .black
     
-    @objc func backToList() {
-      self.navigationController?.popViewController(animated: true)
-      NotificationCenter.default.post(name: Notification.Name("test"), object: nil)
-    }
+    guard let taskInfo = detailData else {
+         setUpData()
+         return }
+       
+       getPhoto()
+       setUpall()
+  }
+  
+  @objc func backToList() {
+    self.navigationController?.popViewController(animated: true)
+    NotificationCenter.default.post(name: Notification.Name("test"), object: nil)
+  }
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
@@ -83,7 +105,7 @@ class MissionDetailViewController: UIViewController {
           switch result {
           case .success:
             
-            guard let auth = Auth.auth().currentUser else {
+            guard let _ = Auth.auth().currentUser else {
               SwiftMes.shared.showWarningMessage(body: "請先登入", seconds: 1.0)
               DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "main") as? ViewController
@@ -103,8 +125,7 @@ class MissionDetailViewController: UIViewController {
               SwiftMes.shared.showSuccessMessage(body: "該任務已經完成", seconds: 1.0)
               DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
-                     
-                     self.view.window?.rootViewController = mapView
+                self.view.window?.rootViewController = mapView
               }
             } else {
               self.callTaskData()
@@ -186,7 +207,7 @@ class MissionDetailViewController: UIViewController {
   
   @IBAction func giveUpmissionAct(_ sender: Any) {
     
-    let controller = UIAlertController(title: "您確定要放棄任務？", message: "將會扣您星星評分", preferredStyle: .alert)
+    let controller = UIAlertController(title: "您確定要放棄任務？", message: "將會扣您星星總評分1分", preferredStyle: .alert)
     let okAction = UIAlertAction(title: "ok", style: .default) { _ in
       guard var taskInfo = self.detailData,
         let user = UserManager.shared.currentUserInfo  else { return }
@@ -271,7 +292,11 @@ class MissionDetailViewController: UIViewController {
         UserManager.shared.readData(uid: user.uid) { result in
           switch result {
           case .success(var accountInfo):
-            accountInfo.totalStar += 5.0
+            
+            if accountInfo.totalStar != 0 {
+              accountInfo.totalStar -= 1.0
+            }
+
             UserManager.shared.currentUserInfo = accountInfo
             UserManager.shared.updateUserInfo { result in
               switch result {
@@ -416,21 +441,6 @@ class MissionDetailViewController: UIViewController {
       }
     }
   }
-  var receiveTime: String?
-  
-  var detailData: TaskInfo?
-  
-  var reversePhoto = ""
-  
-  var arrangementPhoto: [String] = []
-  
-  var arrangementVideo: [String] = []
-  
-  let missionDetail = ["任務內容", "懸賞價格", "發布時間", "任務細節"]
-  
-  let pageControl = UIPageControl()
-  
-  let fullSize = UIScreen.main.bounds.size
   
   func setUp() {
     testcollection.delegate = self
@@ -442,7 +452,6 @@ class MissionDetailViewController: UIViewController {
     testcollection.register(UINib(nibName: "MissionDetailCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "detail")
     headerView.addSubview(testcollection)
     detailTableView.tableHeaderView = headerView
-    
   }
   
   lazy var testcollection: UICollectionView = {
@@ -480,14 +489,11 @@ class MissionDetailViewController: UIViewController {
           
           strongSelf.detailData = dataReturn
           
-          guard let taskData = strongSelf.detailData,
-            let status = UserManager.shared.currentUserInfo?.status else { return }
+          guard let taskData = strongSelf.detailData else { return }
           
           if taskData.takerOK && taskData.ownerOK {
-            
             strongSelf.finishMissionAlert(title: "恭喜", message: "任務完成", viewController: strongSelf)
           }
-
           
         case .failure:
           print("error")
@@ -589,7 +595,7 @@ class MissionDetailViewController: UIViewController {
   func startMissionSetupBtn() {
     
     guard let task = detailData,
-      let status = UserManager.shared.currentUserInfo?.status else { return }
+         let status = UserManager.shared.currentUserInfo?.status else { return }
     
     if status == 1 && task.ownerOK {
       finishMissionBtn.isEnabled = false
@@ -697,7 +703,7 @@ class MissionDetailViewController: UIViewController {
     guard let status = UserManager.shared.currentUserInfo?.status,
       let taskinfo = detailData,
       let accountCurrent = UserManager.shared.currentUserInfo else { return }
-      if status == 1 {
+    if status == 1 {
       UserManager.shared.readData(uid: taskinfo.missionTaker) { result in
         switch result {
         case .success(let accountInfo):
@@ -742,6 +748,7 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
   }
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+
     guard let data = detailData else { return 0 }
     return data.taskPhoto.count
   }
@@ -753,10 +760,9 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "detail", for: indexPath) as? MissionDetailCollectionViewCell,
-        let data = detailData else { return UICollectionViewCell() }
+      let data = detailData else { return UICollectionViewCell() }
     
     let typeManager = data.taskPhoto[indexPath.row].components(separatedBy: "mov")
-    
     if typeManager.count > 1 {
       
       cell.detailImage.isHidden = true
@@ -769,7 +775,6 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
       let playerLayer = AVPlayerLayer(player: playQueue)
       
       playerLayer.frame = cell.contentView.bounds
-//      playerLayer.frame = CGRect(x: 0, y: 0, width: 385, height: 300)
       cell.layer.addSublayer(playerLayer)
       
       playQueue.play()
@@ -797,9 +802,7 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
 extension MissionDetailViewController: UICollectionViewDelegateFlowLayout {
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    
     return CGSize(width: UIScreen.main.bounds.width, height: 300)
-    
   }
 }
 
@@ -836,7 +839,7 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
         cell.tapReprt = { [weak self] in
           
           guard let user = UserManager.shared.currentUserInfo,
-               let strongSelf = self else { return }
+            let strongSelf = self else { return }
           
           var compare = ""
           
@@ -866,7 +869,7 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
             if strongSelf.alreadyReport {
               SwiftMes.shared.showWarningMessage(body: "該用戶已在黑名單", seconds: 1.5)
             } else {
- 
+              
               strongSelf.preventTap()
               
               let group = DispatchGroup()
@@ -918,37 +921,31 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
           alert.addAction(report)
           alert.addAction(blackList)
           alert.addAction(cancelAction)
-          
           strongSelf.present(alert, animated: true, completion: nil)
         }
         
         cell.tapOnButton = { [weak self ] in
-          
           guard let strongSelf = self else { return }
-          
           strongSelf.performSegue(withIdentifier: "chat", sender: nil)
         }
         
         cell.tapOnNavi = { [weak self ]in
           
-           guard let strongSelf = self else { return }
+          guard let strongSelf = self else { return }
           guard let originalLocation = strongSelf.myLocationManager.location?.coordinate,
-            let taskInfo = strongSelf.detailData else { return }
+               let taskInfo = strongSelf.detailData else { return }
           
           let originCor = "\(originalLocation.latitude),\(originalLocation.longitude)"
           let destination = "\(taskInfo.lat),\(taskInfo.long)"
-          
           let url = URL(string: "comgooglemaps://?saddr=\(originCor)&daddr=\(destination)&directionsmode=driving")
           
           if UIApplication.shared.canOpenURL(url!) {
             UIApplication.shared.open(url!, options: [:], completionHandler: nil)
           } else {
-            // 若手機沒安裝 Google Map App 則導到 App Store(id443904275 為 Google Map App 的 ID)
             let appStoreGoogleMapURL = URL(string: "itms-apps://itunes.apple.com/app/id585027354")!
             UIApplication.shared.open(appStoreGoogleMapURL, options: [:], completionHandler: nil)
           }
         }
-        
         cell.backgroundColor = .clear
         return cell
       }
@@ -958,14 +955,11 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
       guard let cell = tableView.dequeueReusableCell(withIdentifier: "missionDetail", for: indexPath) as? MissionDetailTableViewCell else { return UITableViewCell() }
       
       switch indexPath.row {
-        
       case 1:
         cell.setUp(title: missionDetail[indexPath.row], content: "\(data.money)")
-        
       default:
         cell.setUp(title: "\(missionDetail[indexPath.row])", content: time)
       }
-      
       return cell
       
     } else {

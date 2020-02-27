@@ -59,11 +59,22 @@
                             <constraint firstAttribute="height" constant="20" id="fGR-7G-9Fp"/>
                         </constraints>
                     </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LjY-NM-opT">
+                        <rect key="frame" x="132" y="74" width="150" height="30"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="150" id="Opd-7l-6u1"/>
+                            <constraint firstAttribute="height" constant="30" id="zFR-hg-nH8"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <color key="backgroundColor" red="0.82744532820000005" green="0.82744556670000002" blue="0.82744413610000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                 <constraints>
                     <constraint firstItem="JJ4-jp-SbZ" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="8" id="9Ot-XM-ISc"/>
                     <constraint firstAttribute="bottom" secondItem="JJ4-jp-SbZ" secondAttribute="bottom" constant="8" id="FEZ-7e-O5N"/>
+                    <constraint firstItem="LjY-NM-opT" firstAttribute="centerY" secondItem="zAm-at-Uar" secondAttribute="centerY" id="FiN-AO-xD3"/>
                     <constraint firstItem="nCn-jl-rEC" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="32" id="Ham-AU-2Sa"/>
                     <constraint firstItem="nCn-jl-rEC" firstAttribute="leading" secondItem="MtE-XZ-BrP" secondAttribute="trailing" constant="16" id="L3I-op-5BD"/>
                     <constraint firstItem="zAm-at-Uar" firstAttribute="leading" secondItem="MtE-XZ-BrP" secondAttribute="trailing" constant="16" id="Py1-59-qGv"/>
@@ -72,6 +83,7 @@
                     <constraint firstItem="MtE-XZ-BrP" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="VG8-VQ-aiR"/>
                     <constraint firstItem="MtE-XZ-BrP" firstAttribute="centerY" secondItem="JJ4-jp-SbZ" secondAttribute="centerY" id="frU-oZ-Ld4"/>
                     <constraint firstAttribute="bottom" secondItem="zAm-at-Uar" secondAttribute="bottom" constant="30" id="hH1-er-aMI"/>
+                    <constraint firstItem="LjY-NM-opT" firstAttribute="leading" secondItem="MtE-XZ-BrP" secondAttribute="trailing" constant="16" id="nvc-fI-xmF"/>
                     <constraint firstItem="JJ4-jp-SbZ" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="upe-Vp-Ybf"/>
                     <constraint firstAttribute="trailing" secondItem="zAm-at-Uar" secondAttribute="trailing" constant="120" id="xOW-R4-Jko"/>
                 </constraints>
@@ -79,6 +91,7 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="backgroundPageView" destination="JJ4-jp-SbZ" id="yvY-pC-RaD"/>
+                <outlet property="describeLabel" destination="LjY-NM-opT" id="fVQ-Wp-aCL"/>
                 <outlet property="nickNameLabel" destination="nCn-jl-rEC" id="Fgs-Tb-zgC"/>
                 <outlet property="peopleImageView" destination="MtE-XZ-BrP" id="FG3-w7-D8G"/>
                 <outlet property="personBtn" destination="gYG-s3-Qdr" id="yFh-AR-SGH"/>

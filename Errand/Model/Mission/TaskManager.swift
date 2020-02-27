@@ -42,15 +42,14 @@ class TaskManager {
     
     guard let email = UserManager.shared.currentUserInfo?.email,
       let nickname = UserManager.shared.currentUserInfo?.nickname,
-      let gender = UserManager.shared.currentUserInfo?.gender,
       let photo = UserManager.shared.currentUserInfo?.photo,
       let fcmToken = UserManager.shared.currentUserInfo?.fcmToken,
       let uid = UserManager.shared.currentUserInfo?.uid else {return }
-    let lat = coordinate.latitude as Double
-    let long = coordinate.longitude as Double
-    let personPhoto = "\(photo)"
+      let lat = coordinate.latitude as Double
+      let long = coordinate.longitude as Double
+      let personPhoto = "\(photo)"
     
-    let info = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: taskData[0], detail: detail, lat: lat, long: long, money: taskData[1], classfied: taskData[2], status: taskData[3], ownerOK: false, takerOK: false, ownerAskFriend: false, takerAskFriend: false, fileType: fileType, personPhoto: personPhoto, requester: [], fcmToken: fcmToken, missionTaker: "", refuse: [], uid: uid, chatRoom: "", isFrirndsNow: false, isComplete: false, star: 0.0, ownerJudge: false, takerJudge: false)
+    let info = TaskInfo(email: email, nickname: nickname, gender: 0, taskPhoto: taskPhoto, time: taskData[0], detail: detail, lat: lat, long: long, money: taskData[1], classfied: taskData[2], status: taskData[3], ownerOK: false, takerOK: false, ownerAskFriend: false, takerAskFriend: false, fileType: fileType, personPhoto: personPhoto, requester: [], fcmToken: fcmToken, missionTaker: "", refuse: [], uid: uid, chatRoom: "", isFrirndsNow: false, isComplete: false, star: 0.0, ownerJudge: false, takerJudge: false)
     
       dbF.collection("Tasks").document(uid).setData(info.toDict) { error in
       

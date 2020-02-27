@@ -78,18 +78,6 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
 
     if body == "任務接受成功" || body == "任務完成" {
       NotificationCenter.default.post(name: Notification.Name("reloadUser"), object: nil)
-//      guard let uid = Auth.auth().currentUser?.uid else {
-//        NotificationCenter.default.post(name: Notification.Name("reloadUser"), object: nil)
-//        return }
-//
-//      UserManager.shared.readData(uid: uid) { result in
-//        switch result {
-//        case .success:
-//          NotificationCenter.default.post(name: Notification.Name("reloadUser"), object: nil)
-//        case .failure:
-//          print("error")
-//        }
-//      }
     }
     
     if body == "對方放棄任務" {

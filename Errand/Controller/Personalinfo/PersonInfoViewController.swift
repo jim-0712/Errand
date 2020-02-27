@@ -10,7 +10,6 @@ import UIKit
 import Firebase
 import MobileCoreServices
 
-
 class PersonInfoViewController: UIViewController {
   
   @IBOutlet weak var backgroundImage: UIImageView!

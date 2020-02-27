@@ -22,8 +22,6 @@ class DataBaseManager {
     
     let blacklist: [String] = []
     
-    let friends: [String] = []
-    
     let task: [String] = []
     
     guard let token = UserDefaults.standard.value(forKey: "fcmToken") as? String,
@@ -32,7 +30,7 @@ class DataBaseManager {
           return
     }
     
-    let info = AccountInfo(email: email, nickname: nickName, gender: 1, task: task, friends: friends, photo: photo, report: report, blacklist: blacklist, onTask: false, fcmToken: "", status: 0, about: "", taskCount: 0, totalStar: 0.0, uid: uid)
+    let info = AccountInfo(email: email, nickname: nickName, noJudgeCount: 0, task: task, minusStar: 0.0, photo: photo, report: report, blacklist: blacklist, onTask: false, fcmToken: token, status: 0, about: "", taskCount: 0, totalStar: 0.0, uid: uid)
     
     self.dbF.collection(classification).document(uid).setData(info.toDict) { error in
       

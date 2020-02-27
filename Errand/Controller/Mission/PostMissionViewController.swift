@@ -210,11 +210,12 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
   
   @IBAction func postAct(_ sender: Any) {
     
-    postMissionAct()
+    postMissionAct(isPost: true)
     
   }
   @IBAction func fixAct(_ sender: Any) {
-    postMissionAct()
+    
+    postMissionAct(isPost: false)
     
   }
   @IBAction func deleteAct(_ sender: Any) {
@@ -261,7 +262,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
     LKProgressHUD.show(controller: tabVC)
   }
   
-  func postMissionAct() {
+  func postMissionAct(isPost: Bool) {
     
     guard let price = priceTextField.text,
       let content = missionContentTextView.text else { return }
@@ -276,8 +277,12 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
       SwiftMes.shared.showErrorMessage(body: "描述內容不得為空", seconds: 1.0)
     } else {
       
-      self.preventTap()
-      
+      if isPost {
+        self.preventTap()
+      } else {
+        LKProgressHUD.show(controller: self)
+      }
+
       self.fileURL = []
       
       let group: DispatchGroup = DispatchGroup()
@@ -285,7 +290,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
       if luke.count == 0 {
         
       } else {
-        
         for _ in 0 ..< luke.count {
           group.enter()
         }

@@ -32,19 +32,14 @@ class RequesterViewController: UIViewController {
     if UserManager.shared.isTourist {
       
       noRequesterLabel.text = "請先去個人頁登入享有功能"
-      
+    
     } else if UserManager.shared.currentUserInfo?.status == 0 {
-      
       noRequesterLabel.text = "當前沒有任務                                        趕快去新增任務吧"
-      //    requesterTable.backgroundColor = .clear
-      
     } else if UserManager.shared.currentUserInfo?.status == 2 {
       
       noRequesterLabel.text = "當前您是任務接受者      沒有申請者"
-      //    requesterTable.backgroundColor = .clear
     } else {
       noRequesterLabel.text = ""
-      //    requesterTable.backgroundColor = .clear
       readRequester()
     }
     NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
@@ -88,9 +83,9 @@ class RequesterViewController: UIViewController {
     requesterTable.delegate = self
     requesterTable.dataSource = self
     refreshControl = UIRefreshControl()
+    requesterTable.separatorStyle = .none
     requesterTable.addSubview(refreshControl)
     refreshControl.addTarget(self, action: #selector(loadData), for: .valueChanged)
-    requesterTable.separatorStyle = .none
     requesterTable.rowHeight = UITableView.automaticDimension
     requesterTable.register(UINib(nibName: "RequesterTableViewCell", bundle: nil), forCellReuseIdentifier: "requester")
   }
@@ -211,7 +206,16 @@ extension RequesterViewController: UITableViewDelegate, UITableViewDataSource {
     
     guard let cell = tableView.dequeueReusableCell(withIdentifier: "requester", for: indexPath) as? RequesterTableViewCell else { return UITableViewCell() }
     
-    cell.setUp(nickName: userInfo[indexPath.row].nickname, starcount: 4.5, image: userInfo[indexPath.row].photo, index: indexPath.row)
+    let user = userInfo[indexPath.row]
+    var averageStar = 0.0
+    var noJudge = false
+    if user.taskCount == user.noJudgeCount {
+      noJudge = true
+    } else {
+      averageStar = (user.totalStar / Double(user.taskCount - user.noJudgeCount)) - user.minusStar
+    }
+    
+    cell.setUp(nickName: user.nickname, starcount: averageStar, image: userInfo[indexPath.row].photo, index: indexPath.row, taskCount: user.taskCount, noJudge: noJudge)
     
     cell.delegate = self
     

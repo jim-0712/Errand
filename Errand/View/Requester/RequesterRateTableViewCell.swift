@@ -26,7 +26,9 @@ class RequesterRateTableViewCell: UITableViewCell {
   
   @IBOutlet weak var starView: CosmosView!
   
-  func setUp(averageStar: Double, titleLabel: String) {
+  @IBOutlet weak var describeLabel: UILabel!
+  
+  func setUp(averageStar: Double, titleLabel: String, notYetJudge: Bool, taskCount: Int) {
     
     starView.settings.updateOnTouch = false
     starView.rating = averageStar
@@ -35,5 +37,14 @@ class RequesterRateTableViewCell: UITableViewCell {
     starView.settings.emptyImage = UIImage(named: "star-2")?.withRenderingMode(.alwaysOriginal)
     starView.settings.filledImage = UIImage(named: "star-3")?.withRenderingMode(.alwaysOriginal)
     detailLabel.text = titleLabel
+    
+    starView.isHidden = notYetJudge
+    describeLabel.isHidden = !notYetJudge
+    
+    if taskCount == 0 {
+      describeLabel.text = "此用戶為新用戶"
+    } else {
+      describeLabel.text = "此用戶尚未被評價"
+    }
   }
 }

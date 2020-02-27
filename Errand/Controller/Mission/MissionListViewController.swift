@@ -177,7 +177,6 @@ class MissionListViewController: UIViewController {
   
   var shouldShowSearchResults = false {
     didSet {
-
       self.taskListTable.reloadData()
     }
   }
@@ -188,7 +187,6 @@ class MissionListViewController: UIViewController {
     didSet {
       if taskDataReturn.isEmpty {
         self.postMissionBtn.isHidden = true
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
           LKProgressHUD.dismiss()
           self.refreshControl.endRefreshing()
@@ -200,7 +198,6 @@ class MissionListViewController: UIViewController {
           self.refreshControl.endRefreshing()
           self.taskListTable.reloadData()
           LKProgressHUD.dismiss()
-          
           guard let status = UserManager.shared.currentUserInfo?.status else { return }
           if status == 0 || status == 1 {
             self.postMissionBtn.isHidden = false

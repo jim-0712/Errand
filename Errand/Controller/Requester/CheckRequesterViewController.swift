@@ -207,11 +207,15 @@ extension CheckRequesterViewController: UITableViewDelegate, UITableViewDataSour
     
     guard let infoData = requsterInfoData else { return UITableViewCell() }
     
-    if totaltaskCount == 0 {
+    var notYetJudge = false
+    
+    if infoData.taskCount == 0 {
       averageStar = 0.0
+    } else if infoData.taskCount - infoData.noJudgeCount == 0 {
+      notYetJudge = true
     } else {
-      averageStar = totalStar / Double(totaltaskCount)
-    }
+      averageStar = (infoData.totalStar / Double(infoData.taskCount - infoData.noJudgeCount))
+        - infoData.minusStar    }
     
     if indexPath.row == 0 {
       
@@ -232,7 +236,7 @@ extension CheckRequesterViewController: UITableViewDelegate, UITableViewDataSour
       
       guard let cell = tableView.dequeueReusableCell(withIdentifier: "requesterRate", for: indexPath) as? RequesterRateTableViewCell else { return UITableViewCell() }
       
-      cell.setUp(averageStar: averageStar, titleLabel: profileDetail[1])
+      cell.setUp(averageStar: averageStar, titleLabel: profileDetail[1], notYetJudge: notYetJudge, taskCount: infoData.taskCount)
       return cell
     } else {
       

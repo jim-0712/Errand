@@ -57,19 +57,46 @@ class JudgeMissionViewController: UIViewController {
   @IBAction func backAct(_ sender: Any) {
     
     guard let taskData = self.detailData,
-         let status = UserManager.shared.currentUserInfo?.status,
+         let user = UserManager.shared.currentUserInfo,
          let judge = judgeTextView.text else { return }
     var judgerOwner = ""
-    if status == 1 {
+    if user.status == 1 {
       judgerOwner = taskData.missionTaker
     } else {
       judgerOwner = taskData.uid
     }
     
+    let group = DispatchGroup()
+    UserManager.shared.preventTap(viewController: self)
+    group.enter()
+    group.enter()
+    
     TaskManager.shared.updateJudge(owner: judgerOwner, classified: taskData.classfied, judge: judge, star: -0.1 ) { (result) in
       switch result {
       case .success:
         print("ok")
+        group.leave()
+      case .failure:
+        print("error")
+      }
+    }
+    
+    UserManager.shared.readData(uid: judgerOwner) { result in
+      switch result {
+      case .success(var accountInfo):
+        accountInfo.taskCount += 1
+        accountInfo.noJudgeCount += 1
+        UserManager.shared.currentUserInfo = accountInfo
+        UserManager.shared.updateUserInfo { result in
+          switch result {
+          case .success(let info):
+            UserManager.shared.currentUserInfo = user
+            print(info)
+            group.leave()
+          case .failure:
+            print("error")
+          }
+        }
       case .failure:
         print("error")
       }
@@ -77,10 +104,11 @@ class JudgeMissionViewController: UIViewController {
     
     addFriendJudge(taskInfo: taskData)
     
-    let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
-    
-    self.view.window?.rootViewController = mapView
-    
+    group.notify(queue: DispatchQueue.main) {
+      let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
+      
+      self.view.window?.rootViewController = mapView
+    }
   }
   
   @IBOutlet weak var addFriendBtn: UIButton!
@@ -223,19 +251,46 @@ class JudgeMissionViewController: UIViewController {
   @IBAction func finishJudgeAct(_ sender: Any) {
     
     guard let taskData = self.detailData,
-      let status = UserManager.shared.currentUserInfo?.status,
+      let user = UserManager.shared.currentUserInfo,
       let judge = judgeTextView.text else { return }
     var judgerOwner = ""
-    if status == 1 {
+    if user.status == 1 {
       judgerOwner = taskData.missionTaker
     } else {
       judgerOwner = taskData.uid
     }
     
+    let group = DispatchGroup()
+    group.enter()
+    group.enter()
+    
     TaskManager.shared.updateJudge(owner: judgerOwner, classified: taskData.classfied, judge: judge, star: starView.rating) { (result) in
       switch result {
       case .success:
         print("ok")
+        group.leave()
+      case .failure:
+        print("error")
+      }
+    }
+    
+    UserManager.shared.readData(uid: judgerOwner) { [weak self]result in
+      guard let strongSelf = self else { return }
+      switch result {
+      case .success(var judgeOwnerInfo):
+        judgeOwnerInfo.totalStar += strongSelf.starView.rating
+        judgeOwnerInfo.taskCount += 1
+        UserManager.shared.currentUserInfo = judgeOwnerInfo
+        UserManager.shared.updateUserInfo { result in
+          switch result {
+          case .success(let info):
+            UserManager.shared.currentUserInfo = user
+            print(info)
+            group.leave()
+          case .failure:
+            print("error")
+          }
+        }
       case .failure:
         print("error")
       }
@@ -251,8 +306,12 @@ class JudgeMissionViewController: UIViewController {
       self.view.window?.rootViewController = mapView
     }
     controller.addAction(okAction)
-    self.present(controller, animated: true, completion: nil)
+    
+    group.notify(queue: DispatchQueue.main) {
+      self.present(controller, animated: true, completion: nil)
+    }
   }
+  
   // swiftlint:enable cyclomatic_complexity
   func setUpTextField() {
     judgeTextView.text = judgeByOwner[0]

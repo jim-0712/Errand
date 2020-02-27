@@ -240,19 +240,32 @@ class ViewController: UIViewController {
       self.name = "使用者"
     }
     
-    guard let email = Auth.auth().currentUser?.email else { return }
+    guard let email = Auth.auth().currentUser?.email,
+         let uid = Auth.auth().currentUser?.uid else { return }
     
-    DataBaseManager.shared.createDataBase(classification: "Users", nickName: name, email: email, photo: self.photo) { result in
+    UserManager.shared.readData(uid: uid) { [weak self] result in
+    guard let strongSelf = self else { return }
+    switch result {
+    case .success:
+      UserDefaults.standard.set(true, forKey: "login")
+      strongSelf.gotoMap(viewController: strongSelf)
+    case .failure(let error):
       
-      switch result {
-        
-      case .success:
-        
-        completion(.success("good"))
-        
-      case .failure:
-        
-        completion(.failure(RegiError.registFailed))
+      if error.localizedDescription == "The operation couldn’t be completed. (Errand.RegiError error 3.)" {
+        DataBaseManager.shared.createDataBase(classification: "Users", nickName: strongSelf.name, email: email, photo: strongSelf.photo) { result in
+          
+          switch result {
+            
+          case .success:
+            
+            completion(.success("good"))
+            
+          case .failure:
+            
+            completion(.failure(RegiError.registFailed))
+          }
+        }
+      } else { print(error.localizedDescription)}
       }
     }
   }

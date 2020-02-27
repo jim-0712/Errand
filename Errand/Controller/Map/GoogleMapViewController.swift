@@ -15,13 +15,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    NotificationCenter.default.addObserver(self, selector: #selector(loadUser), name: Notification.Name("postMission"), object: nil)
-    
-    NotificationCenter.default.addObserver(self, selector: #selector(loadUser), name: Notification.Name("reloadUser"), object: nil)
-    
-    NotificationCenter.default.addObserver(self, selector: #selector(reGetUserInfo), name: Notification.Name("update"), object: nil)
-    
+
     arrangeTextField.delegate = self
 
     setUpView()
@@ -53,11 +47,11 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
     super.viewDidLayoutSubviews()
     taskPersonPhoto.layer.cornerRadius = taskPersonPhoto.bounds.width / 2
   }
-  
-  @objc func reGetUserInfo() {
-    loadUserInfo()
-  }
-  
+//
+//  @objc func reGetUserInfo() {
+//    loadUserInfo()
+//  }
+//
   func loadUserInfo() {
     
     if let uid = Auth.auth().currentUser?.uid {
