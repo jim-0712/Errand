@@ -10,15 +10,15 @@ import UIKit
 import FirebaseAuth
 
 class ChildInfoViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setUpTableView()
-        readJudge()
-        UserManager.shared.isEditNameEmpty = false
-        NotificationCenter.default.addObserver(self, selector: #selector(changeEdit), name: Notification.Name("editing"), object: nil)
-        // Do any additional setup after loading the view.
-    }
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    setUpTableView()
+    readJudge()
+    UserManager.shared.isEditNameEmpty = false
+    NotificationCenter.default.addObserver(self, selector: #selector(changeEdit), name: Notification.Name("editing"), object: nil)
+    // Do any additional setup after loading the view.
+  }
   
   @objc func changeEdit() {
     
@@ -37,7 +37,7 @@ class ChildInfoViewController: UIViewController {
       infoTableView.reloadData()
     }
   }
-    
+  
   @IBOutlet weak var infoTableView: UITableView!
   
   var isSetting = false
@@ -60,6 +60,8 @@ class ChildInfoViewController: UIViewController {
   
   var totaltaskCount = 0
   
+  var noJudge = 0
+  
   var email = "遊客"
   
   var totalStar = 0.0
@@ -70,6 +72,7 @@ class ChildInfoViewController: UIViewController {
     infoTableView.delegate = self
     infoTableView.dataSource = self
     infoTableView.separatorStyle = .none
+    infoTableView.rowHeight = UITableView.automaticDimension
     infoTableView.register(UINib(nibName: "PersonDetailTableViewCell", bundle: nil), forCellReuseIdentifier: "personDetail")
     infoTableView.register(UINib(nibName: "PersonAboutTableViewCell", bundle: nil), forCellReuseIdentifier: "personAbout")
     infoTableView.register(UINib(nibName: "PersonStarTableViewCell", bundle: nil), forCellReuseIdentifier: "rate")
@@ -86,7 +89,7 @@ class ChildInfoViewController: UIViewController {
       case .success:
         LKProgressHUD.dismiss()
         UserManager.shared.isEditNameEmpty = true
-         NotificationCenter.default.post(name: Notification.Name("CompleteEdit"), object: nil)
+        NotificationCenter.default.post(name: Notification.Name("CompleteEdit"), object: nil)
         strongSelf.infoTableView.reloadData()
       case .failure:
         print("error")
@@ -157,23 +160,21 @@ extension ChildInfoViewController: UITableViewDelegate, UITableViewDataSource {
     let tourist = UserManager.shared.isTourist
     
     if !tourist {
-      
-      guard let name = UserManager.shared.currentUserInfo?.nickname,
-           let email = UserManager.shared.currentUserInfo?.email,
-           let aboutMe = UserManager.shared.currentUserInfo?.about,
-           let star = UserManager.shared.currentUserInfo?.totalStar else { return UITableViewCell() }
-      
-      self.name = name
-      self.about = aboutMe
-      self.email = email
-      self.minusStar = star
+      guard let userInfo = UserManager.shared.currentUserInfo else  { return UITableViewCell() }
+      self.name = userInfo.nickname
+      self.about = userInfo.about
+      self.email = userInfo.email
+      self.totalStar = userInfo.totalStar
+      self.minusStar = userInfo.minusStar
+      self.noJudge = userInfo.noJudgeCount
+      self.totaltaskCount = userInfo.taskCount
     }
     LKProgressHUD.dismiss()
     let data = [name, self.about]
     if indexPath.row == 0 {
       
       guard let cell = tableView.dequeueReusableCell(withIdentifier: "personDetail", for: indexPath) as? PersonDetailTableViewCell else { return UITableViewCell() }
- 
+      
       cell.setUpView(isSetting: isSetting, detailTitle: profileDetail[0], content: data[0])
       cell.delegate = self
       
@@ -183,16 +184,18 @@ extension ChildInfoViewController: UITableViewDelegate, UITableViewDataSource {
       guard let cell = tableView.dequeueReusableCell(withIdentifier: "rate", for: indexPath) as? PersonStarTableViewCell else { return UITableViewCell() }
       
       cell.newUserLabel.isHidden = true
-    
+      
       if totaltaskCount == 0 {
-
+        
         cell.setUp(isFirst: true, averageStar: averageStar, titleLabel: profileDetail[1])
-
+        
+      } else if  totaltaskCount - noJudge == 0 {
+        cell.setUp(isFirst: true, averageStar: averageStar, titleLabel: profileDetail[1])
       } else {
-        averageStar = (totalStar - minusStar) / Double(totaltaskCount)
+        averageStar = ((totalStar) / Double(totaltaskCount - noJudge)) - minusStar
         cell.setUp(isFirst: false, averageStar: averageStar, titleLabel: profileDetail[1])
       }
-
+      
       return cell
     } else if indexPath.row == 2 {
       

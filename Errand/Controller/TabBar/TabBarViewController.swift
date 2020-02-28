@@ -120,7 +120,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     guard let uid = Auth.auth().currentUser?.uid else { return }
     
     dbF.collection("Users").document(uid).addSnapshotListener { querySnapshot, error in
-      guard let snapshot = querySnapshot else {
+      guard querySnapshot != nil else {
         print("Error listening for channel updates: \(error?.localizedDescription ?? "No error")")
         return
       }

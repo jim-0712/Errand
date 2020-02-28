@@ -162,43 +162,6 @@ class PersonalViewController: UIViewController {
     
   }
   
-//  func readJudge() {
-//
-//    guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
-//
-//    UserManager.shared.readData(uid: uid) { [weak self] result in
-//      guard let strongSelf = self else { return }
-//      switch result {
-//      case .success(let accountInfo):
-//        strongSelf.accountInfo = accountInfo
-//        strongSelf.infoTableView.reloadData()
-//      case .failure(let error):
-//        print(error.localizedDescription)
-//      }
-//    }
-    
-//    TaskManager.shared.readJudgeData(uid: uid) { result in
-//
-//      switch result {
-//      case .success(let judgeData):
-//
-//        for count in 0 ..< judgeData.count {
-//
-//          self.totalStar += judgeData[count].star
-//        }
-//
-//        self.totaltaskCount = judgeData.count
-//
-//        LKProgressHUD.dismiss()
-//
-//        self.infoTableView.reloadData()
-//
-//      case .failure:
-//        print("error")
-//      }
-//    }
-//  }
-  
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
     cornerView.frame.origin.y = 340 - scrollView.contentOffset.y
   }
@@ -327,22 +290,16 @@ extension PersonalViewController: UITableViewDataSource, UITableViewDelegate {
     
     if !tourist {
       
-      guard let name = UserManager.shared.currentUserInfo?.nickname,
-           let email = UserManager.shared.currentUserInfo?.email,
-           let aboutMe = UserManager.shared.currentUserInfo?.about,
-      let star = UserManager.shared.currentUserInfo?.totalStar,
-      let taskCount = UserManager.shared.currentUserInfo?.taskCount,
-      let noJudge = UserManager.shared.currentUserInfo?.noJudgeCount,
-      let minusStar = UserManager.shared.currentUserInfo?.minusStar else { return UITableViewCell() }
+      guard let userInfo = UserManager.shared.currentUserInfo  else { return UITableViewCell() }
        
-      self.name = name
-      self.about = aboutMe
-      self.email = email
-      self.minusStar = star
-      self.totalStar = star
-      self.totaltaskCount = taskCount
-      self.noJudge = noJudge
-      self.minusStar = minusStar
+      self.name = userInfo.nickname
+      self.about = userInfo.about
+      self.email = userInfo.email
+      self.minusStar = userInfo.minusStar
+      self.totalStar = userInfo.totalStar
+      self.totaltaskCount = userInfo.taskCount
+      self.noJudge = userInfo.noJudgeCount
+      self.minusStar = userInfo.minusStar
     }
       
     LKProgressHUD.dismiss()
@@ -461,12 +418,10 @@ extension PersonalViewController: ProfileManager {
 extension PersonalViewController: ProfileAboutManager {
   
   func changeAbout(tableViewCell: PersonAboutTableViewCell, about: String?, isEdit: Bool) {
-    
     guard let about = about else {
       self.isAbout = false
       return }
     self.about = about
     self.isAbout = true
-    
   }
 }

@@ -72,10 +72,9 @@ class MissionDetailViewController: UIViewController {
     navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(backToList))
     navigationItem.leftBarButtonItem?.tintColor = .black
     
-    guard let taskInfo = detailData else {
+    guard detailData != nil else {
          setUpData()
          return }
-       
        getPhoto()
        setUpall()
   }
@@ -419,7 +418,7 @@ class MissionDetailViewController: UIViewController {
         
       case .success:
         
-        NotificationCenter.default.post(name: Notification.Name("takeMission"), object: nil)
+//        NotificationCenter.default.post(name: Notification.Name("takeMission"), object: nil)
         
         let sender = PushNotificationSender()
         sender.sendPushNotification(to: taskInfo.fcmToken, body: "趕快開啟查看")
@@ -447,6 +446,7 @@ class MissionDetailViewController: UIViewController {
     testcollection.dataSource = self
     detailTableView.delegate = self
     detailTableView.dataSource = self
+    testcollection.isPagingEnabled = true
     detailTableView.rowHeight = UITableView.automaticDimension
     detailTableView.register(UINib(nibName: "StartMissionTableViewCell", bundle: nil), forCellReuseIdentifier: "startMission")
     testcollection.register(UINib(nibName: "MissionDetailCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "detail")

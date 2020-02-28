@@ -171,7 +171,7 @@ class CheckRequesterViewController: UIViewController {
                       
                     case .success:
                       
-                      NotificationCenter.default.post(name: Notification.Name("acceptRequester"), object: nil)
+//                      NotificationCenter.default.post(name: Notification.Name("acceptRequester"), object: nil)
                       NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
                       let sender = PushNotificationSender()
                       sender.sendPushNotification(to: user.fcmToken, body: "任務接受成功")
@@ -215,7 +215,8 @@ extension CheckRequesterViewController: UITableViewDelegate, UITableViewDataSour
       notYetJudge = true
     } else {
       averageStar = (infoData.totalStar / Double(infoData.taskCount - infoData.noJudgeCount))
-        - infoData.minusStar    }
+        - infoData.minusStar
+    }
     
     if indexPath.row == 0 {
       

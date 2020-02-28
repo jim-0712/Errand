@@ -20,120 +20,30 @@ class MissionListViewController: UIViewController {
     setUp()
     setUpindicatorView()
     
-    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("postMission"), object: nil)
-    
-    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("takeMission"), object: nil)
-    
-    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("acceptRequester"), object: nil)
-    
-    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("finishSelf"), object: nil)
-    
+//    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("postMission"), object: nil)
+//    
+//    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("takeMission"), object: nil)
+//    
+//    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("acceptRequester"), object: nil)
+//    
+//    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("finishSelf"), object: nil)
+//    
     NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("getMissionList"), object: nil)
   
   }
   
-  var currentBtnSelect = false
+  override func viewWillAppear(_ animated: Bool) {
+     super.viewWillAppear(animated)
+     searchingLabel.isHidden = true
+     getTaskData()
+     currentBtnSelect = false
+     setUpBtn()
+     startAnimate(sender: allMissionBtn)
+     NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
+   }
   
   @IBOutlet weak var searchingLabel: UILabel!
-  
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    searchingLabel.isHidden = true
-    getTaskData()
-    currentBtnSelect = false
-    setUpBtn()
-    startAnimate(sender: allMissionBtn)
-    NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
-  }
-  
-  @objc func reloadTable() {
-    if currentBtnSelect {
-       getMissionStartData()
-    } else {
-       getTaskData()
-    }
-  }
-  
-   var indicatorCon: NSLayoutConstraint?
-  
-  func getMissionStartData() {
-    
-    guard let user = UserManager.shared.currentUserInfo else {
-      LKProgressHUD.dismiss()
-      SwiftMes.shared.showWarningMessage(body: "當前沒有登入", seconds: 1.0)
-      taskDataReturn = []
-      return }
-    
-    if user.status == 1 {
-      
-      guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
-      
-      taskMan.readSpecificData(parameter: "uid", parameterString: uid) {[weak self](result) in
-             
-             guard let strongSelf = self else { return }
-             
-             switch result {
-               
-             case .success(let dataReturn):
-               
-               strongSelf.taskDataReturn = dataReturn
-               
-             case .failure(let error):
-               LKProgressHUD.dismiss()
-               LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
-             }
-           }
-      
-    } else if user.status == 2 {
-      
-      guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
-      
-      taskMan.readSpecificData(parameter: "missionTaker", parameterString: uid) { [weak self](result) in
-        
-        guard let strongSelf = self else { return }
-        
-        switch result {
-          
-        case .success(let dataReturn):
-          
-          strongSelf.taskDataReturn = dataReturn
-          
-        case .failure(let error):
-          LKProgressHUD.dismiss()
-          LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
-        }
-      }
-    } else {
-      LKProgressHUD.dismiss()
-      SwiftMes.shared.showErrorMessage(body: "當前沒有任務", seconds: 1.0)
-      taskDataReturn = []
-      return
-    }
-  }
-  
-  func startAnimate(sender: UIButton) {
-    let move = UIViewPropertyAnimator(duration: 0.1, curve: .easeInOut) {
-      self.indicatorCon?.isActive = false
-      self.indicatorCon = self.indicatorView.centerXAnchor.constraint(equalTo: sender.centerXAnchor)
-      self.indicatorCon?.isActive = true
-      self.view.layoutIfNeeded()
-    }
-    move.startAnimation()
-  }
-  
-  func setUpindicatorView() {
-    self.view.addSubview(indicatorView)
-    indicatorView.backgroundColor = .G1
-    indicatorView.translatesAutoresizingMaskIntoConstraints = false
-    indicatorCon = indicatorView.centerXAnchor.constraint(equalTo: allMissionBtn.centerXAnchor)
-    
-    NSLayoutConstraint.activate([
-      indicatorView.topAnchor.constraint(equalTo: btnStackView.bottomAnchor, constant: 0),
-      indicatorView.heightAnchor.constraint(equalToConstant: 2),
-      indicatorView.widthAnchor.constraint(equalToConstant: allMissionBtn.bounds.width * 0.6),
-      indicatorCon!
-      ])
-  }
+
   @IBOutlet weak var allMissionBtn: UIButton!
   
   @IBOutlet weak var currentBtn: UIButton!
@@ -147,7 +57,7 @@ class MissionListViewController: UIViewController {
     UserManager.shared.checkDetailBtn = !UserManager.shared.checkDetailBtn
     startAnimate(sender: sender)
   }
-//  SwiftMes.shared.showErrorMessage(body: "當前沒有任務", seconds: 1.0)
+
   @IBAction func currentMission(_ sender: UIButton) {
     startAnimate(sender: sender)
     currentBtnSelect = true
@@ -174,6 +84,8 @@ class MissionListViewController: UIViewController {
   var data: TaskInfo?
   
   var timeString: String?
+  
+  var currentBtnSelect = false
   
   var shouldShowSearchResults = false {
     didSet {
@@ -238,8 +150,7 @@ class MissionListViewController: UIViewController {
     } else if UserManager.shared.currentUserInfo?.status == 0 {
       performSegue(withIdentifier: "post", sender: nil)
     } else if UserManager.shared.currentUserInfo?.status == 1 {
-      
-//      LKProgressHUD.show(controller: self)
+ 
       TaskManager.shared.setUpStatusData { result in
         
         switch result {
@@ -265,6 +176,82 @@ class MissionListViewController: UIViewController {
       TaskManager.shared.showAlert(title: "任務進行中", message: "請完成當前任務", viewController: self)
     }
   }
+  
+  @objc func reloadTable() {
+    if currentBtnSelect {
+       getMissionStartData()
+    } else {
+       getTaskData()
+    }
+  }
+  
+  var indicatorCon: NSLayoutConstraint?
+  
+  func getMissionStartData() {
+     
+     guard let user = UserManager.shared.currentUserInfo else {
+       LKProgressHUD.dismiss()
+       SwiftMes.shared.showWarningMessage(body: "當前沒有登入", seconds: 1.0)
+       taskDataReturn = []
+       return }
+     
+       guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
+     
+     if user.status == 1 {
+
+       readCurrentUserTaskData(parameter: "uid", uid: uid)
+       
+     } else if user.status == 2 {
+
+       readCurrentUserTaskData(parameter: "missionTaker", uid: uid)
+
+     } else {
+       LKProgressHUD.dismiss()
+       SwiftMes.shared.showErrorMessage(body: "當前沒有任務", seconds: 1.0)
+       taskDataReturn = []
+       return
+     }
+   }
+   
+   func readCurrentUserTaskData(parameter: String, uid: String) {
+     taskMan.readSpecificData(parameter: parameter, parameterString: uid) { [weak self](result) in
+       guard let strongSelf = self else { return }
+       switch result {
+         
+       case .success(let dataReturn):
+         
+         strongSelf.taskDataReturn = dataReturn
+         
+       case .failure(let error):
+         LKProgressHUD.dismiss()
+         LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
+       }
+     }
+   }
+   
+   func startAnimate(sender: UIButton) {
+     let move = UIViewPropertyAnimator(duration: 0.1, curve: .easeInOut) {
+       self.indicatorCon?.isActive = false
+       self.indicatorCon = self.indicatorView.centerXAnchor.constraint(equalTo: sender.centerXAnchor)
+       self.indicatorCon?.isActive = true
+       self.view.layoutIfNeeded()
+     }
+     move.startAnimation()
+   }
+   
+   func setUpindicatorView() {
+     self.view.addSubview(indicatorView)
+     indicatorView.backgroundColor = .G1
+     indicatorView.translatesAutoresizingMaskIntoConstraints = false
+     indicatorCon = indicatorView.centerXAnchor.constraint(equalTo: allMissionBtn.centerXAnchor)
+     
+     NSLayoutConstraint.activate([
+       indicatorView.topAnchor.constraint(equalTo: btnStackView.bottomAnchor, constant: 0),
+       indicatorView.heightAnchor.constraint(equalToConstant: 2),
+       indicatorView.widthAnchor.constraint(equalToConstant: allMissionBtn.bounds.width * 0.6),
+       indicatorCon!
+       ])
+   }
   
   func setUpSearch() {
     refreshControl = UIRefreshControl()

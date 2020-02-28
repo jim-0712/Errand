@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import AVKit
+import AVFoundation
 
 protocol UploadDataManager: AnyObject {
   
@@ -27,6 +29,8 @@ class PhotoCollectionViewCell: UICollectionViewCell {
   }
   
   var indexRow = 0
+  
+  var playerLooper: AVPlayerLooper?
   
   required init?(coder: NSCoder) {
     
@@ -51,6 +55,17 @@ class PhotoCollectionViewCell: UICollectionViewCell {
   
   @IBAction func deleteAct(_ sender: Any) {
     self.delegate?.tapOnDelete(collectionViewCelll: self, indexRow: indexRow)
+  }
+  
+  func setUpLooper(video: URL) {
+    let playQueue = AVQueuePlayer()
+    let platItem = AVPlayerItem(url: video)
+    playerLooper = AVPlayerLooper(player: playQueue, templateItem: platItem)
+    let playerLayer = AVPlayerLayer(player: playQueue)
+    
+    playerLayer.frame = self.contentView.bounds
+    self.layer.addSublayer(playerLayer)
+    playQueue.play()
   }
   
 }

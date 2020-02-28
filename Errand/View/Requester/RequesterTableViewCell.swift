@@ -27,7 +27,6 @@ class RequesterTableViewCell: UITableViewCell {
     // Configure the view for the selected state
   }
   
-
   weak var delegate: CheckPersonalInfoManager?
   
   var index = 0

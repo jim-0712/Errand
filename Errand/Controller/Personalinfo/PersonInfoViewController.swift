@@ -12,9 +12,9 @@ import MobileCoreServices
 
 class PersonInfoViewController: UIViewController {
   
-  @IBOutlet weak var backgroundImage: UIImageView!
-  
   @IBOutlet weak var photoTableView: UITableView!
+  
+  @IBOutlet weak var cornerView: UIView!
   
   let imagePickerController = UIImagePickerController()
   
@@ -56,12 +56,20 @@ class PersonInfoViewController: UIViewController {
     super.viewDidLoad()
     UserManager.shared.isEditNameEmpty = true
     setUpTableView()
-    setUpBackPhoto()
     setUpImagePicker()
     setUpIndicatorView()
     setUpNavigationItem()
     historyContainer.alpha = 0.0
+    self.view.backgroundColor = UIColor.Y1
+    
     NotificationCenter.default.addObserver(self, selector: #selector(backToEdit), name: Notification.Name("CompleteEdit"), object: nil)
+  }
+  
+  override func viewWillLayoutSubviews() {
+    super.viewWillLayoutSubviews()
+    cornerView.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 500, y: 340, width: 1000, height: 1000)
+    cornerView.backgroundColor = UIColor.white
+     cornerView.layer.cornerRadius = cornerView.bounds.width / 2
   }
   
   @objc func backToEdit() {
@@ -74,13 +82,7 @@ class PersonInfoViewController: UIViewController {
     guard let user = UserManager.shared.currentUserInfo else { return }
     photo = user.photo
   }
-  
-  func setUpBackPhoto() {
-    backgroundImage.contentMode = .scaleAspectFill
-//    backgroundImage.image = UIImage(named: "Space-Expedition")
-//    37670
-  }
-  
+
   func setUpNavigationItem() {
     settingOff = UIBarButtonItem(title: "編輯", style: .plain, target: self, action: #selector(tapSet))
     settingOn = UIBarButtonItem(image: UIImage(named: "tick-2"), style: .plain, target: self, action: #selector(tapSet))
@@ -180,11 +182,9 @@ class PersonInfoViewController: UIViewController {
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if segue.identifier == "userInfo" {
       guard let userInfoVC = segue.destination as? ChildInfoViewController else { return }
-      userInfoVC.view.backgroundColor = .red
     }
     if segue.identifier == "history" {
       guard let historyVC = segue.destination as? ChildhistroyViewController else { return }
-      historyVC.view.backgroundColor = .green
     }
   }
 }

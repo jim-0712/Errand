@@ -16,22 +16,6 @@ import AuthenticationServices
 
 class ViewController: UIViewController {
   
-  var isEmail = false
-  
-  var photo = ""
-  
-  var name = "使用者"
-  
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    
-    setUpBtn()
-    setUpAppleBtn()
-    IQKeyboardManager.shared().isEnabled = true
-    
-    NotificationCenter.default.addObserver(self, selector: #selector(goToUserInfo), name: Notification.Name("userInfo"), object: nil)
-  }
-  
   let backgroundManager = BackgroundManager.shared
   
   @IBOutlet weak var logoLabel: UILabel!
@@ -44,12 +28,16 @@ class ViewController: UIViewController {
   
   @IBOutlet weak var appleView: UIView!
   
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    setUpBtn()
+    setUpAppleBtn()
+    IQKeyboardManager.shared().isEnabled = true
+    NotificationCenter.default.addObserver(self, selector: #selector(goToUserInfo), name: Notification.Name("userInfo"), object: nil)
+  }
+  
   func preventTap() {
-    
-    guard let rootVC = self.view.window?.rootViewController else {
-      
-      return
-    }
+    guard let rootVC = self.view.window?.rootViewController else { return }
     LKProgressHUD.show(controller: rootVC)
   }
   
@@ -63,93 +51,94 @@ class ViewController: UIViewController {
   }
   
   @IBAction func fbLoginAct(_ sender: Any) {
-    
     UserManager.shared.fbLogin(controller: self) { [weak self] result in
-      
       guard let strongSelf = self else { return }
-      
       switch result {
-        
       case .success(let accessToken):
         
-        UserManager.shared.loginFireBaseWithFB(accesstoken: accessToken, controller: strongSelf) { result in
-          
-          strongSelf.preventTap()
-          
-          switch result {
+        strongSelf.loginDBwithFB(accessToken: accessToken, viewController: strongSelf)
 
-          case .success:
-
-            UserManager.shared.loadFBProfile(controller: strongSelf) { result in
-              
-              strongSelf.preventTap()
-
-              switch result {
-
-              case .success:
-
-                UserManager.shared.isTourist = false
-
-                guard let uid = Auth.auth().currentUser?.uid else { return }
-
-                UserDefaults.standard.set(uid, forKey: "uid")
-
-                UserManager.shared.readData(uid: uid) { result in
-                  switch result {
-                  case .success:
-
-                  UserDefaults.standard.set(true, forKey: "login")
-                  LKProgressHUD.dismiss()
-                   strongSelf.gotoMap(viewController: strongSelf)
-
-                  case .failure(let error):
-
-                    if error.localizedDescription == "The operation couldn’t be completed. (Errand.RegiError error 3.)" {
-
-                      strongSelf.createDataBase(isApple: false, isFB: true) { result in
-
-                        switch result {
-
-                        case .success(let success):
-
-                          LKProgressHUD.dismiss()
-                          UserManager.shared.isTourist = false
-
-                          LKProgressHUD.showSuccess(text: success, controller: strongSelf)
-
-                          strongSelf.gotoMap(viewController: strongSelf)
-
-                        case .failure(let error):
-
-                          LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
-
-                        }
-                      }
-                    } else {
-                      print("error")
-                    }
-                  }
-                }
-
-              case .failure(let error):
-
-                LKProgressHUD.dismiss()
-                LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
-              }
-            }
-
-          case .failure(let error):
-
-            LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
-          }
-        }
       case .failure(let error):
         
         LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
       }
     }
   }
-    
+  
+  func loginDBwithFB(accessToken: String, viewController: UIViewController) {
+    UserManager.shared.loginFireBaseWithFB(accesstoken: accessToken, controller: viewController) { [weak self] result in
+      guard let strongSelf = self else { return }
+      strongSelf.preventTap()
+      switch result {
+      case .success:
+        strongSelf.getFBprofile(controller: strongSelf)
+        
+      case .failure(let error):
+        LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
+      }
+    }
+  }
+  
+  func getFBprofile(controller: UIViewController) {
+    UserManager.shared.loadFBProfile(controller: controller) { [ weak self] result in
+      guard let strongSelf = self else { return }
+      strongSelf.preventTap()
+      switch result {
+      case .success:
+        
+        UserManager.shared.isTourist = false
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        UserDefaults.standard.set(uid, forKey: "uid")
+        strongSelf.readData(uid: uid, isApple: false, isFB: true)
+        
+      case .failure(let error):
+        
+        LKProgressHUD.dismiss()
+        LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
+      }
+    }
+  }
+  
+  func readData(uid: String, isApple: Bool, isFB: Bool) {
+    UserManager.shared.readData(uid: uid) { [weak self] result in
+      guard let strongSelf = self else { return }
+      switch result {
+      case .success:
+        
+        UserDefaults.standard.set(true, forKey: "login")
+        LKProgressHUD.dismiss()
+        strongSelf.gotoMap(viewController: strongSelf)
+        
+      case .failure(let error):
+        
+        if error.localizedDescription == "The operation couldn’t be completed. (Errand.RegiError error 3.)" {
+          strongSelf.setUpDataBase(isApple: isApple, isFB: isFB)
+        } else {
+          print("error")
+        }
+      }
+    }
+  }
+  
+  func setUpDataBase(isApple: Bool, isFB: Bool) {
+    createDataBase(isApple: isApple, isFB: isFB) { [weak self] result in
+      guard let strongSelf = self else { return }
+      switch result {
+      case .success(let success):
+        
+        LKProgressHUD.dismiss()
+        UserManager.shared.isTourist = false
+        UserManager.shared.updatefcmToken()
+        LKProgressHUD.showSuccess(text: success, controller: strongSelf)
+        strongSelf.gotoMap(viewController: strongSelf)
+        
+      case .failure(let error):
+        
+        LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
+      }
+    }
+  }
+  
   let appleButton: ASAuthorizationAppleIDButton = {
     let button = ASAuthorizationAppleIDButton()
     button.addTarget(self, action: #selector(startSignInWithAppleFlow), for: .touchUpInside)
@@ -174,98 +163,56 @@ class ViewController: UIViewController {
       appleButton.bottomAnchor.constraint(equalTo: appleView.bottomAnchor, constant: 0),
       appleButton.leadingAnchor.constraint(equalTo: appleView.leadingAnchor, constant: 0),
       appleButton.trailingAnchor.constraint(equalTo: appleView.trailingAnchor, constant: 0)
-      ])
+    ])
   }
   
   @objc func goToUserInfo () {
-    
-    self.preventTap()
-    
+    preventTap()
     UserManager.shared.isTourist = false
-    
     guard let uid = Auth.auth().currentUser?.uid else { return }
-    
-    UserManager.shared.readData(uid: uid) { [weak self] result in
-      guard let strongSelf = self else { return }
-      switch result {
-      case .success:
-        UserDefaults.standard.set(true, forKey: "login")
-        strongSelf.gotoMap(viewController: strongSelf)
-      case .failure(let error):
-        
-        if error.localizedDescription == "The operation couldn’t be completed. (Errand.RegiError error 3.)" {
-          
-          strongSelf.createDataBase(isApple: false, isFB: false) { result in
-
-                 switch result {
-
-                 case .success(let success):
-
-                   UserManager.shared.isTourist = false
-                   UserManager.shared.updatefcmToken()
-                   LKProgressHUD.dismiss()
-                   LKProgressHUD.showSuccess(text: success, controller: strongSelf)
-                   
-                   strongSelf.gotoMap(viewController: strongSelf)
-
-                 case .failure(let error):
-
-                   LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
-
-                 }
-               }
-          
-        } else {
-          print(error.localizedDescription)
-        }
-        
-      }
-    }
+    readData(uid: uid, isApple: false, isFB: false)
   }
   
   func createDataBase(isApple: Bool, isFB: Bool, completion: @escaping (Result<String, Error>) -> Void) {
     
+    var photo = ""
+    var userName = "使用者"
     let size = "?width=400&height=400"
     
-    if isApple {
-      self.photo = ""
-    } else if isFB {
+    if isApple {  } else if isFB {
       guard let photoBack = UserManager.shared.FBData?.image,
            let name = UserManager.shared.FBData?.name else { return }
-      self.photo = "\(photoBack)\(size)"
-      self.name = name
+
+      photo = "\(photoBack)\(size)"
+      userName = name
     } else {
       guard let userImage = Auth.auth().currentUser?.photoURL?.absoluteString else { return }
-      self.photo = "\(userImage + size)"
-      self.name = "使用者"
+      photo = "\(userImage + size)"
+      userName = "使用者"
     }
     
     guard let email = Auth.auth().currentUser?.email,
          let uid = Auth.auth().currentUser?.uid else { return }
     
-    UserManager.shared.readData(uid: uid) { [weak self] result in
-    guard let strongSelf = self else { return }
-    switch result {
-    case .success:
-      UserDefaults.standard.set(true, forKey: "login")
-      strongSelf.gotoMap(viewController: strongSelf)
-    case .failure(let error):
-      
-      if error.localizedDescription == "The operation couldn’t be completed. (Errand.RegiError error 3.)" {
-        DataBaseManager.shared.createDataBase(classification: "Users", nickName: strongSelf.name, email: email, photo: strongSelf.photo) { result in
-          
-          switch result {
-            
-          case .success:
-            
-            completion(.success("good"))
-            
-          case .failure:
-            
-            completion(.failure(RegiError.registFailed))
+    UserManager.shared.readData(uid: uid) {result in
+      switch result {
+      case .success:
+        completion(.success("good"))
+      case .failure(let error):
+        
+        if error.localizedDescription == "The operation couldn’t be completed. (Errand.RegiError error 3.)" {
+          DataBaseManager.shared.createDataBase(classification: "Users", nickName: userName, email: email, photo: photo) { result in
+            switch result {
+            case .success:
+              
+              completion(.success("good"))
+              
+            case .failure:
+              
+              completion(.failure(RegiError.registFailed))
+            }
           }
-        }
-      } else { print(error.localizedDescription)}
+        } else { print(error.localizedDescription)}
       }
     }
   }
@@ -273,10 +220,10 @@ class ViewController: UIViewController {
   private func randomNonceString(length: Int = 32) -> String {
     precondition(length > 0)
     let charset: Array<Character> =
-        Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+      Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
     var result = ""
     var remainingLength = length
-
+    
     while remainingLength > 0 {
       let randoms: [UInt8] = (0 ..< 16).map { _ in
         var random: UInt8 = 0
@@ -286,53 +233,47 @@ class ViewController: UIViewController {
         }
         return random
       }
-
+      
       randoms.forEach { random in
-        if length == 0 {
-          return
-        }
-
+        if length == 0 { return  }
+        
         if random < charset.count {
           result.append(charset[Int(random)])
           remainingLength -= 1
         }
       }
     }
-
     return result
   }
   
   fileprivate var currentNonce: String?
   
- @objc func startSignInWithAppleFlow() {
-  
+  @objc func startSignInWithAppleFlow() {
     let nonce = randomNonceString()
     currentNonce = nonce
     let appleIDProvider = ASAuthorizationAppleIDProvider()
     let request = appleIDProvider.createRequest()
     request.requestedScopes = [.fullName, .email]
     request.nonce = sha256(nonce)
-
+    
     let authorizationController = ASAuthorizationController(authorizationRequests: [request])
     authorizationController.delegate = self
     authorizationController.presentationContextProvider = self
     authorizationController.performRequests()
   }
-
+  
   private func sha256(_ input: String) -> String {
     let inputData = Data(input.utf8)
     let hashedData = SHA256.hash(data: inputData)
     let hashString = hashedData.compactMap {
       return String(format: "%02x", $0)
     }.joined()
-
     return hashString
   }
 }
 
 extension ViewController: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
   func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-    
     return self.view.window!
   }
   
@@ -349,53 +290,45 @@ extension ViewController: ASAuthorizationControllerDelegate, ASAuthorizationCont
         print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
         return
       }
-   
+      
       let credential = OAuthProvider.credential(withProviderID: "apple.com",
                                                 idToken: idTokenString,
                                                 rawNonce: nonce)
       // Sign in with Firebase.
       Auth.auth().signIn(with: credential) { (_, error) in
-
+        
         if let error = error {
           print(error)
           return
         }
         
         self.createDataBase(isApple: true, isFB: false) { [weak self] result in
+          guard let strongSelf = self else { return }
+          switch result {
             
-            guard let strongSelf = self else { return }
+          case .success(let success):
             
-            switch result {
-              
-            case .success(let success):
-              
-              UserManager.shared.isTourist = false
-              UserManager.shared.updatefcmToken()
-              LKProgressHUD.dismiss()
-              LKProgressHUD.showSuccess(text: success, controller: strongSelf)
-        
-              strongSelf.gotoMap(viewController: strongSelf)
-              
-            case .failure(let error):
-              
-              LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
-              
-            }
+            UserManager.shared.isTourist = false
+            UserManager.shared.updatefcmToken()
+            LKProgressHUD.dismiss()
+            LKProgressHUD.showSuccess(text: success, controller: strongSelf)
+            strongSelf.gotoMap(viewController: strongSelf)
+            
+          case .failure(let error):
+            
+            LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
           }
+        }
       }
     }
   }
-
+  
   func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-    // Handle error.
     print("Sign in with Apple errored: \(error)")
   }
-
-  func gotoMap(viewController: UIViewController) {
-    
-    guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? TabBarViewController else { return }
-        self.view.window?.rootViewController = mapVc
-//        viewController.present(mapVc, animated: true, completion: nil)
-    }
   
+  func gotoMap(viewController: UIViewController) {
+    guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? TabBarViewController else { return }
+    self.view.window?.rootViewController = mapVc
+  }
 }

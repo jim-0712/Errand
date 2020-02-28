@@ -16,8 +16,8 @@ class RequesterViewController: UIViewController {
     super.viewDidLoad()
     self.view.backgroundColor = UIColor.LG1
     
-    NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("acceptRequester"), object: nil)
-    NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("refuseRequester"), object: nil)
+//    NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("acceptRequester"), object: nil)
+//    NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("refuseRequester"), object: nil)
     navigationController?.navigationItem.largeTitleDisplayMode = .always
   }
   
@@ -138,38 +138,29 @@ class RequesterViewController: UIViewController {
         } else {
           
           if taskCount[0].requester.count == 0 {
-            
             strongSelf.userInfo = []
             strongSelf.requesterTable.reloadData()
+            
           } else {
             
             for count in 0 ..< taskCount[0].requester.count {
-              
               UserManager.shared.readData(uid: taskCount[0].requester[count]) { result in
-                
                 switch result {
                   
                 case .success(let accountInfo):
-                  
+                
                   strongSelf.storeInfo = []
-                  
                   strongSelf.storeInfo.append(accountInfo)
-                  
                   if count == taskCount[0].requester.count - 1 {
-                    
                     LKProgressHUD.dismiss()
-                    
                     strongSelf.userInfo = strongSelf.storeInfo
-                    
                     UserManager.shared.currentUserInfo = currentUser
                   }
                   
                 case .failure(let error):
                   
                   LKProgressHUD.dismiss()
-                  
                   LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
-                  
                 }
               }
             }
@@ -179,7 +170,6 @@ class RequesterViewController: UIViewController {
       case .failure(let error):
         
         LKProgressHUD.dismiss()
-        
         LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
       }
     }

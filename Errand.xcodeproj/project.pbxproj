@@ -149,7 +149,7 @@
 		FB387C2023CEEF0F00B6D8C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FB387C2523CEEF1000B6D8C4 /* ErrandTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ErrandTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB387C2923CEEF1000B6D8C4 /* ErrandTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrandTests.swift; sourceTree = "<group>"; };
-		FB387C2B23CEEF1000B6D8C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FB387C2B23CEEF1000B6D8C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = ErrandTests/Info.plist; sourceTree = SOURCE_ROOT; };
 		FB387C3023CEEF1000B6D8C4 /* ErrandUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ErrandUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB387C3423CEEF1000B6D8C4 /* ErrandUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrandUITests.swift; sourceTree = "<group>"; };
 		FB387C3623CEEF1000B6D8C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1203,7 +1203,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Errand/Errand.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = 6V9XMJR84F;
 				INFOPLIST_FILE = Errand/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1224,7 +1224,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Errand/Errand.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = 6V9XMJR84F;
 				INFOPLIST_FILE = Errand/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

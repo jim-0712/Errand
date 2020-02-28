@@ -17,26 +17,28 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OU3-yT-zlV">
-                        <rect key="frame" x="202.5" y="41" width="38" height="40"/>
+                        <rect key="frame" x="202.5" y="31" width="38" height="40"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="40" id="98d-zp-Fwd"/>
                         </constraints>
                         <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="19"/>
-                        <color key="tintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="tintColor" red="0.70280393835616439" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <state key="normal" title="登出"/>
                         <connections>
                             <action selector="tapOnLogOut:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="mLx-Zu-l8g"/>
                         </connections>
                     </button>
                 </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstItem="OU3-yT-zlV" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Nip-mz-OIi"/>
                     <constraint firstItem="OU3-yT-zlV" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="Nkj-Kv-LkN"/>
-                    <constraint firstAttribute="bottom" secondItem="OU3-yT-zlV" secondAttribute="bottom" constant="30" id="iTG-jR-QEe"/>
-                    <constraint firstItem="OU3-yT-zlV" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="30" id="pGm-zL-v6E"/>
+                    <constraint firstAttribute="bottom" secondItem="OU3-yT-zlV" secondAttribute="bottom" constant="20" id="iTG-jR-QEe"/>
+                    <constraint firstItem="OU3-yT-zlV" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="20" id="pGm-zL-v6E"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <point key="canvasLocation" x="221.01449275362322" y="132.92410714285714"/>
         </tableViewCell>
