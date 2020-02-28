@@ -15,7 +15,7 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -57,9 +57,9 @@
 	<key>NSCameraUsageDescription</key>
 	<string>您的相機將用於此app使用，用來存取照片</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Errand想存取您的位置，方便您使用定位功能來查詢附近任務</string>
+	<string>errandBee想存取您的位置，方便您使用定位功能來查詢附近任務</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Errand想存取您的位置，方便您使用定位功能來查詢附近任務</string>
+	<string>errandBee想存取您的位置，方便您使用定位功能來查詢附近任務</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>您的影音檔案將用於任務環境做使用</string>
 	<key>Privacy – Photo Library Usage Description</key>
