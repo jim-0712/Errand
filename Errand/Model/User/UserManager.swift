@@ -311,23 +311,25 @@ class UserManager {
             
             completion(.failure(FireBaseUpdateError.updateError))
           } else {
-            self.readData(uid: data.uid) { [weak self] result in
-              
-              guard let strongSelf = self else { return }
-              
-              switch result {
-                
-              case .success(let dataReturn):
-                
-                strongSelf.currentUserInfo = dataReturn
-                
-                completion(.success(dataReturn))
-                
-              case .failure:
-                
-                completion(.failure(FireBaseUpdateError.updateError))
-              }
-            }
+            
+            completion(.success(data))
+//            self.readData(uid: data.uid) { [weak self] result in
+//
+//              guard let strongSelf = self else { return }
+//
+//              switch result {
+//
+//              case .success(let dataReturn):
+//
+//                strongSelf.currentUserInfo = dataReturn
+//
+//                completion(.success(dataReturn))
+//
+//              case .failure:
+//
+//                completion(.failure(FireBaseUpdateError.updateError))
+//              }
+//            }
             
           }
         })

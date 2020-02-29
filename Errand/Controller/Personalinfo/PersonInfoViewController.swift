@@ -158,17 +158,18 @@ class PersonInfoViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    readTask()
     UserManager.shared.isEditNameEmpty = true
     setUpTableView()
     setUpImagePicker()
     setUpIndicatorView()
     setUpNavigationItem()
     historyContainer.alpha = 0.0
-    self.navigationItem.setHidesBackButton(true, animated: true)
-    NotificationCenter.default.addObserver(self, selector: #selector(backToEdit), name: Notification.Name("CompleteEdit"), object: nil)
-    navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(back))
-    navigationItem.leftBarButtonItem?.tintColor = .black
+    
+//    self.navigationItem.setHidesBackButton(true, animated: true)
+//    NotificationCenter.default.addObserver(self, selector: #selector(backToEdit), name: Notification.Name("CompleteEdit"), object: nil)
+//    navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(back))
+//    navigationItem.leftBarButtonItem?.tintColor = .black
+  
   }
   
   @objc func back() {
@@ -197,6 +198,7 @@ class PersonInfoViewController: UIViewController {
     cornerView.clipsToBounds = true
     
     if UserManager.shared.isRequester {
+      readTask()
       btnBackgroundView.isHidden = false
     } else {
       btnBackgroundView.isHidden = true
@@ -220,12 +222,17 @@ class PersonInfoViewController: UIViewController {
   
   func setUpNavigationItem() {
     
-    if !isRequester {
+    if !UserManager.shared.isRequester {
       settingOff = UIBarButtonItem(title: "編輯", style: .plain, target: self, action: #selector(tapSet))
       settingOn = UIBarButtonItem(image: UIImage(named: "tick-2"), style: .plain, target: self, action: #selector(tapSet))
       settingOn.tintColor = .black
       settingOff.tintColor = .black
       self.navigationItem.rightBarButtonItems = [self.settingOff]
+    } else {
+      self.navigationItem.setHidesBackButton(true, animated: true)
+      NotificationCenter.default.addObserver(self, selector: #selector(backToEdit), name: Notification.Name("CompleteEdit"), object: nil)
+      navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(back))
+      navigationItem.leftBarButtonItem?.tintColor = .black
     }
   }
   

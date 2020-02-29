@@ -50,4 +50,7 @@ extension PersonDetailTableViewCell: UITextViewDelegate {
   func textViewDidEndEditing(_ textView: UITextView) {
     self.delegate?.changeName(tableViewCell: self, name: textView.text, isEdit: false)
   }
+  func textViewDidChange(_ textView: UITextView) {
+    self.delegate?.changeName(tableViewCell: self, name: textView.text, isEdit: false)
+  }
 }
