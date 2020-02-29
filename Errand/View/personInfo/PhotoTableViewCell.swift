@@ -19,6 +19,9 @@ class PhotoTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
         
     }
+  @IBOutlet weak var leftBeeImage: UIImageView!
+  
+  @IBOutlet weak var rightBeeImage: UIImageView!
   
   @IBOutlet weak var personPhotoImage: UIImageView!
   

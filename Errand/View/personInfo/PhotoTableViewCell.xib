@@ -51,12 +51,29 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bee-2" translatesAutoresizingMaskIntoConstraints="NO" id="sDe-Rb-Q2H">
+                        <rect key="frame" x="40" y="51" width="40" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="40" id="Xwf-0h-mQQ"/>
+                            <constraint firstAttribute="height" constant="40" id="eM0-JZ-FjD"/>
+                        </constraints>
+                    </imageView>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Beeee" translatesAutoresizingMaskIntoConstraints="NO" id="3RA-b5-AfO">
+                        <rect key="frame" x="505" y="160.5" width="45" height="45"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="45" id="AUB-HF-8RQ"/>
+                            <constraint firstAttribute="height" constant="45" id="bhr-Aj-ZbO"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstItem="RPV-Fm-5Tw" firstAttribute="top" secondItem="k7y-IV-ZPq" secondAttribute="bottom" constant="16" id="1eb-W2-B1I"/>
                     <constraint firstAttribute="bottom" secondItem="Et5-as-OLe" secondAttribute="bottom" id="3gP-hJ-gdS"/>
+                    <constraint firstAttribute="trailing" secondItem="3RA-b5-AfO" secondAttribute="trailing" constant="40" id="A90-Ql-L6o"/>
                     <constraint firstItem="N47-Q2-FE7" firstAttribute="leading" secondItem="k7y-IV-ZPq" secondAttribute="trailing" constant="-25" id="Ezk-Xd-XVu"/>
+                    <constraint firstItem="sDe-Rb-Q2H" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="20" id="IjH-N9-J6X"/>
+                    <constraint firstItem="3RA-b5-AfO" firstAttribute="centerY" secondItem="RPV-Fm-5Tw" secondAttribute="centerY" id="K79-qX-gu4"/>
                     <constraint firstItem="RPV-Fm-5Tw" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="Kj5-9O-8x8"/>
                     <constraint firstItem="k7y-IV-ZPq" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="40" id="Lsj-8w-O1X"/>
                     <constraint firstItem="Et5-as-OLe" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="Q6G-Vk-u68"/>
@@ -66,6 +83,7 @@
                     <constraint firstItem="RPV-Fm-5Tw" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="fcv-We-4aK"/>
                     <constraint firstItem="Et5-as-OLe" firstAttribute="top" secondItem="RPV-Fm-5Tw" secondAttribute="bottom" constant="4" id="pR9-P4-eBl"/>
                     <constraint firstAttribute="trailing" secondItem="Et5-as-OLe" secondAttribute="trailing" constant="16" id="q3S-LP-61u"/>
+                    <constraint firstItem="sDe-Rb-Q2H" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="40" id="saJ-Dx-3Em"/>
                     <constraint firstItem="N47-Q2-FE7" firstAttribute="centerY" secondItem="k7y-IV-ZPq" secondAttribute="centerY" constant="40" id="ykc-eo-IuD"/>
                 </constraints>
             </tableViewCellContentView>
@@ -74,13 +92,17 @@
             <connections>
                 <outlet property="choosePhotoBtn" destination="N47-Q2-FE7" id="jnc-aT-yZn"/>
                 <outlet property="emailLabel" destination="Et5-as-OLe" id="Duw-Z3-lGw"/>
+                <outlet property="leftBeeImage" destination="sDe-Rb-Q2H" id="hIL-Kb-ixC"/>
                 <outlet property="nickNameLabel" destination="RPV-Fm-5Tw" id="M5b-q4-Bz8"/>
                 <outlet property="personPhotoImage" destination="k7y-IV-ZPq" id="QTa-Mq-avS"/>
+                <outlet property="rightBeeImage" destination="3RA-b5-AfO" id="4Si-VE-Fqi"/>
             </connections>
             <point key="canvasLocation" x="56.521739130434788" y="201.22767857142856"/>
         </tableViewCell>
     </objects>
     <resources>
+        <image name="Beeee" width="800" height="800"/>
+        <image name="bee-2" width="512" height="512"/>
         <image name="photo-camera" width="512" height="512"/>
         <image name="photographer" width="512" height="512"/>
     </resources>
