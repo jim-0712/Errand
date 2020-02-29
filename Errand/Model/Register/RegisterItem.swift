@@ -54,11 +54,11 @@ struct AccountInfo {
   
   var nickname: String
   
-  var gender: Int
+  var noJudgeCount: Int
   
   var task: [String]
   
-  var friends: [String]
+  var minusStar: Double
   
   var photo: String
   
@@ -86,11 +86,11 @@ struct AccountInfo {
               
               "nickname": nickname,
               
-              "gender": gender,
+              "noJudgeCount": noJudgeCount,
               
               "task": task,
               
-              "friends": friends,
+              "minusStar": minusStar,
               
               "photo": photo,
               

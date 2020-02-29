@@ -32,6 +32,8 @@ class MissionPersonTableViewCell: UITableViewCell {
     
     personImage.loadImage(personURL, placeHolder: UIImage(named: "photographer"))
     
+    personImage.contentMode = .scaleAspectFill
+    
     nickName.text = name
   }
 }

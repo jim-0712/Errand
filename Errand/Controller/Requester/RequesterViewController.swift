@@ -16,8 +16,8 @@ class RequesterViewController: UIViewController {
     super.viewDidLoad()
     self.view.backgroundColor = UIColor.LG1
     
-    NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("acceptRequester"), object: nil)
-    NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("refuseRequester"), object: nil)
+//    NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("acceptRequester"), object: nil)
+//    NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("refuseRequester"), object: nil)
     navigationController?.navigationItem.largeTitleDisplayMode = .always
   }
   
@@ -32,19 +32,14 @@ class RequesterViewController: UIViewController {
     if UserManager.shared.isTourist {
       
       noRequesterLabel.text = "請先去個人頁登入享有功能"
-      
+    
     } else if UserManager.shared.currentUserInfo?.status == 0 {
-      
       noRequesterLabel.text = "當前沒有任務                                        趕快去新增任務吧"
-      //    requesterTable.backgroundColor = .clear
-      
     } else if UserManager.shared.currentUserInfo?.status == 2 {
       
       noRequesterLabel.text = "當前您是任務接受者      沒有申請者"
-      //    requesterTable.backgroundColor = .clear
     } else {
       noRequesterLabel.text = ""
-      //    requesterTable.backgroundColor = .clear
       readRequester()
     }
     NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
@@ -88,9 +83,9 @@ class RequesterViewController: UIViewController {
     requesterTable.delegate = self
     requesterTable.dataSource = self
     refreshControl = UIRefreshControl()
+    requesterTable.separatorStyle = .none
     requesterTable.addSubview(refreshControl)
     refreshControl.addTarget(self, action: #selector(loadData), for: .valueChanged)
-    requesterTable.separatorStyle = .none
     requesterTable.rowHeight = UITableView.automaticDimension
     requesterTable.register(UINib(nibName: "RequesterTableViewCell", bundle: nil), forCellReuseIdentifier: "requester")
   }
@@ -143,38 +138,29 @@ class RequesterViewController: UIViewController {
         } else {
           
           if taskCount[0].requester.count == 0 {
-            
             strongSelf.userInfo = []
             strongSelf.requesterTable.reloadData()
+            
           } else {
             
             for count in 0 ..< taskCount[0].requester.count {
-              
               UserManager.shared.readData(uid: taskCount[0].requester[count]) { result in
-                
                 switch result {
                   
                 case .success(let accountInfo):
-                  
+                
                   strongSelf.storeInfo = []
-                  
                   strongSelf.storeInfo.append(accountInfo)
-                  
                   if count == taskCount[0].requester.count - 1 {
-                    
                     LKProgressHUD.dismiss()
-                    
                     strongSelf.userInfo = strongSelf.storeInfo
-                    
                     UserManager.shared.currentUserInfo = currentUser
                   }
                   
                 case .failure(let error):
                   
                   LKProgressHUD.dismiss()
-                  
                   LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
-                  
                 }
               }
             }
@@ -184,7 +170,6 @@ class RequesterViewController: UIViewController {
       case .failure(let error):
         
         LKProgressHUD.dismiss()
-        
         LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
       }
     }
@@ -211,7 +196,16 @@ extension RequesterViewController: UITableViewDelegate, UITableViewDataSource {
     
     guard let cell = tableView.dequeueReusableCell(withIdentifier: "requester", for: indexPath) as? RequesterTableViewCell else { return UITableViewCell() }
     
-    cell.setUp(nickName: userInfo[indexPath.row].nickname, starcount: 4.5, image: userInfo[indexPath.row].photo, index: indexPath.row)
+    let user = userInfo[indexPath.row]
+    var averageStar = 0.0
+    var noJudge = false
+    if user.taskCount == user.noJudgeCount {
+      noJudge = true
+    } else {
+      averageStar = (user.totalStar / Double(user.taskCount - user.noJudgeCount)) - user.minusStar
+    }
+    
+    cell.setUp(nickName: user.nickname, starcount: averageStar, image: userInfo[indexPath.row].photo, index: indexPath.row, taskCount: user.taskCount, noJudge: noJudge)
     
     cell.delegate = self
     

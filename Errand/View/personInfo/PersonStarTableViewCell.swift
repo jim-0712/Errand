@@ -46,15 +46,16 @@ class PersonStarTableViewCell: UITableViewCell {
       starView.isHidden = false
     }
     
-    if averageStar == 0.01 {
-      newUserLabel.text = "尚未被評價"
-    }
-    
     if UserManager.shared.isTourist {
       newUserLabel.text = "遊客"
     } else {
-      newUserLabel.text = "此用戶為新用戶"
+      
+      guard let user = UserManager.shared.currentUserInfo else { return }
+      if user.taskCount - user.noJudgeCount == 0 {
+        newUserLabel.text = "此用戶尚未被評價"
+      } else {
+        newUserLabel.text = "此用戶為新用戶"
+      }
     }
   }
-    
 }

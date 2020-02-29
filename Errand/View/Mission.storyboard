@@ -931,7 +931,6 @@
                                         <state key="normal" title="修改完成"/>
                                         <connections>
                                             <action selector="fixAct:" destination="aZU-mc-oHp" eventType="touchUpInside" id="VRq-hS-RdD"/>
-                                            <action selector="postAct:" destination="aZU-mc-oHp" eventType="touchUpInside" id="75f-JY-WgU"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yWz-EO-YVB">

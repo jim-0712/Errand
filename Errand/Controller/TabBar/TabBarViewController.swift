@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 import MarqueeLabel
 
 private enum Tab {
@@ -102,6 +103,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     
     delegate = self
  
+    setUpListener()
   }
   
   let notiView = UIView()
@@ -109,6 +111,43 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
   let lengthyLabel = MarqueeLabel()
   
   let alert = UIImageView()
+  
+  private var reference: CollectionReference?
+  
+  let dbF = Firestore.firestore()
+  
+  func setUpListener() {
+    guard let uid = Auth.auth().currentUser?.uid else { return }
+    
+    dbF.collection("Users").document(uid).addSnapshotListener { querySnapshot, error in
+      guard querySnapshot != nil else {
+        print("Error listening for channel updates: \(error?.localizedDescription ?? "No error")")
+        return
+      }
+      guard let quary = querySnapshot?.data() else { return }
+      
+      guard let onTask = quary["onTask"] as? Bool,
+        let email = quary["email"] as? String,
+        let nickname = quary["nickname"] as? String,
+        let noJudgeCount = quary["noJudgeCount"] as? Int,
+        let task = quary["task"] as? [String],
+        let minusStar = quary["minusStar"] as? Double,
+        let photo = quary["photo"] as? String,
+        let blacklist = quary["blacklist"] as? [String],
+        let report = quary["report"] as? Int,
+        let fcmToken = quary["fcmToken"] as? String,
+        let status = quary["status"] as? Int,
+        let about = quary["about"] as? String,
+        let totalStar = quary["totalStar"] as? Double,
+        let taskCount = quary["taskCount"] as? Int,
+        let uid = quary["uid"] as? String else { return }
+      
+        let dataReturn = AccountInfo(email: email, nickname: nickname, noJudgeCount: noJudgeCount, task: task, minusStar: minusStar, photo: photo, report: report, blacklist: blacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
+      
+      UserManager.shared.currentUserInfo = dataReturn
+  
+    }
+  }
   
   func setUpView() {
     notiView.frame = CGRect(x: 10, y: 35, width: self.view.frame.size.width, height: 50)

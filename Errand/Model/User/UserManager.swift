@@ -235,9 +235,9 @@ class UserManager {
     guard let onTask = quary.documents.first?.data()["onTask"] as? Bool,
       let email = quary.documents.first?.data()["email"] as? String,
       let nickname = quary.documents.first?.data()["nickname"] as? String,
-      let gender = quary.documents.first?.data()["gender"] as? Int,
+      let noJudgeCount = quary.documents.first?.data()["noJudgeCount"] as? Int,
       let task = quary.documents.first?.data()["task"] as? [String],
-      let friends = quary.documents.first?.data()["friends"] as? [String],
+      let minusStar = quary.documents.first?.data()["minusStar"] as? Double,
       let photo = quary.documents.first?.data()["photo"] as? String,
       let blacklist = quary.documents.first?.data()["blacklist"] as? [String],
       let report = quary.documents.first?.data()["report"] as? Int,
@@ -248,7 +248,7 @@ class UserManager {
       let taskCount = quary.documents.first?.data()["taskCount"] as? Int,
       let uid = quary.documents.first?.data()["uid"] as? String else { return }
     
-      let dataReturn = AccountInfo(email: email, nickname: nickname, gender: gender, task: task, friends: friends, photo: photo, report: report, blacklist: blacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
+      let dataReturn = AccountInfo(email: email, nickname: nickname, noJudgeCount: noJudgeCount, task: task, minusStar: minusStar, photo: photo, report: report, blacklist: blacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
     
       completion(.success(dataReturn))
   }
@@ -452,9 +452,9 @@ class UserManager {
       guard let onTask = data["onTask"] as? Bool,
       let email = data["email"] as? String,
       let nickname = data["nickname"] as? String,
-      let gender = data["gender"] as? Int,
+      let noJudgeCount = data["noJudgeCount"] as? Int,
       let task = data["task"] as? [String],
-      let friends = data["friends"] as? [String],
+      let minusStar = data["minusStar"] as? Double,
       let photo = data["photo"] as? String,
       let blacklist = data["blacklist"] as? [String],
       let report = data["report"] as? Int,
@@ -465,7 +465,7 @@ class UserManager {
       let taskCount = data["taskCount"] as? Int,
       let uid = data["uid"] as? String else { return }
       
-      let dataReturn = AccountInfo(email: email, nickname: nickname, gender: gender, task: task, friends: friends, photo: photo, report: report, blacklist: blacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
+      let dataReturn = AccountInfo(email: email, nickname: nickname, noJudgeCount: noJudgeCount, task: task, minusStar: minusStar, photo: photo, report: report, blacklist: blacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
       
       completion(.success(dataReturn))
     }

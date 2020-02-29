@@ -15,11 +15,11 @@ class BackgroundManager {
   
   func setUpView(view: UIView) -> CAGradientLayer {
       
-      let topColor = UIColor(red: 0xff/255, green: 0xff/255, blue: 0xff/255, alpha: 1)
+    let topColor = UIColor.white
     
-      let buttomColor = UIColor(red: 0x87/255, green: 0xce/255, blue: 0xeb/255, alpha: 1)
+    let buttomColor = UIColor.Y1
     
-      let gradientColors = [topColor.cgColor, buttomColor.cgColor]
+    let gradientColors = [topColor.cgColor, buttomColor?.cgColor]
        
       //定义每种颜色所在的位置
       let gradientLocations: [NSNumber] = [0.0, 1.0]
@@ -27,7 +27,7 @@ class BackgroundManager {
       //创建CAGradientLayer对象并设置参数
       let gradientLayer = CAGradientLayer()
     
-      gradientLayer.colors = gradientColors
+    gradientLayer.colors = gradientColors as [Any]
     
       gradientLayer.locations = gradientLocations
        

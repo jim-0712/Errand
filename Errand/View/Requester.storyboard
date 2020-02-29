@@ -110,19 +110,32 @@
                                                         <constraint firstAttribute="height" constant="1" id="Acz-AV-B1u"/>
                                                     </constraints>
                                                 </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s5U-fe-sOz">
+                                                    <rect key="frame" x="88" y="49" width="200" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="200" id="6nj-Ea-d8g"/>
+                                                        <constraint firstAttribute="height" constant="30" id="uIv-O4-chW"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="7RH-gB-u0R" firstAttribute="top" secondItem="JXV-Od-Wmp" secondAttribute="top" constant="30" id="3q6-6a-YEu"/>
                                                 <constraint firstItem="EMG-Gi-yiU" firstAttribute="centerY" secondItem="7RH-gB-u0R" secondAttribute="centerY" constant="6" id="4Rl-jA-7JW"/>
+                                                <constraint firstItem="s5U-fe-sOz" firstAttribute="leading" secondItem="7RH-gB-u0R" secondAttribute="trailing" constant="30" id="D1v-op-ldt"/>
                                                 <constraint firstItem="EMG-Gi-yiU" firstAttribute="leading" secondItem="7RH-gB-u0R" secondAttribute="trailing" constant="30" id="G3z-bl-JKl"/>
                                                 <constraint firstAttribute="bottom" secondItem="7RH-gB-u0R" secondAttribute="bottom" constant="30" id="ZFf-nV-Hh9"/>
                                                 <constraint firstItem="7RH-gB-u0R" firstAttribute="leading" secondItem="JXV-Od-Wmp" secondAttribute="leading" constant="16" id="ZOd-Zw-ibS"/>
+                                                <constraint firstItem="s5U-fe-sOz" firstAttribute="centerY" secondItem="7RH-gB-u0R" secondAttribute="centerY" id="eWU-Uk-EGB"/>
                                                 <constraint firstAttribute="trailing" secondItem="kKq-3j-fc8" secondAttribute="trailing" constant="16" id="gRg-N6-MF5"/>
                                                 <constraint firstAttribute="bottom" secondItem="kKq-3j-fc8" secondAttribute="bottom" id="gdo-1A-8zx"/>
                                                 <constraint firstItem="kKq-3j-fc8" firstAttribute="leading" secondItem="JXV-Od-Wmp" secondAttribute="leading" constant="16" id="keI-P4-Rkh"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="describeLabel" destination="s5U-fe-sOz" id="7bm-gi-lUu"/>
                                             <outlet property="detailLabel" destination="7RH-gB-u0R" id="jaL-Jc-0GH"/>
                                             <outlet property="starView" destination="EMG-Gi-yiU" id="bQu-aZ-eWX"/>
                                         </connections>

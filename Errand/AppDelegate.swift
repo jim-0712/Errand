@@ -137,9 +137,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
   }
   
   @objc func backToRootRefuse () {
-    let storyboard = UIStoryboard(name: "Mission", bundle: nil)
+    _ = UIStoryboard(name: "Mission", bundle: nil)
     guard let tabBarController = self.window?.rootViewController as? TabBarViewController,
-      let navi = tabBarController.selectedViewController as? UINavigationController else {
+      let _ = tabBarController.selectedViewController as? UINavigationController else {
         
         return
     }
@@ -150,7 +150,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     
     guard let tabBarController = self.window?.rootViewController as? TabBarViewController,
       let navi = tabBarController.selectedViewController as? UINavigationController else {
-        
         return
     }
     
@@ -194,7 +193,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
         }
         
         if navi.visibleViewController is MissionDetailViewController == false {
-          
+      
           if tabBarController.presentedViewController == nil {
             tabBarController.dismiss(animated: true) {
               //        navi.popViewController(animated: true)

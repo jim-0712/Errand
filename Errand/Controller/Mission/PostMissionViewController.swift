@@ -209,14 +209,13 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
   }
   
   @IBAction func postAct(_ sender: Any) {
-    
-    postMissionAct()
-    
+    postMissionAct(isPost: true)
   }
+  
   @IBAction func fixAct(_ sender: Any) {
-    postMissionAct()
-    
+    postMissionAct(isPost: false)
   }
+  
   @IBAction func deleteAct(_ sender: Any) {
     
     guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -232,7 +231,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
         group.leave()
       case .failure:
         group.leave()
-        print("delete Fail")
       }
     }
     
@@ -242,7 +240,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
         group.leave()
       case .failure:
         group.leave()
-        print("delete Fail")
+
       }
     }
     
@@ -261,7 +259,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
     LKProgressHUD.show(controller: tabVC)
   }
   
-  func postMissionAct() {
+  func postMissionAct(isPost: Bool) {
     
     guard let price = priceTextField.text,
       let content = missionContentTextView.text else { return }
@@ -276,8 +274,12 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
       SwiftMes.shared.showErrorMessage(body: "描述內容不得為空", seconds: 1.0)
     } else {
       
-      self.preventTap()
-      
+      if isPost {
+        self.preventTap()
+      } else {
+        LKProgressHUD.show(controller: self)
+      }
+
       self.fileURL = []
       
       let group: DispatchGroup = DispatchGroup()
@@ -285,7 +287,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
       if luke.count == 0 {
         
       } else {
-        
         for _ in 0 ..< luke.count {
           group.enter()
         }
@@ -373,12 +374,10 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
         }
       }
       group.notify(queue: DispatchQueue.main) {
-        print("ya")
         TaskManager.shared.address = ""
         self.createDataBase()
       }
     }
-    
   }
   
   func createDataBase() {
@@ -417,7 +416,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
             
           case .success:
             
-            NotificationCenter.default.post(name: Notification.Name("postMission"), object: nil)
+//            NotificationCenter.default.post(name: Notification.Name("postMission"), object: nil)
             UserManager.shared.currentUserInfo?.status = 1
             LKProgressHUD.dismiss()
             SwiftMes.shared.showSuccessMessage(body: "返回任務頁面中", seconds: 1.7)
@@ -492,7 +491,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
   }
   
   @IBAction func addLocationAct(_ sender: Any) {
-    
     performSegue(withIdentifier: "addlocation", sender: nil)
   }
   
@@ -523,7 +521,6 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
     if collectionView == self.missionGroupCollectionView {
       return TaskManager.shared.taskClassified.count - 1
     } else {
-      print(luke.count + 1)
       return luke.count + 1
     }
   }
@@ -535,16 +532,10 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
       guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "group", for: indexPath) as? MissionGroupCollectionViewCell else { return UICollectionViewCell() }
       
       cell.setUpContent(label: TaskManager.shared.taskClassified[indexPath.row + 1].title, color: TaskManager.shared.taskClassified[indexPath.row + 1].color)
-      
-      if judge[indexPath.row] {
-        cell.contentView.backgroundColor = UIColor(red: 246.9/255.0, green: 212.0/255.0, blue: 95.0/255.0, alpha: 1.0)
-        cell.layer.borderWidth =  1.0
-        cell.layer.borderColor = UIColor.clear.cgColor
-      } else {
-        cell.contentView.backgroundColor = UIColor.white
-        cell.layer.borderWidth =  0.0
-        cell.layer.borderColor = UIColor.white.cgColor
-      }
+
+      cell.contentView.backgroundColor = judge[indexPath.row] ? UIColor(red: 246.9/255.0, green: 212.0/255.0, blue: 95.0/255.0, alpha: 1.0) : .white
+      cell.layer.borderWidth = judge[indexPath.row] ? 1.0 : 0.0
+      cell.layer.borderColor = judge[indexPath.row] ? UIColor.clear.cgColor : UIColor.white.cgColor
       
       return cell
       
@@ -554,80 +545,59 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
       
       cell.delegate = self
       if luke.count == 0 {
-        guard let layers = cell.layer.sublayers else { return UICollectionViewCell() }
-        for layer in layers {
-          if let avPlayerLayer = layer as? AVPlayerLayer {
-            avPlayerLayer.removeFromSuperlayer()
-          }
-        }
-        
+        removeLayer(cell: cell)
         cell.indexRow = 0
-        cell.deleteBtn.isHidden = true
         cell.backgroundColor = .white
+        cell.deleteBtn.isHidden = true
         cell.addPhotoBtn.isHidden = false
-
-        cell.contentView.backgroundColor = .white
         cell.photoImageView.isHidden = true
+        cell.contentView.backgroundColor = .white
         return cell
         
       } else if indexPath.row != luke.count && ((luke[indexPath.row] as? UIImage) != nil) {
-        
-        cell.photoImageView.isHidden = false
-        cell.indexRow = indexPath.row
-        guard let layers = cell.layer.sublayers else { return UICollectionViewCell() }
-        for layer in layers {
-          if let avPlayerLayer = layer as? AVPlayerLayer {
-            avPlayerLayer.removeFromSuperlayer()
-          }
-        }
-        
+        removeLayer(cell: cell)
         guard let image = luke[indexPath.row] as? UIImage else { return UICollectionViewCell() }
-        cell.addPhotoBtn.isHidden = true
-        cell.deleteBtn.isHidden = false
         cell.backgroundColor = .clear
-        cell.photoImageView.contentMode = .scaleAspectFill
+        cell.deleteBtn.isHidden = false
+        cell.indexRow = indexPath.row
+        cell.addPhotoBtn.isHidden = true
         cell.photoImageView.image = image
+        cell.photoImageView.isHidden = false
         cell.contentView.backgroundColor = .white
+        cell.photoImageView.contentMode = .scaleAspectFill
         return cell
         
       } else if indexPath.row != luke.count && ((luke[indexPath.row] as? URL) != nil) {
-        cell.indexRow = indexPath.row
         cell.deleteBtn.isHidden = false
-        cell.contentView.backgroundColor = .black
+        cell.indexRow = indexPath.row
         cell.photoImageView.isHidden = true
+        cell.contentView.backgroundColor = .black
         guard let video = luke[indexPath.row] as? URL else { return UICollectionViewCell() }
-        
-        let playQueue = AVQueuePlayer()
-        let platItem = AVPlayerItem(url: video)
-        plaverLooper = AVPlayerLooper(player: playQueue, templateItem: platItem)
-        let playerLayer = AVPlayerLayer(player: playQueue)
-        
-        playerLayer.frame = cell.contentView.bounds
-        cell.layer.addSublayer(playerLayer)
-        
-        playQueue.play()
+        cell.setUpLooper(video: video)
         return cell
         
       } else {
-        
-        guard let layers = cell.layer.sublayers else { return UICollectionViewCell() }
-        for layer in layers {
-          if let avPlayerLayer = layer as? AVPlayerLayer {
-            avPlayerLayer.removeFromSuperlayer()
-          }
-        }
-        cell.contentView.backgroundColor = .white
-        cell.indexRow = indexPath.row
+        removeLayer(cell: cell)
         cell.deleteBtn.isHidden = true
+        cell.indexRow = indexPath.row
         cell.addPhotoBtn.isHidden = false
         cell.photoImageView.isHidden = true
+        cell.contentView.backgroundColor = .white
         return cell
       }
     }
   }
   
+  func removeLayer(cell: PhotoCollectionViewCell) {
+    guard let layers = cell.layer.sublayers else { return }
+    for layer in layers {
+      if let avPlayerLayer = layer as? AVPlayerLayer {
+        avPlayerLayer.removeFromSuperlayer()
+      }
+    }
+  }
+  
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    
     if collectionView == self.missionGroupCollectionView {
       selectIndex = indexPath.row
       judge = [Bool](repeating: false, count: 8)
@@ -635,7 +605,6 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
       missionGroupCollectionView.reloadData()
     }
   }
-  
 }
 
 extension PostMissionViewController: UICollectionViewDelegateFlowLayout {
@@ -683,7 +652,6 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
 
 extension PostMissionViewController: LocationManager {
   func locationReturn(viewController: AddLocationViewController, lat: Double, long: Double) {
-    
     self.lat = lat
     self.long = long
   }

@@ -19,6 +19,9 @@ class PhotoTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
         
     }
+  @IBOutlet weak var leftBeeImage: UIImageView!
+  
+  @IBOutlet weak var rightBeeImage: UIImageView!
   
   @IBOutlet weak var personPhotoImage: UIImageView!
   
@@ -31,6 +34,7 @@ class PhotoTableViewCell: UITableViewCell {
   func setUpView(personPhoto: String, nickName: String, email: String) {
     personPhotoImage.loadImage(personPhoto, placeHolder: UIImage(named: "photographer"))
     personPhotoImage.layer.cornerRadius = personPhotoImage.bounds.width / 2
+    personPhotoImage.contentMode = .scaleAspectFill
     nickNameLabel.text = nickName
     emailLabel.text = email
   }

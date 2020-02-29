@@ -38,6 +38,8 @@ class PersonalViewController: UIViewController {
   
   var totaltaskCount = 0
   
+  var noJudge = 0
+  
   var email = "遊客"
   
   var totalStar = 0.0
@@ -49,6 +51,8 @@ class PersonalViewController: UIViewController {
   var settingOn: UIBarButtonItem!
   
   var settingOff: UIBarButtonItem!
+  
+  let screenHeight = UIScreen.main.bounds.height
   
   @IBOutlet weak var cornerView: UIView!
   
@@ -68,7 +72,6 @@ class PersonalViewController: UIViewController {
       imagePickerController.delegate = self
       imagePickerController.allowsEditing = true
       imagePickerController.mediaTypes = [kUTTypeImage as String]
-      readJudge()
       totalStar = 0
       totaltaskCount = 0
     }
@@ -77,7 +80,8 @@ class PersonalViewController: UIViewController {
   override func viewWillLayoutSubviews() {
     super.viewWillLayoutSubviews()
     NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
-    cornerView.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 500, y: 340, width: 1000, height: 2000)
+    
+    cornerView.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 500, y: 340, width: 1000, height: 1000)
     cornerView.backgroundColor = UIColor.white
     backgroundImageView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 1000)
     backgroundImageView.image = UIImage(named: "Ice")
@@ -158,32 +162,6 @@ class PersonalViewController: UIViewController {
     
   }
   
-  func readJudge() {
-    
-    guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
-    
-    TaskManager.shared.readJudgeData(uid: uid) { result in
-      
-      switch result {
-      case .success(let judgeData):
-        
-        for count in 0 ..< judgeData.count {
-          
-          self.totalStar += judgeData[count].star
-        }
-        
-        self.totaltaskCount = judgeData.count
-        
-        LKProgressHUD.dismiss()
-        
-        self.infoTableView.reloadData()
-        
-      case .failure:
-        print("error")
-      }
-    }
-  }
-  
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
     cornerView.frame.origin.y = 340 - scrollView.contentOffset.y
   }
@@ -239,7 +217,7 @@ class PersonalViewController: UIViewController {
 
 extension PersonalViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
-  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [ UIImagePickerController.InfoKey : Any]) {
     
     preventTap()
     
@@ -312,15 +290,16 @@ extension PersonalViewController: UITableViewDataSource, UITableViewDelegate {
     
     if !tourist {
       
-      guard let name = UserManager.shared.currentUserInfo?.nickname,
-           let email = UserManager.shared.currentUserInfo?.email,
-           let aboutMe = UserManager.shared.currentUserInfo?.about,
-           let star = UserManager.shared.currentUserInfo?.totalStar else { return UITableViewCell() }
-      
-      self.name = name
-      self.about = aboutMe
-      self.email = email
-      self.minusStar = star
+      guard let userInfo = UserManager.shared.currentUserInfo  else { return UITableViewCell() }
+       
+      self.name = userInfo.nickname
+      self.about = userInfo.about
+      self.email = userInfo.email
+      self.minusStar = userInfo.minusStar
+      self.totalStar = userInfo.totalStar
+      self.totaltaskCount = userInfo.taskCount
+      self.noJudge = userInfo.noJudgeCount
+      self.minusStar = userInfo.minusStar
     }
       
     LKProgressHUD.dismiss()
@@ -358,8 +337,10 @@ extension PersonalViewController: UITableViewDataSource, UITableViewDelegate {
         
         cell.setUp(isFirst: true, averageStar: averageStar, titleLabel: profileDetail[1])
         
+      } else if  totaltaskCount - noJudge == 0 {
+        cell.setUp(isFirst: true, averageStar: averageStar, titleLabel: profileDetail[1])
       } else {
-        averageStar = (totalStar - minusStar) / Double(totaltaskCount)
+        averageStar = ((totalStar) / Double(totaltaskCount - noJudge)) - minusStar
         cell.setUp(isFirst: false, averageStar: averageStar, titleLabel: profileDetail[1])
       }
 
@@ -386,9 +367,7 @@ extension PersonalViewController: UITableViewDataSource, UITableViewDelegate {
         guard let strongSelf = self else { return }
         
         if tourist {
-          
           let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "main") as? ViewController
-          
           strongSelf.view.window?.rootViewController = signInVC
           
         } else {
@@ -439,12 +418,10 @@ extension PersonalViewController: ProfileManager {
 extension PersonalViewController: ProfileAboutManager {
   
   func changeAbout(tableViewCell: PersonAboutTableViewCell, about: String?, isEdit: Bool) {
-    
     guard let about = about else {
       self.isAbout = false
       return }
     self.about = about
     self.isAbout = true
-    
   }
 }

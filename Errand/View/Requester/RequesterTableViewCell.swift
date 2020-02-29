@@ -41,11 +41,25 @@ class RequesterTableViewCell: UITableViewCell {
   
   @IBOutlet weak var personBtn: UIButton!
   
+  @IBOutlet weak var describeLabel: UILabel!
+  
   @IBAction func goToPersonInfo(_ sender: Any) {
     
     self.delegate?.checkTheInfo(tableViewCell: self, index: index)
   }
-  func setUp(nickName: String, starcount: Double, image: String, index: Int) {
+  func setUp(nickName: String, starcount: Double, image: String, index: Int, taskCount: Int, noJudge: Bool) {
+    
+    if taskCount == 0 {
+      describeLabel.text = "此用戶為新用戶"
+      starView.isHidden = true
+    }
+    
+    if noJudge {
+      describeLabel.text = "此用戶尚未被評價"
+      starView.isHidden = true
+    } else {
+      describeLabel.isHidden = true
+    }
     
     self.index = index
     
