@@ -17,7 +17,12 @@ class ChildInfoViewController: UIViewController {
     readJudge()
     UserManager.shared.isEditNameEmpty = false
     NotificationCenter.default.addObserver(self, selector: #selector(changeEdit), name: Notification.Name("editing"), object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("hideLog"), object: nil)
     // Do any additional setup after loading the view.
+  }
+  
+  @objc func reload() {
+    infoTableView.reloadData()
   }
   
   @objc func changeEdit() {
@@ -152,14 +157,19 @@ class ChildInfoViewController: UIViewController {
 
 extension ChildInfoViewController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 4
+    
+    if UserManager.shared.isRequester {
+      return 3
+    } else {
+      return 4
+    }
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     let tourist = UserManager.shared.isTourist
     
-    if !tourist {
+    if !tourist && !UserManager.shared.isRequester{
       guard let userInfo = UserManager.shared.currentUserInfo else  { return UITableViewCell() }
       self.name = userInfo.nickname
       self.about = userInfo.about
@@ -168,7 +178,17 @@ extension ChildInfoViewController: UITableViewDelegate, UITableViewDataSource {
       self.minusStar = userInfo.minusStar
       self.noJudge = userInfo.noJudgeCount
       self.totaltaskCount = userInfo.taskCount
+    } else {
+      guard let requester = UserManager.shared.requesterInfo else  { return UITableViewCell() }
+      self.name = requester.nickname
+      self.about = requester.about
+      self.email = requester.email
+      self.totalStar = requester.totalStar
+      self.minusStar = requester.minusStar
+      self.noJudge = requester.noJudgeCount
+      self.totaltaskCount = requester.taskCount
     }
+    
     LKProgressHUD.dismiss()
     let data = [name, self.about]
     if indexPath.row == 0 {

@@ -22,7 +22,13 @@ class PersonInfoViewController: UIViewController {
   
   var indicatorCon: NSLayoutConstraint?
   
+  var requester: AccountInfo?
+  
+  var taskInfo: TaskInfo?
+  
   var isSetting = false
+  
+  var isRequester = false
   
   var photo = ""
   
@@ -40,6 +46,10 @@ class PersonInfoViewController: UIViewController {
   
   @IBOutlet weak var userContainer: UIView!
   
+  @IBOutlet weak var btnBackgroundView: UIView!
+  
+  @IBOutlet weak var backViewHeight: NSLayoutConstraint!
+  
   @IBAction func personInfoAct(_ sender: UIButton) {
     historyContainer.alpha = 0.0
     userContainer.alpha = 1.0
@@ -52,24 +62,124 @@ class PersonInfoViewController: UIViewController {
     startAnimate(sender: sender)
   }
   
+  @IBAction func acceptAct(_ sender: Any) {
+    guard let user = requester,
+      var taskInfo = taskInfo else { return }
+    
+    let chatRoomID = UUID().uuidString
+    
+    taskInfo.missionTaker = user.uid
+    taskInfo.requester = []
+    taskInfo.status = 1
+    taskInfo.chatRoom = chatRoomID
+    
+    TaskManager.shared.createChatRoom(chatRoomID: chatRoomID) { result in
+      
+      switch result {
+        
+      case .success:
+        
+        UserManager.shared.updateStatus(uid: user.uid, status: 2) { result in
+          
+          switch result {
+            
+          case .success:
+            
+            guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
+            
+            TaskManager.shared.updateWholeTask(task: taskInfo, uid: uid) { [weak self] result in
+              
+              guard let strongSelf = self else { return }
+              
+              switch result {
+                
+              case .success:
+                
+                NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
+                let sender = PushNotificationSender()
+                sender.sendPushNotification(to: user.fcmToken, body: "任務接受成功")
+                NotificationCenter.default.post(name: Notification.Name("test"), object: nil)
+                strongSelf.navigationController?.popViewController(animated: true)
+                
+              case .failure:
+                
+                TaskManager.shared.showAlert(title: "失敗", message: "請重新接受", viewController: strongSelf)
+              }
+            }
+          case .failure(let error):
+            
+            print(error.localizedDescription)
+          }
+        }
+        
+      case .failure(let error):
+        
+        print(error.localizedDescription)
+      }
+    }
+  }
+  
+  @IBAction func refuseAct(_ sender: Any) {
+    guard let user = requester,
+      var taskInfo = taskInfo else { return }
+    
+    taskInfo.requester = taskInfo.requester.filter({ info in
+      
+      if info != user.uid {
+        return true
+      } else {
+        return false
+      }
+    })
+    
+    taskInfo.refuse.append(user.uid)
+    guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
+    
+    TaskManager.shared.updateWholeTask(task: taskInfo, uid: uid) { [weak self] result in
+      
+      guard let strongSelf = self else { return }
+      
+      switch result {
+        
+      case .success:
+        
+        NotificationCenter.default.post(name: Notification.Name("refuseRequester"), object: nil)
+        let sender = PushNotificationSender()
+        sender.sendPushNotification(to: user.fcmToken, body: "您已被拒絕")
+        NotificationCenter.default.post(name: Notification.Name("test"), object: nil)
+        strongSelf.navigationController?.popViewController(animated: true)
+        
+      case .failure:
+        
+        TaskManager.shared.showAlert(title: "失敗", message: "請重新接受", viewController: strongSelf)
+      }
+    }
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
+    readTask()
     UserManager.shared.isEditNameEmpty = true
     setUpTableView()
     setUpImagePicker()
     setUpIndicatorView()
     setUpNavigationItem()
     historyContainer.alpha = 0.0
-    self.view.backgroundColor = UIColor.Y1
-    
+    self.navigationItem.setHidesBackButton(true, animated: true)
     NotificationCenter.default.addObserver(self, selector: #selector(backToEdit), name: Notification.Name("CompleteEdit"), object: nil)
+    navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(back))
+    navigationItem.leftBarButtonItem?.tintColor = .black
+  }
+  
+  @objc func back() {
+    self.navigationController?.popViewController(animated: false)
   }
   
   override func viewWillLayoutSubviews() {
     super.viewWillLayoutSubviews()
     cornerView.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 500, y: 340, width: 1000, height: 1000)
     cornerView.backgroundColor = UIColor.white
-     cornerView.layer.cornerRadius = cornerView.bounds.width / 2
+    cornerView.layer.cornerRadius = cornerView.bounds.width / 2
   }
   
   @objc func backToEdit() {
@@ -77,18 +187,64 @@ class PersonInfoViewController: UIViewController {
     isSetting = false
   }
   
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+  }
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    guard let user = UserManager.shared.currentUserInfo else { return }
-    photo = user.photo
+    
+    cornerView.clipsToBounds = true
+    
+    if UserManager.shared.isRequester {
+      btnBackgroundView.isHidden = false
+    } else {
+      btnBackgroundView.isHidden = true
+    }
+    
+    if isRequester {
+      UserManager.shared.isRequester = true
+      guard let requester = UserManager.shared.requesterInfo else { return }
+      photo = requester.photo
+      btnBackgroundView.isHidden = false
+      
+    } else {
+      UserManager.shared.isRequester = false
+      guard let user = UserManager.shared.currentUserInfo else { return }
+      photo = user.photo
+      btnBackgroundView.isHidden = true
+    }
+    
+    NotificationCenter.default.post(name: Notification.Name("hideLog"), object: nil)
   }
-
+  
   func setUpNavigationItem() {
-    settingOff = UIBarButtonItem(title: "編輯", style: .plain, target: self, action: #selector(tapSet))
-    settingOn = UIBarButtonItem(image: UIImage(named: "tick-2"), style: .plain, target: self, action: #selector(tapSet))
-    settingOn.tintColor = .black
-    settingOff.tintColor = .black
-    self.navigationItem.rightBarButtonItems = [self.settingOff]
+    
+    if !isRequester {
+      settingOff = UIBarButtonItem(title: "編輯", style: .plain, target: self, action: #selector(tapSet))
+      settingOn = UIBarButtonItem(image: UIImage(named: "tick-2"), style: .plain, target: self, action: #selector(tapSet))
+      settingOn.tintColor = .black
+      settingOff.tintColor = .black
+      self.navigationItem.rightBarButtonItems = [self.settingOff]
+    }
+  }
+  
+  func readTask() {
+    
+    guard let uid = Auth.auth().currentUser?.uid else { return }
+    
+    TaskManager.shared.readSpecificData(parameter: "uid", parameterString: uid) { result in
+      switch result {
+        
+      case .success(let data):
+        
+        self.taskInfo = data[0]
+        
+      case .failure(let error):
+        
+        print(error.localizedDescription)
+      }
+    }
   }
   
   @objc func tapSet() {
@@ -108,7 +264,7 @@ class PersonInfoViewController: UIViewController {
         self.navigationItem.setRightBarButtonItems([self.settingOn], animated: false)
         NotificationCenter.default.post(name: Notification.Name("editing"), object: nil)
       } else {
-      self.navigationItem.setRightBarButtonItems([self.settingOff], animated: false)
+        self.navigationItem.setRightBarButtonItems([self.settingOff], animated: false)
         NotificationCenter.default.post(name: Notification.Name("editing"), object: nil)
         isSetting = !isSetting
       }
@@ -178,15 +334,6 @@ class PersonInfoViewController: UIViewController {
     imagePickerAlertController.addAction(cancelAction)
     present(imagePickerAlertController, animated: true, completion: nil)
   }
-  
-  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    if segue.identifier == "userInfo" {
-      guard let userInfoVC = segue.destination as? ChildInfoViewController else { return }
-    }
-    if segue.identifier == "history" {
-      guard let historyVC = segue.destination as? ChildhistroyViewController else { return }
-    }
-  }
 }
 
 extension PersonInfoViewController: UITableViewDelegate, UITableViewDataSource {
@@ -195,10 +342,22 @@ extension PersonInfoViewController: UITableViewDelegate, UITableViewDataSource {
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    guard let cell = tableView.dequeueReusableCell(withIdentifier: "personPhoto", for: indexPath) as? PhotoTableViewCell,
-      let userInfo = UserManager.shared.currentUserInfo else { return UITableViewCell() }
+    var name = ""
+    var email = ""
     
-    cell.setUpView(personPhoto: photo, nickName: userInfo.nickname, email: userInfo.email)
+    guard let cell = tableView.dequeueReusableCell(withIdentifier: "personPhoto", for: indexPath) as? PhotoTableViewCell else { return UITableViewCell() }
+    
+    if isRequester {
+      guard let requester = UserManager.shared.requesterInfo else { return UITableViewCell() }
+      name = requester.nickname
+      email = requester.email
+    } else {
+      guard let userInfo = UserManager.shared.currentUserInfo else { return UITableViewCell() }
+      name = userInfo.nickname
+      email = userInfo.email
+    }
+    
+    cell.setUpView(isRequester: isRequester, personPhoto: photo, nickName: name, email: email)
     cell.choosePhotoBtn.addTarget(self, action: #selector(pickImage), for: .touchUpInside)
     cell.backgroundColor = .clear
     return cell

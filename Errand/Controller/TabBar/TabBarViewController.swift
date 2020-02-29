@@ -140,9 +140,10 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
         let about = quary["about"] as? String,
         let totalStar = quary["totalStar"] as? Double,
         let taskCount = quary["taskCount"] as? Int,
-        let uid = quary["uid"] as? String else { return }
+        let uid = quary["uid"] as? String,
+        let oppoBlacklist = quary["oppoBlacklist"] as? [String] else { return }
       
-        let dataReturn = AccountInfo(email: email, nickname: nickname, noJudgeCount: noJudgeCount, task: task, minusStar: minusStar, photo: photo, report: report, blacklist: blacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
+      let dataReturn = AccountInfo(email: email, nickname: nickname, noJudgeCount: noJudgeCount, task: task, minusStar: minusStar, photo: photo, report: report, blacklist: blacklist, oppoBlacklist: oppoBlacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
       
       UserManager.shared.currentUserInfo = dataReturn
   

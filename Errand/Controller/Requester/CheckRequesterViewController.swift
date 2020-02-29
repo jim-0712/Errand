@@ -18,8 +18,26 @@ class CheckRequesterViewController: UIViewController {
 
     setUpTableView()
     readTask()
-    self.tabBarController?.tabBar.barTintColor = UIColor.black
-    // Do any additional setup after loading the view.
+//    self.tabBarController?.tabBar.barTintColor = UIColor.black
+//    self.navigationItem.setHidesBackButton(true, animated: true)
+    self.navigationController?.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(test))
+    navigationItem.rightBarButtonItem?.tintColor = .black
+
+  }
+  
+  @objc func test() {
+    performSegue(withIdentifier: "test", sender: nil)
+  }
+  
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    if segue.identifier == "test" {
+      guard let userVC = segue.destination as? PersonInfoViewController,
+           let requesterInfo = requsterInfoData else { return }
+      UserManager.shared.isRequester = true
+      UserManager.shared.requesterInfo = requesterInfo
+      userVC.isRequester = true
+      userVC.requester = requesterInfo
+    }
   }
   
   var averageStar = 0.0
@@ -101,7 +119,7 @@ class CheckRequesterViewController: UIViewController {
   
   @IBAction func refuseAct(_ sender: Any) {
     
-    guard let user = requsterInfoData,
+ guard let user = requsterInfoData,
       var taskInfo = taskInfo else { return }
     
     taskInfo.requester = taskInfo.requester.filter({ info in
@@ -222,7 +240,7 @@ extension CheckRequesterViewController: UITableViewDelegate, UITableViewDataSour
       
       guard let cell = tableView.dequeueReusableCell(withIdentifier: "personPhoto", for: indexPath) as? PhotoTableViewCell else { return UITableViewCell() }
       
-      cell.setUpView(personPhoto: infoData.photo, nickName: infoData.nickname, email: infoData.email)
+      cell.setUpView(isRequester: true, personPhoto: infoData.photo, nickName: infoData.nickname, email: infoData.email)
       cell.choosePhotoBtn.isHidden = true
       
       return cell

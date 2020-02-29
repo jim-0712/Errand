@@ -18,16 +18,20 @@ class RequesterViewController: UIViewController {
     
 //    NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("acceptRequester"), object: nil)
 //    NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("refuseRequester"), object: nil)
-    navigationController?.navigationItem.largeTitleDisplayMode = .always
+    navigationItem.leftBarButtonItem?.tintColor = .black
+    navigationItem.rightBarButtonItem?.tintColor = .black
   }
   
   @objc func reload() {
     readRequester()
   }
   
+  var indexRow = 0
+  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     setUpTable()
+    UserManager.shared.isRequester = true
     
     if UserManager.shared.isTourist {
       
@@ -43,6 +47,11 @@ class RequesterViewController: UIViewController {
       readRequester()
     }
     NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
+  }
+  
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    UserManager.shared.isRequester = false
   }
   
   override func viewDidAppear(_ animated: Bool) {
@@ -177,13 +186,14 @@ class RequesterViewController: UIViewController {
   
   @IBOutlet weak var requesterTable: UITableView!
   
-  func checkRequest(viewController: UIViewController, indexInt: Int) {
-    
-    guard let requesterInfo = storyboard?.instantiateViewController(identifier: "requesterInfo") as? CheckRequesterViewController          else { return }
-    
-    requesterInfo.requsterInfoData = userInfo[indexInt]
-    
-    self.show(requesterInfo, sender: nil)
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    if segue.identifier == "test" {
+      guard let userVC = segue.destination as? PersonInfoViewController else { return }
+      UserManager.shared.isRequester = true
+      UserManager.shared.requesterInfo = userInfo[indexRow]
+      userVC.isRequester = true
+      userVC.requester = userInfo[indexRow]
+    }
   }
 }
 
@@ -216,6 +226,13 @@ extension RequesterViewController: UITableViewDelegate, UITableViewDataSource {
 extension RequesterViewController: CheckPersonalInfoManager {
   func checkTheInfo(tableViewCell: RequesterTableViewCell, index: Int) {
     
-    checkRequest(viewController: self, indexInt: index)
+    indexRow = index
+    
+    guard let userVC = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(identifier: "PersonInfoViewController") as? PersonInfoViewController else { return }
+         UserManager.shared.isRequester = true
+         UserManager.shared.requesterInfo = userInfo[indexRow]
+         userVC.isRequester = true
+         userVC.requester = userInfo[indexRow]
+         self.navigationController?.pushViewController(userVC, animated: false)
   }
 }

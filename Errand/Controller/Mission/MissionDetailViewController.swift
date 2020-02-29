@@ -849,10 +849,8 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
             compare = taskData.uid
           }
           
-          for badMan in user.blacklist {
-            if badMan == compare {
+          for badMan in user.blacklist where badMan == compare {
               strongSelf.alreadyReport = true
-            }
           }
           
           let alert = UIAlertController(title: "檢舉系統", message: "請選擇要做的行動", preferredStyle: .actionSheet)

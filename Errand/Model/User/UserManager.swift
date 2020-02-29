@@ -20,6 +20,10 @@ class UserManager {
   
   var currentUserInfo: AccountInfo?
   
+  var isRequester = false
+  
+  var requesterInfo: AccountInfo?
+  
   var isEditNameEmpty = false
   
   var checkDetailBtn = false
@@ -246,9 +250,10 @@ class UserManager {
       let about = quary.documents.first?.data()["about"] as? String,
       let totalStar = quary.documents.first?.data()["totalStar"] as? Double,
       let taskCount = quary.documents.first?.data()["taskCount"] as? Int,
-      let uid = quary.documents.first?.data()["uid"] as? String else { return }
+      let uid = quary.documents.first?.data()["uid"] as? String,
+      let oppoBlacklist = quary.documents.first?.data()["oppoBlacklist"] as? [String] else { return }
     
-      let dataReturn = AccountInfo(email: email, nickname: nickname, noJudgeCount: noJudgeCount, task: task, minusStar: minusStar, photo: photo, report: report, blacklist: blacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
+    let dataReturn = AccountInfo(email: email, nickname: nickname, noJudgeCount: noJudgeCount, task: task, minusStar: minusStar, photo: photo, report: report, blacklist: blacklist, oppoBlacklist: oppoBlacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
     
       completion(.success(dataReturn))
   }
@@ -339,11 +344,9 @@ class UserManager {
         var isBlack = false
         guard let currentuid = Auth.auth().currentUser?.uid else { return }
         
-        for info in reverseInfo.blacklist {
-          if info == currentuid {
+        for info in reverseInfo.oppoBlacklist where info == currentuid {
             isBlack = true
             break
-          }
         }
         
         if isBlack {
@@ -352,7 +355,7 @@ class UserManager {
   
         } else {
           
-          reverseInfo.blacklist.append(currentuid)
+          reverseInfo.oppoBlacklist.append(currentuid)
           self.currentUserInfo = reverseInfo
           
             UserManager.shared.updateUserInfo { result in
@@ -373,15 +376,11 @@ class UserManager {
   func updatefreinds(ownerUid: String, takerUid: String, chatRoomID: String, completion: @escaping (Result<String, Error>) -> Void) {
     
     let ownerRdf = dbF.collection("Users").document(ownerUid)
-    
     let takerRef = dbF.collection("Users").document(takerUid)
-    
     let ownerFriend = Friends(nameREF: takerRef, chatRoomID: chatRoomID)
-    
     let takerFriend = Friends(nameREF: ownerRdf, chatRoomID: chatRoomID)
     
     let group = DispatchGroup()
-    
     group.enter()
     group.enter()
     
@@ -463,9 +462,10 @@ class UserManager {
       let about = data["about"] as? String,
       let totalStar = data["totalStar"] as? Double,
       let taskCount = data["taskCount"] as? Int,
-      let uid = data["uid"] as? String else { return }
+      let uid = data["uid"] as? String,
+      let oppoBlacklist = data["oppoBlacklist"] as? [String] else { return }
       
-      let dataReturn = AccountInfo(email: email, nickname: nickname, noJudgeCount: noJudgeCount, task: task, minusStar: minusStar, photo: photo, report: report, blacklist: blacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
+      let dataReturn = AccountInfo(email: email, nickname: nickname, noJudgeCount: noJudgeCount, task: task, minusStar: minusStar, photo: photo, report: report, blacklist: blacklist, oppoBlacklist: oppoBlacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
       
       completion(.success(dataReturn))
     }

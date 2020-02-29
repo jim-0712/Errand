@@ -29,14 +29,12 @@
 		FB387C5023CF0E8E00B6D8C4 /* RegisterItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB387C4F23CF0E8E00B6D8C4 /* RegisterItem.swift */; };
 		FB387C5623CF521D00B6D8C4 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB387C5523CF521D00B6D8C4 /* UserManager.swift */; };
 		FB387C5823CF551A00B6D8C4 /* Content.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB387C5723CF551A00B6D8C4 /* Content.storyboard */; };
-		FB4A50E123D6A8E60028BC82 /* PersonalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A50E023D6A8E60028BC82 /* PersonalViewController.swift */; };
 		FB4A50E323D6D19A0028BC82 /* UserDataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A50E223D6D19A0028BC82 /* UserDataItem.swift */; };
 		FB4BF7B423E288D600C4C05A /* ListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4BF7B323E288D600C4C05A /* ListTableViewCell.swift */; };
 		FB50C55223F81FF5002325BC /* Friend.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB50C55123F81FF5002325BC /* Friend.storyboard */; };
 		FB50C55423F82034002325BC /* FriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB50C55323F82034002325BC /* FriendViewController.swift */; };
 		FB53F30B23EA51A70041C49D /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB53F30A23EA51A70041C49D /* NotificationManager.swift */; };
 		FB53F30D23EA7D630041C49D /* PushNotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB53F30C23EA7D630041C49D /* PushNotificationSender.swift */; };
-		FB53F30F23EA9A430041C49D /* CheckRequesterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB53F30E23EA9A430041C49D /* CheckRequesterViewController.swift */; };
 		FB53F31123EAAE3C0041C49D /* Requester.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB53F31023EAAE3C0041C49D /* Requester.storyboard */; };
 		FB53F31423EAAEA40041C49D /* RequesterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB53F31323EAAEA40041C49D /* RequesterViewController.swift */; };
 		FB53F31823EAAFC20041C49D /* RequesterTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB53F31623EAAFC20041C49D /* RequesterTableViewCell.xib */; };
@@ -66,6 +64,7 @@
 		FB638DCE23E71D3500030CB2 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB638DCD23E71D3500030CB2 /* Profile.storyboard */; };
 		FB638DD023E7ECA400030CB2 /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB638DCF23E7ECA400030CB2 /* DoubleExtension.swift */; };
 		FB638DD223E8913800030CB2 /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB638DD123E8913800030CB2 /* PhotoCollectionViewCell.swift */; };
+		FB63A5C2240A687D00343788 /* CheckRequesterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB63A5C1240A687D00343788 /* CheckRequesterViewController.swift */; };
 		FB64439E24065FCD0002BAE6 /* RequesterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB64439D24065FCD0002BAE6 /* RequesterTableViewCell.swift */; };
 		FB65027C23F3D3F000896D34 /* DataBaseManagerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB65027B23F3D3F000896D34 /* DataBaseManagerManager.swift */; };
 		FB69552423EFA1AB0049DB14 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FB69552323EFA1AB0049DB14 /* GoogleService-Info.plist */; };
@@ -157,14 +156,12 @@
 		FB387C4F23CF0E8E00B6D8C4 /* RegisterItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterItem.swift; sourceTree = "<group>"; };
 		FB387C5523CF521D00B6D8C4 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		FB387C5723CF551A00B6D8C4 /* Content.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Content.storyboard; sourceTree = "<group>"; };
-		FB4A50E023D6A8E60028BC82 /* PersonalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalViewController.swift; sourceTree = "<group>"; };
 		FB4A50E223D6D19A0028BC82 /* UserDataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataItem.swift; sourceTree = "<group>"; };
 		FB4BF7B323E288D600C4C05A /* ListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewCell.swift; sourceTree = "<group>"; };
 		FB50C55123F81FF5002325BC /* Friend.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Friend.storyboard; sourceTree = "<group>"; };
 		FB50C55323F82034002325BC /* FriendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendViewController.swift; sourceTree = "<group>"; };
 		FB53F30A23EA51A70041C49D /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		FB53F30C23EA7D630041C49D /* PushNotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationSender.swift; sourceTree = "<group>"; };
-		FB53F30E23EA9A430041C49D /* CheckRequesterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckRequesterViewController.swift; sourceTree = "<group>"; };
 		FB53F31023EAAE3C0041C49D /* Requester.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Requester.storyboard; sourceTree = "<group>"; };
 		FB53F31323EAAEA40041C49D /* RequesterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequesterViewController.swift; sourceTree = "<group>"; };
 		FB53F31623EAAFC20041C49D /* RequesterTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RequesterTableViewCell.xib; sourceTree = "<group>"; };
@@ -194,6 +191,7 @@
 		FB638DCD23E71D3500030CB2 /* Profile.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		FB638DCF23E7ECA400030CB2 /* DoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
 		FB638DD123E8913800030CB2 /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
+		FB63A5C1240A687D00343788 /* CheckRequesterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckRequesterViewController.swift; sourceTree = "<group>"; };
 		FB64439D24065FCD0002BAE6 /* RequesterTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequesterTableViewCell.swift; sourceTree = "<group>"; };
 		FB65027B23F3D3F000896D34 /* DataBaseManagerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerManager.swift; sourceTree = "<group>"; };
 		FB69552323EFA1AB0049DB14 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -484,7 +482,6 @@
 		FB4A50DF23D6A8C90028BC82 /* Personalinfo */ = {
 			isa = PBXGroup;
 			children = (
-				FB4A50E023D6A8E60028BC82 /* PersonalViewController.swift */,
 				FBBCEE9A2404190B0068410C /* PersonInfoViewController.swift */,
 				FBBCEE9C240423D70068410C /* ChildInfoViewController.swift */,
 				FBBCEE9E240423EF0068410C /* ChildhistroyViewController.swift */,
@@ -512,8 +509,8 @@
 		FB53F31223EAAE8D0041C49D /* Requester */ = {
 			isa = PBXGroup;
 			children = (
+				FB63A5C1240A687D00343788 /* CheckRequesterViewController.swift */,
 				FB53F31323EAAEA40041C49D /* RequesterViewController.swift */,
-				FB53F30E23EA9A430041C49D /* CheckRequesterViewController.swift */,
 			);
 			path = Requester;
 			sourceTree = "<group>";
@@ -965,12 +962,12 @@
 			files = (
 				FB24EC1223D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift in Sources */,
 				FB53F30D23EA7D630041C49D /* PushNotificationSender.swift in Sources */,
+				FB63A5C2240A687D00343788 /* CheckRequesterViewController.swift in Sources */,
 				FB53F33023EBD5230041C49D /* PersonRateTableViewCell.swift in Sources */,
 				FB50C55423F82034002325BC /* FriendViewController.swift in Sources */,
 				FB387C5623CF521D00B6D8C4 /* UserManager.swift in Sources */,
 				FB24EC1923DAB72500FA3F02 /* TaskManager.swift in Sources */,
 				FB24EC0F23D96B8500FA3F02 /* PostMissionViewController.swift in Sources */,
-				FB53F30F23EA9A430041C49D /* CheckRequesterViewController.swift in Sources */,
 				FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */,
 				FB638D7F23E56FC000030CB2 /* CategoryCollectionViewCell.swift in Sources */,
 				FB69553323F001350049DB14 /* Message.swift in Sources */,
@@ -993,7 +990,6 @@
 				FB53F30B23EA51A70041C49D /* NotificationManager.swift in Sources */,
 				FBEC726123FA376400A6AF86 /* FriendsTableViewCell.swift in Sources */,
 				FB638DC823E71AED00030CB2 /* UIStoryboard+Extension.swift in Sources */,
-				FB4A50E123D6A8E60028BC82 /* PersonalViewController.swift in Sources */,
 				FB65027C23F3D3F000896D34 /* DataBaseManagerManager.swift in Sources */,
 				FB63664823E3CF15008555BC /* TabBarViewController.swift in Sources */,
 				FB387C5023CF0E8E00B6D8C4 /* RegisterItem.swift in Sources */,

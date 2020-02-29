@@ -42,6 +42,9 @@ class MissionListViewController: UIViewController {
      NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
    }
   
+  override func viewWillDisappear(_ animated: Bool) {
+  }
+  
   @IBOutlet weak var searchingLabel: UILabel!
 
   @IBOutlet weak var allMissionBtn: UIButton!
@@ -278,16 +281,16 @@ class MissionListViewController: UIViewController {
           strongSelf.taskDataReturn = taskData
           
         } else {
-          guard let userBlackList = UserManager.shared.currentUserInfo?.blacklist else { return }
+          guard let userinfo = UserManager.shared.currentUserInfo else { return }
           
           let filterData = taskData.filter { taskInfo in
             var isMatch = false
-            for badMan in userBlackList {
-              if badMan == taskInfo.uid {
+            for badMan in userinfo.blacklist where badMan == taskInfo.uid {
                 isMatch =  true
-              } else {
-                isMatch =  false
-              }
+            }
+            
+            for oppoBadman in userinfo.oppoBlacklist where oppoBadman == taskInfo.uid {
+              isMatch = true
             }
             if isMatch { return false } else { return true}
           }

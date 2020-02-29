@@ -18,7 +18,14 @@ class ChildhistroyViewController: UIViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     setUpTable()
-    readJudge()
+    if UserManager.shared.isRequester {
+      guard let uid = UserManager.shared.requesterInfo?.uid else { return }
+      readJudge(uid: uid)
+      
+    } else {
+      guard let uid = Auth.auth().currentUser?.uid else { return }
+      readJudge(uid: uid)
+    }
   }
     
   @IBOutlet weak var historyTableView: UITableView!
@@ -35,8 +42,7 @@ class ChildhistroyViewController: UIViewController {
     }
   }
   
-  func readJudge() {
-    guard let uid = Auth.auth().currentUser?.uid else { return }
+  func readJudge(uid: String) {
     TaskManager.shared.readJudgeData(uid: uid) {[weak self] result in
       guard let strongSelf = self else { return }
       switch result {
@@ -47,8 +53,6 @@ class ChildhistroyViewController: UIViewController {
       }
     }
   }
-  
-//  TaskManager.shared.filterClassified(classified: data.classfied + 1)
   
   func setUpTable() {
     historyTableView.delegate = self
