@@ -66,18 +66,12 @@ class BlacklistViewController: UIViewController {
     navigationItem.setHidesBackButton(true, animated: true)
     navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(back))
     navigationItem.leftBarButtonItem?.tintColor = .black
-//    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editBlacklist(sender:)))
   }
     
   @objc func back() {
     self.navigationController?.popViewController(animated: false)
   }
-  
-//  @objc func editBlacklist(sender: UIBarButtonItem) {
-//    blackListTable.isEditing = !blackListTable.isEditing
-//    sender.title = blackListTable.isEditing ? "Done" : "Edit"
-//  }
-  
+
   func setUpTable() {
     blackListTable.delegate = self
     blackListTable.dataSource = self

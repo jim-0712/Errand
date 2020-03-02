@@ -89,7 +89,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   
   override func viewDidLoad() {
     super.viewDidLoad()
-
+//    Fabric.sharedSDK().debug = true
     arrangeTextField.delegate = self
     setUpView()
     changeConstraints()
@@ -128,6 +128,8 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   }
   
   @IBAction func dismissSearchAct(_ sender: Any) {
+    
+    Crashlytics.sharedInstance().crash()
     isSearch = !isSearch
     self.view.endEditing(true)
     self.resignFirstResponder()

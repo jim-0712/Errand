@@ -15,36 +15,25 @@ class MissionListViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-  
     setUpSearch()
     setUp()
     setUpindicatorView()
-    
-//    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("postMission"), object: nil)
-//    
-//    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("takeMission"), object: nil)
-//    
-//    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("acceptRequester"), object: nil)
-//    
-//    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("finishSelf"), object: nil)
-//    
+    searchingLabel.isHidden = true
+    getTaskData()
+    NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("getMissionList"), object: nil)
   }
-
-  override func viewWillAppear(_ animated: Bool) {
-     super.viewWillAppear(animated)
-     searchingLabel.isHidden = true
-     getTaskData()
-     currentBtnSelect = false
-
-     setUpBtn()
-     startAnimate(sender: allMissionBtn)
-     NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
-   }
   
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     currentBtnSelect = false
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    currentBtnSelect = false
+    setUpBtn()
+    startAnimate(sender: allMissionBtn)
   }
   
   @IBOutlet weak var searchingLabel: UILabel!

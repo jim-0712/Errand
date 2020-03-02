@@ -98,7 +98,7 @@ class PersonInfoViewController: UIViewController {
                 NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
                 let sender = PushNotificationSender()
                 sender.sendPushNotification(to: user.fcmToken, body: "任務接受成功")
-                NotificationCenter.default.post(name: Notification.Name("test"), object: nil)
+                NotificationCenter.default.post(name: Notification.Name("requester"), object: nil)
                 strongSelf.navigationController?.popViewController(animated: false)
                 
               case .failure:
@@ -146,7 +146,7 @@ class PersonInfoViewController: UIViewController {
         NotificationCenter.default.post(name: Notification.Name("refuseRequester"), object: nil)
         let sender = PushNotificationSender()
         sender.sendPushNotification(to: user.fcmToken, body: "您已被拒絕")
-        NotificationCenter.default.post(name: Notification.Name("test"), object: nil)
+        NotificationCenter.default.post(name: Notification.Name("requester"), object: nil)
         strongSelf.navigationController?.popViewController(animated: false)
         
       case .failure:
@@ -163,13 +163,7 @@ class PersonInfoViewController: UIViewController {
     setUpImagePicker()
     setUpIndicatorView()
     setUpNavigationItem()
-    historyContainer.alpha = 0.0
-    
-//    self.navigationItem.setHidesBackButton(true, animated: true)
-//    NotificationCenter.default.addObserver(self, selector: #selector(backToEdit), name: Notification.Name("CompleteEdit"), object: nil)
-//    navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(back))
-//    navigationItem.leftBarButtonItem?.tintColor = .black
-  
+    historyContainer.alpha = 0.0  
   }
   
   @objc func back() {

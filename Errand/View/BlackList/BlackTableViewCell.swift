@@ -36,4 +36,5 @@ class BlackTableViewCell: UITableViewCell {
     personImageView.layer.cornerRadius = personImageView.bounds.width / 2
     personImageView.loadImage(image, placeHolder: UIImage(named: "photographer"))
   }
+  
 }

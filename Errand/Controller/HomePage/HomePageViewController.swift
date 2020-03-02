@@ -50,6 +50,12 @@ class ViewController: UIViewController {
     GIDSignIn.sharedInstance()?.signIn()
   }
   
+  @IBAction func privacyAct(_ sender: Any) {
+    guard let webView = storyboard?.instantiateViewController(identifier: "WebViewController") as? WebViewController else { return }
+    self.present(webView, animated: true, completion: nil)
+    
+  }
+  
   @IBAction func fbLoginAct(_ sender: Any) {
     UserManager.shared.fbLogin(controller: self) { [weak self] result in
       guard let strongSelf = self else { return }

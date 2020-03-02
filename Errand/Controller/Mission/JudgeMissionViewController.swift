@@ -123,11 +123,12 @@ class JudgeMissionViewController: UIViewController {
   // swiftlint:disable cyclomatic_complexity
   @IBAction func addFriendsBtn(_ sender: Any) {
     
-    guard let taskInfo = self.detailData else { return }
-    
-    let status = UserManager.shared.statusJudge
+    guard let taskInfo = self.detailData,
+         let userInfo = UserManager.shared.currentUserInfo else { return }
     
     var reFaceData = taskInfo
+    
+    let status = UserManager.shared.statusJudge
     
     if status == 1 {
       reFaceData.ownerAskFriend = true
@@ -135,23 +136,79 @@ class JudgeMissionViewController: UIViewController {
       reFaceData.takerAskFriend = true
     } else { print("friend") }
     
-    if status == 1 && taskInfo.ownerAskFriend {
-      TaskManager.shared.showAlert(title: "等待中", message: "您已送出邀請", viewController: self)
-    } else if status == 2 && taskInfo.takerAskFriend {
-      TaskManager.shared.showAlert(title: "等待中", message: "您已送出邀請", viewController: self)
-    } else {
-      let controller = UIAlertController(title: "好友", message: "確定送出好友邀請？", preferredStyle: .alert)
-      let okAction = UIAlertAction(title: "ok", style: .default) { _ in
-        LKProgressHUD.show(controller: self)
+    var isFriends = false
+    
+    UserManager.shared.getFriends { result in
+      switch result {
+      case .success(let friends):
         
-        self.refreshTask(task: reFaceData, uid: reFaceData.uid)
+        var nameRef: DocumentReference?
+        
+        if status == 1 {
+          nameRef = self.dbF.collection("Users").document(taskInfo.missionTaker)
+        } else if status == 2 {
+          nameRef = self.dbF.collection("Users").document(taskInfo.uid)
+        } else { }
+        
+        guard let nameRe = nameRef else { return }
+        
+//        for count in 0 ..< friends.count {
+//          if friends[count].nameREF == nameRe {
+//            isFriends = true
+//          }
+//        }
+        
+        for friend in friends where friend.nameREF == nameRe {
+          isFriends = true
+        }
+        
+        if !isFriends {
+          
+          if status == 1 && taskInfo.ownerAskFriend {
+            TaskManager.shared.showAlert(title: "等待中", message: "您已送出邀請", viewController: self)
+          } else if status == 2 && taskInfo.takerAskFriend {
+            TaskManager.shared.showAlert(title: "等待中", message: "您已送出邀請", viewController: self)
+          } else {
+            let controller = UIAlertController(title: "好友", message: "確定送出好友邀請？", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "ok", style: .default) { _ in
+              LKProgressHUD.show(controller: self)
+              
+              self.refreshTask(task: reFaceData, uid: reFaceData.uid)
 
+            }
+            let cancelAct = UIAlertAction(title: "cancel", style: .cancel, handler: nil)
+            controller.addAction(okAction)
+            controller.addAction(cancelAct)
+            self.present(controller, animated: true, completion: nil)
+          }
+        } else {
+          
+          SwiftMes.shared.showErrorMessage(body: "此用戶已在好友名單", seconds: 0.8)
+          
+        }
+        
+      case .failure:
+        print("friendsError")
       }
-      let cancelAct = UIAlertAction(title: "cancel", style: .cancel, handler: nil)
-      controller.addAction(okAction)
-      controller.addAction(cancelAct)
-      self.present(controller, animated: true, completion: nil)
     }
+    
+//    if status == 1 && taskInfo.ownerAskFriend {
+//      TaskManager.shared.showAlert(title: "等待中", message: "您已送出邀請", viewController: self)
+//    } else if status == 2 && taskInfo.takerAskFriend {
+//      TaskManager.shared.showAlert(title: "等待中", message: "您已送出邀請", viewController: self)
+//    } else {
+//      let controller = UIAlertController(title: "好友", message: "確定送出好友邀請？", preferredStyle: .alert)
+//      let okAction = UIAlertAction(title: "ok", style: .default) { _ in
+//        LKProgressHUD.show(controller: self)
+//
+//        self.refreshTask(task: reFaceData, uid: reFaceData.uid)
+//
+//      }
+//      let cancelAct = UIAlertAction(title: "cancel", style: .cancel, handler: nil)
+//      controller.addAction(okAction)
+//      controller.addAction(cancelAct)
+//      self.present(controller, animated: true, completion: nil)
+//    }
   }
   
   func setUplistener() {

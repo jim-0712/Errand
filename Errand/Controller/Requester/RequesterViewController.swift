@@ -15,21 +15,9 @@ class RequesterViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     self.view.backgroundColor = UIColor.LG1
-    
-//    NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("acceptRequester"), object: nil)
-//    NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("refuseRequester"), object: nil)
+
     navigationItem.leftBarButtonItem?.tintColor = .black
     navigationItem.rightBarButtonItem?.tintColor = .black
-  }
-  
-  @objc func reload() {
-    readRequester()
-  }
-  
-  var indexRow = 0
-  
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
     setUpTable()
     UserManager.shared.isRequester = true
     
@@ -46,27 +34,54 @@ class RequesterViewController: UIViewController {
       noRequesterLabel.text = ""
       readRequester()
     }
-    NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
+    
+    NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("requester"), object: nil)
   }
+  
+  @objc func reload() {
+    readRequester()
+  }
+  
+  var indexRow = 0
+  
+//  override func viewWillAppear(_ animated: Bool) {
+//    super.viewWillAppear(animated)
+//    setUpTable()
+//    UserManager.shared.isRequester = true
+//
+//    if UserManager.shared.isTourist {
+//
+//      noRequesterLabel.text = "請先去個人頁登入享有功能"
+//
+//    } else if UserManager.shared.currentUserInfo?.status == 0 {
+//      noRequesterLabel.text = "當前沒有任務                                        趕快去新增任務吧"
+//    } else if UserManager.shared.currentUserInfo?.status == 2 {
+//
+//      noRequesterLabel.text = "當前您是任務接受者"
+//    } else {
+//      noRequesterLabel.text = ""
+//      readRequester()
+//    }
+//  }
   
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     UserManager.shared.isRequester = false
   }
   
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-    if UserManager.shared.isTourist {
-      
-    } else if UserManager.shared.currentUserInfo?.status == 1 {
-      preventTap()
-    }
-  }
-  
-  func preventTap() {
-    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
-    LKProgressHUD.show(controller: tabVC)
-  }
+//  override func viewDidAppear(_ animated: Bool) {
+//    super.viewDidAppear(animated)
+//    if UserManager.shared.isTourist {
+//
+//    } else if UserManager.shared.currentUserInfo?.status == 1 {
+//      preventTap()
+//    }
+//  }
+//
+////  func preventTap() {
+////    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
+////    LKProgressHUD.show(controller: tabVC)
+////  }
   
   var userInfo = [AccountInfo]() {
     didSet {
@@ -105,6 +120,7 @@ class RequesterViewController: UIViewController {
     readRequester()
   }
   
+  
   func showAlert(title: String, message: String, viewController: UIViewController) {
     let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
     let okAction = UIAlertAction(title: "ok", style: .default) { _ in
@@ -137,7 +153,7 @@ class RequesterViewController: UIViewController {
           }
         }
         
-        if taskCount.count == 0 {
+        if taskCount.count == 0 || taskCount[0].isComplete {
           strongSelf.userInfo = []
           LKProgressHUD.dismiss()
           SwiftMes.shared.showWarningMessage(body: "您當前沒有任務", seconds: 1.0)

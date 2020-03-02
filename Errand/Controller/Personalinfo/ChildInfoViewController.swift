@@ -186,7 +186,7 @@ extension ChildInfoViewController: UITableViewDelegate, UITableViewDataSource {
       self.noJudge = userInfo.noJudgeCount
       self.totaltaskCount = userInfo.taskCount
     } else {
-      guard let requester = UserManager.shared.requesterInfo else  { return UITableViewCell() }
+      guard let requester = UserManager.shared.requesterInfo else { return UITableViewCell() }
       self.name = requester.nickname
       self.about = requester.about
       self.email = requester.email

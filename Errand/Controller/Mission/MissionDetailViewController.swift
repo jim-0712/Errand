@@ -57,7 +57,6 @@ class MissionDetailViewController: UIViewController {
       missionStackView.isHidden = false
       takeMissionBtn.isHidden = true
       startMissionSetupBtn()
-//      setUpListener()
     } else {
       missionStackView.isHidden = true
       takeMissionBtn.isHidden = false
@@ -81,12 +80,10 @@ class MissionDetailViewController: UIViewController {
        getPhoto()
        setUpall()
        setUpListener()
-       
   }
   
   @objc func backToList() {
     self.navigationController?.popViewController(animated: true)
-    NotificationCenter.default.post(name: Notification.Name("test"), object: nil)
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -115,9 +112,7 @@ class MissionDetailViewController: UIViewController {
                 let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "main") as? ViewController
                 
                 UserManager.shared.isTourist = true
-                
                 UserDefaults.standard.removeObject(forKey: "login")
-                
                 self.view.window?.rootViewController = signInVC
               }
               return
@@ -149,20 +144,20 @@ class MissionDetailViewController: UIViewController {
         UserManager.shared.statusJudge = userInfo.status
         self.callTaskData()
       }
-//      backBtn.isHidden = true
     }
   }
   
   func callTaskData() {
-    TaskManager.shared.setUpStatusData { result in
+    TaskManager.shared.setUpStatusData { [weak self] result in
+      guard let strongSelf = self else { return }
       switch result {
       case .success(let taskInfo):
-        self.detailData = taskInfo
-        self.receiveTime = TaskManager.shared.timeConverter(time: taskInfo.time)
-        self.getPhoto()
-        self.setUpall()
-        if self.isMissionON {
-          self.setUpListener()
+        strongSelf.detailData = taskInfo
+        strongSelf.receiveTime = TaskManager.shared.timeConverter(time: taskInfo.time)
+        strongSelf.getPhoto()
+        strongSelf.setUpall()
+        if strongSelf.isMissionON {
+           strongSelf.setUpListener()
         }
         
       case .failure(let error):
@@ -174,10 +169,10 @@ class MissionDetailViewController: UIViewController {
           let okAction = UIAlertAction(title: "ok", style: .default) { _ in
             let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
             
-            self.view.window?.rootViewController = mapView
+            strongSelf.view.window?.rootViewController = mapView
           }
           alert.addAction(okAction)
-          self.present(alert, animated: true, completion: nil)
+          strongSelf.present(alert, animated: true, completion: nil)
           
         } else {
           print(error.localizedDescription)
@@ -351,11 +346,7 @@ class MissionDetailViewController: UIViewController {
       owner = "takerOK"
       taskData.takerOK = true
     }
-    
-//    if taskData.ownerOK && taskData.takerOK {
-//      changeStatus()
-//    }
-    
+
     let group = DispatchGroup()
     
     group.enter()
@@ -408,9 +399,9 @@ class MissionDetailViewController: UIViewController {
         guard let judgeVC = strongSelf.storyboard?.instantiateViewController(identifier: "judge") as? JudgeMissionViewController,
              let taskInfo = strongSelf.detailData  else { return }
 
-        if taskInfo.takerOK && taskInfo.ownerOK {
-          strongSelf.finishMissionAlert(title: "恭喜", message: "任務完成", viewController: strongSelf)
-        }
+//        if taskInfo.takerOK && taskInfo.ownerOK {
+//          strongSelf.finishMissionAlert(title: "恭喜", message: "任務完成", viewController: strongSelf)
+//        }
 
         judgeVC.detailData = taskInfo
         NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
@@ -444,10 +435,8 @@ class MissionDetailViewController: UIViewController {
         
       case .success:
         
-//        NotificationCenter.default.post(name: Notification.Name("takeMission"), object: nil)
-        
         let sender = PushNotificationSender()
-        sender.sendPushNotification(to: taskInfo.fcmToken, body: "趕快開啟查看")
+        sender.sendPushNotification(to: taskInfo.fcmToken, body: "有人申請任務")
         strongSelf.setUpBtnEnable()
         
         let controller = UIAlertController(title: "恭喜", message: "您已申請", preferredStyle: .alert)
@@ -1003,8 +992,6 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
           chatVC.detailData = taskInfo
           chatVC.receiverPhoto = strongSelf.reversePhoto
           strongSelf.show(chatVC, sender: nil)
-          
-//          strongSelf.performSegue(withIdentifier: "chat", sender: nil)
         }
         
         cell.tapOnNavi = { [weak self ]in

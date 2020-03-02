@@ -59,7 +59,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
   
   @objc func backToList() {
     self.navigationController?.popViewController(animated: true)
-    NotificationCenter.default.post(name: Notification.Name("test"), object: nil)
   }
   
   override func viewWillAppear(_ animated: Bool) {

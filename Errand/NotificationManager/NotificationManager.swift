@@ -70,7 +70,7 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
          let message = info["alert"] as? [String: Any],
          let  body = message["body"] as? String else { return }
     
-    if body != "您已被拒絕" && body != "對方放棄任務" {
+    if body != "您已被拒絕" && body != "對方放棄任務" && body != "有人申請任務" {
       NotificationCenter.default.post(name: Notification.Name("popVC"), object: nil)
     } 
     
