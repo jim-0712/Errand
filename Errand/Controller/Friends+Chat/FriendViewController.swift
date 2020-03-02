@@ -21,8 +21,22 @@ class FriendViewController: UIViewController {
       } else {
         noFreindsLabel.text = "搜尋好友中"
         setUpTable()
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "ban"), style: .plain, target: self, action: #selector(enterBlacklist))
+        self.navigationItem.rightBarButtonItem?.tintColor = .red
+        
       }
     }
+
+  
+  @objc func enterBlacklist() {
+    guard let userInfo = UserManager.shared.currentUserInfo else { return }
+    if userInfo.blacklist.isEmpty {
+      SwiftMes.shared.showWarningMessage(body: "當前黑名單人員為空", seconds: 0.75)
+    } else {
+      performSegue(withIdentifier: "blackList", sender: nil)
+    }
+  }
   
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
@@ -42,6 +56,8 @@ class FriendViewController: UIViewController {
   var refreshControl: UIRefreshControl!
   
   var friend = [Friends]()
+  
+//  var deleteUID: [String] = []
   
   var friendsPhoto: [String] = []
   
@@ -147,5 +163,21 @@ extension FriendViewController: UITableViewDelegate, UITableViewDataSource {
       strongSelf.performSegue(withIdentifier: "friendChat", sender: nil)
     }
     return cell
+  }
+  
+  func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    
+    if editingStyle == .delete {
+      guard let uid = Auth.auth().currentUser?.uid else { return }
+      let path = friendsData[indexPath.item]
+      friend[indexPath.item].nameREF.collection("Friends").document(uid).delete()
+      Firestore.firestore().collection("Users").document(uid).collection("Friends").document(path.uid).delete()
+      friendsData.remove(at: indexPath.item)
+      friendListTable.deleteRows(at: [indexPath], with: .automatic)
+    }
+  }
+  
+  func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    return true
   }
 }

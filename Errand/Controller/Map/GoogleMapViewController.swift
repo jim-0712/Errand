@@ -10,6 +10,9 @@ import UIKit
 import FirebaseAuth
 import GoogleMaps
 import CoreLocation
+import Fabric
+import FirebaseAnalytics
+import Crashlytics
 
 class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDelegate {
   
@@ -95,7 +98,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
     setupCollectin()
     searchView.isHidden = true
     judge[0] = true
-    
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -114,6 +116,9 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   }
   
   @IBAction func radarAct(_ sender: Any) {
+    
+//    Crashlytics.sharedInstance().crash()
+
     if CLLocationManager.locationServicesEnabled() {
       checkLocationAuth(isRadar: true)
       

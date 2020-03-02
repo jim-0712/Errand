@@ -59,8 +59,10 @@ class JudgeMissionViewController: UIViewController {
     guard let taskData = self.detailData,
          let user = UserManager.shared.currentUserInfo,
          let judge = judgeTextView.text else { return }
+    
+    let status = UserManager.shared.statusJudge
     var judgerOwner = ""
-    if user.status == 1 {
+    if status == 1 {
       judgerOwner = taskData.missionTaker
     } else {
       judgerOwner = taskData.uid
@@ -111,13 +113,19 @@ class JudgeMissionViewController: UIViewController {
     }
   }
   
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    UserManager.shared.statusJudge = 0
+  }
+  
   @IBOutlet weak var addFriendBtn: UIButton!
   
   // swiftlint:disable cyclomatic_complexity
   @IBAction func addFriendsBtn(_ sender: Any) {
     
-    guard let status = UserManager.shared.currentUserInfo?.status,
-      let taskInfo = self.detailData else { return }
+    guard let taskInfo = self.detailData else { return }
+    
+    let status = UserManager.shared.statusJudge
     
     var reFaceData = taskInfo
     
@@ -137,16 +145,7 @@ class JudgeMissionViewController: UIViewController {
         LKProgressHUD.show(controller: self)
         
         self.refreshTask(task: reFaceData, uid: reFaceData.uid)
-//        TaskManager.shared.updateWholeTask(task: reFaceData, uid: reFaceData.uid) { result in
-//
-//          switch result {
-//          case .success:
-//            LKProgressHUD.dismiss()
-//            print("ya")
-//          case .failure:
-//            print("fuck")
-//          }
-//        }
+
       }
       let cancelAct = UIAlertAction(title: "cancel", style: .cancel, handler: nil)
       controller.addAction(okAction)
@@ -175,19 +174,14 @@ class JudgeMissionViewController: UIViewController {
     }
   }
 
-  
   func addFriendJudge(taskInfo: TaskInfo) {
     
     guard let status = UserManager.shared.currentUserInfo?.status else { return }
-
-//    var reFaceData = taskInfo
+    
+    let statusss = UserManager.shared.statusJudge
     
     if taskInfo.takerAskFriend && taskInfo.ownerAskFriend && !taskInfo.isFrirndsNow {
       
-      
-//      if !taskInfo.isFrirndsNow {
-//        let chatRoomID = UUID().uuidString
-        
         UserManager.shared.getFriends { result in
           switch result {
           case .success(let friends):
@@ -195,9 +189,9 @@ class JudgeMissionViewController: UIViewController {
             var nameRef: DocumentReference?
             var alreadyFriend = false
             
-            if status == 1 {
+            if statusss == 1 {
               nameRef = self.dbF.collection("Users").document(taskInfo.missionTaker)
-            } else if status == 2 {
+            } else if statusss == 2 {
               nameRef = self.dbF.collection("Users").document(taskInfo.uid)
             } else { }
             
@@ -212,34 +206,6 @@ class JudgeMissionViewController: UIViewController {
             if !alreadyFriend {
               
               self.addFriendsAct(taskInfo: taskInfo)
-              
-//              TaskManager.shared.createChatRoom(chatRoomID: chatRoomID) { result in
-//                switch result {
-//                case .success:
-//                  print("ChatRoomOK")
-//                  UserManager.shared.updatefreinds(ownerUid: taskInfo.uid, takerUid: taskInfo.missionTaker, chatRoomID: chatRoomID) { result in
-//                    switch result {
-//                      case .success:
-//                      LKProgressHUD.dismiss()
-//                    case .failure:
-//                      print("no")
-//                    }
-//                  }
-//
-//                  reFaceData.isFrirndsNow = true
-//
-//                  TaskManager.shared.updateWholeTask(task: reFaceData, uid: taskInfo.uid) { result in
-//                    switch result {
-//                    case .success:
-//                      print("ya")
-//                    case .failure:
-//                      print("error")
-//                    }
-//                  }
-//                case .failure:
-//                  print("no")
-//                }
-//              }
             
             }
           case .failure:
@@ -247,7 +213,6 @@ class JudgeMissionViewController: UIViewController {
           }
         }
       }
-//    } else { }
   }
   
   func addFriendsAct(taskInfo: TaskInfo) {
@@ -270,14 +235,6 @@ class JudgeMissionViewController: UIViewController {
         
         self.refreshTask(task: reFaceData, uid: taskInfo.uid)
         
-//        TaskManager.shared.updateWholeTask(task: reFaceData, uid: taskInfo.uid) { result in
-//          switch result {
-//          case .success:
-//            print("ya")
-//          case .failure:
-//            print("error")
-//          }
-//        }
       case .failure:
         print("no")
       }
@@ -289,8 +246,10 @@ class JudgeMissionViewController: UIViewController {
     guard let taskData = self.detailData,
       let user = UserManager.shared.currentUserInfo,
       let judge = judgeTextView.text else { return }
+    
+    let status = UserManager.shared.statusJudge
     var judgerOwner = ""
-    if user.status == 1 {
+    if status == 1 {
       judgerOwner = taskData.missionTaker
     } else {
       judgerOwner = taskData.uid
@@ -350,7 +309,11 @@ class JudgeMissionViewController: UIViewController {
   
   // swiftlint:enable cyclomatic_complexity
   func setUpTextField() {
-    judgeTextView.text = judgeByOwner[0]
+    if UserManager.shared.statusJudge == 1 {
+      judgeTextView.text = judgeByOwner[0]
+    } else {
+      judgeTextView.text = judgeByRequester[0]
+    }
     judgeTextView.layer.cornerRadius = judgeTextView.bounds.width / 20
     judgeTextView.layer.shadowOpacity = 0.6
     judgeTextView.layer.shadowOffset = .zero
@@ -389,6 +352,7 @@ class JudgeMissionViewController: UIViewController {
        switch result {
        case .success:
          print("ya")
+         LKProgressHUD.dismiss()
        case .failure:
          print("error")
        }
@@ -415,7 +379,7 @@ extension JudgeMissionViewController: UIPickerViewDelegate, UIPickerViewDataSour
   
   func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
     
-    guard let status = UserManager.shared.currentUserInfo?.status else { return "" }
+    let status = UserManager.shared.statusJudge
     
     if status == 1 {
       return judgeByOwner[row]
@@ -426,7 +390,7 @@ extension JudgeMissionViewController: UIPickerViewDelegate, UIPickerViewDataSour
   
   func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
     
-    let status = UserManager.shared.currentUserInfo?.status
+    let status = UserManager.shared.statusJudge
     
     if status == 1 {
       self.judgeTextView.text = judgeByOwner[row]

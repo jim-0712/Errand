@@ -20,6 +20,8 @@ class UserManager {
   
   var currentUserInfo: AccountInfo?
   
+  var statusJudge = 0
+  
   var isRequester = false
   
   var requesterInfo: AccountInfo?
@@ -200,6 +202,60 @@ class UserManager {
        viewController.present(alert, animated: true, completion: nil)
   }
   
+  func readBlackData(uid: String, completion: @escaping ((Result<AccountInfo, Error>) -> Void)) {
+    
+    dbF.collection("Users").whereField("uid", isEqualTo: uid).getDocuments { (querySnapshot, err) in
+      if err != nil {
+        
+        completion(.failure(RegiError.registFailed))
+        
+      } else {
+        guard let quary = querySnapshot else {return }
+        
+        if quary.documents.count == 0 {
+          
+          completion(.failure(RegiError.notFirstRegi))
+          
+        } else {
+          
+          self.dataParser(quary: quary) { result in
+            
+            switch result {
+            case .success(let accountInfo):
+              
+              print(accountInfo)
+              
+              completion(.success(accountInfo))
+            case .failure:
+              print("error")
+            }
+          }
+          
+        }
+      }
+    }
+  }
+  
+  
+  func updateOppoInfo(userInfo: AccountInfo, completion: @escaping (Result<String, Error>) -> Void) {
+    dbF.collection("Users").whereField("uid", isEqualTo: userInfo.uid).getDocuments { (querySnapshot, error) in
+      if let querySnapshot = querySnapshot {
+        let document = querySnapshot.documents.first
+        document?.reference.updateData(userInfo.toDict, completion: { error in
+          
+          if error != nil {
+            
+            completion(.failure(FireBaseUpdateError.updateError))
+          } else {
+            
+            completion(.success("good"))
+  
+          }
+        })
+      }
+    }
+  }
+  
   func readData(uid: String, completion: @escaping ((Result<AccountInfo, Error>) -> Void)) {
     
     dbF.collection("Users").whereField("uid", isEqualTo: uid).getDocuments { (querySnapshot, err) in
@@ -313,24 +369,7 @@ class UserManager {
           } else {
             
             completion(.success(data))
-//            self.readData(uid: data.uid) { [weak self] result in
-//
-//              guard let strongSelf = self else { return }
-//
-//              switch result {
-//
-//              case .success(let dataReturn):
-//
-//                strongSelf.currentUserInfo = dataReturn
-//
-//                completion(.success(dataReturn))
-//
-//              case .failure:
-//
-//                completion(.failure(FireBaseUpdateError.updateError))
-//              }
-//            }
-            
+  
           }
         })
       }
@@ -386,7 +425,7 @@ class UserManager {
     group.enter()
     group.enter()
     
-    dbF.collection("Users").document(ownerUid).collection("Friends").document().setData(ownerFriend.toDict) { error in
+    dbF.collection("Users").document(ownerUid).collection("Friends").document(takerUid).setData(ownerFriend.toDict) { error in
       
       if error != nil {
         
@@ -397,7 +436,7 @@ class UserManager {
       }
     }
     
-    dbF.collection("Users").document(takerUid).collection("Friends").document().setData(takerFriend.toDict) { error in
+    dbF.collection("Users").document(takerUid).collection("Friends").document(ownerUid).setData(takerFriend.toDict) { error in
       
       if error != nil {
         

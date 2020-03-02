@@ -44,11 +44,43 @@
                         <outlet property="friendListTable" destination="8Qy-U2-vwd" id="RP4-4e-gto"/>
                         <outlet property="noFreindsLabel" destination="q4b-OG-fTh" id="vgf-5T-mAC"/>
                         <segue destination="GVJ-pG-glb" kind="show" identifier="friendChat" id="Pmc-xG-tDy"/>
+                        <segue destination="FAW-dr-Lea" kind="show" identifier="blackList" id="ZIP-Z0-lql"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cNk-W7-GXH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1266.6666666666667" y="111.83035714285714"/>
+        </scene>
+        <!--黑名單-->
+        <scene sceneID="Vdh-1y-fpn">
+            <objects>
+                <viewController id="FAW-dr-Lea" customClass="BlacklistViewController" customModule="Errand" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="3hd-f7-FXX">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" contentInsetAdjustmentBehavior="never" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zzh-B7-gml">
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="mZB-aX-kne" firstAttribute="bottom" secondItem="zzh-B7-gml" secondAttribute="bottom" id="3iW-O3-Zs0"/>
+                            <constraint firstItem="zzh-B7-gml" firstAttribute="leading" secondItem="mZB-aX-kne" secondAttribute="leading" id="6qx-Vb-SUO"/>
+                            <constraint firstItem="zzh-B7-gml" firstAttribute="top" secondItem="mZB-aX-kne" secondAttribute="top" id="LWz-lM-HtU"/>
+                            <constraint firstItem="mZB-aX-kne" firstAttribute="trailing" secondItem="zzh-B7-gml" secondAttribute="trailing" id="mKy-Ru-vCt"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="mZB-aX-kne"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="黑名單" id="xJ2-Hy-0bb"/>
+                    <connections>
+                        <outlet property="blackListTable" destination="zzh-B7-gml" id="01z-GU-WWg"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qRM-SE-GnX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1267" y="860"/>
         </scene>
         <!--Friend Chat View Controller-->
         <scene sceneID="zXx-3g-RcO">

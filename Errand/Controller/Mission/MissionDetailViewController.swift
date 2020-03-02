@@ -57,6 +57,7 @@ class MissionDetailViewController: UIViewController {
       missionStackView.isHidden = false
       takeMissionBtn.isHidden = true
       startMissionSetupBtn()
+//      setUpListener()
     } else {
       missionStackView.isHidden = true
       takeMissionBtn.isHidden = false
@@ -75,8 +76,12 @@ class MissionDetailViewController: UIViewController {
     guard detailData != nil else {
          setUpData()
          return }
+    guard let status = UserManager.shared.currentUserInfo?.status else { return }
+    UserManager.shared.statusJudge = status
        getPhoto()
        setUpall()
+       setUpListener()
+       
   }
   
   @objc func backToList() {
@@ -127,6 +132,7 @@ class MissionDetailViewController: UIViewController {
                 self.view.window?.rootViewController = mapView
               }
             } else {
+              UserManager.shared.statusJudge = status
               self.callTaskData()
             }
           case .failure:
@@ -140,9 +146,10 @@ class MissionDetailViewController: UIViewController {
       if userInfo.status == 0 {
         setUpall()
       } else {
+        UserManager.shared.statusJudge = userInfo.status
         self.callTaskData()
       }
-      backBtn.isHidden = true
+//      backBtn.isHidden = true
     }
   }
   
@@ -184,6 +191,15 @@ class MissionDetailViewController: UIViewController {
     setUpBtn()
     setUppageControll()
     detailTableView.reloadData()
+  }
+  
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    guard let taskData = detailData else { return }
+    
+    if taskData.ownerOK && taskData.takerOK {
+      changeStatus()
+    }
   }
   
   override func viewDidLayoutSubviews() {
@@ -309,8 +325,7 @@ class MissionDetailViewController: UIViewController {
             print("error")
           }
         }
-        
-        NotificationCenter.default.post(name: Notification.Name("reloadUser"), object: nil)
+
         let sender = PushNotificationSender()
         sender.sendPushNotification(to: self.destination, body: "對方放棄任務")
         LKProgressHUD.dismiss()
@@ -326,14 +341,20 @@ class MissionDetailViewController: UIViewController {
   }
   @IBAction func finishMissionAct(_ sender: Any) {
     
-    guard let taskData = self.detailData,
-      let status = UserManager.shared.currentUserInfo?.status else { return }
+    guard var taskData = self.detailData,
+         let status = UserManager.shared.currentUserInfo?.status else { return }
     var owner = ""
     if status == 1 {
       owner = "ownerOK"
+      taskData.ownerOK = true
     } else {
       owner = "takerOK"
+      taskData.takerOK = true
     }
+    
+//    if taskData.ownerOK && taskData.takerOK {
+//      changeStatus()
+//    }
     
     let group = DispatchGroup()
     
@@ -381,14 +402,19 @@ class MissionDetailViewController: UIViewController {
       sender.sendPushNotification(to: self.destination, body: "對方任務完成")
       
       let controller = UIAlertController(title: "恭喜", message: "等待對方完成", preferredStyle: .alert)
-      let okAction = UIAlertAction(title: "ok", style: .default) { _ in
-        
-        guard let judgeVC = self.storyboard?.instantiateViewController(identifier: "judge") as? JudgeMissionViewController,
-          let taskInfo = self.detailData else { return }
-        
+      let okAction = UIAlertAction(title: "ok", style: .default) { [weak self] _ in
+        guard let strongSelf = self else { return }
+
+        guard let judgeVC = strongSelf.storyboard?.instantiateViewController(identifier: "judge") as? JudgeMissionViewController,
+             let taskInfo = strongSelf.detailData  else { return }
+
+        if taskInfo.takerOK && taskInfo.ownerOK {
+          strongSelf.finishMissionAlert(title: "恭喜", message: "任務完成", viewController: strongSelf)
+        }
+
         judgeVC.detailData = taskInfo
         NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
-        self.present(judgeVC, animated: true, completion: nil)
+        strongSelf.present(judgeVC, animated: true, completion: nil)
       }
       controller.addAction(okAction)
       self.present(controller, animated: true, completion: nil)
@@ -502,13 +528,57 @@ class MissionDetailViewController: UIViewController {
     }
   }
   
+  func changeStatus() {
+    
+    guard let task = detailData else { return }
+    
+    LKProgressHUD.show(controller: self)
+    
+    let group = DispatchGroup()
+    group.enter()
+    group.enter()
+    group.enter()
+    TaskManager.shared.taskUpdateData(uid: task.uid, status: true, identity: "isComplete") { (result) in
+      switch result {
+      case .success:
+        group.leave()
+      case .failure:
+        print("error")
+      }
+    }
+    
+    UserManager.shared.updateStatus(uid: task.uid, status: 0) { result in
+      switch result {
+      case .success:
+        group.leave()
+      case .failure:
+        print("no")
+        group.leave()
+      }
+    }
+    
+    UserManager.shared.updateStatus(uid: task.missionTaker, status: 0) { result in
+      switch result {
+      case .success:
+        group.leave()
+      case .failure:
+        print("no")
+        group.leave()
+      }
+    }
+    
+    group.notify(queue: DispatchQueue.main) {
+      LKProgressHUD.dismiss()
+    }
+  }
+  
   func finishMissionAlert(title: String, message: String, viewController: UIViewController) {
     let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
     let okAction = UIAlertAction(title: "ok", style: .default) { [weak self]_ in
       NotificationCenter.default.post(name: Notification.Name("finishTask"), object: nil)
       guard let strongSelf = self else { return }
       guard let task = strongSelf.detailData,
-        let  currentUserStatus = UserManager.shared.currentUserInfo?.status else { return }
+           let  currentUserStatus = UserManager.shared.currentUserInfo?.status else { return }
       
       LKProgressHUD.show(controller: strongSelf)
       
@@ -579,10 +649,11 @@ class MissionDetailViewController: UIViewController {
         LKProgressHUD.dismiss()
         
         guard let judgeVC = strongSelf.storyboard?.instantiateViewController(identifier: "judge") as? JudgeMissionViewController,
-          let taskInfo = strongSelf.detailData else { return }
+             let taskInfo = strongSelf.detailData else { return }
         
         judgeVC.detailData = taskInfo
         NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
+        NotificationCenter.default.post(name: Notification.Name("hideMes"), object: nil)
         strongSelf.present(judgeVC, animated: true, completion: nil)
         
       }
@@ -731,7 +802,7 @@ class MissionDetailViewController: UIViewController {
     if segue.identifier == "chat" {
       guard let chatVC = segue.destination as? ChatViewController,
         let taskInfo = detailData else { return }
-      
+
       chatVC.detailData = taskInfo
       chatVC.receiverPhoto = reversePhoto
     }
@@ -812,6 +883,7 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
     return 4
   }
   // swiftlint:disable cyclomatic_complexity
+  // swiftlint:disable_rule:line_length
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     guard let data = detailData,
@@ -924,7 +996,15 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
         
         cell.tapOnButton = { [weak self ] in
           guard let strongSelf = self else { return }
-          strongSelf.performSegue(withIdentifier: "chat", sender: nil)
+          
+          guard let chatVC = UIStoryboard(name: "Chat", bundle: nil).instantiateViewController(identifier: "ChatViewController") as? ChatViewController,
+            let taskInfo = strongSelf.detailData else { return }
+
+          chatVC.detailData = taskInfo
+          chatVC.receiverPhoto = strongSelf.reversePhoto
+          strongSelf.show(chatVC, sender: nil)
+          
+//          strongSelf.performSegue(withIdentifier: "chat", sender: nil)
         }
         
         cell.tapOnNavi = { [weak self ]in
@@ -969,6 +1049,7 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
       return cell
     }
   }
+  // swiftlint:enable_rule:line_length
   // swiftlint:enable cyclomatic_complexity
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
     

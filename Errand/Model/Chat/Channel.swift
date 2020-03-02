@@ -33,6 +33,7 @@ struct Channel {
   let id: String?
   let name: String
   
+  
   init(name: String) {
     id = nil
     self.name = name
@@ -74,5 +75,4 @@ extension Channel: Comparable {
   static func < (lhs: Channel, rhs: Channel) -> Bool {
     return lhs.name < rhs.name
   }
-
 }

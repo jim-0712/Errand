@@ -41,7 +41,7 @@ class RequesterViewController: UIViewController {
       noRequesterLabel.text = "當前沒有任務                                        趕快去新增任務吧"
     } else if UserManager.shared.currentUserInfo?.status == 2 {
       
-      noRequesterLabel.text = "當前您是任務接受者      沒有申請者"
+      noRequesterLabel.text = "當前您是任務接受者"
     } else {
       noRequesterLabel.text = ""
       readRequester()
@@ -85,6 +85,8 @@ class RequesterViewController: UIViewController {
   }
   
   var storeInfo = [AccountInfo]()
+  
+  var taskinfo: TaskInfo?
   
   var refreshControl: UIRefreshControl!
   
@@ -142,16 +144,18 @@ class RequesterViewController: UIViewController {
         } else if taskCount[0].status == 1 {
           strongSelf.userInfo = []
           strongSelf.requesterTable.reloadData()
+          strongSelf.taskinfo = taskCount[0]
           LKProgressHUD.dismiss()
           SwiftMes.shared.showWarningMessage(body: "任務進行中", seconds: 1.0)
         } else {
           
           if taskCount[0].requester.count == 0 {
             strongSelf.userInfo = []
+            strongSelf.taskinfo = taskCount[0]
             strongSelf.requesterTable.reloadData()
             
           } else {
-            
+            strongSelf.taskinfo = taskCount[0]
             for count in 0 ..< taskCount[0].requester.count {
               UserManager.shared.readData(uid: taskCount[0].requester[count]) { result in
                 switch result {
@@ -228,10 +232,12 @@ extension RequesterViewController: CheckPersonalInfoManager {
     
     indexRow = index
     
-    guard let userVC = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(identifier: "PersonInfoViewController") as? PersonInfoViewController else { return }
+    guard let userVC = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(identifier: "PersonInfoViewController") as? PersonInfoViewController,
+         let taskinfoData = taskinfo else { return }
          UserManager.shared.isRequester = true
          UserManager.shared.requesterInfo = userInfo[indexRow]
          userVC.isRequester = true
+         userVC.taskInfo = taskinfoData
          userVC.requester = userInfo[indexRow]
          self.navigationController?.pushViewController(userVC, animated: false)
   }

@@ -30,8 +30,8 @@ target 'Errand' do
   pod 'KMPlaceholderTextView', '~> 1.4.0'
   pod 'MarqueeLabel'
   pod 'SwiftMessages'
-  pod 'Fabric', '~> 1.10.2'
-  pod 'Crashlytics', '~> 3.14.0'
+  pod 'Fabric'
+  pod 'Crashlytics'
   pod 'Firebase/Analytics'
 
   target 'ErrandTests' do

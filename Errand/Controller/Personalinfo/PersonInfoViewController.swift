@@ -64,7 +64,7 @@ class PersonInfoViewController: UIViewController {
   
   @IBAction func acceptAct(_ sender: Any) {
     guard let user = requester,
-      var taskInfo = taskInfo else { return }
+         var taskInfo = taskInfo else { return }
     
     let chatRoomID = UUID().uuidString
     
@@ -99,7 +99,7 @@ class PersonInfoViewController: UIViewController {
                 let sender = PushNotificationSender()
                 sender.sendPushNotification(to: user.fcmToken, body: "任務接受成功")
                 NotificationCenter.default.post(name: Notification.Name("test"), object: nil)
-                strongSelf.navigationController?.popViewController(animated: true)
+                strongSelf.navigationController?.popViewController(animated: false)
                 
               case .failure:
                 
@@ -147,7 +147,7 @@ class PersonInfoViewController: UIViewController {
         let sender = PushNotificationSender()
         sender.sendPushNotification(to: user.fcmToken, body: "您已被拒絕")
         NotificationCenter.default.post(name: Notification.Name("test"), object: nil)
-        strongSelf.navigationController?.popViewController(animated: true)
+        strongSelf.navigationController?.popViewController(animated: false)
         
       case .failure:
         
@@ -276,6 +276,7 @@ class PersonInfoViewController: UIViewController {
         isSetting = !isSetting
       }
     }
+    UserManager.shared.isEditNameEmpty = false
   }
   
   func setUpTableView() {
