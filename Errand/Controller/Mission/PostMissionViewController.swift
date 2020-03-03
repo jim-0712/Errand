@@ -26,14 +26,6 @@ struct MediaManager {
 
 class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDelegate, UITextViewDelegate {
   
-  let myLocationManager = CLLocationManager()
-  
-  var statusOneData: TaskInfo?
-  
-  var judge = [Bool](repeating: false, count: 8)
-  
-  var isEdit = false
-  
   @IBOutlet weak var giveUpBtn: UIButton!
   
   @IBOutlet weak var fixBtn: UIButton!
@@ -41,7 +33,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
   @IBOutlet weak var editMissionStackView: UIStackView!
   
   @IBOutlet weak var changeAddressBtn: UIButton!
-
+  
   @IBAction func changeAddressAct(_ sender: Any) {
     
     performSegue(withIdentifier: "addlocation", sender: nil)
@@ -59,7 +51,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
   
   @objc func backToList() {
     self.navigationController?.popViewController(animated: true)
-    NotificationCenter.default.post(name: Notification.Name("test"), object: nil)
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -81,6 +72,149 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
     super.viewWillDisappear(animated)
     TaskManager.shared.address = ""
   }
+  
+  func setUpDetail() {
+    guard let taskInfo = statusOneData else { return }
+    isChange = true
+    latitude = taskInfo.lat
+    longitude = taskInfo.long
+    fileURL = taskInfo.taskPhoto
+    fileType = taskInfo.fileType
+    priceTextField.text = "\(taskInfo.money)"
+    missionContentTextView.text = taskInfo.detail
+    
+    for count in 0 ..< taskInfo.taskPhoto.count {
+      
+      let seperate = taskInfo.taskPhoto[count].components(separatedBy: "jpeg")
+      
+      if seperate.count > 1 {
+        guard let url = URL(string: fileURL[count]) else { return }
+        guard let data = try? Data(contentsOf: url) else { return }
+        guard let image = UIImage(data: data) else { return }
+        fileURLmix.append(image)
+      } else {
+        guard let url = URL(string: fileURL[count]) else { return }
+        fileURLmix.append(url as NSURL)
+      }
+    }
+    photoCollectionView.reloadData()
+    LKProgressHUD.dismiss()
+  }
+  
+  @IBOutlet weak var pinImage: UIImageView!
+  
+  @IBOutlet weak var plusBtn: UIButton!
+  
+  @IBOutlet weak var photoCollectionView: UICollectionView!
+  
+  @IBOutlet weak var photoUploadText: UILabel!
+  
+  @IBOutlet weak var chooseGroupText: UILabel!
+  
+  @IBOutlet weak var missionGroupCollectionView: UICollectionView!
+  
+  @IBOutlet weak var uploadPhotoBtn: UIButton!
+  
+  @IBOutlet weak var editBackBtn: UIButton!
+  
+  @IBOutlet weak var priceLabel: UILabel!
+  
+  @IBOutlet weak var priceTextField: UITextField!
+  
+  @IBOutlet weak var missionLabel: UILabel!
+  
+  @IBOutlet weak var missionContentTextView: UITextView!
+  
+  @IBOutlet weak var postBtn: UIButton!
+  
+  @IBOutlet weak var stackNTDView: UIStackView!
+  
+  @IBOutlet weak var addressLabel: UILabel!
+  
+  @IBAction func editBackAct(_ sender: Any) {
+    self.dismiss(animated: true, completion: nil)
+  }
+  
+  @IBAction func postAct(_ sender: Any) {
+    postMissionAct(isPost: true)
+  }
+  
+  @IBAction func fixAct(_ sender: Any) {
+    postMissionAct(isPost: false)
+  }
+  
+  @IBAction func deleteAct(_ sender: Any) {
+    
+    guard let uid = Auth.auth().currentUser?.uid else { return }
+    
+    let group = DispatchGroup()
+    
+    group.enter()
+    group.enter()
+    
+    TaskManager.shared.deleteTask(uid: uid) { result in
+      switch result {
+      case .success:
+        group.leave()
+      case .failure:
+        group.leave()
+      }
+    }
+    
+    UserManager.shared.updateStatus(uid: uid, status: 0) { result in
+      switch result {
+      case .success:
+        group.leave()
+      case .failure:
+        group.leave()
+        
+      }
+    }
+    
+    group.notify(queue: DispatchQueue.main) {
+      NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
+      UserManager.shared.currentUserInfo?.status = 0
+      LKProgressHUD.dismiss()
+      SwiftMes.shared.showSuccessMessage(body: "恭喜刪除 返回任務頁面中", seconds: 1.7)
+      DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        self.dismiss(animated: true, completion: nil)
+      }
+    }
+  }
+  
+  let imagePickerController = UIImagePickerController()
+  
+  let backgroundManager = BackgroundManager.shared
+  
+  var isChange = false
+  
+  var fileURL: [String] = []
+  
+  var fileType: [Int] = []
+  
+  var fileURLmix: [Any] = []
+  
+  var selectIndex = 0
+  
+  var indexRow = 0
+  
+  var latitude: Double?
+  
+  var longitude: Double?
+  
+  var plaverLooper: AVPlayerLooper?
+  
+  let screenwidth = UIScreen.main.bounds.width
+  
+  let screenheight = UIScreen.main.bounds.height
+  
+  let myLocationManager = CLLocationManager()
+  
+  var statusOneData: TaskInfo?
+  
+  var judge = [Bool](repeating: false, count: 8)
+  
+  var isEdit = false
   
   func setUpall() {
     setUp()
@@ -120,140 +254,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
     }
   }
   
-  func setUpDetail() {
-    guard let taskInfo = statusOneData else { return }
-    isChange = true
-    lat = taskInfo.lat
-    long = taskInfo.long
-    fileURL = taskInfo.taskPhoto
-    fileType = taskInfo.fileType
-    priceTextField.text = "\(taskInfo.money)"
-    missionContentTextView.text = taskInfo.detail
-    
-    for count in 0 ..< taskInfo.taskPhoto.count {
-      
-      let seperate = taskInfo.taskPhoto[count].components(separatedBy: "jpeg")
-      
-      if seperate.count > 1 {
-        guard let url = URL(string: fileURL[count]) else { return }
-        guard let data = try? Data(contentsOf: url) else { return }
-        guard let image = UIImage(data: data) else { return }
-        luke.append(image)
-      } else {
-        guard let url = URL(string: fileURL[count]) else { return }
-        luke.append(url as NSURL)
-      }
-    }
-    photoCollectionView.reloadData()
-    LKProgressHUD.dismiss()
-  }
-  
-  @IBOutlet weak var pinImage: UIImageView!
-  
-  @IBOutlet weak var plusBtn: UIButton!
-  
-  @IBOutlet weak var photoCollectionView: UICollectionView!
-  
-  @IBOutlet weak var photoUploadText: UILabel!
-  
-  @IBOutlet weak var chooseGroupText: UILabel!
-  
-  @IBOutlet weak var missionGroupCollectionView: UICollectionView!
-  
-  @IBOutlet weak var uploadPhotoBtn: UIButton!
-  
-  @IBOutlet weak var editBackBtn: UIButton!
-  
-  @IBOutlet weak var priceLabel: UILabel!
-  
-  @IBOutlet weak var priceTextField: UITextField!
-  
-  @IBOutlet weak var missionLabel: UILabel!
-  
-  @IBOutlet weak var missionContentTextView: UITextView!
-  
-  @IBOutlet weak var postBtn: UIButton!
-  
-  @IBOutlet weak var stackNTDView: UIStackView!
-  
-  @IBOutlet weak var addressLabel: UILabel!
-  
-  let imagePickerController = UIImagePickerController()
-  
-  let backgroundManager = BackgroundManager.shared
-  
-  var isChange = false
-  
-  var fileURL: [String] = []
-  
-  var fileType: [Int] = []
-  
-  var luke: [Any] = []
-  
-  var selectIndex = 0
-  
-  var indexRow = 0
-  
-  var lat: Double?
-  
-  var long: Double?
-  
-  var plaverLooper: AVPlayerLooper?
-  
-  let screenwidth = UIScreen.main.bounds.width
-  
-  let screenheight = UIScreen.main.bounds.height
-  
-  @IBAction func editBackAct(_ sender: Any) {
-    self.dismiss(animated: true, completion: nil)
-  }
-  
-  @IBAction func postAct(_ sender: Any) {
-    postMissionAct(isPost: true)
-  }
-  
-  @IBAction func fixAct(_ sender: Any) {
-    postMissionAct(isPost: false)
-  }
-  
-  @IBAction func deleteAct(_ sender: Any) {
-    
-    guard let uid = Auth.auth().currentUser?.uid else { return }
-    
-    let group = DispatchGroup()
-    
-    group.enter()
-    group.enter()
-    
-    TaskManager.shared.deleteTask(uid: uid) { result in
-      switch result {
-      case .success:
-        group.leave()
-      case .failure:
-        group.leave()
-      }
-    }
-    
-    UserManager.shared.updateData(status: 0) { result in
-      switch result {
-      case .success:
-        group.leave()
-      case .failure:
-        group.leave()
-
-      }
-    }
-    
-    group.notify(queue: DispatchQueue.main) {
-      UserManager.shared.currentUserInfo?.status = 0
-      LKProgressHUD.dismiss()
-      SwiftMes.shared.showSuccessMessage(body: "恭喜刪除 返回任務頁面中", seconds: 1.7)
-      DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-        self.dismiss(animated: true, completion: nil)
-      }
-    }
-  }
-  
   func preventTap() {
     guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
     LKProgressHUD.show(controller: tabVC)
@@ -261,12 +261,13 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
   
   func postMissionAct(isPost: Bool) {
     
-    guard let price = priceTextField.text,
-      let content = missionContentTextView.text else { return }
+    guard let money = priceTextField.text,
+      let content = missionContentTextView.text,
+      let uid = Auth.auth().currentUser?.uid else { return }
     
-    if fileType.count == 0 {
+    if fileType.isEmpty {
       SwiftMes.shared.showErrorMessage(body: "照片不得為空", seconds: 1.0)
-    } else if price.isEmpty {
+    } else if money.isEmpty {
       SwiftMes.shared.showErrorMessage(body: "價錢不得為空", seconds: 1.0)
     } else if addressLabel.text == "" {
       SwiftMes.shared.showErrorMessage(body: "地址不能為空", seconds: 1.0)
@@ -274,65 +275,42 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
       SwiftMes.shared.showErrorMessage(body: "描述內容不得為空", seconds: 1.0)
     } else {
       
+      guard let latitude = latitude,
+        let longitude = longitude else { return }
+      
       if isPost {
         self.preventTap()
       } else {
         LKProgressHUD.show(controller: self)
       }
-
+      
       self.fileURL = []
       
-      let group: DispatchGroup = DispatchGroup()
+      let group = DispatchGroup()
       
-      if luke.count == 0 {
+      if !fileURLmix.isEmpty {
         
-      } else {
-        for _ in 0 ..< luke.count {
+        for _ in 0 ..< fileURLmix.count {
           group.enter()
         }
         
-        for count in 0 ..< luke.count {
+        for count in 0 ..< fileURLmix.count {
           let id = UUID().uuidString
-          if let image = luke[count] as? UIImage {
+          if let image = fileURLmix[count] as? UIImage {
             guard let imageData = image.jpegData(compressionQuality: 0.5) else {
               group.leave()
               return }
             let storageRef = Storage.storage().reference().child("TaskFinder").child("\(id).jpeg")
             
-            storageRef.putData(imageData, metadata: nil, completion: { [weak self] (_, error) in
-              
-              guard let strongSelf = self else { return }
-              
-              if error != nil {
-                return
-              }
-              
-              storageRef.downloadURL { (url, error) in
-                
-                if error != nil {
-                  
-                  LKProgressHUD.dismiss()
-                  LKProgressHUD.showFailure(text: "Error", controller: strongSelf)
-                  return }
-                
-                guard let urlBack = url else { return }
-                
-                let stringUrl = "\(urlBack)"
-                
-                strongSelf.fileURL.append(stringUrl)
-                
-                group.leave()
-                
-              }
-            })
+            uploadDataToDB(data: imageData, storageRef: storageRef) {
+              group.leave()
+            }
             
           } else {
             
-            let id = UUID().uuidString
-            
             let storageRef = Storage.storage().reference().child("TaskVideo").child("\(id).mov")
             
-            guard let videourl = luke[count] as? NSURL else { return }
+            guard let videourl = fileURLmix[count] as? NSURL else { return }
             
             let videoTransferUrl = videourl as URL
             
@@ -345,79 +323,77 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
               return
             }
             
-            storageRef.putData(movieData!, metadata: nil ) { (_, error) in
-              
-              if error != nil {
-                LKProgressHUD.dismiss()
-                return
-              }
-              
-              storageRef.downloadURL { [weak self](url, error) in
-                
-                guard let strongSelf = self else { return }
-                
-                if error != nil {
-                  LKProgressHUD.dismiss()
-                  LKProgressHUD.showFailure(text: "Error", controller: strongSelf)
-                  return }
-                
-                guard let urlBack = url else { return }
-                
-                let stringUrl = "\(urlBack)"
-                
-                strongSelf.fileURL.append(stringUrl)
-                
-                group.leave()
-              }
+            uploadDataToDB(data: movieData!, storageRef: storageRef) {
+              group.leave()
             }
           }
         }
       }
+      
       group.notify(queue: DispatchQueue.main) {
         TaskManager.shared.address = ""
-        self.createDataBase()
+        self.createDataBase(money: money, content: content, latitude: latitude, longitude: longitude, uid: uid)
       }
     }
   }
   
-  func createDataBase() {
-    guard let money = priceTextField.text,
-      let content = missionContentTextView.text,
-      let lat = lat,
-      let long = long else { return }
+  func uploadDataToDB(data: Data, storageRef: StorageReference, completion: @escaping (() -> Void)) {
+    storageRef.putData(data, metadata: nil ) { (_, error) in
+      
+      if error != nil {
+        LKProgressHUD.dismiss()
+        return
+      }
+      
+      storageRef.downloadURL { [weak self](url, error) in
+        
+        guard let strongSelf = self else { return }
+        
+        if error != nil {
+          LKProgressHUD.dismiss()
+          LKProgressHUD.showFailure(text: "Error", controller: strongSelf)
+          return }
+        
+        guard let urlBack = url else { return }
+        
+        let stringUrl = "\(urlBack)"
+        
+        strongSelf.fileURL.append(stringUrl)
+        
+        completion()
+        
+      }
+    }
+  }
+  
+  func createDataBase(money: String, content: String, latitude: Double, longitude: Double, uid: String) {
     
-    let indexfinal = selectIndex
+    let finalSelectIndex = selectIndex
     
     let intMoney = Int(money) ?? 0
     
-    let now = NSDate()
+    let now = Int(NSDate().timeIntervalSince1970)
     
-    let currentTimeS = Int(now.timeIntervalSince1970)
+    let location = CLLocationCoordinate2DMake(latitude, longitude)
     
-    let location = CLLocationCoordinate2DMake(lat, long)
-    
-    let taskData: [Int] = [currentTimeS, intMoney, indexfinal, 0]
+    let taskData: [Int] = [now, intMoney, finalSelectIndex, 0]
     
     TaskManager.shared.createMission(taskPhoto: fileURL, coordinate: location, taskData: taskData, detail: content, fileType: self.fileType) { [weak self](result) in
-      
       guard let strongSelf = self else { return }
       
       switch result {
         
       case .failure:
-        
         print("fail")
         
       case .success:
         
-        UserManager.shared.updateData(status: 1) { result in
-          
+        UserManager.shared.updateStatus(uid: uid, status: 1) { result in
           switch result {
             
           case .success:
-            
-//            NotificationCenter.default.post(name: Notification.Name("postMission"), object: nil)
             UserManager.shared.currentUserInfo?.status = 1
+            NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
             LKProgressHUD.dismiss()
             SwiftMes.shared.showSuccessMessage(body: "返回任務頁面中", seconds: 1.7)
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
@@ -521,7 +497,7 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
     if collectionView == self.missionGroupCollectionView {
       return TaskManager.shared.taskClassified.count - 1
     } else {
-      return luke.count + 1
+      return fileURLmix.count + 1
     }
   }
   
@@ -532,7 +508,7 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
       guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "group", for: indexPath) as? MissionGroupCollectionViewCell else { return UICollectionViewCell() }
       
       cell.setUpContent(label: TaskManager.shared.taskClassified[indexPath.row + 1].title, color: TaskManager.shared.taskClassified[indexPath.row + 1].color)
-
+      
       cell.contentView.backgroundColor = judge[indexPath.row] ? UIColor(red: 246.9/255.0, green: 212.0/255.0, blue: 95.0/255.0, alpha: 1.0) : .white
       cell.layer.borderWidth = judge[indexPath.row] ? 1.0 : 0.0
       cell.layer.borderColor = judge[indexPath.row] ? UIColor.clear.cgColor : UIColor.white.cgColor
@@ -544,7 +520,7 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
       guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photo", for: indexPath) as? PhotoCollectionViewCell else { return UICollectionViewCell() }
       
       cell.delegate = self
-      if luke.count == 0 {
+      if fileURLmix.isEmpty {
         removeLayer(cell: cell)
         cell.indexRow = 0
         cell.backgroundColor = .white
@@ -554,9 +530,9 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
         cell.contentView.backgroundColor = .white
         return cell
         
-      } else if indexPath.row != luke.count && ((luke[indexPath.row] as? UIImage) != nil) {
+      } else if indexPath.row != fileURLmix.count && ((fileURLmix[indexPath.row] as? UIImage) != nil) {
         removeLayer(cell: cell)
-        guard let image = luke[indexPath.row] as? UIImage else { return UICollectionViewCell() }
+        guard let image = fileURLmix[indexPath.row] as? UIImage else { return UICollectionViewCell() }
         cell.backgroundColor = .clear
         cell.deleteBtn.isHidden = false
         cell.indexRow = indexPath.row
@@ -567,12 +543,12 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
         cell.photoImageView.contentMode = .scaleAspectFill
         return cell
         
-      } else if indexPath.row != luke.count && ((luke[indexPath.row] as? URL) != nil) {
+      } else if indexPath.row != fileURLmix.count && ((fileURLmix[indexPath.row] as? URL) != nil) {
         cell.deleteBtn.isHidden = false
         cell.indexRow = indexPath.row
         cell.photoImageView.isHidden = true
         cell.contentView.backgroundColor = .black
-        guard let video = luke[indexPath.row] as? URL else { return UICollectionViewCell() }
+        guard let video = fileURLmix[indexPath.row] as? URL else { return UICollectionViewCell() }
         cell.setUpLooper(video: video)
         return cell
         
@@ -630,16 +606,17 @@ extension PostMissionViewController: UICollectionViewDelegateFlowLayout {
 
 extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
-  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+  func imagePickerController(_ picker: UIImagePickerController,
+                             didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
     
     if let pickedImage = info[.originalImage ] as? UIImage {
-      luke.append(pickedImage)
+      fileURLmix.append(pickedImage)
       self.fileType.append(0)
       self.fileURL.append("0")
       LKProgressHUD.dismiss()
     } else {
       if let videoURL = info[.mediaURL ] as? NSURL {
-        luke.append(videoURL)
+        fileURLmix.append(videoURL)
         self.fileType.append(1)
         self.fileURL.append("0")
         LKProgressHUD.dismiss()
@@ -652,14 +629,14 @@ extension PostMissionViewController: UIImagePickerControllerDelegate, UINavigati
 
 extension PostMissionViewController: LocationManager {
   func locationReturn(viewController: AddLocationViewController, lat: Double, long: Double) {
-    self.lat = lat
-    self.long = long
+    self.latitude = lat
+    self.longitude = long
   }
 }
 
 extension PostMissionViewController: UploadDataManager {
   func tapOnDelete(collectionViewCelll: PhotoCollectionViewCell, indexRow: Int) {
-    self.luke.remove(at: indexRow)
+    self.fileURLmix.remove(at: indexRow)
     self.fileType.remove(at: indexRow)
     self.fileURL.remove(at: indexRow)
     photoCollectionView.reloadData()

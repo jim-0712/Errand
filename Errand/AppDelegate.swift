@@ -11,6 +11,7 @@ import CoreData
 import Firebase
 import GoogleMaps
 import GoogleSignIn
+import Fabric
 import UserNotifications
 import FBSDKLoginKit
 import FirebaseFirestore
@@ -66,6 +67,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     FirebaseApp.configure()
     
     GMSServices.provideAPIKey("AIzaSyBbTnBn0MHPMnioaL4y68Da3d41JlaSY-g")
+    
+    Fabric.sharedSDK().debug = true
     
     GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
     
@@ -126,7 +129,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     
     guard let uid = Auth.auth().currentUser?.uid else { return }
     
-    UserManager.shared.readData(uid: uid) { result in
+    UserManager.shared.readUserInfo(uid: uid, isSelf: true) { result in
       switch result {
       case .success:
         self.gotoDetail()
@@ -170,7 +173,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     
     var status = 0
     
-    UserManager.shared.readData(uid: uid) { result in
+    UserManager.shared.readUserInfo(uid: uid, isSelf: true) { result in
       switch result {
       case .success(let userInfo):
         status = userInfo.status
@@ -196,7 +199,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
       
           if tabBarController.presentedViewController == nil {
             tabBarController.dismiss(animated: true) {
-              //        navi.popViewController(animated: true)
+              //  navi.popViewController(animated: true)
               conversationVC.modalPresentationStyle = .fullScreen
               UserManager.shared.currentUserInfo?.status = 2
               conversationVC.isMissionON = true

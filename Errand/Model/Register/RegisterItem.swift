@@ -66,6 +66,8 @@ struct AccountInfo {
 
   var blacklist: [String]
   
+  var oppoBlacklist: [String]
+  
   var onTask: Bool
   
   var fcmToken: String
@@ -110,7 +112,9 @@ struct AccountInfo {
               
               "totalStar": totalStar,
               
-              "uid": uid
+              "uid": uid,
+              
+              "oppoBlacklist": oppoBlacklist
           ]
   }
 }

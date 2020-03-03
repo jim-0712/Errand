@@ -104,6 +104,25 @@
                                     <constraint firstAttribute="height" constant="40" id="nKd-Qr-Zyi"/>
                                 </constraints>
                             </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="gMX-Kc-oQh">
+                                <rect key="frame" x="88" y="846" width="238" height="30"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="註冊登入即代表您同意" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6uC-pO-cja">
+                                        <rect key="frame" x="0.0" y="0.0" width="153" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7U9-yg-8HZ">
+                                        <rect key="frame" x="161" y="0.0" width="77" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <state key="normal" title="隱私權政策"/>
+                                        <connections>
+                                            <action selector="privacyAct:" destination="BYZ-38-t0r" eventType="touchUpInside" id="eUJ-JZ-bCk"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" red="0.1020161882" green="0.1606125534" blue="0.24301019309999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -124,6 +143,8 @@
                             <constraint firstItem="p7Z-eB-DUq" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" constant="-150" id="hJL-Ic-kGM"/>
                             <constraint firstItem="zJy-HG-Q1l" firstAttribute="top" secondItem="4aw-tP-mdE" secondAttribute="bottom" constant="30" id="m21-Wh-NiX"/>
                             <constraint firstItem="ijz-ko-HvP" firstAttribute="top" secondItem="zJy-HG-Q1l" secondAttribute="bottom" constant="30" id="m4o-mI-aAK"/>
+                            <constraint firstAttribute="bottom" secondItem="gMX-Kc-oQh" secondAttribute="bottom" constant="20" id="xdM-R7-fJH"/>
+                            <constraint firstItem="gMX-Kc-oQh" firstAttribute="centerX" secondItem="Lcn-N1-hyQ" secondAttribute="centerX" id="xej-5r-o7b"/>
                             <constraint firstItem="EPt-eE-bb8" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="yCg-66-ovt"/>
                             <constraint firstItem="ijz-ko-HvP" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="zLM-0W-eh6"/>
                         </constraints>
@@ -140,6 +161,21 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="131.8840579710145" y="120.53571428571428"/>
+        </scene>
+        <!--Web View Controller-->
+        <scene sceneID="ky3-dG-VY8">
+            <objects>
+                <viewController storyboardIdentifier="WebViewController" id="XJJ-Ba-Nus" customClass="WebViewController" customModule="Errand" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Crh-1N-Ckn">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="nwY-hX-6tv"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HWZ-lN-Ujy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1062" y="121"/>
         </scene>
     </scenes>
     <resources>

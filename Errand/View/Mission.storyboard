@@ -1110,7 +1110,7 @@
         <image name="marker" width="512" height="512"/>
         <image name="pin" width="512" height="512"/>
         <image name="plus-icon" width="512" height="512"/>
-        <image name="stop" width="512" height="512"/>
+        <image name="stop" width="50" height="50"/>
         <namedColor name="Y1">
             <color red="1" green="0.82300001382827759" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>

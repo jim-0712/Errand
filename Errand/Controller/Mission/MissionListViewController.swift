@@ -11,36 +11,28 @@ import FirebaseAuth
 
 class MissionListViewController: UIViewController {
   
-  var refreshControl: UIRefreshControl!
-  
   override func viewDidLoad() {
     super.viewDidLoad()
-  
     setUpSearch()
     setUp()
     setUpindicatorView()
-    
-//    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("postMission"), object: nil)
-//    
-//    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("takeMission"), object: nil)
-//    
-//    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("acceptRequester"), object: nil)
-//    
-//    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("finishSelf"), object: nil)
-//    
+    searchingLabel.isHidden = true
+    getTaskData()
+    NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("getMissionList"), object: nil)
+  }
   
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    currentBtnSelect = false
   }
   
   override func viewWillAppear(_ animated: Bool) {
-     super.viewWillAppear(animated)
-     searchingLabel.isHidden = true
-     getTaskData()
-     currentBtnSelect = false
-     setUpBtn()
-     startAnimate(sender: allMissionBtn)
-     NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
-   }
+    super.viewWillAppear(animated)
+    currentBtnSelect = false
+    setUpBtn()
+    startAnimate(sender: allMissionBtn)
+  }
   
   @IBOutlet weak var searchingLabel: UILabel!
 
@@ -70,18 +62,57 @@ class MissionListViewController: UIViewController {
     getMissionStartData()
   }
   
-  func preventTap() {
-    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
-    LKProgressHUD.show(controller: tabVC)
+  @IBOutlet weak var taskListTable: UITableView!
+  
+  @IBOutlet weak var postMissionBtn: UIButton!
+  
+  @IBAction func postMissionBtn(_ sender: Any) {
+    
+    if UserManager.shared.isTourist {
+      
+      UserManager.shared.goSignInPage(viewController: self)
+      
+    } else if UserManager.shared.currentUserInfo?.status == 0 {
+      performSegue(withIdentifier: "post", sender: nil)
+    } else if UserManager.shared.currentUserInfo?.status == 1 {
+ 
+      TaskManager.shared.setUpStatusData { result in
+        
+        switch result {
+        case .success(let taskInfo):
+          
+          if taskInfo.missionTaker != "" {
+            TaskManager.shared.showAlert(title: "警告", message: "任務已被接受，不能隨意更改", viewController: self)
+          } else {
+            guard let editVC = self.storyboard?.instantiateViewController(identifier: "post") as? PostMissionViewController,
+                 let status = UserManager.shared.currentUserInfo?.status else { return }
+            if status == 1 {
+              editVC.isEditing = true
+            } else {
+              editVC.isEditing = false
+            }
+             self.present(editVC, animated: true, completion: nil)
+          }
+        case .failure:
+          print("error")
+        }
+      }
+    } else {
+      TaskManager.shared.showAlert(title: "任務進行中", message: "請完成當前任務", viewController: self)
+    }
   }
   
+  var indicatorCon: NSLayoutConstraint?
+  
   let indicatorView = UIView()
+  
+  var refreshControl: UIRefreshControl!
   
   let taskMan = TaskManager.shared
   
   var detailData: TaskInfo?
   
-  var data: TaskInfo?
+  var containerrTask: TaskInfo?
   
   var timeString: String?
   
@@ -137,55 +168,18 @@ class MissionListViewController: UIViewController {
     }
   }
   
-  @IBOutlet weak var taskListTable: UITableView!
-  
-  @IBOutlet weak var postMissionBtn: UIButton!
-  
-  @IBAction func postMissionBtn(_ sender: Any) {
-    
-    if UserManager.shared.isTourist {
-      
-      UserManager.shared.goToSignOrStay(viewController: self)
-      
-    } else if UserManager.shared.currentUserInfo?.status == 0 {
-      performSegue(withIdentifier: "post", sender: nil)
-    } else if UserManager.shared.currentUserInfo?.status == 1 {
- 
-      TaskManager.shared.setUpStatusData { result in
-        
-        switch result {
-        case .success(let taskInfo):
-          
-          if taskInfo.missionTaker != "" {
-            TaskManager.shared.showAlert(title: "警告", message: "任務已被接受，不能隨意更改", viewController: self)
-          } else {
-            guard let editVC = self.storyboard?.instantiateViewController(identifier: "post") as? PostMissionViewController,
-                 let status = UserManager.shared.currentUserInfo?.status else { return }
-            if status == 1 {
-              editVC.isEditing = true
-            } else {
-              editVC.isEditing = false
-            }
-             self.present(editVC, animated: true, completion: nil)
-          }
-        case .failure:
-          print("error")
-        }
-      }
-    } else {
-      TaskManager.shared.showAlert(title: "任務進行中", message: "請完成當前任務", viewController: self)
-    }
-  }
-  
   @objc func reloadTable() {
-    if currentBtnSelect {
-       getMissionStartData()
-    } else {
-       getTaskData()
-    }
-  }
+     if currentBtnSelect {
+        getMissionStartData()
+     } else {
+        getTaskData()
+     }
+   }
   
-  var indicatorCon: NSLayoutConstraint?
+  func preventTap() {
+    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
+    LKProgressHUD.show(controller: tabVC)
+  }
   
   func getMissionStartData() {
      
@@ -278,16 +272,16 @@ class MissionListViewController: UIViewController {
           strongSelf.taskDataReturn = taskData
           
         } else {
-          guard let userBlackList = UserManager.shared.currentUserInfo?.blacklist else { return }
+          guard let userinfo = UserManager.shared.currentUserInfo else { return }
           
           let filterData = taskData.filter { taskInfo in
             var isMatch = false
-            for badMan in userBlackList {
-              if badMan == taskInfo.uid {
+            for badMan in userinfo.blacklist where badMan == taskInfo.uid {
                 isMatch =  true
-              } else {
-                isMatch =  false
-              }
+            }
+            
+            for oppoBadman in userinfo.oppoBlacklist where oppoBadman == taskInfo.uid {
+              isMatch = true
             }
             if isMatch { return false } else { return true}
           }
@@ -345,12 +339,12 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
     cell.delegate = self
     
     if shouldShowSearchResults {
-      self.data = filteredArray[indexPath.row]
+      self.containerrTask = filteredArray[indexPath.row]
     } else {
-      self.data = taskDataReturn[indexPath.row]
+      self.containerrTask = taskDataReturn[indexPath.row]
     }
     
-    guard let data = self.data else { return UITableViewCell() }
+    guard let data = self.containerrTask else { return UITableViewCell() }
     self.timeString = TaskManager.shared.timeConverter(time: data.time)
     guard let time = timeString else { return UITableViewCell() }
     let missionText = TaskManager.shared.filterClassified(classified: data.classfied + 1)
@@ -444,7 +438,7 @@ extension MissionListViewController: UISearchResultsUpdating {
       return isMatch
     })
     
-    if filteredArray.count == 0 && shouldShowSearchResults {
+    if filteredArray.isEmpty && shouldShowSearchResults {
       searchingLabel.isHidden = false
     } else {
       searchingLabel.isHidden = true

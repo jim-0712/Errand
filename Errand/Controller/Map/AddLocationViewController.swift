@@ -26,22 +26,17 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
     navigationItem.leftBarButtonItem?.tintColor = .black
     }
   
-  @objc func backToList() {
-    self.navigationController?.popViewController(animated: true)
-    TaskManager.shared.address = ""
-  }
-  
   let myLocationManager = CLLocationManager()
   
   var addressFinal: String = ""
   
-  var finalLat: Double = 0.0
+  var destnationLatitude: Double = 0.0
   
-  var finalLong: Double = 0.0
-  
-  @IBOutlet weak var pinImage: UIImageView!
+  var destinationLongtitude: Double = 0.0
   
   weak var delegate: LocationManager?
+  
+  @IBOutlet weak var pinImage: UIImageView!
   
   @IBOutlet weak var confirmLocation: UIButton!
   
@@ -49,9 +44,9 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
   
   @IBAction func checkThePosition(_ sender: Any) {
     
-    let lat = "\(finalLat)"
+    let lat = "\(destnationLatitude)"
     
-    let long = "\(finalLong)"
+    let long = "\(destinationLongtitude)"
     
     MapManager.shared.getLocation(latitude: lat, longitude: long) { [weak self](result) in
       
@@ -67,7 +62,7 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
         
         DispatchQueue.main.async {
           
-          strongSelf.alertCome(lat: strongSelf.finalLat, long: strongSelf.finalLong)
+          strongSelf.alertCome(lat: strongSelf.destnationLatitude, long: strongSelf.destinationLongtitude)
         }
         
       case .failure:
@@ -76,6 +71,11 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
       }
     }
     
+  }
+  
+  @objc func backToList() {
+    self.navigationController?.popViewController(animated: true)
+    TaskManager.shared.address = ""
   }
   
   func setUp() {
@@ -88,20 +88,16 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
     let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 17)
     addLocationMap.camera = myArrange
     addLocationMap.animate(to: myArrange)
-    finalLat = center.latitude
-    finalLong = center.longitude
+    destnationLatitude = center.latitude
+    destinationLongtitude = center.longitude
   }
   
   func alertCome(lat: Double, long: Double) {
     
     let controller = UIAlertController(title: "是否用以下地址", message: "\(addressFinal)", preferredStyle: .alert)
-    
     let okAction = UIAlertAction(title: "好的", style: .default) { [weak self] (_) in
-       
       guard let strongSelf = self else { return }
-      
       strongSelf.delegate?.locationReturn(viewController: strongSelf, lat: lat, long: long)
-      
       strongSelf.navigationController?.popViewController(animated: true)
       strongSelf.dismiss(animated: true, completion: nil)
     }
@@ -109,16 +105,13 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
     controller.addAction(okAction)
     let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
     controller.addAction(cancelAction)
-    
     present(controller, animated: true, completion: nil)
   }
 }
 
 extension AddLocationViewController: GMSMapViewDelegate {
-  
   func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
-    
-    finalLat = position.target.latitude
-    finalLong = position.target.longitude
+    destnationLatitude = position.target.latitude
+    destinationLongtitude = position.target.longitude
   }
 }

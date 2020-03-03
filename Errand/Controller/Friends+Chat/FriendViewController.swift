@@ -21,22 +21,21 @@ class FriendViewController: UIViewController {
       } else {
         noFreindsLabel.text = "搜尋好友中"
         setUpTable()
+        getFriend()
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "ban"), style: .plain, target: self, action: #selector(enterBlacklist))
+        self.navigationItem.rightBarButtonItem?.tintColor = .red
+        
       }
     }
-  
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-    if UserManager.shared.isTourist {
-      friendListTable.backgroundColor = .clear
+
+  @objc func enterBlacklist() {
+    guard let userInfo = UserManager.shared.currentUserInfo else { return }
+    if userInfo.blacklist.isEmpty {
+      SwiftMes.shared.showWarningMessage(body: "當前黑名單人員為空", seconds: 0.75)
     } else {
-      preventTap()
-      getFriend()
+      performSegue(withIdentifier: "blackList", sender: nil)
     }
-  }
-  
-  func preventTap() {
-    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
-    LKProgressHUD.show(controller: tabVC)
   }
   
   var refreshControl: UIRefreshControl!
@@ -91,7 +90,7 @@ class FriendViewController: UIViewController {
       switch result {
       case .success(let friends):
         
-        if friends.count == 0 {
+        if friends.isEmpty {
           self.friendInfo = []
           LKProgressHUD.dismiss()
         }
@@ -120,7 +119,6 @@ class FriendViewController: UIViewController {
   }
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    
     if segue.identifier == "friendChat" {
       guard let chatVC = segue.destination as? FriendChatViewController else { return }
       chatVC.chatRoom = friend[indexRow]
@@ -147,5 +145,26 @@ extension FriendViewController: UITableViewDelegate, UITableViewDataSource {
       strongSelf.performSegue(withIdentifier: "friendChat", sender: nil)
     }
     return cell
+  }
+  
+  func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    
+    if editingStyle == .delete {
+      guard let uid = Auth.auth().currentUser?.uid else { return }
+      let path = friendsData[indexPath.item]
+      friend[indexPath.item].nameREF.collection("Friends").document(uid).delete()
+      Firestore.firestore().collection("Users").document(uid).collection("Friends").document(path.uid).delete()
+      friendsData.remove(at: indexPath.item)
+      friendInfo.remove(at: indexPath.item)
+      friendListTable.reloadData()
+    }
+  }
+  
+  func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
+    return "移除"
+  }
+  
+  func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+    return true
   }
 }

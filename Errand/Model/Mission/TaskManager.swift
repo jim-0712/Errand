@@ -386,13 +386,17 @@ class TaskManager {
           case .success(var taskInfo):
             
             if identity == "ownerOK" {
-              
+
               taskInfo.ownerOK = status
-              
+
+            } else if identity == "isComplete"{
+              taskInfo.takerOK = status
+              taskInfo.ownerOK = status
+              taskInfo.isComplete = status
             } else {
               taskInfo.takerOK = status
             }
-            
+
             document.reference.updateData(taskInfo.toDict) { (error) in
               
               if error != nil {

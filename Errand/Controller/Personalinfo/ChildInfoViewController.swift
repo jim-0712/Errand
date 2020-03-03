@@ -17,7 +17,12 @@ class ChildInfoViewController: UIViewController {
     readJudge()
     UserManager.shared.isEditNameEmpty = false
     NotificationCenter.default.addObserver(self, selector: #selector(changeEdit), name: Notification.Name("editing"), object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("hideLog"), object: nil)
     // Do any additional setup after loading the view.
+  }
+  
+  @objc func reload() {
+    infoTableView.reloadData()
   }
   
   @objc func changeEdit() {
@@ -54,6 +59,8 @@ class ChildInfoViewController: UIViewController {
   
   var about = "無"
   
+  var aboutHide = ""
+  
   var minusStar = 0.0
   
   var averageStar = 0.0
@@ -73,26 +80,32 @@ class ChildInfoViewController: UIViewController {
     infoTableView.dataSource = self
     infoTableView.separatorStyle = .none
     infoTableView.rowHeight = UITableView.automaticDimension
-    infoTableView.register(UINib(nibName: "PersonDetailTableViewCell", bundle: nil), forCellReuseIdentifier: "personDetail")
-    infoTableView.register(UINib(nibName: "PersonAboutTableViewCell", bundle: nil), forCellReuseIdentifier: "personAbout")
-    infoTableView.register(UINib(nibName: "PersonStarTableViewCell", bundle: nil), forCellReuseIdentifier: "rate")
     infoTableView.register(UINib(nibName: "LogoutTableViewCell", bundle: nil), forCellReuseIdentifier: "logout")
+    infoTableView.register(UINib(nibName: "PersonStarTableViewCell", bundle: nil), forCellReuseIdentifier: "rate")
+    infoTableView.register(UINib(nibName: "PersonAboutTableViewCell", bundle: nil), forCellReuseIdentifier: "personAbout")
+    infoTableView.register(UINib(nibName: "PersonDetailTableViewCell", bundle: nil), forCellReuseIdentifier: "personDetail")
   }
   
   func uploadData() {
-    UserManager.shared.currentUserInfo?.nickname = self.name
-    UserManager.shared.currentUserInfo?.about = self.about
-    UserManager.shared.updateUserInfo { [weak self] result in
-      guard let strongSelf = self else { return }
+    
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
       
-      switch result {
-      case .success:
-        LKProgressHUD.dismiss()
-        UserManager.shared.isEditNameEmpty = true
-        NotificationCenter.default.post(name: Notification.Name("CompleteEdit"), object: nil)
-        strongSelf.infoTableView.reloadData()
-      case .failure:
-        print("error")
+      UserManager.shared.currentUserInfo?.nickname = self.name
+      UserManager.shared.currentUserInfo?.about = self.aboutHide
+      guard let userInfo = UserManager.shared.currentUserInfo else { return }
+      
+      UserManager.shared.updateOppoInfo(userInfo: userInfo) { [weak self] result in
+        guard let strongSelf = self else { return }
+        
+        switch result {
+        case .success:
+          LKProgressHUD.dismiss()
+          UserManager.shared.isEditNameEmpty = true
+          NotificationCenter.default.post(name: Notification.Name("CompleteEdit"), object: nil)
+          strongSelf.infoTableView.reloadData()
+        case .failure:
+          print("error")
+        }
       }
     }
   }
@@ -152,23 +165,34 @@ class ChildInfoViewController: UIViewController {
 
 extension ChildInfoViewController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 4
+    
+    if UserManager.shared.isRequester {
+      return 3
+    } else {
+      return 4
+    }
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     let tourist = UserManager.shared.isTourist
+    var containerUserInfo: AccountInfo?
     
-    if !tourist {
-      guard let userInfo = UserManager.shared.currentUserInfo else  { return UITableViewCell() }
-      self.name = userInfo.nickname
-      self.about = userInfo.about
-      self.email = userInfo.email
-      self.totalStar = userInfo.totalStar
-      self.minusStar = userInfo.minusStar
-      self.noJudge = userInfo.noJudgeCount
-      self.totaltaskCount = userInfo.taskCount
+    if !tourist && !UserManager.shared.isRequester {
+      containerUserInfo = UserManager.shared.currentUserInfo
+    } else {
+      containerUserInfo = UserManager.shared.requesterInfo
     }
+    
+    guard let container = containerUserInfo else { return UITableViewCell() }
+    self.name = container.nickname
+    self.about = container.about
+    self.email = container.email
+    self.totalStar = container.totalStar
+    self.minusStar = container.minusStar
+    self.noJudge = container.noJudgeCount
+    self.totaltaskCount = container.taskCount
+    
     LKProgressHUD.dismiss()
     let data = [name, self.about]
     if indexPath.row == 0 {
@@ -201,8 +225,8 @@ extension ChildInfoViewController: UITableViewDelegate, UITableViewDataSource {
       
       guard let cell = tableView.dequeueReusableCell(withIdentifier: "personAbout", for: indexPath) as? PersonAboutTableViewCell else { return UITableViewCell() }
       
-      cell.setUpView(isSetting: isSetting, titleLabel: profileDetail[2], content: data[1])
       cell.delegate = self
+      cell.setUpView(isSetting: isSetting, titleLabel: profileDetail[2], content: data[1])
       
       return cell
     } else {
@@ -237,6 +261,8 @@ extension ChildInfoViewController: ProfileAboutManager {
     guard let about = about else { return }
     if !about.isEmpty {
       self.about = about
+      self.aboutHide = about
+      UserManager.shared.isEditNameEmpty = false
     }
   }
 }

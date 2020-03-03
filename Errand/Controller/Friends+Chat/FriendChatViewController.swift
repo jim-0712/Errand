@@ -43,7 +43,6 @@ class FriendChatViewController: MessagesViewController {
       
       @objc func backToList() {
         self.navigationController?.popViewController(animated: true)
-        NotificationCenter.default.post(name: Notification.Name("test"), object: nil)
       }
   
     var selfSender: String?

@@ -29,14 +29,13 @@
 		FB387C5023CF0E8E00B6D8C4 /* RegisterItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB387C4F23CF0E8E00B6D8C4 /* RegisterItem.swift */; };
 		FB387C5623CF521D00B6D8C4 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB387C5523CF521D00B6D8C4 /* UserManager.swift */; };
 		FB387C5823CF551A00B6D8C4 /* Content.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB387C5723CF551A00B6D8C4 /* Content.storyboard */; };
-		FB4A50E123D6A8E60028BC82 /* PersonalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A50E023D6A8E60028BC82 /* PersonalViewController.swift */; };
+		FB479DA1240D029700C43E50 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB479DA0240D029700C43E50 /* WebViewController.swift */; };
 		FB4A50E323D6D19A0028BC82 /* UserDataItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A50E223D6D19A0028BC82 /* UserDataItem.swift */; };
 		FB4BF7B423E288D600C4C05A /* ListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4BF7B323E288D600C4C05A /* ListTableViewCell.swift */; };
 		FB50C55223F81FF5002325BC /* Friend.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB50C55123F81FF5002325BC /* Friend.storyboard */; };
 		FB50C55423F82034002325BC /* FriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB50C55323F82034002325BC /* FriendViewController.swift */; };
 		FB53F30B23EA51A70041C49D /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB53F30A23EA51A70041C49D /* NotificationManager.swift */; };
 		FB53F30D23EA7D630041C49D /* PushNotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB53F30C23EA7D630041C49D /* PushNotificationSender.swift */; };
-		FB53F30F23EA9A430041C49D /* CheckRequesterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB53F30E23EA9A430041C49D /* CheckRequesterViewController.swift */; };
 		FB53F31123EAAE3C0041C49D /* Requester.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB53F31023EAAE3C0041C49D /* Requester.storyboard */; };
 		FB53F31423EAAEA40041C49D /* RequesterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB53F31323EAAEA40041C49D /* RequesterViewController.swift */; };
 		FB53F31823EAAFC20041C49D /* RequesterTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB53F31623EAAFC20041C49D /* RequesterTableViewCell.xib */; };
@@ -66,9 +65,9 @@
 		FB638DCE23E71D3500030CB2 /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB638DCD23E71D3500030CB2 /* Profile.storyboard */; };
 		FB638DD023E7ECA400030CB2 /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB638DCF23E7ECA400030CB2 /* DoubleExtension.swift */; };
 		FB638DD223E8913800030CB2 /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB638DD123E8913800030CB2 /* PhotoCollectionViewCell.swift */; };
+		FB63A5C6240B4CD100343788 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FB63A5C5240B4CD100343788 /* GoogleService-Info.plist */; };
 		FB64439E24065FCD0002BAE6 /* RequesterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB64439D24065FCD0002BAE6 /* RequesterTableViewCell.swift */; };
 		FB65027C23F3D3F000896D34 /* DataBaseManagerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB65027B23F3D3F000896D34 /* DataBaseManagerManager.swift */; };
-		FB69552423EFA1AB0049DB14 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FB69552323EFA1AB0049DB14 /* GoogleService-Info.plist */; };
 		FB69552923F000B50049DB14 /* UICollectionView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB69552823F000B50049DB14 /* UICollectionView+Additions.swift */; };
 		FB69552C23F000BE0049DB14 /* UIView+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB69552A23F000BD0049DB14 /* UIView+Additions.swift */; };
 		FB69552D23F000BE0049DB14 /* UIImage+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB69552B23F000BE0049DB14 /* UIImage+Additions.swift */; };
@@ -80,6 +79,9 @@
 		FB69553923F1461D0049DB14 /* StartMissionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB69553723F1461D0049DB14 /* StartMissionTableViewCell.xib */; };
 		FB752ABB23D5DFB200BF3852 /* PermanentMarker.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */; };
 		FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB752ABD23D5E57900BF3852 /* Background.swift */; };
+		FB93F4E8240B8A1B001BC2F9 /* BlacklistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB93F4E7240B8A1B001BC2F9 /* BlacklistViewController.swift */; };
+		FB93F4F6240B9C53001BC2F9 /* BlackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB93F4F4240B9C53001BC2F9 /* BlackTableViewCell.swift */; };
+		FB93F4F7240B9C53001BC2F9 /* BlackTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB93F4F5240B9C53001BC2F9 /* BlackTableViewCell.xib */; };
 		FB9A2BFE23D068FF00553D97 /* MissionListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */; };
 		FB9A2C0023D0729400553D97 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB9A2BFF23D0729400553D97 /* MapKit.framework */; };
 		FBA557F723ED17A400521B89 /* RequesterRateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA557F623ED17A400521B89 /* RequesterRateTableViewCell.swift */; };
@@ -157,14 +159,13 @@
 		FB387C4F23CF0E8E00B6D8C4 /* RegisterItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterItem.swift; sourceTree = "<group>"; };
 		FB387C5523CF521D00B6D8C4 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		FB387C5723CF551A00B6D8C4 /* Content.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Content.storyboard; sourceTree = "<group>"; };
-		FB4A50E023D6A8E60028BC82 /* PersonalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalViewController.swift; sourceTree = "<group>"; };
+		FB479DA0240D029700C43E50 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		FB4A50E223D6D19A0028BC82 /* UserDataItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataItem.swift; sourceTree = "<group>"; };
 		FB4BF7B323E288D600C4C05A /* ListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewCell.swift; sourceTree = "<group>"; };
 		FB50C55123F81FF5002325BC /* Friend.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Friend.storyboard; sourceTree = "<group>"; };
 		FB50C55323F82034002325BC /* FriendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendViewController.swift; sourceTree = "<group>"; };
 		FB53F30A23EA51A70041C49D /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		FB53F30C23EA7D630041C49D /* PushNotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationSender.swift; sourceTree = "<group>"; };
-		FB53F30E23EA9A430041C49D /* CheckRequesterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckRequesterViewController.swift; sourceTree = "<group>"; };
 		FB53F31023EAAE3C0041C49D /* Requester.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Requester.storyboard; sourceTree = "<group>"; };
 		FB53F31323EAAEA40041C49D /* RequesterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequesterViewController.swift; sourceTree = "<group>"; };
 		FB53F31623EAAFC20041C49D /* RequesterTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RequesterTableViewCell.xib; sourceTree = "<group>"; };
@@ -194,9 +195,9 @@
 		FB638DCD23E71D3500030CB2 /* Profile.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Profile.storyboard; sourceTree = "<group>"; };
 		FB638DCF23E7ECA400030CB2 /* DoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
 		FB638DD123E8913800030CB2 /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
+		FB63A5C5240B4CD100343788 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FB64439D24065FCD0002BAE6 /* RequesterTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequesterTableViewCell.swift; sourceTree = "<group>"; };
 		FB65027B23F3D3F000896D34 /* DataBaseManagerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseManagerManager.swift; sourceTree = "<group>"; };
-		FB69552323EFA1AB0049DB14 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		FB69552823F000B50049DB14 /* UICollectionView+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Additions.swift"; sourceTree = "<group>"; };
 		FB69552A23F000BD0049DB14 /* UIView+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Additions.swift"; sourceTree = "<group>"; };
 		FB69552B23F000BE0049DB14 /* UIImage+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Additions.swift"; sourceTree = "<group>"; };
@@ -208,6 +209,9 @@
 		FB69553723F1461D0049DB14 /* StartMissionTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StartMissionTableViewCell.xib; sourceTree = "<group>"; };
 		FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PermanentMarker.ttf; sourceTree = "<group>"; };
 		FB752ABD23D5E57900BF3852 /* Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
+		FB93F4E7240B8A1B001BC2F9 /* BlacklistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlacklistViewController.swift; sourceTree = "<group>"; };
+		FB93F4F4240B9C53001BC2F9 /* BlackTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlackTableViewCell.swift; sourceTree = "<group>"; };
+		FB93F4F5240B9C53001BC2F9 /* BlackTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BlackTableViewCell.xib; sourceTree = "<group>"; };
 		FB9A2BFD23D068FF00553D97 /* MissionListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionListViewController.swift; sourceTree = "<group>"; };
 		FB9A2BFF23D0729400553D97 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		FBA557F623ED17A400521B89 /* RequesterRateTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequesterRateTableViewCell.swift; sourceTree = "<group>"; };
@@ -357,7 +361,7 @@
 				FB387C0F23CEEF0E00B6D8C4 /* AppDelegate.swift */,
 				FB69553423F0055B0049DB14 /* AppSettings.swift */,
 				FB24EC1323D9B19300FA3F02 /* CustomeColor.swift */,
-				FB69552323EFA1AB0049DB14 /* GoogleService-Info.plist */,
+				FB63A5C5240B4CD100343788 /* GoogleService-Info.plist */,
 				FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */,
 				FB5F5BCF23DB2847003B9ABC /* setofont.ttf */,
 				FB387C1B23CEEF0F00B6D8C4 /* Assets.xcassets */,
@@ -389,6 +393,7 @@
 		FB387C4423CEF5A900B6D8C4 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				FB93F4E6240B89E6001BC2F9 /* Blacklist */,
 				FBA557FF23EE553A00521B89 /* Friends+Chat */,
 				FB53F31223EAAE8D0041C49D /* Requester */,
 				FB24EC0D23D96A0400FA3F02 /* TabBar */,
@@ -403,6 +408,7 @@
 		FB387C4523CEF5BB00B6D8C4 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				FB93F4E9240B8FFF001BC2F9 /* BlackList */,
 				FB0749D624059415001751A2 /* HistoryJudge */,
 				FBEC725E23FA374300A6AF86 /* Friend */,
 				FBA557F523ED177E00521B89 /* Requester */,
@@ -428,6 +434,7 @@
 			isa = PBXGroup;
 			children = (
 				FB387C1323CEEF0E00B6D8C4 /* HomePageViewController.swift */,
+				FB479DA0240D029700C43E50 /* WebViewController.swift */,
 			);
 			path = HomePage;
 			sourceTree = "<group>";
@@ -484,7 +491,6 @@
 		FB4A50DF23D6A8C90028BC82 /* Personalinfo */ = {
 			isa = PBXGroup;
 			children = (
-				FB4A50E023D6A8E60028BC82 /* PersonalViewController.swift */,
 				FBBCEE9A2404190B0068410C /* PersonInfoViewController.swift */,
 				FBBCEE9C240423D70068410C /* ChildInfoViewController.swift */,
 				FBBCEE9E240423EF0068410C /* ChildhistroyViewController.swift */,
@@ -513,7 +519,6 @@
 			isa = PBXGroup;
 			children = (
 				FB53F31323EAAEA40041C49D /* RequesterViewController.swift */,
-				FB53F30E23EA9A430041C49D /* CheckRequesterViewController.swift */,
 			);
 			path = Requester;
 			sourceTree = "<group>";
@@ -600,6 +605,23 @@
 			path = Background;
 			sourceTree = "<group>";
 		};
+		FB93F4E6240B89E6001BC2F9 /* Blacklist */ = {
+			isa = PBXGroup;
+			children = (
+				FB93F4E7240B8A1B001BC2F9 /* BlacklistViewController.swift */,
+			);
+			path = Blacklist;
+			sourceTree = "<group>";
+		};
+		FB93F4E9240B8FFF001BC2F9 /* BlackList */ = {
+			isa = PBXGroup;
+			children = (
+				FB93F4F4240B9C53001BC2F9 /* BlackTableViewCell.swift */,
+				FB93F4F5240B9C53001BC2F9 /* BlackTableViewCell.xib */,
+			);
+			path = BlackList;
+			sourceTree = "<group>";
+		};
 		FB9A2BFC23D068E200553D97 /* Mission */ = {
 			isa = PBXGroup;
 			children = (
@@ -663,6 +685,7 @@
 				74C14ED52E29D0F622B01A39 /* [CP] Embed Pods Frameworks */,
 				FB387C5123CF1BCA00B6D8C4 /* ShellScript */,
 				E2E510830B748E5A2386962E /* [CP] Copy Pods Resources */,
+				FB63A5C7240B4F0700343788 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -766,6 +789,7 @@
 				FB53F32323EBB42A0041C49D /* PersonDetailTableViewCell.xib in Resources */,
 				FBBCEEA72404B5C70068410C /* LogoutTableViewCell.xib in Resources */,
 				FB752ABB23D5DFB200BF3852 /* PermanentMarker.ttf in Resources */,
+				FB93F4F7240B9C53001BC2F9 /* BlackTableViewCell.xib in Resources */,
 				FB638DCA23E71D0C00030CB2 /* Map.storyboard in Resources */,
 				FB69553923F1461D0049DB14 /* StartMissionTableViewCell.xib in Resources */,
 				FBBCEEA324042EED0068410C /* PersonStarTableViewCell.xib in Resources */,
@@ -778,9 +802,9 @@
 				FBEC726223FA376400A6AF86 /* FriendsTableViewCell.xib in Resources */,
 				FB638D8023E56FC000030CB2 /* CategoryCollectionViewCell.xib in Resources */,
 				FB387C1723CEEF0E00B6D8C4 /* Main.storyboard in Resources */,
+				FB63A5C6240B4CD100343788 /* GoogleService-Info.plist in Resources */,
 				FB53F32D23EBCE220041C49D /* PersonAboutTableViewCell.xib in Resources */,
 				FB0749DA2405943F001751A2 /* HistoryJudgeTableViewCell.xib in Resources */,
-				FB69552423EFA1AB0049DB14 /* GoogleService-Info.plist in Resources */,
 				FB387C5823CF551A00B6D8C4 /* Content.storyboard in Resources */,
 				FB638DCC23E71D2800030CB2 /* Mission.storyboard in Resources */,
 				FB53F31123EAAE3C0041C49D /* Requester.storyboard in Resources */,
@@ -941,6 +965,24 @@
 		};
 		FB387C5123CF1BCA00B6D8C4 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
+		};
+		FB63A5C7240B4F0700343788 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -954,7 +996,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/SwiftLint/swiftlint\"\n\"${PODS_ROOT}/Fabric/run\"\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/Fabric/run\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -964,17 +1006,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB24EC1223D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift in Sources */,
+				FB479DA1240D029700C43E50 /* WebViewController.swift in Sources */,
 				FB53F30D23EA7D630041C49D /* PushNotificationSender.swift in Sources */,
 				FB53F33023EBD5230041C49D /* PersonRateTableViewCell.swift in Sources */,
 				FB50C55423F82034002325BC /* FriendViewController.swift in Sources */,
 				FB387C5623CF521D00B6D8C4 /* UserManager.swift in Sources */,
 				FB24EC1923DAB72500FA3F02 /* TaskManager.swift in Sources */,
+				FB93F4F6240B9C53001BC2F9 /* BlackTableViewCell.swift in Sources */,
 				FB24EC0F23D96B8500FA3F02 /* PostMissionViewController.swift in Sources */,
-				FB53F30F23EA9A430041C49D /* CheckRequesterViewController.swift in Sources */,
 				FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */,
 				FB638D7F23E56FC000030CB2 /* CategoryCollectionViewCell.swift in Sources */,
 				FB69553323F001350049DB14 /* Message.swift in Sources */,
 				FBF24FCF23FD9C39002A56A4 /* MissionDetailCollectionViewCell.swift in Sources */,
+				FB93F4E8240B8A1B001BC2F9 /* BlacklistViewController.swift in Sources */,
 				FB69553223F001350049DB14 /* DatabaseRepresentation.swift in Sources */,
 				FB5C00C62400E3F40036CD87 /* SwiftMessage.swift in Sources */,
 				FB387C1423CEEF0E00B6D8C4 /* HomePageViewController.swift in Sources */,
@@ -993,7 +1037,6 @@
 				FB53F30B23EA51A70041C49D /* NotificationManager.swift in Sources */,
 				FBEC726123FA376400A6AF86 /* FriendsTableViewCell.swift in Sources */,
 				FB638DC823E71AED00030CB2 /* UIStoryboard+Extension.swift in Sources */,
-				FB4A50E123D6A8E60028BC82 /* PersonalViewController.swift in Sources */,
 				FB65027C23F3D3F000896D34 /* DataBaseManagerManager.swift in Sources */,
 				FB63664823E3CF15008555BC /* TabBarViewController.swift in Sources */,
 				FB387C5023CF0E8E00B6D8C4 /* RegisterItem.swift in Sources */,
@@ -1203,7 +1246,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Errand/Errand.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 6V9XMJR84F;
 				INFOPLIST_FILE = Errand/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1225,7 +1268,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Errand/Errand.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 6V9XMJR84F;
 				INFOPLIST_FILE = Errand/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

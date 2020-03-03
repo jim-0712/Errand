@@ -358,8 +358,8 @@ PODS:
 DEPENDENCIES:
   - Alamofire
   - Cosmos
-  - Crashlytics (~> 3.14.0)
-  - Fabric (~> 1.10.2)
+  - Crashlytics
+  - Fabric
   - FBSDKLoginKit
   - Firebase/Analytics
   - Firebase/Auth
@@ -478,6 +478,6 @@ SPEC CHECKSUMS:
   SwiftLint: 4105f061f9812b214568b736dab580ab2c73a582
   SwiftMessages: b577dc7043be8b299857ab35bb663dbff6483bd0
 
-PODFILE CHECKSUM: 69cca96bdf0251d16cb64e3f45c245270e580023
+PODFILE CHECKSUM: 45d230416a99aa8c20c49b93344415fb7a007182
 
 COCOAPODS: 1.8.4

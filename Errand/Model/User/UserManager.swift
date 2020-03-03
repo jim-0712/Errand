@@ -20,6 +20,12 @@ class UserManager {
   
   var currentUserInfo: AccountInfo?
   
+  var statusJudge = 0
+  
+  var isRequester = false
+  
+  var requesterInfo: AccountInfo?
+  
   var isEditNameEmpty = false
   
   var checkDetailBtn = false
@@ -105,7 +111,7 @@ class UserManager {
     }
   }
   
-  func updatePhotoData(photo: URL, completion: @escaping (Result<String, Error>) -> Void) {
+  func updatePersonPhotoURL(photo: URL, completion: @escaping (Result<String, Error>) -> Void) {
     
     let transferPhoto = photo.absoluteString
     
@@ -148,34 +154,7 @@ class UserManager {
     }
   }
   
-  func goToSign(viewController: UIViewController) {
-    
-    let alert = UIAlertController(title: "注意", message: "請先登入享有功能", preferredStyle: UIAlertController.Style.alert)
-    
-    let cancelAction = UIAlertAction(title: "取消", style: .cancel) { (_) in
-      
-      let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
-      
-      viewController.view.window?.rootViewController = mapView
-    }
-    
-    let action = UIAlertAction(title: "OK", style: .default) { (_) in
-      
-      let storyboard = UIStoryboard(name: "Main", bundle: nil)
-      
-      let goViewController = storyboard.instantiateViewController(withIdentifier: "main")
-      
-      viewController.view.window?.rootViewController = goViewController
-    }
-    
-    alert.addAction(action)
-    
-    alert.addAction(cancelAction)
-    
-    viewController.present(alert, animated: true, completion: nil)
-  }
-  
-  func goToSignOrStay(viewController: UIViewController) {
+  func goSignInPage(viewController: UIViewController) {
     let alert = UIAlertController(title: "注意", message: "請先登入享有功能", preferredStyle: UIAlertController.Style.alert)
        
     let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
@@ -195,8 +174,27 @@ class UserManager {
        
        viewController.present(alert, animated: true, completion: nil)
   }
+
+  func updateOppoInfo(userInfo: AccountInfo, completion: @escaping (Result<String, Error>) -> Void) {
+    dbF.collection("Users").whereField("uid", isEqualTo: userInfo.uid).getDocuments { (querySnapshot, error) in
+      if let querySnapshot = querySnapshot {
+        let document = querySnapshot.documents.first
+        document?.reference.updateData(userInfo.toDict, completion: { error in
+          
+          if error != nil {
+            
+            completion(.failure(FireBaseUpdateError.updateError))
+          } else {
+            
+            completion(.success("good"))
   
-  func readData(uid: String, completion: @escaping ((Result<AccountInfo, Error>) -> Void)) {
+          }
+        })
+      }
+    }
+  }
+  
+  func readUserInfo(uid: String, isSelf: Bool, completion: @escaping ((Result<AccountInfo, Error>) -> Void)) {
     
     dbF.collection("Users").whereField("uid", isEqualTo: uid).getDocuments { (querySnapshot, err) in
       if err != nil {
@@ -206,7 +204,7 @@ class UserManager {
       } else {
         guard let quary = querySnapshot else {return }
         
-        if quary.documents.count == 0 {
+        if quary.documents.isEmpty {
           
           completion(.failure(RegiError.notFirstRegi))
           
@@ -216,9 +214,10 @@ class UserManager {
             
             switch result {
             case .success(let accountInfo):
-              self.currentUserInfo = accountInfo
-              print(accountInfo)
               
+              if isSelf {
+                self.currentUserInfo = accountInfo
+              }
               completion(.success(accountInfo))
             case .failure:
               print("error")
@@ -246,31 +245,12 @@ class UserManager {
       let about = quary.documents.first?.data()["about"] as? String,
       let totalStar = quary.documents.first?.data()["totalStar"] as? Double,
       let taskCount = quary.documents.first?.data()["taskCount"] as? Int,
-      let uid = quary.documents.first?.data()["uid"] as? String else { return }
+      let uid = quary.documents.first?.data()["uid"] as? String,
+      let oppoBlacklist = quary.documents.first?.data()["oppoBlacklist"] as? [String] else { return }
     
-      let dataReturn = AccountInfo(email: email, nickname: nickname, noJudgeCount: noJudgeCount, task: task, minusStar: minusStar, photo: photo, report: report, blacklist: blacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
+    let dataReturn = AccountInfo(email: email, nickname: nickname, noJudgeCount: noJudgeCount, task: task, minusStar: minusStar, photo: photo, report: report, blacklist: blacklist, oppoBlacklist: oppoBlacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
     
       completion(.success(dataReturn))
-  }
-  
-  func updateData(status: Int, completion: @escaping (Result<String, Error>) -> Void) {
-    
-    guard let userInfo = currentUserInfo else { return }
-    
-    dbF.collection("Users").whereField("uid", isEqualTo: userInfo.uid).getDocuments { (querySnapshot, error) in
-      if let querySnapshot = querySnapshot {
-        let document = querySnapshot.documents.first
-        
-        document?.reference.updateData(["status": status ], completion: { (error) in
-          
-          if error != nil {
-            completion(.failure(FireBaseUpdateError.updateError))
-          } else {
-            completion(.success("Update Success"))
-          }
-        })
-      }
-    }
   }
   
   func updateStatus(uid: String, status: Int, completion: @escaping (Result<String, Error>) -> Void) {
@@ -295,55 +275,18 @@ class UserManager {
     }
   }
   
-  func updateUserInfo(completion: @escaping (Result<AccountInfo, Error>) -> Void) {
-    guard let data = currentUserInfo else { return }
-    dbF.collection("Users").whereField("uid", isEqualTo: data.uid).getDocuments { (querySnapshot, error) in
-      if let querySnapshot = querySnapshot {
-        let document = querySnapshot.documents.first
-        document?.reference.updateData(data.toDict, completion: { error in
-          
-          if error != nil {
-            
-            completion(.failure(FireBaseUpdateError.updateError))
-          } else {
-            self.readData(uid: data.uid) { [weak self] result in
-              
-              guard let strongSelf = self else { return }
-              
-              switch result {
-                
-              case .success(let dataReturn):
-                
-                strongSelf.currentUserInfo = dataReturn
-                
-                completion(.success(dataReturn))
-                
-              case .failure:
-                
-                completion(.failure(FireBaseUpdateError.updateError))
-              }
-            }
-            
-          }
-        })
-      }
-    }
-  }
-  
-  func updateReverseUid(uid: String, completion: @escaping (Result<String, Error>) -> Void) {
+  func updateReverseUid(uid: String, isSelf: Bool, completion: @escaping (Result<String, Error>) -> Void) {
       
-    UserManager.shared.readData(uid: uid) { result in
+    UserManager.shared.readUserInfo(uid: uid, isSelf: isSelf) { result in
       switch result {
-      case .success(var  reverseInfo):
+      case .success(var reverseInfo):
         
         var isBlack = false
         guard let currentuid = Auth.auth().currentUser?.uid else { return }
         
-        for info in reverseInfo.blacklist {
-          if info == currentuid {
+        for info in reverseInfo.oppoBlacklist where info == currentuid {
             isBlack = true
             break
-          }
         }
         
         if isBlack {
@@ -352,17 +295,15 @@ class UserManager {
   
         } else {
           
-          reverseInfo.blacklist.append(currentuid)
-          self.currentUserInfo = reverseInfo
-          
-            UserManager.shared.updateUserInfo { result in
-              switch result {
-              case .success:
-                completion(.success("Success"))
-              case .failure:
-                completion(.failure(FireBaseUpdateError.updateError))
-              }
+          reverseInfo.oppoBlacklist.append(currentuid)
+          UserManager.shared.updateOppoInfo(userInfo: reverseInfo) { result in
+            switch result {
+            case .success:
+              completion(.success("Success"))
+            case .failure:
+              completion(.failure(FireBaseUpdateError.updateError))
             }
+          }
         }
       case .failure:
         completion(.failure(FireBaseUpdateError.updateError))
@@ -373,19 +314,15 @@ class UserManager {
   func updatefreinds(ownerUid: String, takerUid: String, chatRoomID: String, completion: @escaping (Result<String, Error>) -> Void) {
     
     let ownerRdf = dbF.collection("Users").document(ownerUid)
-    
     let takerRef = dbF.collection("Users").document(takerUid)
-    
     let ownerFriend = Friends(nameREF: takerRef, chatRoomID: chatRoomID)
-    
     let takerFriend = Friends(nameREF: ownerRdf, chatRoomID: chatRoomID)
     
     let group = DispatchGroup()
-    
     group.enter()
     group.enter()
     
-    dbF.collection("Users").document(ownerUid).collection("Friends").document().setData(ownerFriend.toDict) { error in
+    dbF.collection("Users").document(ownerUid).collection("Friends").document(takerUid).setData(ownerFriend.toDict) { error in
       
       if error != nil {
         
@@ -396,7 +333,7 @@ class UserManager {
       }
     }
     
-    dbF.collection("Users").document(takerUid).collection("Friends").document().setData(takerFriend.toDict) { error in
+    dbF.collection("Users").document(takerUid).collection("Friends").document(ownerUid).setData(takerFriend.toDict) { error in
       
       if error != nil {
         
@@ -463,28 +400,16 @@ class UserManager {
       let about = data["about"] as? String,
       let totalStar = data["totalStar"] as? Double,
       let taskCount = data["taskCount"] as? Int,
-      let uid = data["uid"] as? String else { return }
+      let uid = data["uid"] as? String,
+      let oppoBlacklist = data["oppoBlacklist"] as? [String] else { return }
       
-      let dataReturn = AccountInfo(email: email, nickname: nickname, noJudgeCount: noJudgeCount, task: task, minusStar: minusStar, photo: photo, report: report, blacklist: blacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
+      let dataReturn = AccountInfo(email: email, nickname: nickname, noJudgeCount: noJudgeCount, task: task, minusStar: minusStar, photo: photo, report: report, blacklist: blacklist, oppoBlacklist: oppoBlacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
       
       completion(.success(dataReturn))
     }
   }
-  
   func preventTap(viewController: UIViewController) {
     guard let tabVC = viewController.view.window?.rootViewController as? TabBarViewController else { return }
     LKProgressHUD.show(controller: tabVC)
   }
-  
-//  func updateHistoryMission(owner: String, classified: Int, judge: String, star: Double, completion: @escaping (Result<String, Error>) -> Void) {
-//    
-//    guard let uid = Auth.auth().currentUser?.uid else { return }
-//    
-//    let info = JudgeInfo(owner: owner, judge: judge, star: star, classified: classified)
-//    
-//    dbF.collection("Users").document(uid).collection("History").addDocument(data: info.toDict) { _  in
-//      
-//      completion(Result.success("Success"))
-//    }
-//  }
 }

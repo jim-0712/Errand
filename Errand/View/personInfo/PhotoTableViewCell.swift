@@ -31,7 +31,13 @@ class PhotoTableViewCell: UITableViewCell {
   
   @IBOutlet weak var emailLabel: UILabel!
   
-  func setUpView(personPhoto: String, nickName: String, email: String) {
+  func setUpView(isRequester: Bool, personPhoto: String, nickName: String, email: String) {
+    
+    if isRequester {
+      choosePhotoBtn.isHidden = true
+    } else {
+      choosePhotoBtn.isHidden = false
+    }
     personPhotoImage.loadImage(personPhoto, placeHolder: UIImage(named: "photographer"))
     personPhotoImage.layer.cornerRadius = personPhotoImage.bounds.width / 2
     personPhotoImage.contentMode = .scaleAspectFill

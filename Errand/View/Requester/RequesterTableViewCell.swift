@@ -47,14 +47,19 @@ class RequesterTableViewCell: UITableViewCell {
     
     self.delegate?.checkTheInfo(tableViewCell: self, index: index)
   }
+  
   func setUp(nickName: String, starcount: Double, image: String, index: Int, taskCount: Int, noJudge: Bool) {
     
+    peopleImageView.contentMode = .scaleAspectFill
+    
     if taskCount == 0 {
+      describeLabel.isHidden = false
       describeLabel.text = "此用戶為新用戶"
       starView.isHidden = true
     }
     
     if noJudge {
+      describeLabel.isHidden = false
       describeLabel.text = "此用戶尚未被評價"
       starView.isHidden = true
     } else {
