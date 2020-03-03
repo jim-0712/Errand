@@ -27,12 +27,6 @@ class FriendViewController: UIViewController {
         self.navigationItem.rightBarButtonItem?.tintColor = .red
         
       }
-//      if UserManager.shared.isTourist {
-//            friendListTable.backgroundColor = .clear
-//          } else {
-//      //      preventTap()
-//            getFriend()
-//          }
     }
 
   @objc func enterBlacklist() {
@@ -96,7 +90,7 @@ class FriendViewController: UIViewController {
       switch result {
       case .success(let friends):
         
-        if friends.count == 0 {
+        if friends.isEmpty {
           self.friendInfo = []
           LKProgressHUD.dismiss()
         }

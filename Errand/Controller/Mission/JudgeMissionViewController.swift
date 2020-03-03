@@ -57,8 +57,7 @@ class JudgeMissionViewController: UIViewController {
   @IBAction func backAct(_ sender: Any) {
     
     guard let taskData = self.detailData,
-         let user = UserManager.shared.currentUserInfo,
-         let judge = judgeTextView.text else { return }
+      let judge = judgeTextView.text else { return }
     
     let status = UserManager.shared.statusJudge
     var judgerOwner = ""
@@ -69,31 +68,27 @@ class JudgeMissionViewController: UIViewController {
     }
     
     let group = DispatchGroup()
-    UserManager.shared.preventTap(viewController: self)
+    LKProgressHUD.show(controller: self)
     group.enter()
     group.enter()
     
     TaskManager.shared.updateJudge(owner: judgerOwner, classified: taskData.classfied, judge: judge, star: -0.1 ) { (result) in
       switch result {
       case .success:
-        print("ok")
         group.leave()
       case .failure:
         print("error")
       }
     }
     
-    UserManager.shared.readData(uid: judgerOwner) { result in
+    UserManager.shared.readUserInfo(uid: judgerOwner, isSelf: false) { result in
       switch result {
       case .success(var accountInfo):
         accountInfo.taskCount += 1
         accountInfo.noJudgeCount += 1
-        UserManager.shared.currentUserInfo = accountInfo
-        UserManager.shared.updateUserInfo { result in
+        UserManager.shared.updateOppoInfo(userInfo: accountInfo) { result in
           switch result {
-          case .success(let info):
-            UserManager.shared.currentUserInfo = user
-            print(info)
+          case .success:
             group.leave()
           case .failure:
             print("error")
@@ -107,8 +102,8 @@ class JudgeMissionViewController: UIViewController {
     addFriendJudge(taskInfo: taskData)
     
     group.notify(queue: DispatchQueue.main) {
+      LKProgressHUD.dismiss()
       let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
-      
       self.view.window?.rootViewController = mapView
     }
   }
@@ -123,18 +118,22 @@ class JudgeMissionViewController: UIViewController {
   // swiftlint:disable cyclomatic_complexity
   @IBAction func addFriendsBtn(_ sender: Any) {
     
-    guard let taskInfo = self.detailData,
-         let userInfo = UserManager.shared.currentUserInfo else { return }
+    guard let taskInfo = self.detailData else { return }
     
     var reFaceData = taskInfo
+    
+    var nameRef: DocumentReference?
     
     let status = UserManager.shared.statusJudge
     
     if status == 1 {
       reFaceData.ownerAskFriend = true
-    } else if status == 2 {
+      nameRef = self.dbF.collection("Users").document(taskInfo.missionTaker)
+    }
+    if status == 2 {
       reFaceData.takerAskFriend = true
-    } else { print("friend") }
+      nameRef = self.dbF.collection("Users").document(taskInfo.uid)
+    }
     
     var isFriends = false
     
@@ -142,28 +141,13 @@ class JudgeMissionViewController: UIViewController {
       switch result {
       case .success(let friends):
         
-        var nameRef: DocumentReference?
-        
-        if status == 1 {
-          nameRef = self.dbF.collection("Users").document(taskInfo.missionTaker)
-        } else if status == 2 {
-          nameRef = self.dbF.collection("Users").document(taskInfo.uid)
-        } else { }
-        
         guard let nameRe = nameRef else { return }
-        
-//        for count in 0 ..< friends.count {
-//          if friends[count].nameREF == nameRe {
-//            isFriends = true
-//          }
-//        }
         
         for friend in friends where friend.nameREF == nameRe {
           isFriends = true
         }
         
         if !isFriends {
-          
           if status == 1 && taskInfo.ownerAskFriend {
             TaskManager.shared.showAlert(title: "等待中", message: "您已送出邀請", viewController: self)
           } else if status == 2 && taskInfo.takerAskFriend {
@@ -172,9 +156,7 @@ class JudgeMissionViewController: UIViewController {
             let controller = UIAlertController(title: "好友", message: "確定送出好友邀請？", preferredStyle: .alert)
             let okAction = UIAlertAction(title: "ok", style: .default) { _ in
               LKProgressHUD.show(controller: self)
-              
               self.refreshTask(task: reFaceData, uid: reFaceData.uid)
-
             }
             let cancelAct = UIAlertAction(title: "cancel", style: .cancel, handler: nil)
             controller.addAction(okAction)
@@ -182,33 +164,13 @@ class JudgeMissionViewController: UIViewController {
             self.present(controller, animated: true, completion: nil)
           }
         } else {
-          
           SwiftMes.shared.showErrorMessage(body: "此用戶已在好友名單", seconds: 0.8)
-          
         }
         
       case .failure:
         print("friendsError")
       }
     }
-    
-//    if status == 1 && taskInfo.ownerAskFriend {
-//      TaskManager.shared.showAlert(title: "等待中", message: "您已送出邀請", viewController: self)
-//    } else if status == 2 && taskInfo.takerAskFriend {
-//      TaskManager.shared.showAlert(title: "等待中", message: "您已送出邀請", viewController: self)
-//    } else {
-//      let controller = UIAlertController(title: "好友", message: "確定送出好友邀請？", preferredStyle: .alert)
-//      let okAction = UIAlertAction(title: "ok", style: .default) { _ in
-//        LKProgressHUD.show(controller: self)
-//
-//        self.refreshTask(task: reFaceData, uid: reFaceData.uid)
-//
-//      }
-//      let cancelAct = UIAlertAction(title: "cancel", style: .cancel, handler: nil)
-//      controller.addAction(okAction)
-//      controller.addAction(cancelAct)
-//      self.present(controller, animated: true, completion: nil)
-//    }
   }
   
   func setUplistener() {
@@ -230,46 +192,39 @@ class JudgeMissionViewController: UIViewController {
       }
     }
   }
-
+  
   func addFriendJudge(taskInfo: TaskInfo) {
     
-    guard let status = UserManager.shared.currentUserInfo?.status else { return }
-    
     let statusss = UserManager.shared.statusJudge
-    
     if taskInfo.takerAskFriend && taskInfo.ownerAskFriend && !taskInfo.isFrirndsNow {
       
-        UserManager.shared.getFriends { result in
-          switch result {
-          case .success(let friends):
-            
-            var nameRef: DocumentReference?
-            var alreadyFriend = false
-            
-            if statusss == 1 {
-              nameRef = self.dbF.collection("Users").document(taskInfo.missionTaker)
-            } else if statusss == 2 {
-              nameRef = self.dbF.collection("Users").document(taskInfo.uid)
-            } else { }
-            
-            guard let nameRe = nameRef else { return }
-            
-            for count in 0 ..< friends.count {
-              if friends[count].nameREF == nameRe {
-                alreadyFriend = true
-              }
-            }
-            
-            if !alreadyFriend {
-              
-              self.addFriendsAct(taskInfo: taskInfo)
-            
-            }
-          case .failure:
-            print("friendsError")
+      UserManager.shared.getFriends { result in
+        switch result {
+        case .success(let friends):
+          
+          var nameRef: DocumentReference?
+          var alreadyFriend = false
+          
+          if statusss == 1 {
+            nameRef = self.dbF.collection("Users").document(taskInfo.missionTaker)
           }
+          if statusss == 2 {
+            nameRef = self.dbF.collection("Users").document(taskInfo.uid)
+          }
+          
+          guard let nameRe = nameRef else { return }
+          for friend in friends where friend.nameREF == nameRe {
+            alreadyFriend = true
+          }
+          
+          if !alreadyFriend {
+            self.addFriendsAct(taskInfo: taskInfo)
+          }
+        case .failure:
+          print("friendsError")
         }
       }
+    }
   }
   
   func addFriendsAct(taskInfo: TaskInfo) {
@@ -278,18 +233,16 @@ class JudgeMissionViewController: UIViewController {
     TaskManager.shared.createChatRoom(chatRoomID: chatRoomID) { result in
       switch result {
       case .success:
-        print("ChatRoomOK")
         UserManager.shared.updatefreinds(ownerUid: taskInfo.uid, takerUid: taskInfo.missionTaker, chatRoomID: chatRoomID) { result in
           switch result {
-            case .success:
+          case .success :
             LKProgressHUD.dismiss()
-          case .failure:
+          case .failure :
             print("no")
           }
         }
         
         reFaceData.isFrirndsNow = true
-        
         self.refreshTask(task: reFaceData, uid: taskInfo.uid)
         
       case .failure:
@@ -301,7 +254,6 @@ class JudgeMissionViewController: UIViewController {
   @IBAction func finishJudgeAct(_ sender: Any) {
     
     guard let taskData = self.detailData,
-      let user = UserManager.shared.currentUserInfo,
       let judge = judgeTextView.text else { return }
     
     let status = UserManager.shared.statusJudge
@@ -326,17 +278,16 @@ class JudgeMissionViewController: UIViewController {
       }
     }
     
-    UserManager.shared.readData(uid: judgerOwner) { [weak self]result in
+    UserManager.shared.readUserInfo(uid: judgerOwner, isSelf: false) { [weak self]result in
       guard let strongSelf = self else { return }
       switch result {
       case .success(var judgeOwnerInfo):
         judgeOwnerInfo.totalStar += strongSelf.starView.rating
         judgeOwnerInfo.taskCount += 1
-        UserManager.shared.currentUserInfo = judgeOwnerInfo
-        UserManager.shared.updateUserInfo { result in
+        
+        UserManager.shared.updateOppoInfo(userInfo: judgeOwnerInfo) { result in
           switch result {
           case .success(let info):
-            UserManager.shared.currentUserInfo = user
             print(info)
             group.leave()
           case .failure:
@@ -405,16 +356,16 @@ class JudgeMissionViewController: UIViewController {
   }
   
   func refreshTask(task: TaskInfo, uid: String) {
-     TaskManager.shared.updateWholeTask(task: task, uid: uid) { result in
-       switch result {
-       case .success:
-         print("ya")
-         LKProgressHUD.dismiss()
-       case .failure:
-         print("error")
-       }
-     }
-   }
+    TaskManager.shared.updateWholeTask(task: task, uid: uid) { result in
+      switch result {
+      case .success:
+        print("ya")
+        LKProgressHUD.dismiss()
+      case .failure:
+        print("error")
+      }
+    }
+  }
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if segue.identifier == "chat" {

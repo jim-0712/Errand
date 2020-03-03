@@ -399,7 +399,7 @@ extension PersonInfoViewController: UIImagePickerControllerDelegate, UINavigatio
               
               guard let urlBack = url else { return }
               
-              UserManager.shared.updatePhotoData(photo: urlBack) { result in
+              UserManager.shared.updatePersonPhotoURL(photo: urlBack) { result in
                 
                 switch result {
                   

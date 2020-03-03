@@ -52,19 +52,17 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   
   @IBOutlet weak var searchBtn: UIButton!
   
-  var isLocation = false
+  let segueMapdetail = "Mapdetail"
   
-  var currentClassified = 0
+  var isLocationAuthOn = false
   
-  var finalLat: Double = 0.0
+  var missionClassifiedIndex = 0
   
-  var finalLong: Double = 0.0
+  var currentPositionLatitude: Double = 0.0
   
-  var isSearch: Bool = false
+  var currentPositionLongtitude: Double = 0.0
   
-  var path: GMSMutablePath!
-  
-  var count = 0
+  var isOnSearch: Bool = false
   
   let myLocationManager = CLLocationManager()
   
@@ -85,19 +83,27 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
 
   var isTapOnContent: Bool = false
   
-  var judge = [Bool](repeating: false, count: 9)
+  var preventReuseCellBug = [Bool](repeating: false, count: 9)
   
   override func viewDidLoad() {
     super.viewDidLoad()
-//    Fabric.sharedSDK().debug = true
     arrangeTextField.delegate = self
-    setUpView()
+    preSetup()
     changeConstraints()
     setUpLocation()
     checkLocationAuth(isRadar: false)
-    setupCollectin()
     searchView.isHidden = true
-    judge[0] = true
+    preventReuseCellBug[0] = true
+  }
+  
+  func preSetup() {
+    setUpBtn()
+    setUpView()
+    setUpPageView()
+    setUpRadarView()
+    setupCollectin()
+    setUpSearchView()
+    setUpArrangeTextField()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -110,64 +116,44 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
     LKProgressHUD.show(controller: tabVC)
   }
   
-  override func viewDidLayoutSubviews() {
-    super.viewDidLayoutSubviews()
-    taskPersonPhoto.layer.cornerRadius = taskPersonPhoto.bounds.width / 2
-  }
-  
-  @IBAction func radarAct(_ sender: Any) {
-    
-//    Crashlytics.sharedInstance().crash()
-
+  @IBAction func tapRadarCheckAuth(_ sender: Any) {
     if CLLocationManager.locationServicesEnabled() {
       checkLocationAuth(isRadar: true)
-      
     } else {
       alertOpen()
     }
   }
   
   @IBAction func dismissSearchAct(_ sender: Any) {
-    
-    Crashlytics.sharedInstance().crash()
-    isSearch = !isSearch
+    isOnSearch = !isOnSearch
     self.view.endEditing(true)
     self.resignFirstResponder()
     arrangeTextField.text = ""
-    searchView.isHidden = isSearch
+    searchView.isHidden = isOnSearch
   }
   
-  @IBAction func searchAct(_ sender: Any) {
+  @IBAction func tapSearchMission(_ sender: Any) {
     
-    guard let kilo = arrangeTextField.text,
-         let kiloDouble = Double(kilo) else { return }
+    guard let limit = arrangeTextField.text,
+         let limitDistance = Double(limit) else { return }
     
     googleMapView.clear()
-    
     TaskManager.shared.readData { [weak self] result in
-      
       guard let strongSelf = self else { return }
-      
       switch result {
         
       case .success(let taskData):
         
         TaskManager.shared.taskData = []
-        
         strongSelf.taskDataReturn = taskData.filter({ [weak self] info in
-          
           guard let strongSelf = self else { return false }
+          let distance = MapManager.shared.getDistance(lat1: info.lat, lng1: info.long, lat2: strongSelf.currentPositionLatitude, lng2: strongSelf.currentPositionLongtitude)
           
-          let distance = MapManager.shared.getDistance(lat1: info.lat, lng1: info.long, lat2: strongSelf.finalLat, lng2: strongSelf.finalLong)
-          
-          if strongSelf.currentClassified == 0 && distance <= kiloDouble {
-            
+          if strongSelf.missionClassifiedIndex == 0 && distance <= limitDistance {
             return true
-          } else if distance <= kiloDouble && info.classfied == strongSelf.currentClassified {
-            
+          } else if distance <= limitDistance && info.classfied == strongSelf.missionClassifiedIndex {
             return true
           } else {
-            
             return false
           }
         })
@@ -178,8 +164,8 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       }
     }
     addAnnotation()
-    isSearch = !isSearch
-    searchView.isHidden = isSearch
+    isOnSearch = !isOnSearch
+    searchView.isHidden = isOnSearch
   }
   
   @IBAction func backAct(_ sender: Any) {
@@ -188,21 +174,17 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   }
   
   @IBAction func checkDetailAct(_ sender: Any) {
-    performSegue(withIdentifier: "Mapdetail", sender: nil)
+    performSegue(withIdentifier: segueMapdetail, sender: nil)
   }
   
   func changeConstraints() {
-    
     if isTapOnContent {
-      
       let move = UIViewPropertyAnimator(duration: 1.0, curve: .easeInOut) {
         self.invisibleBottomCons.constant = 0
       }
       move.startAnimation()
     } else {
-      
       let move = UIViewPropertyAnimator(duration: 1.0, curve: .easeInOut) {
-        
         self.invisibleBottomCons.constant = 170
       }
       move.startAnimation()
@@ -212,13 +194,9 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   func getTaskData() {
     
     TaskManager.shared.readData { [weak self] result in
-      
       guard let strongSelf = self else { return }
-      
       switch result {
-        
       case .success(let taskData):
-        
         strongSelf.taskDataReturn = taskData
         TaskManager.shared.taskData = []
         
@@ -237,46 +215,62 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
     categoryCollection.backgroundColor = .clear
   }
   
-  func setUpView() {
-    isSearch = false
-    searchView.isHidden = isSearch
-    pageView.layer.shadowOpacity = 0.2
-    searchBtn.layer.shadowOpacity = 0.5
+  func setUpSearchView() {
+    searchView.isHidden = isOnSearch
     searchView.layer.shadowOpacity = 0.5
-    backgroundView.layer.shadowOpacity = 0.5
-    radarBackView.layer.shadowOpacity = 0.5
-    checkDetailBtn.layer.borderWidth = 1.0
-    arrangeTextField.layer.shadowOpacity = 0.5
-    checkDetailBtn.layer.borderColor = UIColor.G1?.cgColor
-    backBtn.layer.cornerRadius = backBtn.bounds.height / 2
-    pageView.layer.cornerRadius = pageView.bounds.height / 10
-    searchBtn.layer.cornerRadius = searchBtn.bounds.height / 10
     searchView.layer.cornerRadius = searchView.bounds.height / 10
-    radarBackView.layer.cornerRadius = radarBackView.bounds.width / 2
-    backgroundView.layer.cornerRadius = backgroundView.bounds.width / 2
-    pageView.layer.shadowOffset = CGSize(width: 3, height: 3)
-    searchBtn.layer.shadowOffset = CGSize(width: 3, height: 3)
     searchView.layer.shadowOffset = CGSize(width: 3, height: 3)
-    backgroundView.layer.shadowOffset = .zero
-    radarBackView.layer.shadowOffset = .zero
-    backgroundView.backgroundColor = .white
+  }
+  
+  func setUpRadarView() {
     radarBackView.backgroundColor = .white
-    checkDetailBtn.layer.cornerRadius = checkDetailBtn.bounds.height / 4
+    radarBackView.backgroundColor = .white
+    radarBackView.layer.shadowOpacity = 0.5
+    radarBackView.layer.shadowOffset = .zero
+    radarBackView.layer.cornerRadius = radarBackView.bounds.width / 2
+  }
+  
+  func setUpPageView() {
+    pageView.layer.shadowOpacity = 0.2
+    pageView.layer.cornerRadius = pageView.bounds.height / 10
+    pageView.layer.shadowOffset = CGSize(width: 3, height: 3)
+  }
+  
+  func setUpArrangeTextField() {
+    arrangeTextField.layer.shadowOpacity = 0.5
     arrangeTextField.layer.shadowOffset = CGSize(width: 3, height: 3)
+  }
+  
+  func setUpBtn() {
+    searchBtn.layer.shadowOpacity = 0.5
+    searchBtn.layer.cornerRadius = searchBtn.bounds.height / 10
+    searchBtn.layer.shadowOffset = CGSize(width: 3, height: 3)
+    checkDetailBtn.layer.borderWidth = 1.0
+    checkDetailBtn.layer.borderColor = UIColor.G1?.cgColor
+    checkDetailBtn.layer.cornerRadius = checkDetailBtn.bounds.height / 4
+    backBtn.layer.cornerRadius = backBtn.bounds.height / 2
+  }
+  
+  func setUpView() {
+    isOnSearch = false
+    backgroundView.backgroundColor = .white
+    backgroundView.layer.shadowOpacity = 0.5
+    backgroundView.layer.shadowOffset = .zero
+    backBtn.layer.cornerRadius = backBtn.bounds.height / 2
+    backgroundView.layer.cornerRadius = backgroundView.bounds.width / 2
     taskPersonPhoto.layer.cornerRadius = taskPersonPhoto.bounds.width / 2
   }
   
   @IBAction func reloadLocation(_ sender: Any) {
-    
     if CLLocationManager.locationServicesEnabled() {
       checkLocationAuth(isRadar: false)
-      isSearch = !isSearch
+      isOnSearch = !isOnSearch
       searchView.isHidden = true
     } else {
       alertOpen()
     }
     
-    if isLocation {
+    if isLocationAuthOn {
       guard let center = myLocationManager.location?.coordinate else { return }
       let myArrange = GMSCameraPosition.camera(withTarget: center, zoom: 17)
       googleMapView.camera = myArrange
@@ -288,8 +282,8 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
     guard let lat = myLocationManager.location?.coordinate.latitude,
          let long = myLocationManager.location?.coordinate.longitude else { return }
     
-    finalLat = lat
-    finalLong = long
+    currentPositionLatitude = lat
+    currentPositionLongtitude = long
     googleMapView.delegate = self
     myLocationManager.delegate = self
     myLocationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -326,9 +320,9 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       }
       googleMapView.isMyLocationEnabled = true
       myLocationManager.startUpdatingLocation()
-      isSearch = !isSearch
-      searchView.isHidden = isSearch
-      isLocation = true
+      isOnSearch = !isOnSearch
+      searchView.isHidden = isOnSearch
+      isLocationAuthOn = true
       
     case .denied:
       
@@ -344,9 +338,9 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       }
       myLocationManager.startUpdatingLocation()
       googleMapView.isMyLocationEnabled = true
-      isSearch = !isSearch
-      searchView.isHidden = isSearch
-      isLocation = true
+      isOnSearch = !isOnSearch
+      searchView.isHidden = isOnSearch
+      isLocationAuthOn = true
       
     case .restricted:
       SwiftMes.shared.showWarningMessage(body: "請至 設定 > 隱私權 > 定位服務 開啟定位服務", seconds: 1.0)
@@ -375,12 +369,12 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   }
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    if segue.identifier == "Mapdetail" {
-      guard let detailVC = segue.destination as? MissionDetailViewController else { return }
-      detailVC.modalPresentationStyle = .fullScreen
-      detailVC.detailData = specificData[0]
-      detailVC.isNavi = true
-      detailVC.receiveTime =  TaskManager.shared.timeConverter(time: specificData[0].time)
+    if segue.identifier == segueMapdetail {
+      guard let missionDetailVC = segue.destination as? MissionDetailViewController else { return }
+      missionDetailVC.modalPresentationStyle = .fullScreen
+      missionDetailVC.detailData = specificData[0]
+      missionDetailVC.isNavi = true
+      missionDetailVC.receiveTime =  TaskManager.shared.timeConverter(time: specificData[0].time)
     }
   }
 }
@@ -421,8 +415,8 @@ extension GoogleMapViewController: GMSMapViewDelegate {
   }
   
   func mapView(_ mapView: GMSMapView, didChange position: GMSCameraPosition) {
-    finalLat = position.target.latitude
-    finalLong = position.target.longitude
+    currentPositionLatitude = position.target.latitude
+    currentPositionLongtitude = position.target.longitude
   }
 }
 
@@ -437,7 +431,7 @@ extension GoogleMapViewController: UICollectionViewDelegate, UICollectionViewDat
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "category", for: indexPath) as? CategoryCollectionViewCell else { return UICollectionViewCell() }
     let classified = TaskManager.shared.taskClassified
     cell.setUpContent(label: classified[indexPath.row].title, color: classified[indexPath.row].color)
-    cell.contentView.backgroundColor = judge[indexPath.row] ? UIColor.Y1 : UIColor.LG2
+    cell.contentView.backgroundColor = preventReuseCellBug[indexPath.row] ? UIColor.Y1 : UIColor.LG2
     return cell
   }
   
@@ -447,12 +441,12 @@ extension GoogleMapViewController: UICollectionViewDelegate, UICollectionViewDat
     
     if indexPath.row == 0 {
       
-      currentClassified = 0
+      missionClassifiedIndex = 0
       
       self.getTaskData()
     } else {
       
-      currentClassified = indexPath.row
+      missionClassifiedIndex = indexPath.row
       TaskManager.shared.taskData = []
       TaskManager.shared.readSpecificData(parameter: "classfied", parameterDataInt: indexPath.row - 1) { [weak self] result in
         guard let strongSelf = self else { return }
@@ -466,8 +460,8 @@ extension GoogleMapViewController: UICollectionViewDelegate, UICollectionViewDat
       }
     }
     
-    judge = [Bool](repeating: false, count: 9)
-    judge[indexPath.row] = true
+    preventReuseCellBug = [Bool](repeating: false, count: 9)
+    preventReuseCellBug[indexPath.row] = true
     self.categoryCollection.reloadData()
   }
 }

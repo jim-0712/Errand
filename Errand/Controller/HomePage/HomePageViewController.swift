@@ -33,12 +33,7 @@ class ViewController: UIViewController {
     setUpBtn()
     setUpAppleBtn()
     IQKeyboardManager.shared().isEnabled = true
-    NotificationCenter.default.addObserver(self, selector: #selector(goToUserInfo), name: Notification.Name("userInfo"), object: nil)
-  }
-  
-  func preventTap() {
-    guard let rootVC = self.view.window?.rootViewController else { return }
-    LKProgressHUD.show(controller: rootVC)
+    NotificationCenter.default.addObserver(self, selector: #selector(gotoMapPage), name: Notification.Name("userInfo"), object: nil)
   }
   
   @IBAction func visitorAct(_ sender: Any) {
@@ -52,8 +47,7 @@ class ViewController: UIViewController {
   
   @IBAction func privacyAct(_ sender: Any) {
     guard let webView = storyboard?.instantiateViewController(identifier: "WebViewController") as? WebViewController else { return }
-    self.present(webView, animated: true, completion: nil)
-    
+    self.present(webView, animated: true, completion: nil)    
   }
   
   @IBAction func fbLoginAct(_ sender: Any) {
@@ -69,6 +63,11 @@ class ViewController: UIViewController {
         LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
       }
     }
+  }
+  
+  func preventTap() {
+    guard let rootVC = self.view.window?.rootViewController else { return }
+    LKProgressHUD.show(controller: rootVC)
   }
   
   func loginDBwithFB(accessToken: String, viewController: UIViewController) {
@@ -106,7 +105,7 @@ class ViewController: UIViewController {
   }
   
   func readData(uid: String, isApple: Bool, isFB: Bool) {
-    UserManager.shared.readData(uid: uid) { [weak self] result in
+    UserManager.shared.readUserInfo(uid: uid, isSelf: true) { [weak self] result in
       guard let strongSelf = self else { return }
       switch result {
       case .success:
@@ -172,7 +171,7 @@ class ViewController: UIViewController {
     ])
   }
   
-  @objc func goToUserInfo () {
+  @objc func gotoMapPage () {
     preventTap()
     UserManager.shared.isTourist = false
     guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -200,7 +199,7 @@ class ViewController: UIViewController {
     guard let email = Auth.auth().currentUser?.email,
          let uid = Auth.auth().currentUser?.uid else { return }
     
-    UserManager.shared.readData(uid: uid) {result in
+    UserManager.shared.readUserInfo(uid: uid, isSelf: true) {result in
       switch result {
       case .success:
         completion(.success("good"))
@@ -210,7 +209,6 @@ class ViewController: UIViewController {
           DataBaseManager.shared.createDataBase(classification: "Users", nickName: userName, email: email, photo: photo) { result in
             switch result {
             case .success:
-              
               completion(.success("good"))
               
             case .failure:

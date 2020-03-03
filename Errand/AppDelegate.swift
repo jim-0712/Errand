@@ -129,7 +129,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     
     guard let uid = Auth.auth().currentUser?.uid else { return }
     
-    UserManager.shared.readData(uid: uid) { result in
+    UserManager.shared.readUserInfo(uid: uid, isSelf: true) { result in
       switch result {
       case .success:
         self.gotoDetail()
@@ -173,7 +173,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     
     var status = 0
     
-    UserManager.shared.readData(uid: uid) { result in
+    UserManager.shared.readUserInfo(uid: uid, isSelf: true) { result in
       switch result {
       case .success(let userInfo):
         status = userInfo.status

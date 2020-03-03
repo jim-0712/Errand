@@ -92,7 +92,9 @@ class ChildInfoViewController: UIViewController {
       
       UserManager.shared.currentUserInfo?.nickname = self.name
       UserManager.shared.currentUserInfo?.about = self.aboutHide
-      UserManager.shared.updateUserInfo { [weak self] result in
+      guard let userInfo = UserManager.shared.currentUserInfo else { return }
+      
+      UserManager.shared.updateOppoInfo(userInfo: userInfo) { [weak self] result in
         guard let strongSelf = self else { return }
         
         switch result {
@@ -105,7 +107,6 @@ class ChildInfoViewController: UIViewController {
           print("error")
         }
       }
-      
     }
   }
   
@@ -175,26 +176,22 @@ extension ChildInfoViewController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     let tourist = UserManager.shared.isTourist
+    var containerUserInfo: AccountInfo?
     
     if !tourist && !UserManager.shared.isRequester {
-      guard let userInfo = UserManager.shared.currentUserInfo else  { return UITableViewCell() }
-      self.name = userInfo.nickname
-      self.about = userInfo.about
-      self.email = userInfo.email
-      self.totalStar = userInfo.totalStar
-      self.minusStar = userInfo.minusStar
-      self.noJudge = userInfo.noJudgeCount
-      self.totaltaskCount = userInfo.taskCount
+      containerUserInfo = UserManager.shared.currentUserInfo
     } else {
-      guard let requester = UserManager.shared.requesterInfo else { return UITableViewCell() }
-      self.name = requester.nickname
-      self.about = requester.about
-      self.email = requester.email
-      self.totalStar = requester.totalStar
-      self.minusStar = requester.minusStar
-      self.noJudge = requester.noJudgeCount
-      self.totaltaskCount = requester.taskCount
+      containerUserInfo = UserManager.shared.requesterInfo
     }
+    
+    guard let container = containerUserInfo else { return UITableViewCell() }
+    self.name = container.nickname
+    self.about = container.about
+    self.email = container.email
+    self.totalStar = container.totalStar
+    self.minusStar = container.minusStar
+    self.noJudge = container.noJudgeCount
+    self.totaltaskCount = container.taskCount
     
     LKProgressHUD.dismiss()
     let data = [name, self.about]

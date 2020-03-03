@@ -69,6 +69,4 @@ class HistoryJudgeTableViewCell: UITableViewCell {
     starView.settings.filledImage = UIImage(named: "star-3")?.withRenderingMode(.alwaysOriginal)
     
   }
-  
-  
 }

@@ -397,7 +397,6 @@ class TaskManager {
               taskInfo.takerOK = status
             }
 
-            
             document.reference.updateData(taskInfo.toDict) { (error) in
               
               if error != nil {

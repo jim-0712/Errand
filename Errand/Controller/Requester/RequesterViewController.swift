@@ -69,20 +69,6 @@ class RequesterViewController: UIViewController {
     UserManager.shared.isRequester = false
   }
   
-//  override func viewDidAppear(_ animated: Bool) {
-//    super.viewDidAppear(animated)
-//    if UserManager.shared.isTourist {
-//
-//    } else if UserManager.shared.currentUserInfo?.status == 1 {
-//      preventTap()
-//    }
-//  }
-//
-////  func preventTap() {
-////    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
-////    LKProgressHUD.show(controller: tabVC)
-////  }
-  
   var userInfo = [AccountInfo]() {
     didSet {
       if userInfo.isEmpty {
@@ -120,7 +106,6 @@ class RequesterViewController: UIViewController {
     readRequester()
   }
   
-  
   func showAlert(title: String, message: String, viewController: UIViewController) {
     let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
     let okAction = UIAlertAction(title: "ok", style: .default) { _ in
@@ -134,8 +119,8 @@ class RequesterViewController: UIViewController {
   }
   
   func readRequester() {
-    guard let uid = UserManager.shared.currentUserInfo?.uid,
-      let currentUser = UserManager.shared.currentUserInfo else { return }
+    guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
+//      let currentUser = UserManager.shared.currentUserInfo else { return }
     
     TaskManager.shared.readSpecificData(parameter: "uid", parameterString: uid) { [weak self] result in
       
@@ -153,7 +138,7 @@ class RequesterViewController: UIViewController {
           }
         }
         
-        if taskCount.count == 0 || taskCount[0].isComplete {
+        if taskCount.isEmpty || taskCount[0].isComplete {
           strongSelf.userInfo = []
           LKProgressHUD.dismiss()
           SwiftMes.shared.showWarningMessage(body: "您當前沒有任務", seconds: 1.0)
@@ -165,7 +150,7 @@ class RequesterViewController: UIViewController {
           SwiftMes.shared.showWarningMessage(body: "任務進行中", seconds: 1.0)
         } else {
           
-          if taskCount[0].requester.count == 0 {
+          if taskCount[0].requester.isEmpty {
             strongSelf.userInfo = []
             strongSelf.taskinfo = taskCount[0]
             strongSelf.requesterTable.reloadData()
@@ -173,7 +158,7 @@ class RequesterViewController: UIViewController {
           } else {
             strongSelf.taskinfo = taskCount[0]
             for count in 0 ..< taskCount[0].requester.count {
-              UserManager.shared.readData(uid: taskCount[0].requester[count]) { result in
+              UserManager.shared.readUserInfo(uid: taskCount[0].requester[count], isSelf: false) { result in
                 switch result {
                   
                 case .success(let accountInfo):
@@ -183,7 +168,7 @@ class RequesterViewController: UIViewController {
                   if count == taskCount[0].requester.count - 1 {
                     LKProgressHUD.dismiss()
                     strongSelf.userInfo = strongSelf.storeInfo
-                    UserManager.shared.currentUserInfo = currentUser
+//                    UserManager.shared.currentUserInfo = currentUser
                   }
                   
                 case .failure(let error):

@@ -111,7 +111,7 @@ class UserManager {
     }
   }
   
-  func updatePhotoData(photo: URL, completion: @escaping (Result<String, Error>) -> Void) {
+  func updatePersonPhotoURL(photo: URL, completion: @escaping (Result<String, Error>) -> Void) {
     
     let transferPhoto = photo.absoluteString
     
@@ -154,34 +154,7 @@ class UserManager {
     }
   }
   
-  func goToSign(viewController: UIViewController) {
-    
-    let alert = UIAlertController(title: "注意", message: "請先登入享有功能", preferredStyle: UIAlertController.Style.alert)
-    
-    let cancelAction = UIAlertAction(title: "取消", style: .cancel) { (_) in
-      
-      let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
-      
-      viewController.view.window?.rootViewController = mapView
-    }
-    
-    let action = UIAlertAction(title: "OK", style: .default) { (_) in
-      
-      let storyboard = UIStoryboard(name: "Main", bundle: nil)
-      
-      let goViewController = storyboard.instantiateViewController(withIdentifier: "main")
-      
-      viewController.view.window?.rootViewController = goViewController
-    }
-    
-    alert.addAction(action)
-    
-    alert.addAction(cancelAction)
-    
-    viewController.present(alert, animated: true, completion: nil)
-  }
-  
-  func goToSignOrStay(viewController: UIViewController) {
+  func goSignInPage(viewController: UIViewController) {
     let alert = UIAlertController(title: "注意", message: "請先登入享有功能", preferredStyle: UIAlertController.Style.alert)
        
     let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
@@ -201,42 +174,7 @@ class UserManager {
        
        viewController.present(alert, animated: true, completion: nil)
   }
-  
-  func readBlackData(uid: String, completion: @escaping ((Result<AccountInfo, Error>) -> Void)) {
-    
-    dbF.collection("Users").whereField("uid", isEqualTo: uid).getDocuments { (querySnapshot, err) in
-      if err != nil {
-        
-        completion(.failure(RegiError.registFailed))
-        
-      } else {
-        guard let quary = querySnapshot else {return }
-        
-        if quary.documents.count == 0 {
-          
-          completion(.failure(RegiError.notFirstRegi))
-          
-        } else {
-          
-          self.dataParser(quary: quary) { result in
-            
-            switch result {
-            case .success(let accountInfo):
-              
-              print(accountInfo)
-              
-              completion(.success(accountInfo))
-            case .failure:
-              print("error")
-            }
-          }
-          
-        }
-      }
-    }
-  }
-  
-  
+
   func updateOppoInfo(userInfo: AccountInfo, completion: @escaping (Result<String, Error>) -> Void) {
     dbF.collection("Users").whereField("uid", isEqualTo: userInfo.uid).getDocuments { (querySnapshot, error) in
       if let querySnapshot = querySnapshot {
@@ -256,7 +194,7 @@ class UserManager {
     }
   }
   
-  func readData(uid: String, completion: @escaping ((Result<AccountInfo, Error>) -> Void)) {
+  func readUserInfo(uid: String, isSelf: Bool, completion: @escaping ((Result<AccountInfo, Error>) -> Void)) {
     
     dbF.collection("Users").whereField("uid", isEqualTo: uid).getDocuments { (querySnapshot, err) in
       if err != nil {
@@ -266,7 +204,7 @@ class UserManager {
       } else {
         guard let quary = querySnapshot else {return }
         
-        if quary.documents.count == 0 {
+        if quary.documents.isEmpty {
           
           completion(.failure(RegiError.notFirstRegi))
           
@@ -276,9 +214,10 @@ class UserManager {
             
             switch result {
             case .success(let accountInfo):
-              self.currentUserInfo = accountInfo
-              print(accountInfo)
               
+              if isSelf {
+                self.currentUserInfo = accountInfo
+              }
               completion(.success(accountInfo))
             case .failure:
               print("error")
@@ -314,26 +253,6 @@ class UserManager {
       completion(.success(dataReturn))
   }
   
-  func updateData(status: Int, completion: @escaping (Result<String, Error>) -> Void) {
-    
-    guard let userInfo = currentUserInfo else { return }
-    
-    dbF.collection("Users").whereField("uid", isEqualTo: userInfo.uid).getDocuments { (querySnapshot, error) in
-      if let querySnapshot = querySnapshot {
-        let document = querySnapshot.documents.first
-        
-        document?.reference.updateData(["status": status ], completion: { (error) in
-          
-          if error != nil {
-            completion(.failure(FireBaseUpdateError.updateError))
-          } else {
-            completion(.success("Update Success"))
-          }
-        })
-      }
-    }
-  }
-  
   func updateStatus(uid: String, status: Int, completion: @escaping (Result<String, Error>) -> Void) {
     
     dbF.collection("Users").whereField("uid", isEqualTo: uid).getDocuments { (querySnapshot, error) in
@@ -356,31 +275,11 @@ class UserManager {
     }
   }
   
-  func updateUserInfo(completion: @escaping (Result<AccountInfo, Error>) -> Void) {
-    guard let data = currentUserInfo else { return }
-    dbF.collection("Users").whereField("uid", isEqualTo: data.uid).getDocuments { (querySnapshot, error) in
-      if let querySnapshot = querySnapshot {
-        let document = querySnapshot.documents.first
-        document?.reference.updateData(data.toDict, completion: { error in
-          
-          if error != nil {
-            
-            completion(.failure(FireBaseUpdateError.updateError))
-          } else {
-            
-            completion(.success(data))
-  
-          }
-        })
-      }
-    }
-  }
-  
-  func updateReverseUid(uid: String, completion: @escaping (Result<String, Error>) -> Void) {
+  func updateReverseUid(uid: String, isSelf: Bool, completion: @escaping (Result<String, Error>) -> Void) {
       
-    UserManager.shared.readData(uid: uid) { result in
+    UserManager.shared.readUserInfo(uid: uid, isSelf: isSelf) { result in
       switch result {
-      case .success(var  reverseInfo):
+      case .success(var reverseInfo):
         
         var isBlack = false
         guard let currentuid = Auth.auth().currentUser?.uid else { return }
@@ -397,16 +296,14 @@ class UserManager {
         } else {
           
           reverseInfo.oppoBlacklist.append(currentuid)
-          self.currentUserInfo = reverseInfo
-          
-            UserManager.shared.updateUserInfo { result in
-              switch result {
-              case .success:
-                completion(.success("Success"))
-              case .failure:
-                completion(.failure(FireBaseUpdateError.updateError))
-              }
+          UserManager.shared.updateOppoInfo(userInfo: reverseInfo) { result in
+            switch result {
+            case .success:
+              completion(.success("Success"))
+            case .failure:
+              completion(.failure(FireBaseUpdateError.updateError))
             }
+          }
         }
       case .failure:
         completion(.failure(FireBaseUpdateError.updateError))
@@ -511,21 +408,8 @@ class UserManager {
       completion(.success(dataReturn))
     }
   }
-  
   func preventTap(viewController: UIViewController) {
     guard let tabVC = viewController.view.window?.rootViewController as? TabBarViewController else { return }
     LKProgressHUD.show(controller: tabVC)
   }
-  
-//  func updateHistoryMission(owner: String, classified: Int, judge: String, star: Double, completion: @escaping (Result<String, Error>) -> Void) {
-//    
-//    guard let uid = Auth.auth().currentUser?.uid else { return }
-//    
-//    let info = JudgeInfo(owner: owner, judge: judge, star: star, classified: classified)
-//    
-//    dbF.collection("Users").document(uid).collection("History").addDocument(data: info.toDict) { _  in
-//      
-//      completion(Result.success("Success"))
-//    }
-//  }
 }

@@ -32,8 +32,7 @@ struct Channel {
   
   let id: String?
   let name: String
-  
-  
+
   init(name: String) {
     id = nil
     self.name = name

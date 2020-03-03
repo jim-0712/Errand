@@ -52,7 +52,10 @@ class BlacklistViewController: UIViewController {
     super.viewWillDisappear(animated)
     
     UserManager.shared.currentUserInfo?.blacklist = blackuid
-    UserManager.shared.updateUserInfo { result in
+    
+    guard let userInfo = UserManager.shared.currentUserInfo else { return }
+    
+    UserManager.shared.updateOppoInfo(userInfo: userInfo) { result in
       switch result {
       case .success:
         print("Good")
@@ -60,6 +63,14 @@ class BlacklistViewController: UIViewController {
         print("fuck")
       }
     }
+//    UserManager.shared.updateUserInfo { result in
+//      switch result {
+//      case .success:
+//        print("Good")
+//      case .failure:
+//        print("fuck")
+//      }
+//    }
   }
   
   func setUpNavigation() {
@@ -86,7 +97,8 @@ class BlacklistViewController: UIViewController {
     var blacklistCounter: [AccountInfo] = []
     
     blackList.forEach { uid in
-      UserManager.shared.readBlackData(uid: uid) { [weak self] result in
+      
+      UserManager.shared.readUserInfo(uid: uid, isSelf: false) { [weak self] result in
         guard let strongSelf = self else { return }
         switch result {
         case .success(let accountInfo):
@@ -98,6 +110,18 @@ class BlacklistViewController: UIViewController {
           print("error")
         }
       }
+//      UserManager.shared.readBlackData(uid: uid) { [weak self] result in
+//        guard let strongSelf = self else { return }
+//        switch result {
+//        case .success(let accountInfo):
+//          blacklistCounter.append(accountInfo)
+//          if blacklistCounter.count == blackList.count {
+//            strongSelf.blacklistinfo = blacklistCounter
+//          }
+//        case .failure:
+//          print("error")
+//        }
+//      }
     }
   }
 }
@@ -122,7 +146,8 @@ extension BlacklistViewController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
   
     if editingStyle == .delete {
-      UserManager.shared.readBlackData(uid: blackuid[indexPath.item]) { [weak self] result in
+      
+      UserManager.shared.readUserInfo(uid: blackuid[indexPath.item], isSelf: false) { [weak self] result in
         guard let strongSelf = self,
              let currentUser = UserManager.shared.currentUserInfo?.uid else { return }
         
@@ -144,6 +169,29 @@ extension BlacklistViewController: UITableViewDelegate, UITableViewDataSource {
           LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
         }
       }
+      
+//      UserManager.shared.readBlackData(uid: blackuid[indexPath.item]) { [weak self] result in
+//        guard let strongSelf = self,
+//             let currentUser = UserManager.shared.currentUserInfo?.uid else { return }
+//
+//        switch result {
+//        case .success(var accountInfo):
+//
+//          accountInfo.oppoBlacklist = accountInfo.oppoBlacklist.filter({ $0 != currentUser})
+//
+//          UserManager.shared.updateOppoInfo(userInfo: accountInfo) { result in
+//            switch result {
+//            case .success:
+//              print("good")
+//            case .failure:
+//              print("error")
+//            }
+//          }
+//
+//        case .failure(let error):
+//          LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
+//        }
+//      }
       blacklistinfo.remove(at: indexPath.item)
       blackuid.remove(at: indexPath.item)
       blackListTable.deleteRows(at: [indexPath], with: .automatic)
