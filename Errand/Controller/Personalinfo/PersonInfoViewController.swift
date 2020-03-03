@@ -12,10 +12,6 @@ import MobileCoreServices
 
 class PersonInfoViewController: UIViewController {
   
-  @IBOutlet weak var photoTableView: UITableView!
-  
-  @IBOutlet weak var cornerView: UIView!
-  
   let imagePickerController = UIImagePickerController()
   
   let indicatorView = UIView()
@@ -35,6 +31,10 @@ class PersonInfoViewController: UIViewController {
   var settingOn: UIBarButtonItem!
   
   var settingOff: UIBarButtonItem!
+  
+  @IBOutlet weak var photoTableView: UITableView!
+  
+  @IBOutlet weak var cornerView: UIView!
   
   @IBOutlet weak var btnStack: UIStackView!
   
@@ -166,20 +166,11 @@ class PersonInfoViewController: UIViewController {
     historyContainer.alpha = 0.0  
   }
   
-  @objc func back() {
-    self.navigationController?.popViewController(animated: false)
-  }
-  
   override func viewWillLayoutSubviews() {
     super.viewWillLayoutSubviews()
     cornerView.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 500, y: 340, width: 1000, height: 1000)
     cornerView.backgroundColor = UIColor.white
     cornerView.layer.cornerRadius = cornerView.bounds.width / 2
-  }
-  
-  @objc func backToEdit() {
-    self.navigationItem.setRightBarButtonItems([self.settingOff], animated: false)
-    isSetting = false
   }
   
   override func viewDidLayoutSubviews() {
@@ -210,8 +201,16 @@ class PersonInfoViewController: UIViewController {
       photo = user.photo
       btnBackgroundView.isHidden = true
     }
-    
     NotificationCenter.default.post(name: Notification.Name("hideLog"), object: nil)
+  }
+  
+  @objc func back() {
+    self.navigationController?.popViewController(animated: false)
+  }
+  
+  @objc func backToEdit() {
+    self.navigationItem.setRightBarButtonItems([self.settingOff], animated: false)
+    isSetting = false
   }
   
   func setUpNavigationItem() {
@@ -223,7 +222,7 @@ class PersonInfoViewController: UIViewController {
       settingOff.tintColor = .black
       self.navigationItem.rightBarButtonItems = [self.settingOff]
     } else {
-      self.navigationItem.setHidesBackButton(true, animated: true)
+      navigationItem.setHidesBackButton(true, animated: true)
       NotificationCenter.default.addObserver(self, selector: #selector(backToEdit), name: Notification.Name("CompleteEdit"), object: nil)
       navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(back))
       navigationItem.leftBarButtonItem?.tintColor = .black
@@ -234,7 +233,7 @@ class PersonInfoViewController: UIViewController {
     
     guard let uid = Auth.auth().currentUser?.uid else { return }
     
-    TaskManager.shared.readSpecificData(parameter: "uid", parameterString: uid) { result in
+    TaskManager.shared.readSpecificData(parameter: "uid", parameterData: uid) { result in
       switch result {
         
       case .success(let data):

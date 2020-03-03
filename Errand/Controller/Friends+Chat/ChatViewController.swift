@@ -29,7 +29,6 @@ class ChatViewController: MessagesViewController {
   private let storage = Storage.storage().reference()
   
   override func viewDidLoad() {
-
     super.viewDidLoad()
     setUpListener()
     setUpMessage()

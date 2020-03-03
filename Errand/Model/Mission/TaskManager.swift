@@ -88,34 +88,11 @@ class TaskManager {
     }
   }
   
-  func readSpecificData(parameter: String, parameterDataInt: Int, completion: @escaping ((Result<[TaskInfo], Error>) -> Void)) {
+  func readSpecificData(parameter: String, parameterData: Any, completion: @escaping ((Result<[TaskInfo], Error>) -> Void)) {
     
     self.taskData = []
     
-    dbF.collection("Tasks").whereField(parameter, isEqualTo: parameterDataInt).getDocuments { [weak self] (querySnapshot, err) in
-      
-      guard let strongSelf = self else { return }
-      
-      if err != nil {
-        
-        completion(.failure(ReadDataError.readDataError))
-        
-      } else {
-        
-        guard let quary = querySnapshot else {return }
-        
-        strongSelf.reFactDataSpec(quary: quary)
-        
-        completion(.success(strongSelf.taskData))
-      }
-    }
-  }
-  
-  func readSpecificData(parameter: String, parameterString: String, completion: @escaping ((Result<[TaskInfo], Error>) -> Void)) {
-    
-    self.taskData = []
-    
-    dbF.collection("Tasks").whereField(parameter, isEqualTo: parameterString).getDocuments { [weak self] (querySnapshot, err) in
+    dbF.collection("Tasks").whereField(parameter, isEqualTo: parameterData).getDocuments { [weak self] (querySnapshot, err) in
       
       guard let strongSelf = self else { return }
       
@@ -169,7 +146,13 @@ class TaskManager {
         
         switch result {
         case .success(let task):
-          self.taskData.append(task)
+          
+          if task.status == 1 || task.isComplete {
+            
+          } else {
+            self.taskData.append(task)
+          }
+          
         case .failure(let error):
           print(error.localizedDescription)
         }
@@ -181,7 +164,6 @@ class TaskManager {
     
     guard let quary = quary.data() else { return }
     
-    self.taskData = []
     guard let email = quary["email"] as? String,
       let nickname = quary["nickname"] as? String,
       let gender = quary["gender"] as? Int,
@@ -406,7 +388,7 @@ class TaskManager {
               } else {
                 
                 completion(.success("Update Success"))
-                
+      
               }
             }
             
@@ -448,7 +430,7 @@ class TaskManager {
     
     if userInfo.status == 1 {
       
-      TaskManager.shared.readSpecificData(parameter: "uid", parameterString: userInfo.uid) { result in
+      TaskManager.shared.readSpecificData(parameter: "uid", parameterData: userInfo.uid) { result in
         
         switch result {
         case .success(let taskInfo):
@@ -460,7 +442,7 @@ class TaskManager {
         }
       }
     } else if userInfo.status == 2 {
-      TaskManager.shared.readSpecificData(parameter: "missionTaker", parameterString: userInfo.uid) { result in
+      TaskManager.shared.readSpecificData(parameter: "missionTaker", parameterData: userInfo.uid) { result in
         
         switch result {
         case .success(let taskInfo):

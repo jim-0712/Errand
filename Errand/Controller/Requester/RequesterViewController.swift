@@ -12,63 +12,6 @@ class RequesterViewController: UIViewController {
   
   @IBOutlet weak var noRequesterLabel: UILabel!
   
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    self.view.backgroundColor = UIColor.LG1
-
-    navigationItem.leftBarButtonItem?.tintColor = .black
-    navigationItem.rightBarButtonItem?.tintColor = .black
-    setUpTable()
-    UserManager.shared.isRequester = true
-    
-    if UserManager.shared.isTourist {
-      
-      noRequesterLabel.text = "請先去個人頁登入享有功能"
-    
-    } else if UserManager.shared.currentUserInfo?.status == 0 {
-      noRequesterLabel.text = "當前沒有任務                                        趕快去新增任務吧"
-    } else if UserManager.shared.currentUserInfo?.status == 2 {
-      
-      noRequesterLabel.text = "當前您是任務接受者"
-    } else {
-      noRequesterLabel.text = ""
-      readRequester()
-    }
-    
-    NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("requester"), object: nil)
-  }
-  
-  @objc func reload() {
-    readRequester()
-  }
-  
-  var indexRow = 0
-  
-//  override func viewWillAppear(_ animated: Bool) {
-//    super.viewWillAppear(animated)
-//    setUpTable()
-//    UserManager.shared.isRequester = true
-//
-//    if UserManager.shared.isTourist {
-//
-//      noRequesterLabel.text = "請先去個人頁登入享有功能"
-//
-//    } else if UserManager.shared.currentUserInfo?.status == 0 {
-//      noRequesterLabel.text = "當前沒有任務                                        趕快去新增任務吧"
-//    } else if UserManager.shared.currentUserInfo?.status == 2 {
-//
-//      noRequesterLabel.text = "當前您是任務接受者"
-//    } else {
-//      noRequesterLabel.text = ""
-//      readRequester()
-//    }
-//  }
-  
-  override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillDisappear(animated)
-    UserManager.shared.isRequester = false
-  }
-  
   var userInfo = [AccountInfo]() {
     didSet {
       if userInfo.isEmpty {
@@ -87,9 +30,66 @@ class RequesterViewController: UIViewController {
   
   var storeInfo = [AccountInfo]()
   
+  let segueIdentifier = "requesterInfo"
+  
   var taskinfo: TaskInfo?
   
   var refreshControl: UIRefreshControl!
+  
+  var indexRow = 0
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    self.view.backgroundColor = UIColor.LG1
+    navigationItem.leftBarButtonItem?.tintColor = .black
+    navigationItem.rightBarButtonItem?.tintColor = .black
+    NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("requester"), object: nil)
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    setUpTable()
+    UserManager.shared.isRequester = true
+    
+    if UserManager.shared.isTourist {
+      
+      noRequesterLabel.text = "請先去個人頁登入享有功能"
+      
+    } else if UserManager.shared.currentUserInfo?.status == 0 {
+      noRequesterLabel.text = "當前沒有任務                                        趕快去新增任務吧"
+    } else if UserManager.shared.currentUserInfo?.status == 2 {
+      
+      noRequesterLabel.text = "當前您是任務接受者"
+    } else {
+      noRequesterLabel.text = ""
+      readRequester()
+    }
+  }
+  
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    UserManager.shared.isRequester = false
+  }
+  
+  @IBOutlet weak var requesterTable: UITableView!
+  
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    if segue.identifier == segueIdentifier {
+      guard let userVC = segue.destination as? PersonInfoViewController else { return }
+      UserManager.shared.isRequester = true
+      UserManager.shared.requesterInfo = userInfo[indexRow]
+      userVC.isRequester = true
+      userVC.requester = userInfo[indexRow]
+    }
+  }
+  
+  @objc func reload() {
+    readRequester()
+  }
+  
+  @objc func loadData() {
+    readRequester()
+  }
   
   func setUpTable() {
     requesterTable.delegate = self
@@ -100,10 +100,6 @@ class RequesterViewController: UIViewController {
     refreshControl.addTarget(self, action: #selector(loadData), for: .valueChanged)
     requesterTable.rowHeight = UITableView.automaticDimension
     requesterTable.register(UINib(nibName: "RequesterTableViewCell", bundle: nil), forCellReuseIdentifier: "requester")
-  }
-  
-  @objc func loadData() {
-    readRequester()
   }
   
   func showAlert(title: String, message: String, viewController: UIViewController) {
@@ -120,9 +116,8 @@ class RequesterViewController: UIViewController {
   
   func readRequester() {
     guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
-//      let currentUser = UserManager.shared.currentUserInfo else { return }
     
-    TaskManager.shared.readSpecificData(parameter: "uid", parameterString: uid) { [weak self] result in
+    TaskManager.shared.readSpecificData(parameter: "uid", parameterData: uid) { [weak self] result in
       
       guard let strongSelf = self else { return }
       
@@ -130,7 +125,9 @@ class RequesterViewController: UIViewController {
         
       case .success(let taskInfo):
         
-        let taskCount = taskInfo.filter { info in
+        strongSelf.userInfo = []
+        
+        let taskOnGoing = taskInfo.filter { info in
           if info.isComplete {
             return false
           } else {
@@ -138,48 +135,7 @@ class RequesterViewController: UIViewController {
           }
         }
         
-        if taskCount.isEmpty || taskCount[0].isComplete {
-          strongSelf.userInfo = []
-          LKProgressHUD.dismiss()
-          SwiftMes.shared.showWarningMessage(body: "您當前沒有任務", seconds: 1.0)
-        } else if taskCount[0].status == 1 {
-          strongSelf.userInfo = []
-          strongSelf.requesterTable.reloadData()
-          strongSelf.taskinfo = taskCount[0]
-          LKProgressHUD.dismiss()
-          SwiftMes.shared.showWarningMessage(body: "任務進行中", seconds: 1.0)
-        } else {
-          
-          if taskCount[0].requester.isEmpty {
-            strongSelf.userInfo = []
-            strongSelf.taskinfo = taskCount[0]
-            strongSelf.requesterTable.reloadData()
-            
-          } else {
-            strongSelf.taskinfo = taskCount[0]
-            for count in 0 ..< taskCount[0].requester.count {
-              UserManager.shared.readUserInfo(uid: taskCount[0].requester[count], isSelf: false) { result in
-                switch result {
-                  
-                case .success(let accountInfo):
-                
-                  strongSelf.storeInfo = []
-                  strongSelf.storeInfo.append(accountInfo)
-                  if count == taskCount[0].requester.count - 1 {
-                    LKProgressHUD.dismiss()
-                    strongSelf.userInfo = strongSelf.storeInfo
-//                    UserManager.shared.currentUserInfo = currentUser
-                  }
-                  
-                case .failure(let error):
-                  
-                  LKProgressHUD.dismiss()
-                  LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
-                }
-              }
-            }
-          }
-        }
+        strongSelf.handleRequesterData(taskInfo: taskOnGoing)
         
       case .failure(let error):
         
@@ -189,15 +145,41 @@ class RequesterViewController: UIViewController {
     }
   }
   
-  @IBOutlet weak var requesterTable: UITableView!
-  
-  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    if segue.identifier == "test" {
-      guard let userVC = segue.destination as? PersonInfoViewController else { return }
-      UserManager.shared.isRequester = true
-      UserManager.shared.requesterInfo = userInfo[indexRow]
-      userVC.isRequester = true
-      userVC.requester = userInfo[indexRow]
+  func handleRequesterData(taskInfo: [TaskInfo]) {
+    
+    if taskInfo.isEmpty || taskInfo[0].isComplete {
+      LKProgressHUD.dismiss()
+      SwiftMes.shared.showWarningMessage(body: "您當前沒有任務", seconds: 1.0)
+    } else if taskInfo[0].status == 1 {
+      requesterTable.reloadData()
+      taskinfo = taskInfo[0]
+      LKProgressHUD.dismiss()
+      SwiftMes.shared.showWarningMessage(body: "任務進行中", seconds: 1.0)
+    } else if taskInfo[0].requester.isEmpty {
+      taskinfo = taskInfo[0]
+      requesterTable.reloadData()
+    } else {
+      taskinfo = taskInfo[0]
+      taskInfo[0].requester.forEach { requester in
+        UserManager.shared.readUserInfo(uid: requester, isSelf: false) { [weak self] result in
+          
+          guard let strongSelf = self else { return }
+          switch result {
+            
+          case .success(let accountInfo):
+            strongSelf.storeInfo.append(accountInfo)
+            if strongSelf.storeInfo.count == taskInfo[0].requester.count {
+              LKProgressHUD.dismiss()
+              strongSelf.userInfo = strongSelf.storeInfo
+            }
+            
+          case .failure(let error):
+            
+            LKProgressHUD.dismiss()
+            LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
+          }
+        }
+      }
     }
   }
 }
@@ -234,12 +216,12 @@ extension RequesterViewController: CheckPersonalInfoManager {
     indexRow = index
     
     guard let userVC = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(identifier: "PersonInfoViewController") as? PersonInfoViewController,
-         let taskinfoData = taskinfo else { return }
-         UserManager.shared.isRequester = true
-         UserManager.shared.requesterInfo = userInfo[indexRow]
-         userVC.isRequester = true
-         userVC.taskInfo = taskinfoData
-         userVC.requester = userInfo[indexRow]
-         self.navigationController?.pushViewController(userVC, animated: false)
+      let taskinfoData = taskinfo else { return }
+    UserManager.shared.isRequester = true
+    UserManager.shared.requesterInfo = userInfo[indexRow]
+    userVC.isRequester = true
+    userVC.taskInfo = taskinfoData
+    userVC.requester = userInfo[indexRow]
+    self.navigationController?.pushViewController(userVC, animated: false)
   }
 }

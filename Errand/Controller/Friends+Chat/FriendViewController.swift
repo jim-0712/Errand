@@ -94,8 +94,9 @@ class FriendViewController: UIViewController {
           self.friendInfo = []
           LKProgressHUD.dismiss()
         }
-        for count in 0 ..< friends.count {
-          UserManager.shared.getPhoto(nameRef: friends[count].nameREF) { result in
+        
+        friends.forEach { friend in
+          UserManager.shared.getPhoto(nameRef: friend.nameREF) { result in
             switch result {
             case .success(let info):
               self.friendsPhoto.append(info.photo)

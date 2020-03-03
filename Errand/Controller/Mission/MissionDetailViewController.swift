@@ -16,6 +16,11 @@ import CoreLocation
 
 class MissionDetailViewController: UIViewController {
   
+  var category: [CellContent] = [CellContent(type: .miniPhoto, title: "大頭貼"),
+                            CellContent(type: .normal, title: "懸賞價格"),
+                            CellContent(type: .normal, title: "發布時間"),
+                            CellContent(type: .purpose, title: "任務細節") ]
+  
   var isRequester = false
   
   var isMissionON = false
@@ -90,15 +95,15 @@ class MissionDetailViewController: UIViewController {
     navigationItem.leftBarButtonItem?.tintColor = .black
     
     guard detailData != nil else {
-         setUpData()
-         return }
+      setUpData()
+      return }
     guard let status = UserManager.shared.currentUserInfo?.status else {
       setUpData()
       return }
     UserManager.shared.statusJudge = status
-       getPhoto()
-       setUpall()
-       setUpListener()
+    getPhoto()
+    setUpall()
+    setUpListener()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -172,7 +177,6 @@ class MissionDetailViewController: UIViewController {
           switch result {
           case .success(let takerAccount):
             self.destination = takerAccount.fcmToken
-//            UserManager.shared.currentUserInfo = user
             group.leave()
           case .failure:
             group.leave()
@@ -229,8 +233,6 @@ class MissionDetailViewController: UIViewController {
             if accountInfo.totalStar != 0 {
               accountInfo.totalStar -= 1.0
             }
-
-//            UserManager.shared.currentUserInfo = accountInfo
             
             UserManager.shared.updateOppoInfo(userInfo: accountInfo) { result in
               switch result {
@@ -241,20 +243,11 @@ class MissionDetailViewController: UIViewController {
               }
             }
             
-//            UserManager.shared.updateUserInfo { result in
-//              switch result {
-//              case .success:
-//                print("Ya")
-//              case .failure:
-//                print("error")
-//              }
-//            }
-//
           case .failure:
             print("error")
           }
         }
-
+        
         let sender = PushNotificationSender()
         sender.sendPushNotification(to: self.destination, body: "對方放棄任務")
         LKProgressHUD.dismiss()
@@ -271,7 +264,7 @@ class MissionDetailViewController: UIViewController {
   @IBAction func finishMissionAct(_ sender: Any) {
     
     guard var taskData = self.detailData,
-         let status = UserManager.shared.currentUserInfo?.status else { return }
+      let status = UserManager.shared.currentUserInfo?.status else { return }
     var owner = ""
     if status == 1 {
       owner = "ownerOK"
@@ -280,7 +273,7 @@ class MissionDetailViewController: UIViewController {
       owner = "takerOK"
       taskData.takerOK = true
     }
-
+    
     let group = DispatchGroup()
     
     group.enter()
@@ -325,10 +318,10 @@ class MissionDetailViewController: UIViewController {
       let controller = UIAlertController(title: "恭喜", message: "等待對方完成", preferredStyle: .alert)
       let okAction = UIAlertAction(title: "ok", style: .default) { [weak self] _ in
         guard let strongSelf = self else { return }
-
+        
         guard let judgeVC = strongSelf.storyboard?.instantiateViewController(identifier: "judge") as? JudgeMissionViewController,
-             let taskInfo = strongSelf.detailData  else { return }
-
+          let taskInfo = strongSelf.detailData  else { return }
+        
         judgeVC.detailData = taskInfo
         NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
         strongSelf.present(judgeVC, animated: true, completion: nil)
@@ -395,7 +388,7 @@ class MissionDetailViewController: UIViewController {
         UserManager.shared.readUserInfo(uid: uid, isSelf: true) { result in
           switch result {
           case .success:
-
+            
             if Auth.auth().currentUser == nil {
               SwiftMes.shared.showWarningMessage(body: "請先登入", seconds: 1.0)
               DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -446,7 +439,7 @@ class MissionDetailViewController: UIViewController {
         strongSelf.getPhoto()
         strongSelf.setUpall()
         if strongSelf.isMissionON {
-           strongSelf.setUpListener()
+          strongSelf.setUpListener()
         }
         
       case .failure(let error):
@@ -571,7 +564,7 @@ class MissionDetailViewController: UIViewController {
       NotificationCenter.default.post(name: Notification.Name("finishTask"), object: nil)
       guard let strongSelf = self else { return }
       guard let task = strongSelf.detailData,
-           let  currentUserStatus = UserManager.shared.currentUserInfo?.status else { return }
+        let  currentUserStatus = UserManager.shared.currentUserInfo?.status else { return }
       
       LKProgressHUD.show(controller: strongSelf)
       
@@ -638,7 +631,7 @@ class MissionDetailViewController: UIViewController {
         LKProgressHUD.dismiss()
         
         guard let judgeVC = strongSelf.storyboard?.instantiateViewController(identifier: "judge") as? JudgeMissionViewController,
-             let taskInfo = strongSelf.detailData else { return }
+          let taskInfo = strongSelf.detailData else { return }
         
         judgeVC.detailData = taskInfo
         NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
@@ -655,7 +648,7 @@ class MissionDetailViewController: UIViewController {
   func startMissionSetupBtn() {
     
     guard let task = detailData,
-         let status = UserManager.shared.currentUserInfo?.status else { return }
+      let status = UserManager.shared.currentUserInfo?.status else { return }
     
     if status == 1 && task.ownerOK {
       finishMissionBtn.isEnabled = false
@@ -786,7 +779,7 @@ class MissionDetailViewController: UIViewController {
     if segue.identifier == "chat" {
       guard let chatVC = segue.destination as? ChatViewController,
         let taskInfo = detailData else { return }
-
+      
       chatVC.detailData = taskInfo
       chatVC.receiverPhoto = reversePhoto
     }
@@ -803,7 +796,7 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
   }
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-
+    
     guard let data = detailData else { return 0 }
     return data.taskPhoto.count
   }
@@ -871,160 +864,156 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     guard let data = detailData,
-      let time = self.receiveTime else { return UITableViewCell() }
+         let time = self.receiveTime else { return UITableViewCell() }
     
-    if indexPath.row == 0 {
+    category[0].type = isMissionON ? .startMission : .miniPhoto
+    
+    let categorys = category[indexPath.item]
+    
+    switch categorys.type {
       
-      if !isMissionON {
+    case .miniPhoto:
+      guard let cell = tableView.dequeueReusableCell(withIdentifier: "person", for: indexPath) as? MissionPersonTableViewCell else { return UITableViewCell() }
+      
+      cell.setUp(personURL: data.personPhoto, name: data.nickname)
+      
+      return cell
+      
+    case .startMission:
+      guard let cell = tableView.dequeueReusableCell(withIdentifier: "startMission", for: indexPath) as? StartMissionTableViewCell,
+        let taskData = detailData else { return UITableViewCell() }
+      
+      let classified = TaskManager.shared.filterClassified(classified: taskData.classfied + 1)
+      
+      cell.setUp(ownerImage: taskData.personPhoto, author: taskData.nickname, classified: classified[0], price: taskData.money)
+      
+      cell.tapReprt = { [weak self] in
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "person", for: indexPath) as? MissionPersonTableViewCell else { return UITableViewCell() }
+        guard let user = UserManager.shared.currentUserInfo,
+          let strongSelf = self else { return }
         
-        cell.setUp(personURL: data.personPhoto, name: data.nickname)
+        var compare = ""
         
-        return cell
+        if user.status == 1 {
+          compare = taskData.missionTaker
+        } else {
+          compare = taskData.uid
+        }
         
-      } else {
+        for badMan in user.blacklist where badMan == compare {
+          strongSelf.alreadyReport = true
+        }
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "startMission", for: indexPath) as? StartMissionTableViewCell,
-          let taskData = detailData else { return UITableViewCell() }
+        let alert = UIAlertController(title: "檢舉系統", message: "請選擇要做的行動", preferredStyle: .actionSheet)
         
-        let classified = TaskManager.shared.filterClassified(classified: taskData.classfied + 1)
-        
-        cell.setUp(ownerImage: taskData.personPhoto, author: taskData.nickname, classified: classified[0], price: taskData.money)
-        
-        cell.tapReprt = { [weak self] in
+        let report = UIAlertAction(title: "檢舉", style: .default) { _ in
+          LKProgressHUD.showSuccess(text: "系統已到您的通知", controller: strongSelf)
+        }
+        let blackList = UIAlertAction(title: "加入黑名單", style: .default) { [weak self] _ in
           
-          guard let user = UserManager.shared.currentUserInfo,
-            let strongSelf = self else { return }
+          guard let strongSelf = self else { return }
+          guard var userInfo = UserManager.shared.currentUserInfo,
+            let taskInfo = strongSelf.detailData else { return }
           
-          var compare = ""
-          
-          if user.status == 1 {
-            compare = taskData.missionTaker
+          if strongSelf.alreadyReport {
+            SwiftMes.shared.showWarningMessage(body: "該用戶已在黑名單", seconds: 1.5)
           } else {
-            compare = taskData.uid
-          }
-          
-          for badMan in user.blacklist where badMan == compare {
-              strongSelf.alreadyReport = true
-          }
-          
-          let alert = UIAlertController(title: "檢舉系統", message: "請選擇要做的行動", preferredStyle: .actionSheet)
-          
-          let report = UIAlertAction(title: "檢舉", style: .default) { _ in
-            LKProgressHUD.showSuccess(text: "系統已到您的通知", controller: strongSelf)
-          }
-          let blackList = UIAlertAction(title: "加入黑名單", style: .default) { [weak self] _ in
             
-            guard let strongSelf = self else { return }
-            guard var userInfo = UserManager.shared.currentUserInfo,
-              let taskInfo = strongSelf.detailData else { return }
+            strongSelf.preventTap()
             
-            if strongSelf.alreadyReport {
-              SwiftMes.shared.showWarningMessage(body: "該用戶已在黑名單", seconds: 1.5)
+            let group = DispatchGroup()
+            group.enter()
+            group.enter()
+            
+            if userInfo.status == 1 {
+              userInfo.blacklist.append(taskInfo.missionTaker)
+              strongSelf.reverse = taskInfo.missionTaker
             } else {
+              userInfo.blacklist.append(taskInfo.uid)
+              strongSelf.reverse = taskInfo.uid
+            }
+            
+            UserManager.shared.updateOppoInfo(userInfo: userInfo) { result in
               
-              strongSelf.preventTap()
-              
-              let group = DispatchGroup()
-              group.enter()
-              group.enter()
-              
-              if userInfo.status == 1 {
-                userInfo.blacklist.append(taskInfo.missionTaker)
-                strongSelf.reverse = taskInfo.missionTaker
-              } else {
-                userInfo.blacklist.append(taskInfo.uid)
-                strongSelf.reverse = taskInfo.uid
-              }
-              
-              UserManager.shared.updateOppoInfo(userInfo: userInfo) { result in
-                
-                switch result {
-                case .success:
-                  print("yes")
-                  group.leave()
-                case .failure:
-                  group.leave()
-                  print("no")
-                }
-              }
-              
-              UserManager.shared.updateReverseUid(uid: strongSelf.reverse, isSelf: false) { result in
-                switch result {
-                case .success:
-                  group.leave()
-                case .failure:
-                  group.leave()
-                  print("error")
-                }
-              }
-              
-              group.notify(queue: DispatchQueue.main) {
-                UserManager.shared.currentUserInfo = userInfo
-                LKProgressHUD.dismiss()
+              switch result {
+              case .success:
+                print("yes")
+                group.leave()
+              case .failure:
+                group.leave()
+                print("no")
               }
             }
-          }
-          
-          let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
-          alert.addAction(report)
-          alert.addAction(blackList)
-          alert.addAction(cancelAction)
-          strongSelf.present(alert, animated: true, completion: nil)
-        }
-        
-        cell.tapOnButton = { [weak self ] in
-          guard let strongSelf = self else { return }
-          
-          guard let chatVC = UIStoryboard(name: "Chat", bundle: nil).instantiateViewController(identifier: "ChatViewController") as? ChatViewController,
-            let taskInfo = strongSelf.detailData else { return }
-
-          chatVC.detailData = taskInfo
-          chatVC.receiverPhoto = strongSelf.reversePhoto
-          strongSelf.show(chatVC, sender: nil)
-        }
-        
-        cell.tapOnNavi = { [weak self ]in
-          
-          guard let strongSelf = self else { return }
-          guard let originalLocation = strongSelf.myLocationManager.location?.coordinate,
-               let taskInfo = strongSelf.detailData else { return }
-          
-          let originCor = "\(originalLocation.latitude),\(originalLocation.longitude)"
-          let destination = "\(taskInfo.lat),\(taskInfo.long)"
-          let url = URL(string: "comgooglemaps://?saddr=\(originCor)&daddr=\(destination)&directionsmode=driving")
-          
-          if UIApplication.shared.canOpenURL(url!) {
-            UIApplication.shared.open(url!, options: [:], completionHandler: nil)
-          } else {
-            let appStoreGoogleMapURL = URL(string: "itms-apps://itunes.apple.com/app/id585027354")!
-            UIApplication.shared.open(appStoreGoogleMapURL, options: [:], completionHandler: nil)
+            
+            UserManager.shared.updateReverseUid(uid: strongSelf.reverse, isSelf: false) { result in
+              switch result {
+              case .success:
+                group.leave()
+              case .failure:
+                group.leave()
+                print("error")
+              }
+            }
+            
+            group.notify(queue: DispatchQueue.main) {
+              UserManager.shared.currentUserInfo = userInfo
+              LKProgressHUD.dismiss()
+            }
           }
         }
-        cell.backgroundColor = .clear
-        return cell
+        
+        let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
+        alert.addAction(report)
+        alert.addAction(blackList)
+        alert.addAction(cancelAction)
+        strongSelf.present(alert, animated: true, completion: nil)
       }
       
-    } else if indexPath.row != 3 {
+      cell.tapOnButton = { [weak self ] in
+        guard let strongSelf = self else { return }
+        
+        guard let chatVC = UIStoryboard(name: "Chat", bundle: nil).instantiateViewController(identifier: "ChatViewController") as? ChatViewController,
+          let taskInfo = strongSelf.detailData else { return }
+        
+        chatVC.detailData = taskInfo
+        chatVC.receiverPhoto = strongSelf.reversePhoto
+        strongSelf.show(chatVC, sender: nil)
+      }
       
+      cell.tapOnNavi = { [weak self ]in
+        
+        guard let strongSelf = self else { return }
+        guard let originalLocation = strongSelf.myLocationManager.location?.coordinate,
+          let taskInfo = strongSelf.detailData else { return }
+        
+        let originCor = "\(originalLocation.latitude),\(originalLocation.longitude)"
+        let destination = "\(taskInfo.lat),\(taskInfo.long)"
+        let url = URL(string: "comgooglemaps://?saddr=\(originCor)&daddr=\(destination)&directionsmode=driving")
+        
+        if UIApplication.shared.canOpenURL(url!) {
+          UIApplication.shared.open(url!, options: [:], completionHandler: nil)
+        } else {
+          let appStoreGoogleMapURL = URL(string: "itms-apps://itunes.apple.com/app/id585027354")!
+          UIApplication.shared.open(appStoreGoogleMapURL, options: [:], completionHandler: nil)
+        }
+      }
+      cell.backgroundColor = .clear
+      return cell
+    
+    case .normal :
       guard let cell = tableView.dequeueReusableCell(withIdentifier: "missionDetail", for: indexPath) as? MissionDetailTableViewCell else { return UITableViewCell() }
-      
-      switch indexPath.row {
-      case 1:
-        cell.setUp(title: missionDetail[indexPath.row], content: "\(data.money)")
-      default:
-        cell.setUp(title: "\(missionDetail[indexPath.row])", content: time)
-      }
+      cell.setUp(title: categorys.title, content: time)
       return cell
       
-    } else {
-      
+    case .purpose :
       guard let cell = tableView.dequeueReusableCell(withIdentifier: "content", for: indexPath) as? MissionContentTableViewCell else { return UITableViewCell() }
       
-      cell.setUp(title: missionDetail[3], content: data.detail)
+      cell.setUp(title: categorys.title, content: data.detail)
       
       return cell
+      
+    default:
+      return UITableViewCell()
     }
   }
   // swiftlint:enable_rule:line_length

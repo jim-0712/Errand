@@ -595,12 +595,7 @@ extension PostMissionViewController: UICollectionViewDelegateFlowLayout {
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-    
-    if collectionView == self.missionGroupCollectionView {
       return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-    } else {
-      return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-    }
   }
 }
 

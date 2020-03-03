@@ -208,7 +208,7 @@ class MissionListViewController: UIViewController {
    }
    
    func readCurrentUserTaskData(parameter: String, uid: String) {
-     taskMan.readSpecificData(parameter: parameter, parameterString: uid) { [weak self](result) in
+    taskMan.readSpecificData(parameter: parameter, parameterData: uid) { [weak self](result) in
        guard let strongSelf = self else { return }
        switch result {
          

@@ -43,7 +43,7 @@
                     <connections>
                         <outlet property="noRequesterLabel" destination="nFE-i1-FxX" id="h5h-hI-eHL"/>
                         <outlet property="requesterTable" destination="BMy-qS-A1H" id="oTZ-nV-nmk"/>
-                        <segue destination="y85-pc-VpG" kind="show" identifier="test" id="h0R-uS-Krj"/>
+                        <segue destination="y85-pc-VpG" kind="show" identifier="requesterInfo" id="h0R-uS-Krj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vk0-md-7Mv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

@@ -448,7 +448,7 @@ extension GoogleMapViewController: UICollectionViewDelegate, UICollectionViewDat
       
       missionClassifiedIndex = indexPath.row
       TaskManager.shared.taskData = []
-      TaskManager.shared.readSpecificData(parameter: "classfied", parameterDataInt: indexPath.row - 1) { [weak self] result in
+      TaskManager.shared.readSpecificData(parameter: "classfied", parameterData: indexPath.row - 1) { [weak self] result in
         guard let strongSelf = self else { return }
         switch result {
         case .success(let taskData):
