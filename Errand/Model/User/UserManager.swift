@@ -12,13 +12,15 @@ import Firebase
 import FirebaseAuth
 import FirebaseFirestore
 
-class UserManager {
+class UserManager: NSObject {
   
-  static let shared = UserManager()
+  @objc static let shared = UserManager()
   
   let dbF = Firestore.firestore()
   
   var currentUserInfo: AccountInfo?
+  
+  @objc dynamic var isChange = false
   
   var statusJudge = 0
   
@@ -37,8 +39,6 @@ class UserManager {
   var isPostTask = false
   
   var FBData: FbData?
-  
-  private init() { }
   
   func fbLogin(controller: UIViewController, completion: @escaping (Result<String, Error>) -> Void) {
     
@@ -275,7 +275,7 @@ class UserManager {
     }
   }
   
-  func updateReverseUid(uid: String, isSelf: Bool, completion: @escaping (Result<String, Error>) -> Void) {
+  func updateOppoBlackList(uid: String, isSelf: Bool, completion: @escaping (Result<String, Error>) -> Void) {
       
     UserManager.shared.readUserInfo(uid: uid, isSelf: isSelf) { result in
       switch result {

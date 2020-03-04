@@ -169,7 +169,6 @@ class TaskManager {
     }
   }
   
-  // swiftlint:enable cyclomatic_complexity
   func reFactDataSpec(quary: DocumentSnapshot, completion: @escaping (Result<TaskInfo, Error>) -> Void) {
     
     guard let quary = quary.data() else { return }
@@ -204,42 +203,10 @@ class TaskManager {
       let ownerJudge = quary["ownerJudge"] as? Bool,
       let takerJudge = quary["takerJudge"] as? Bool else { return }
     
-    print("2")
-    
-//    guard let email = quary["email"] as? String else { return }
-//    guard let nickname = quary["nickname"] as? String else { return }
-//    guard let gender = quary["gender"] as? Int else { return }
-//    guard let taskPhoto = quary["taskPhoto"] as? [String] else { return }
-//    guard let time = quary["time"] as? Int else { return }
-//    guard let detail = quary["detail"] as? String else { return }
-//    guard let lat = quary["lat"] as? Double else { return }
-//    guard let long = quary["long"] as? Double else { return }
-//    guard let money = quary["money"] as? Int else { return }
-//    guard let status = quary["status"] as? Int else { return }
-//    guard let fileType = quary["fileType"] as? [Int] else { return }
-//    guard let classfied = quary["classfied"] as? Int else { return }
-//    guard let personPhoto = quary["personPhoto"] as? String else { return }
-//    guard let requester = quary["requester"] as? [String] else { return }
-//    guard let fcmToken = quary["fcmToken"] as? String else { return }
-//    guard let missionTaker = quary["missionTaker"] as? String else { return }
-//    guard let refuse = quary["refuse"] as? [String] else { return }
-//    guard let uid = quary["uid"] as? String else { return }
-//    guard let chatRoom = quary["chatRoom"] as? String else { return }
-//    guard let isComplete = quary["isComplete"] as? Bool else { return }
-//    guard let ownerOK = quary["ownerOK"] as? Bool else { return }
-//    guard let takerOK = quary["takerOK"] as? Bool else { return }
-//    guard let star = quary["star"] as? Double else { return }
-//    guard let ownerAskFriend = quary["ownerAskFriend"] as? Bool else { return }
-//    guard let takerAskFriend = quary["takerAskFriend"] as? Bool else { return }
-//    guard let isFrirndsNow = quary["isFrirndsNow"] as? Bool else { return }
-//    guard let ownerJudge = quary["ownerJudge"] as? Bool else { return }
-//    guard let takerJudge = quary["takerJudge"] as? Bool else { return }
-    
     let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, ownerOK: ownerOK, takerOK: takerOK, ownerAskFriend: ownerAskFriend, takerAskFriend: takerAskFriend, fileType: fileType, personPhoto: personPhoto, requester: requester, fcmToken: fcmToken, missionTaker: missionTaker, refuse: refuse, uid: uid, chatRoom: chatRoom, isFrirndsNow: isFrirndsNow, isComplete: isComplete, star: star, ownerJudge: ownerJudge, takerJudge: takerJudge)
     
     completion(.success(dataReturn))
   }
-  // swiftlint:disable cyclomatic_complexity
   
   func filterClassified(classified: Int) -> [String] {
     
@@ -443,9 +410,10 @@ class TaskManager {
     }
   }
   
-  func updateJudge(owner: String, classified: Int, judge: String, star: Double, completion: @escaping (Result<String, Error>) -> Void) {
+  func updateJudge(owner: String, classified: Int, judge: String, star: Double, date: Int, completion: @escaping (Result<String, Error>) -> Void) {
+
     
-    let info = JudgeInfo(owner: owner, judge: judge, star: star, classified: classified)
+    let info = JudgeInfo(owner: owner, judge: judge, star: star, classified: classified, date: date)
     
     dbF.collection("Judge").addDocument(data: info.toDict) { _  in
       
@@ -499,7 +467,7 @@ class TaskManager {
     }
   }
   
-  func  readJudgeData(uid: String, completion: @escaping (Result<[JudgeInfo], Error>) -> Void) {
+  func readJudgeData(uid: String, completion: @escaping (Result<[JudgeInfo], Error>) -> Void) {
   
     dbF.collection("Judge").whereField("owner", isEqualTo: uid).getDocuments { quarySnapShot, error in
       
@@ -516,12 +484,20 @@ class TaskManager {
         guard let owner = quary["owner"] as? String,
              let judge = quary["judge"] as? String,
              let star = quary["star"] as? Double,
-             let classified = quary["classified"] as? Int else { return }
+             let classified = quary["classified"] as? Int,
+             let date = quary["date"] as? Int else { return }
         
-          let data = JudgeInfo(owner: owner, judge: judge, star: star, classified: classified)
+        let data = JudgeInfo(owner: owner, judge: judge, star: star, classified: classified, date: date)
           dataStore.append(data)
       }
       
+      dataStore.sort { (first, second) -> Bool in
+        if first.date > second.date {
+          return true
+        } else {
+          return false
+        }
+      }
       completion(.success(dataStore))
     
     }

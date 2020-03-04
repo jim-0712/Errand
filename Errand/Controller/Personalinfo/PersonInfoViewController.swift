@@ -57,9 +57,14 @@ class PersonInfoViewController: UIViewController {
   }
   
   @IBAction func historyMissionAct(_ sender: UIButton) {
-    historyContainer.alpha = 1.0
-    userContainer.alpha = 0.0
-    startAnimate(sender: sender)
+    if UserManager.shared.isTourist {
+      SwiftMes.shared.showWarningMessage(body: "當前沒有登入", seconds: 0.8)
+      
+    } else {
+      historyContainer.alpha = 1.0
+      userContainer.alpha = 0.0
+      startAnimate(sender: sender)
+    }
   }
   
   @IBAction func acceptAct(_ sender: Any) {
@@ -215,7 +220,9 @@ class PersonInfoViewController: UIViewController {
   
   func setUpNavigationItem() {
     
-    if !UserManager.shared.isRequester {
+    if UserManager.shared.isTourist {
+      
+    } else if !UserManager.shared.isRequester {
       settingOff = UIBarButtonItem(title: "編輯", style: .plain, target: self, action: #selector(tapSet))
       settingOn = UIBarButtonItem(image: UIImage(named: "tick-2"), style: .plain, target: self, action: #selector(tapSet))
       settingOn.tintColor = .black
@@ -348,7 +355,9 @@ extension PersonInfoViewController: UITableViewDelegate, UITableViewDataSource {
     
     guard let cell = tableView.dequeueReusableCell(withIdentifier: "personPhoto", for: indexPath) as? PhotoTableViewCell else { return UITableViewCell() }
     
-    if isRequester {
+    if UserManager.shared.isTourist {
+      name = "遊客"
+    } else if isRequester {
       guard let requester = UserManager.shared.requesterInfo else { return UITableViewCell() }
       name = requester.nickname
       email = requester.email
@@ -359,6 +368,7 @@ extension PersonInfoViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     cell.setUpView(isRequester: isRequester, personPhoto: photo, nickName: name, email: email)
+    cell.choosePhotoBtn.isHidden = UserManager.shared.isTourist
     cell.choosePhotoBtn.addTarget(self, action: #selector(pickImage), for: .touchUpInside)
     cell.backgroundColor = .clear
     return cell

@@ -32,11 +32,10 @@ enum CellType {
   case startMission
   case normal
   case purpose
+  case blacklist
 }
 
 struct CellContent {
   var type: CellType
   var title: String
 }
-
-

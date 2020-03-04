@@ -59,6 +59,7 @@ class JudgeMissionViewController: UIViewController {
     guard let taskData = self.detailData,
       let judge = judgeTextView.text else { return }
     
+    let date = Int(Date().timeIntervalSince1970)
     let status = UserManager.shared.statusJudge
     var judgerOwner = ""
     if status == 1 {
@@ -72,7 +73,7 @@ class JudgeMissionViewController: UIViewController {
     group.enter()
     group.enter()
     
-    TaskManager.shared.updateJudge(owner: judgerOwner, classified: taskData.classfied, judge: judge, star: -0.1 ) { (result) in
+    TaskManager.shared.updateJudge(owner: judgerOwner, classified: taskData.classfied, judge: judge, star: -0.1, date: date ) { (result) in
       switch result {
       case .success:
         group.leave()
@@ -115,7 +116,6 @@ class JudgeMissionViewController: UIViewController {
   
   @IBOutlet weak var addFriendBtn: UIButton!
   
-  // swiftlint:disable cyclomatic_complexity
   @IBAction func addFriendsBtn(_ sender: Any) {
     
     guard let taskInfo = self.detailData else { return }
@@ -256,6 +256,7 @@ class JudgeMissionViewController: UIViewController {
     guard let taskData = self.detailData,
       let judge = judgeTextView.text else { return }
     
+    let date = Int(Date().timeIntervalSince1970)
     let status = UserManager.shared.statusJudge
     var judgerOwner = ""
     if status == 1 {
@@ -266,9 +267,7 @@ class JudgeMissionViewController: UIViewController {
     
     let group = DispatchGroup()
     group.enter()
-    group.enter()
-    
-    TaskManager.shared.updateJudge(owner: judgerOwner, classified: taskData.classfied, judge: judge, star: starView.rating) { (result) in
+    TaskManager.shared.updateJudge(owner: judgerOwner, classified: taskData.classfied, judge: judge, star: starView.rating, date: date) { (result) in
       switch result {
       case .success:
         print("ok")
@@ -278,6 +277,7 @@ class JudgeMissionViewController: UIViewController {
       }
     }
     
+    group.enter()
     UserManager.shared.readUserInfo(uid: judgerOwner, isSelf: false) { [weak self]result in
       guard let strongSelf = self else { return }
       switch result {

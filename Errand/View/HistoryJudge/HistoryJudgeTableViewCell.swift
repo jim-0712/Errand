@@ -31,7 +31,10 @@ class HistoryJudgeTableViewCell: UITableViewCell {
   
   @IBOutlet weak var seperateLine: UIView!
   
-  func setUp(starCount: Double, judge: String, classified: String) {
+  @IBOutlet weak var timeLabel: UILabel!
+  
+  
+  func setUp(starCount: Double, judge: String, classified: String, time: String) {
     
     if starCount == -0.1 {
       noCommentLabel.isHidden = false
@@ -43,6 +46,8 @@ class HistoryJudgeTableViewCell: UITableViewCell {
       judgeTextView.isHidden = false
       noCommentLabel.isHidden = true
     }
+    
+    timeLabel.text = time
     
     judgeTextView.text = judge
     

@@ -134,6 +134,11 @@ class ChildInfoViewController: UIViewController {
     }
   }
   
+  func logIn() {
+    let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "main") as? ViewController
+    self.view.window?.rootViewController = signInVC
+  }
+  
   func logout() {
     
     let alertControl = UIAlertController(title: "注意", message: "您真的要登出嗎？", preferredStyle: .alert)
@@ -163,7 +168,7 @@ class ChildInfoViewController: UIViewController {
 
 extension ChildInfoViewController: UITableViewDelegate, UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return UserManager.shared.isRequester ? 3 : 4
+      return UserManager.shared.isRequester ? 3 : 4
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -171,21 +176,25 @@ extension ChildInfoViewController: UITableViewDelegate, UITableViewDataSource {
     let tourist = UserManager.shared.isTourist
     var containerUserInfo: AccountInfo?
     
-    if !tourist && !UserManager.shared.isRequester {
+    if UserManager.shared.isTourist {
+      
+    } else if !tourist && !UserManager.shared.isRequester {
       containerUserInfo = UserManager.shared.currentUserInfo
     } else {
       containerUserInfo = UserManager.shared.requesterInfo
     }
     
-  guard let container = containerUserInfo else { return UITableViewCell() }
-    self.name = container.nickname
-    self.about = container.about
-    self.email = container.email
-    self.totalStar = container.totalStar
-    self.minusStar = container.minusStar
-    self.noJudge = container.noJudgeCount
-    self.totaltaskCount = container.taskCount
-    
+    if !UserManager.shared.isTourist {
+      guard let container = containerUserInfo else { return UITableViewCell() }
+      self.name = container.nickname
+      self.about = container.about
+      self.email = container.email
+      self.totalStar = container.totalStar
+      self.minusStar = container.minusStar
+      self.noJudge = container.noJudgeCount
+      self.totaltaskCount = container.taskCount
+    }
+
     LKProgressHUD.dismiss()
     let data = [name, self.about]
     
@@ -225,10 +234,15 @@ extension ChildInfoViewController: UITableViewDelegate, UITableViewDataSource {
     case .logout:
       guard let cell = tableView.dequeueReusableCell(withIdentifier: "logout", for: indexPath) as? LogoutTableViewCell else { return UITableViewCell() }
       
+      cell.setUp(isTourist: UserManager.shared.isTourist)
+      
       cell.touchHandler = { [weak self] in
-        
         guard let strongSelf = self else { return }
-        strongSelf.logout()
+        if UserManager.shared.isTourist {
+          strongSelf.logIn()
+        } else {
+          strongSelf.logout()
+        }
       }
       return cell
     default:

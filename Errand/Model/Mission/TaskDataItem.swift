@@ -24,6 +24,8 @@ struct JudgeInfo {
   
   var classified: Int
   
+  var date: Int
+  
   var toDict: [String: Any] {
     
     return [
@@ -33,7 +35,9 @@ struct JudgeInfo {
       
       "star": star,
       
-      "classified": classified
+      "classified": classified,
+      
+      "date": date
     ]
   }
 }

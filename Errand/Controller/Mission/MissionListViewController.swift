@@ -11,6 +11,8 @@ import FirebaseAuth
 
 class MissionListViewController: UIViewController {
   
+  var observation: NSKeyValueObservation?
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     setUpSearch()
@@ -18,6 +20,12 @@ class MissionListViewController: UIViewController {
     setUpindicatorView()
     searchingLabel.isHidden = true
     getTaskData()
+    
+    observation = UserManager.shared.observe(\.isChange) { [weak self] (_, _) in
+      guard let strongSelf = self else { return }
+      strongSelf.getTaskData()
+    }
+    
     NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("getMissionList"), object: nil)
   }
@@ -35,7 +43,7 @@ class MissionListViewController: UIViewController {
   }
   
   @IBOutlet weak var searchingLabel: UILabel!
-
+  
   @IBOutlet weak var allMissionBtn: UIButton!
   
   @IBOutlet weak var currentBtn: UIButton!
@@ -49,7 +57,7 @@ class MissionListViewController: UIViewController {
     UserManager.shared.checkDetailBtn = !UserManager.shared.checkDetailBtn
     startAnimate(sender: sender)
   }
-
+  
   @IBAction func currentMission(_ sender: UIButton) {
     startAnimate(sender: sender)
     currentBtnSelect = true
@@ -75,7 +83,7 @@ class MissionListViewController: UIViewController {
     } else if UserManager.shared.currentUserInfo?.status == 0 {
       performSegue(withIdentifier: "post", sender: nil)
     } else if UserManager.shared.currentUserInfo?.status == 1 {
- 
+      
       TaskManager.shared.setUpStatusData { result in
         
         switch result {
@@ -85,13 +93,13 @@ class MissionListViewController: UIViewController {
             TaskManager.shared.showAlert(title: "警告", message: "任務已被接受，不能隨意更改", viewController: self)
           } else {
             guard let editVC = self.storyboard?.instantiateViewController(identifier: "post") as? PostMissionViewController,
-                 let status = UserManager.shared.currentUserInfo?.status else { return }
+              let status = UserManager.shared.currentUserInfo?.status else { return }
             if status == 1 {
               editVC.isEditing = true
             } else {
               editVC.isEditing = false
             }
-             self.present(editVC, animated: true, completion: nil)
+            self.present(editVC, animated: true, completion: nil)
           }
         case .failure:
           print("error")
@@ -169,12 +177,12 @@ class MissionListViewController: UIViewController {
   }
   
   @objc func reloadTable() {
-     if currentBtnSelect {
-        getMissionStartData()
-     } else {
-        getTaskData()
-     }
-   }
+    if currentBtnSelect {
+      getMissionStartData()
+    } else {
+      getTaskData()
+    }
+  }
   
   func preventTap() {
     guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
@@ -182,70 +190,70 @@ class MissionListViewController: UIViewController {
   }
   
   func getMissionStartData() {
-     
-     guard let user = UserManager.shared.currentUserInfo else {
-       LKProgressHUD.dismiss()
-       SwiftMes.shared.showWarningMessage(body: "當前沒有登入", seconds: 1.0)
-       taskDataReturn = []
-       return }
-     
-       guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
-     
-     if user.status == 1 {
-
-       readCurrentUserTaskData(parameter: "uid", uid: uid)
-       
-     } else if user.status == 2 {
-
-       readCurrentUserTaskData(parameter: "missionTaker", uid: uid)
-
-     } else {
-       LKProgressHUD.dismiss()
-       SwiftMes.shared.showErrorMessage(body: "當前沒有任務", seconds: 1.0)
-       taskDataReturn = []
-       return
-     }
-   }
-   
-   func readCurrentUserTaskData(parameter: String, uid: String) {
+    
+    guard let user = UserManager.shared.currentUserInfo else {
+      LKProgressHUD.dismiss()
+      SwiftMes.shared.showWarningMessage(body: "當前沒有登入", seconds: 1.0)
+      taskDataReturn = []
+      return }
+    
+    guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
+    
+    if user.status == 1 {
+      
+      readCurrentUserTaskData(parameter: "uid", uid: uid)
+      
+    } else if user.status == 2 {
+      
+      readCurrentUserTaskData(parameter: "missionTaker", uid: uid)
+      
+    } else {
+      LKProgressHUD.dismiss()
+      SwiftMes.shared.showErrorMessage(body: "當前沒有任務", seconds: 1.0)
+      taskDataReturn = []
+      return
+    }
+  }
+  
+  func readCurrentUserTaskData(parameter: String, uid: String) {
     taskMan.readSpecificData(parameter: parameter, parameterString: uid) { [weak self](result) in
-       guard let strongSelf = self else { return }
-       switch result {
-         
-       case .success(let dataReturn):
-         
-         strongSelf.taskDataReturn = dataReturn
-         
-       case .failure(let error):
-         LKProgressHUD.dismiss()
-         LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
-       }
-     }
-   }
-   
-   func startAnimate(sender: UIButton) {
-     let move = UIViewPropertyAnimator(duration: 0.1, curve: .easeInOut) {
-       self.indicatorCon?.isActive = false
-       self.indicatorCon = self.indicatorView.centerXAnchor.constraint(equalTo: sender.centerXAnchor)
-       self.indicatorCon?.isActive = true
-       self.view.layoutIfNeeded()
-     }
-     move.startAnimation()
-   }
-   
-   func setUpindicatorView() {
-     self.view.addSubview(indicatorView)
-     indicatorView.backgroundColor = .G1
-     indicatorView.translatesAutoresizingMaskIntoConstraints = false
-     indicatorCon = indicatorView.centerXAnchor.constraint(equalTo: allMissionBtn.centerXAnchor)
-     
-     NSLayoutConstraint.activate([
-       indicatorView.topAnchor.constraint(equalTo: btnStackView.bottomAnchor, constant: 0),
-       indicatorView.heightAnchor.constraint(equalToConstant: 2),
-       indicatorView.widthAnchor.constraint(equalToConstant: allMissionBtn.bounds.width * 0.6),
-       indicatorCon!
-       ])
-   }
+      guard let strongSelf = self else { return }
+      switch result {
+        
+      case .success(let dataReturn):
+        
+        strongSelf.taskDataReturn = dataReturn
+        
+      case .failure(let error):
+        LKProgressHUD.dismiss()
+        LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
+      }
+    }
+  }
+  
+  func startAnimate(sender: UIButton) {
+    let move = UIViewPropertyAnimator(duration: 0.1, curve: .easeInOut) {
+      self.indicatorCon?.isActive = false
+      self.indicatorCon = self.indicatorView.centerXAnchor.constraint(equalTo: sender.centerXAnchor)
+      self.indicatorCon?.isActive = true
+      self.view.layoutIfNeeded()
+    }
+    move.startAnimation()
+  }
+  
+  func setUpindicatorView() {
+    self.view.addSubview(indicatorView)
+    indicatorView.backgroundColor = .G1
+    indicatorView.translatesAutoresizingMaskIntoConstraints = false
+    indicatorCon = indicatorView.centerXAnchor.constraint(equalTo: allMissionBtn.centerXAnchor)
+    
+    NSLayoutConstraint.activate([
+      indicatorView.topAnchor.constraint(equalTo: btnStackView.bottomAnchor, constant: 0),
+      indicatorView.heightAnchor.constraint(equalToConstant: 2),
+      indicatorView.widthAnchor.constraint(equalToConstant: allMissionBtn.bounds.width * 0.6),
+      indicatorCon!
+    ])
+  }
   
   func setUpSearch() {
     refreshControl = UIRefreshControl()
@@ -261,12 +269,12 @@ class MissionListViewController: UIViewController {
   }
   
   func getTaskData() {
-
+    
     TaskManager.shared.readData { [weak self] result in
       guard let strongSelf = self else { return }
       switch result {
       case .success(let taskData):
-     
+        
         if UserManager.shared.isTourist {
           
           strongSelf.taskDataReturn = taskData
@@ -277,7 +285,7 @@ class MissionListViewController: UIViewController {
           let filterData = taskData.filter { taskInfo in
             var isMatch = false
             for badMan in userinfo.blacklist where badMan == taskInfo.uid {
-                isMatch =  true
+              isMatch =  true
             }
             
             for oppoBadman in userinfo.oppoBlacklist where oppoBadman == taskInfo.uid {
@@ -323,7 +331,7 @@ class MissionListViewController: UIViewController {
 }
 
 extension MissionListViewController: UITableViewDataSource, UITableViewDelegate {
-
+  
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     if shouldShowSearchResults {
       return filteredArray.count
@@ -361,14 +369,14 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
     
     let spring = UISpringTimingParameters(dampingRatio: 0.6, initialVelocity: CGVector(dx: 1.0, dy: 0.2))
     let animator = UIViewPropertyAnimator(duration: 0.8, timingParameters: spring)
-          cell.alpha = 0
-          cell.transform = CGAffineTransform(translationX: 0, y: 100 * 0.6)
-          animator.addAnimations {
-              cell.alpha = 1
-              cell.transform = .identity
-            self.taskListTable.layoutIfNeeded()
-          }
-          animator.startAnimation(afterDelay: 0.1 * Double(indexPath.item))
+    cell.alpha = 0
+    cell.transform = CGAffineTransform(translationX: 0, y: 100 * 0.6)
+    animator.addAnimations {
+      cell.alpha = 1
+      cell.transform = .identity
+      self.taskListTable.layoutIfNeeded()
+    }
+    animator.startAnimation(afterDelay: 0.1 * Double(indexPath.item))
   }
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -376,7 +384,7 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
     if segue.identifier == "detail" {
       
       guard let detailVC = segue.destination as? MissionDetailViewController,
-           let time = self.timeString else { return }
+        let time = self.timeString else { return }
       detailVC.detailData = detailData
       detailVC.receiveTime = time
       if detailData?.missionTaker != "" {

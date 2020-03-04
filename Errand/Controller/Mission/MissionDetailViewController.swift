@@ -178,7 +178,6 @@ class MissionDetailViewController: UIViewController {
           group.leave()
         }
 
-        
         strongSelf.updateStatus(uid: user.uid, status: 0) {
           group.leave()
         }
@@ -206,23 +205,17 @@ class MissionDetailViewController: UIViewController {
       
       group.notify(queue: DispatchQueue.main) {
         
-        UserManager.shared.readUserInfo(uid: user.uid, isSelf: true) { result in
+        UserManager.shared.readUserInfo(uid: user.uid, isSelf: true) {result in
+         
           switch result {
           case .success(var accountInfo):
             
             if accountInfo.totalStar != 0 {
               accountInfo.totalStar -= 1.0
             }
-            
-            UserManager.shared.updateOppoInfo(userInfo: accountInfo) { result in
-              switch result {
-              case .success:
-                print("Ya")
-              case .failure:
-                print("error")
-              }
-            }
-            
+          
+            strongSelf.updateUserInfo(userInfo: accountInfo) { }
+
           case .failure:
             print("error")
           }
@@ -241,7 +234,7 @@ class MissionDetailViewController: UIViewController {
     self.present(controller, animated: true, completion: nil)
     
   }
-  @IBAction func finishMissionAct(_ sender: Any) {
+ @IBAction func finishMissionAct(_ sender: Any) {
     
  guard var taskData = self.detailData,
       let status = UserManager.shared.currentUserInfo?.status else { return }
@@ -398,6 +391,17 @@ class MissionDetailViewController: UIViewController {
     }
   }
   
+  func updateUserInfo(userInfo: AccountInfo, completion: @escaping (() -> Void)) {
+    UserManager.shared.updateOppoInfo(userInfo: userInfo) { result in
+      switch result {
+      case .success:
+        completion()
+      case .failure:
+        completion()
+      }
+    }
+  }
+  
   func callTaskData() {
     TaskManager.shared.setUpStatusData { [weak self] result in
       guard let strongSelf = self else { return }
@@ -460,10 +464,8 @@ class MissionDetailViewController: UIViewController {
     TaskManager.shared.taskUpdateData(uid: uid, status: status, identity: identity) { (result) in
       switch result {
       case .success:
-        print("1")
         completion()
       case .failure:
-        print("2")
         completion()
       }
     }
@@ -506,13 +508,7 @@ class MissionDetailViewController: UIViewController {
         case .success(let dataReturn):
           
           strongSelf.detailData = dataReturn
-          
-//          guard let taskData = strongSelf.detailData else { return }
-          
-//          if taskData.takerOK && taskData.ownerOK {
-//            strongSelf.finishMissionAlert(title: "恭喜", message: "任務完成", viewController: strongSelf)
-//          }
-          
+
         case .failure:
           print("error")
         }
@@ -599,7 +595,6 @@ class MissionDetailViewController: UIViewController {
           let taskInfo = strongSelf.detailData else { return }
         
         judgeVC.detailData = taskInfo
-        NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
         NotificationCenter.default.post(name: Notification.Name("hideMes"), object: nil)
         strongSelf.present(judgeVC, animated: true, completion: nil)
         
@@ -647,7 +642,7 @@ class MissionDetailViewController: UIViewController {
     }
     
     guard let user = UserManager.shared.currentUserInfo,
-      let task = detailData else { return }
+         let task = detailData else { return }
     
     var isRequseter = false
     
@@ -669,7 +664,6 @@ class MissionDetailViewController: UIViewController {
       takeMissionBtn.setTitle("請先完成當前任務", for: .normal)
       takeMissionBtn.tintColor = .black
       takeMissionBtn.isEnabled = false
-      
     } else {
       takeMissionBtn.backgroundColor = UIColor(red: 246.0/255.0, green: 212/255.0, blue: 95/255.0, alpha: 1.0)
       takeMissionBtn.setTitle("接受任務", for: .normal)
@@ -741,7 +735,6 @@ class MissionDetailViewController: UIViewController {
     if segue.identifier == "chat" {
       guard let chatVC = segue.destination as? ChatViewController,
         let taskInfo = detailData else { return }
-      
       chatVC.detailData = taskInfo
       chatVC.receiverPhoto = reversePhoto
     }
@@ -895,19 +888,11 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
               strongSelf.reverse = taskInfo.uid
             }
             
-            UserManager.shared.updateOppoInfo(userInfo: userInfo) { result in
-              
-              switch result {
-              case .success:
-                print("yes")
-                group.leave()
-              case .failure:
-                group.leave()
-                print("no")
-              }
+            strongSelf.updateUserInfo(userInfo: userInfo) {
+              group.leave()
             }
             
-            UserManager.shared.updateReverseUid(uid: strongSelf.reverse, isSelf: false) { result in
+            UserManager.shared.updateOppoBlackList(uid: strongSelf.reverse, isSelf: false) { result in
               switch result {
               case .success:
                 group.leave()
@@ -942,11 +927,11 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
         strongSelf.show(chatVC, sender: nil)
       }
       
-      cell.tapOnNavi = { [weak self ]in
+      cell.tapOnNavi = { [weak self]in
         
         guard let strongSelf = self else { return }
         guard let originalLocation = strongSelf.myLocationManager.location?.coordinate,
-          let taskInfo = strongSelf.detailData else { return }
+             let taskInfo = strongSelf.detailData else { return }
         
         let originCor = "\(originalLocation.latitude),\(originalLocation.longitude)"
         let destination = "\(taskInfo.lat),\(taskInfo.long)"
