@@ -117,15 +117,13 @@ class RequesterViewController: UIViewController {
   func readRequester() {
     guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
     
-    TaskManager.shared.readSpecificData(parameter: "uid", parameterData: uid) { [weak self] result in
+    TaskManager.shared.readSpecificData(parameter: "uid", parameterString: uid) { [weak self] result in
       
       guard let strongSelf = self else { return }
       
       switch result {
         
       case .success(let taskInfo):
-        
-        strongSelf.userInfo = []
         
         let taskOnGoing = taskInfo.filter { info in
           if info.isComplete {
@@ -148,27 +146,31 @@ class RequesterViewController: UIViewController {
   func handleRequesterData(taskInfo: [TaskInfo]) {
     
     if taskInfo.isEmpty || taskInfo[0].isComplete {
+      userInfo = []
       LKProgressHUD.dismiss()
       SwiftMes.shared.showWarningMessage(body: "您當前沒有任務", seconds: 1.0)
     } else if taskInfo[0].status == 1 {
+      userInfo = []
       requesterTable.reloadData()
       taskinfo = taskInfo[0]
       LKProgressHUD.dismiss()
       SwiftMes.shared.showWarningMessage(body: "任務進行中", seconds: 1.0)
     } else if taskInfo[0].requester.isEmpty {
+      userInfo = []
       taskinfo = taskInfo[0]
       requesterTable.reloadData()
     } else {
       taskinfo = taskInfo[0]
-      taskInfo[0].requester.forEach { requester in
-        UserManager.shared.readUserInfo(uid: requester, isSelf: false) { [weak self] result in
-          
+      for count in 0 ..< taskInfo[0].requester.count {
+        UserManager.shared.readUserInfo(uid: taskInfo[0].requester[count], isSelf: false) {[weak self] result in
           guard let strongSelf = self else { return }
           switch result {
             
           case .success(let accountInfo):
+            
+            strongSelf.storeInfo = []
             strongSelf.storeInfo.append(accountInfo)
-            if strongSelf.storeInfo.count == taskInfo[0].requester.count {
+            if count == taskInfo[0].requester.count - 1 {
               LKProgressHUD.dismiss()
               strongSelf.userInfo = strongSelf.storeInfo
             }

@@ -233,7 +233,7 @@ class PersonInfoViewController: UIViewController {
     
     guard let uid = Auth.auth().currentUser?.uid else { return }
     
-    TaskManager.shared.readSpecificData(parameter: "uid", parameterData: uid) { result in
+    TaskManager.shared.readSpecificData(parameter: "uid", parameterString: uid) { result in
       switch result {
         
       case .success(let data):

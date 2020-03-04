@@ -1,11 +1,3 @@
-//
-//  TaskManager.swift
-//  Errand
-//
-//  Created by Jim on 2020/1/24.
-//  Copyright © 2020 Jim. All rights reserved.
-//
-
 import UIKit
 import Foundation
 import Firebase
@@ -81,18 +73,18 @@ class TaskManager {
         
         guard let quary = querySnapshot else {return }
         
-        strongSelf.reFactData(quary: quary)
+        strongSelf.reFactDatanormal(quary: quary)
         
         completion(.success(strongSelf.taskData))
       }
     }
   }
   
-  func readSpecificData(parameter: String, parameterData: Any, completion: @escaping ((Result<[TaskInfo], Error>) -> Void)) {
+  func readSpecificData(parameter: String, parameterDataInt: Int, completion: @escaping ((Result<[TaskInfo], Error>) -> Void)) {
     
     self.taskData = []
     
-    dbF.collection("Tasks").whereField(parameter, isEqualTo: parameterData).getDocuments { [weak self] (querySnapshot, err) in
+    dbF.collection("Tasks").whereField(parameter, isEqualTo: parameterDataInt).getDocuments { [weak self] (querySnapshot, err) in
       
       guard let strongSelf = self else { return }
       
@@ -111,10 +103,33 @@ class TaskManager {
     }
   }
   
-  func reFactData(quary: QuerySnapshot) {
+  func readSpecificData(parameter: String, parameterString: String, completion: @escaping ((Result<[TaskInfo], Error>) -> Void)) {
     
     self.taskData = []
-    var storeData: [TaskInfo] = []
+    
+    dbF.collection("Tasks").whereField(parameter, isEqualTo: parameterString).getDocuments { [weak self] (querySnapshot, err) in
+      
+      guard let strongSelf = self else { return }
+      
+      if err != nil {
+        
+        completion(.failure(ReadDataError.readDataError))
+        
+      } else {
+        
+        guard let quary = querySnapshot else {return }
+        
+        strongSelf.reFactDataSpec(quary: quary)
+        
+        completion(.success(strongSelf.taskData))
+      }
+    }
+  }
+  
+  func reFactDatanormal(quary: QuerySnapshot) {
+    
+    self.taskData = []
+      var storeData: [TaskInfo] = []
     for info in quary.documents {
       
       self.reFactDataSpec(quary: info) { result in
@@ -146,13 +161,7 @@ class TaskManager {
         
         switch result {
         case .success(let task):
-          
-          if task.status == 1 || task.isComplete {
-            
-          } else {
-            self.taskData.append(task)
-          }
-          
+          self.taskData.append(task)
         case .failure(let error):
           print(error.localizedDescription)
         }
@@ -160,10 +169,12 @@ class TaskManager {
     }
   }
   
+  // swiftlint:enable cyclomatic_complexity
   func reFactDataSpec(quary: DocumentSnapshot, completion: @escaping (Result<TaskInfo, Error>) -> Void) {
     
     guard let quary = quary.data() else { return }
     
+    self.taskData = []
     guard let email = quary["email"] as? String,
       let nickname = quary["nickname"] as? String,
       let gender = quary["gender"] as? Int,
@@ -193,10 +204,42 @@ class TaskManager {
       let ownerJudge = quary["ownerJudge"] as? Bool,
       let takerJudge = quary["takerJudge"] as? Bool else { return }
     
+    print("2")
+    
+//    guard let email = quary["email"] as? String else { return }
+//    guard let nickname = quary["nickname"] as? String else { return }
+//    guard let gender = quary["gender"] as? Int else { return }
+//    guard let taskPhoto = quary["taskPhoto"] as? [String] else { return }
+//    guard let time = quary["time"] as? Int else { return }
+//    guard let detail = quary["detail"] as? String else { return }
+//    guard let lat = quary["lat"] as? Double else { return }
+//    guard let long = quary["long"] as? Double else { return }
+//    guard let money = quary["money"] as? Int else { return }
+//    guard let status = quary["status"] as? Int else { return }
+//    guard let fileType = quary["fileType"] as? [Int] else { return }
+//    guard let classfied = quary["classfied"] as? Int else { return }
+//    guard let personPhoto = quary["personPhoto"] as? String else { return }
+//    guard let requester = quary["requester"] as? [String] else { return }
+//    guard let fcmToken = quary["fcmToken"] as? String else { return }
+//    guard let missionTaker = quary["missionTaker"] as? String else { return }
+//    guard let refuse = quary["refuse"] as? [String] else { return }
+//    guard let uid = quary["uid"] as? String else { return }
+//    guard let chatRoom = quary["chatRoom"] as? String else { return }
+//    guard let isComplete = quary["isComplete"] as? Bool else { return }
+//    guard let ownerOK = quary["ownerOK"] as? Bool else { return }
+//    guard let takerOK = quary["takerOK"] as? Bool else { return }
+//    guard let star = quary["star"] as? Double else { return }
+//    guard let ownerAskFriend = quary["ownerAskFriend"] as? Bool else { return }
+//    guard let takerAskFriend = quary["takerAskFriend"] as? Bool else { return }
+//    guard let isFrirndsNow = quary["isFrirndsNow"] as? Bool else { return }
+//    guard let ownerJudge = quary["ownerJudge"] as? Bool else { return }
+//    guard let takerJudge = quary["takerJudge"] as? Bool else { return }
+    
     let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, ownerOK: ownerOK, takerOK: takerOK, ownerAskFriend: ownerAskFriend, takerAskFriend: takerAskFriend, fileType: fileType, personPhoto: personPhoto, requester: requester, fcmToken: fcmToken, missionTaker: missionTaker, refuse: refuse, uid: uid, chatRoom: chatRoom, isFrirndsNow: isFrirndsNow, isComplete: isComplete, star: star, ownerJudge: ownerJudge, takerJudge: takerJudge)
     
     completion(.success(dataReturn))
   }
+  // swiftlint:disable cyclomatic_complexity
   
   func filterClassified(classified: Int) -> [String] {
     
@@ -388,7 +431,7 @@ class TaskManager {
               } else {
                 
                 completion(.success("Update Success"))
-      
+                
               }
             }
             
@@ -430,7 +473,7 @@ class TaskManager {
     
     if userInfo.status == 1 {
       
-      TaskManager.shared.readSpecificData(parameter: "uid", parameterData: userInfo.uid) { result in
+      TaskManager.shared.readSpecificData(parameter: "uid", parameterString: userInfo.uid) { result in
         
         switch result {
         case .success(let taskInfo):
@@ -442,7 +485,7 @@ class TaskManager {
         }
       }
     } else if userInfo.status == 2 {
-      TaskManager.shared.readSpecificData(parameter: "missionTaker", parameterData: userInfo.uid) { result in
+      TaskManager.shared.readSpecificData(parameter: "missionTaker", parameterString: userInfo.uid) { result in
         
         switch result {
         case .success(let taskInfo):

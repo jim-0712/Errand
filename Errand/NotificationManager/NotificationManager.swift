@@ -78,7 +78,7 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
       NotificationCenter.default.post(name: Notification.Name("refusePOP"), object: nil)
     }
     
-    NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
+//    NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
       completionHandler()
   }
 }
