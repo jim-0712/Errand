@@ -40,7 +40,6 @@ class FriendChatViewController: MessagesViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
     preSetUp()
     setUpListener()
     setUpMessage()

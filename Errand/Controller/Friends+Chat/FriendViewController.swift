@@ -107,7 +107,6 @@ class FriendViewController: UIViewController {
   }
   
   func setUpTable() {
-    NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
     friendListTable.isHidden = false
     friendListTable.delegate = self
     friendListTable.dataSource = self

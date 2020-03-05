@@ -41,7 +41,7 @@ class TaskManager {
       let long = coordinate.longitude as Double
       let personPhoto = "\(photo)"
     
-    let info = TaskInfo(email: email, nickname: nickname, gender: 0, taskPhoto: taskPhoto, time: taskData[0], detail: detail, lat: lat, long: long, money: taskData[1], classfied: taskData[2], status: taskData[3], ownerOK: false, takerOK: false, ownerAskFriend: false, takerAskFriend: false, fileType: fileType, personPhoto: personPhoto, requester: [], fcmToken: fcmToken, missionTaker: "", refuse: [], uid: uid, chatRoom: "", isFrirndsNow: false, isComplete: false, star: 0.0, ownerJudge: false, takerJudge: false)
+    let info = TaskInfo(email: email, nickname: nickname, gender: 0, taskPhoto: taskPhoto, time: taskData[0], detail: detail, lat: lat, long: long, money: taskData[1], classfied: taskData[2], status: taskData[3], ownerCompleteTask: false, takerCompleteTask: false, ownerAskFriend: false, takerAskFriend: false, fileType: fileType, personPhoto: personPhoto, requester: [], fcmToken: fcmToken, missionTaker: "", refuse: [], uid: uid, chatRoom: "", isFrirndsNow: false, isComplete: false, star: 0.0, ownerJudge: false, takerJudge: false)
     
       dbF.collection("Tasks").document(uid).setData(info.toDict) { error in
       
@@ -194,8 +194,8 @@ class TaskManager {
       let uid = quary["uid"] as? String,
       let chatRoom = quary["chatRoom"] as? String,
       let isComplete = quary["isComplete"] as? Bool,
-      let ownerOK = quary["ownerOK"] as? Bool,
-      let takerOK = quary["takerOK"] as? Bool,
+      let ownerOK = quary["ownerCompleteTask"] as? Bool,
+      let takerOK = quary["takerCompleteTask"] as? Bool,
       let star = quary["star"] as? Double,
       let ownerAskFriend = quary["ownerAskFriend"] as? Bool,
       let takerAskFriend = quary["takerAskFriend"] as? Bool,
@@ -203,7 +203,7 @@ class TaskManager {
       let ownerJudge = quary["ownerJudge"] as? Bool,
       let takerJudge = quary["takerJudge"] as? Bool else { return }
     
-    let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, ownerOK: ownerOK, takerOK: takerOK, ownerAskFriend: ownerAskFriend, takerAskFriend: takerAskFriend, fileType: fileType, personPhoto: personPhoto, requester: requester, fcmToken: fcmToken, missionTaker: missionTaker, refuse: refuse, uid: uid, chatRoom: chatRoom, isFrirndsNow: isFrirndsNow, isComplete: isComplete, star: star, ownerJudge: ownerJudge, takerJudge: takerJudge)
+    let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, ownerCompleteTask: ownerOK, takerCompleteTask: takerOK, ownerAskFriend: ownerAskFriend, takerAskFriend: takerAskFriend, fileType: fileType, personPhoto: personPhoto, requester: requester, fcmToken: fcmToken, missionTaker: missionTaker, refuse: refuse, uid: uid, chatRoom: chatRoom, isFrirndsNow: isFrirndsNow, isComplete: isComplete, star: star, ownerJudge: ownerJudge, takerJudge: takerJudge)
     
     completion(.success(dataReturn))
   }
@@ -337,7 +337,7 @@ class TaskManager {
         
       }
       
-      let taskNewVersion = TaskInfo(email: task.email, nickname: task.nickname, gender: task.gender, taskPhoto: task.taskPhoto, time: task.time, detail: task.detail, lat: task.lat, long: task.long, money: task.money, classfied: task.classfied, status: task.status, ownerOK: task.ownerOK, takerOK: task.takerOK, ownerAskFriend: task.ownerAskFriend, takerAskFriend: task.takerAskFriend, fileType: task.fileType, personPhoto: task.personPhoto, requester: task.requester, fcmToken: task.fcmToken, missionTaker: task.missionTaker, refuse: task.refuse, uid: task.uid, chatRoom: task.chatRoom, isFrirndsNow: task.isFrirndsNow, isComplete: task.isComplete, star: task.star, ownerJudge: task.ownerJudge, takerJudge: task.takerJudge)
+      let taskNewVersion = TaskInfo(email: task.email, nickname: task.nickname, gender: task.gender, taskPhoto: task.taskPhoto, time: task.time, detail: task.detail, lat: task.lat, long: task.long, money: task.money, classfied: task.classfied, status: task.status, ownerCompleteTask: task.ownerCompleteTask, takerCompleteTask: task.takerCompleteTask, ownerAskFriend: task.ownerAskFriend, takerAskFriend: task.takerAskFriend, fileType: task.fileType, personPhoto: task.personPhoto, requester: task.requester, fcmToken: task.fcmToken, missionTaker: task.missionTaker, refuse: task.refuse, uid: task.uid, chatRoom: task.chatRoom, isFrirndsNow: task.isFrirndsNow, isComplete: task.isComplete, star: task.star, ownerJudge: task.ownerJudge, takerJudge: task.takerJudge)
       
       if let querySnapshot = querySnapshot {
         
@@ -379,14 +379,14 @@ class TaskManager {
             
             if identity == "ownerOK" {
 
-              taskInfo.ownerOK = status
+              taskInfo.ownerCompleteTask = status
 
             } else if identity == "isComplete"{
-              taskInfo.takerOK = status
-              taskInfo.ownerOK = status
+              taskInfo.takerCompleteTask = status
+              taskInfo.ownerCompleteTask = status
               taskInfo.isComplete = status
             } else {
-              taskInfo.takerOK = status
+              taskInfo.takerCompleteTask = status
             }
 
             document.reference.updateData(taskInfo.toDict) { (error) in
@@ -501,5 +501,4 @@ class TaskManager {
     
     }
   }
-  
 }

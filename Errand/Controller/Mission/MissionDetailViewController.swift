@@ -17,25 +17,21 @@ import CoreLocation
 class MissionDetailViewController: UIViewController {
   
   var category: [CellContent] = [CellContent(type: .miniPhoto, title: "大頭貼"),
-                            CellContent(type: .normal, title: "懸賞價格"),
-                            CellContent(type: .normal, title: "發布時間"),
-                            CellContent(type: .purpose, title: "任務細節") ]
+                                 CellContent(type: .normal, title: "懸賞價格"),
+                                 CellContent(type: .normal, title: "發布時間"),
+                                 CellContent(type: .purpose, title: "任務細節") ]
   
   var isRequester = false
   
   var isMissionON = false
   
-  var alreadyReport = false
-  
-  var destination = ""
+  var destinationFcmToken = ""
   
   var reverse = ""
   
   let myLocationManager = CLLocationManager()
   
   var plaverLooper: AVPlayerLooper?
-  
-  var isNavi = false
   
   var receiveTime: String?
   
@@ -53,7 +49,7 @@ class MissionDetailViewController: UIViewController {
   
   let dbF = Firestore.firestore()
   
-  lazy var testcollection: UICollectionView = {
+  lazy var missionPhotoCollectionView: UICollectionView = {
     let layout = UICollectionViewFlowLayout()
     let collection = UICollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300), collectionViewLayout: layout)
     layout.scrollDirection = .horizontal
@@ -72,8 +68,22 @@ class MissionDetailViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    navigationItem.setHidesBackButton(true, animated: true)
+    navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(backToList))
+    navigationItem.leftBarButtonItem?.tintColor = .black
     
-    if isMissionON {
+    guard detailData != nil else {
+      fetchTaskData()
+      return
+    }
+    
+    guard let status = UserManager.shared.currentUserInfo?.status else {
+      fetchTaskData()
+      return
+    }
+    
+    if detailData?.missionTaker != "" {
+      isMissionON = true
       missionStackView.isHidden = false
       takeMissionBtn.isHidden = true
       startMissionSetupBtn()
@@ -83,31 +93,20 @@ class MissionDetailViewController: UIViewController {
       setUpBtnEnable()
     }
     
-    if isNavi {
-      backBtn.isHidden = false
-    } else {
-      backBtn.isHidden = true
-    }
-    navigationItem.setHidesBackButton(true, animated: true)
-    navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(backToList))
-    navigationItem.leftBarButtonItem?.tintColor = .black
-    
-    guard detailData != nil else {
-      setUpData()
-      return }
-    guard let status = UserManager.shared.currentUserInfo?.status else {
-      setUpData()
-      return }
     UserManager.shared.statusJudge = status
-    getPhoto()
-    setUpall()
-    setUpListener()
+    
+    fetchTaskOwnerPhoto()
+    setUpView()
+    setUpListenerToTask()
   }
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    self.navigationController?.setToolbarHidden(true, animated: true)
-    NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
+    if navigationController == nil {
+          backBtn.isHidden = false
+        } else {
+          backBtn.isHidden = true
+        }
   }
   
   @objc func backToList() {
@@ -117,14 +116,12 @@ class MissionDetailViewController: UIViewController {
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     guard let taskData = detailData else { return }
-    
-    if taskData.ownerOK && taskData.takerOK {
-      changeStatus()
+    if taskData.ownerCompleteTask && taskData.takerCompleteTask {
+       changeStatus()
     }
   }
   
   override func viewDidLayoutSubviews() {
-    
     super.viewDidLayoutSubviews()
     pageControl.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
   }
@@ -141,154 +138,148 @@ class MissionDetailViewController: UIViewController {
   
   @IBOutlet weak var giveUpmissionBtn: UIButton!
   
-  @IBAction func giveUpmissionAct(_ sender: Any) {
+  func giveUpMission() {
     
-    let controller = UIAlertController(title: "您確定要放棄任務？", message: "將會扣您星星總評分1分", preferredStyle: .alert)
-    let okAction = UIAlertAction(title: "ok", style: .default) { [weak self]_ in
-      guard let strongSelf = self,
-           let user = UserManager.shared.currentUserInfo,
-           var taskInfo = strongSelf.detailData else { return }
-      LKProgressHUD.show(controller: strongSelf)
-      let group = DispatchGroup()
+    guard let user = UserManager.shared.currentUserInfo,
+         var taskInfo = detailData else {
+         return
+      }
+    
+    LKProgressHUD.show(controller: self)
+    let group = DispatchGroup()
+    let missionTaker = taskInfo.missionTaker
+    
+    if user.status == 1 {
       group.enter()
-      group.enter()
-      let taker = taskInfo.missionTaker
-      taskInfo.missionTaker = ""
-      taskInfo.status = 0
-      taskInfo.ownerOK = false
-      taskInfo.takerOK = false
-      
-      //如果是owner要刪除任務並且把雙方的status射程0
-      if user.status == 1 {
-        group.enter()
-        strongSelf.destination = taker
-        TaskManager.shared.deleteTask(uid: user.uid) { result in
-          switch result {
-          case .success:
-            group.leave()
-          case .failure:
-            group.leave()
-          }
-        }
-        
-        group.enter()
-        strongSelf.readUserInfo(uid: taker, isSelf: false) { accountInfo in
-          guard let account = accountInfo else { return }
-          strongSelf.destination = account.fcmToken
+      destinationFcmToken = missionTaker
+      TaskManager.shared.deleteTask(uid: user.uid) { result in
+        switch result {
+        case .success:
           group.leave()
-        }
-
-        strongSelf.updateStatus(uid: user.uid, status: 0) {
-          group.leave()
-        }
-        
-        strongSelf.updateStatus(uid: taker, status: 0) {
-          group.leave()
-        }
-        
-      } else {
-        //如果是taker要把任務重置並且把自己的status射程0
-        strongSelf.destination = taskInfo.fcmToken
-        TaskManager.shared.updateWholeTask(task: taskInfo, uid: taskInfo.uid) { result in
-          switch result {
-          case .success:
-            group.leave()
-          case .failure:
-            group.leave()
-          }
-        }
-        
-        strongSelf.updateStatus(uid: taker, status: 0) {
+        case .failure:
           group.leave()
         }
       }
       
+      group.enter()
+      readUserInfo(uid: missionTaker, isSelf: false) { [weak self]accountInfo in
+        guard let account = accountInfo,
+             let strongSelf = self else { return }
+        strongSelf.destinationFcmToken = account.fcmToken
+        group.leave()
+      }
+      
+      group.enter()
+      updateStatus(uid: user.uid, status: 0) {
+        group.leave()
+      }
+      
+      group.enter()
+      updateStatus(uid: missionTaker, status: 0) {
+        group.leave()
+      }
+    } else {
+      
+      destinationFcmToken = taskInfo.fcmToken
+      taskInfo.missionTaker = ""
+      taskInfo.status = 0
+      taskInfo.ownerCompleteTask = false
+      taskInfo.takerCompleteTask = false
+      
+      group.enter()
+      TaskManager.shared.updateWholeTask(task: taskInfo, uid: taskInfo.uid) { result in
+        switch result {
+        case .success:
+          group.leave()
+        case .failure:
+          group.leave()
+        }
+      }
+      
+      group.enter()
+      updateStatus(uid: missionTaker, status: 0) {
+        group.leave()
+      }
+      
       group.notify(queue: DispatchQueue.main) {
         
-        UserManager.shared.readUserInfo(uid: user.uid, isSelf: true) {result in
-         
+        UserManager.shared.readUserInfo(uid: user.uid, isSelf: true) {[weak self]result in
+          guard let strongSelf = self else { return }
           switch result {
           case .success(var accountInfo):
             
             if accountInfo.totalStar != 0 {
-              accountInfo.totalStar -= 1.0
+               accountInfo.totalStar -= 1.0
             }
-          
+            
             strongSelf.updateUserInfo(userInfo: accountInfo) { }
-
+            
           case .failure:
             print("error")
           }
         }
         
         let sender = PushNotificationSender()
-        sender.sendPushNotification(to: strongSelf.destination, body: "對方放棄任務")
+        sender.sendPushNotification(to: self.destinationFcmToken, body: "對方放棄任務")
         LKProgressHUD.dismiss()
         let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
-        strongSelf.view.window?.rootViewController = mapView
+        self.view.window?.rootViewController = mapView
       }
     }
-    let cancelAct = UIAlertAction(title: "back", style: .cancel, handler: nil)
-    controller.addAction(okAction)
-    controller.addAction(cancelAct)
-    self.present(controller, animated: true, completion: nil)
-    
   }
- @IBAction func finishMissionAct(_ sender: Any) {
+  
+  func completeMission() {
     
- guard var taskData = self.detailData,
-      let status = UserManager.shared.currentUserInfo?.status else { return }
-    var owner = ""
+    guard var taskInfo = detailData,
+         let status = UserManager.shared.currentUserInfo?.status else {
+        return
+    }
+    
+    var taskCompleteStatus = ""
+    
     if status == 1 {
-      owner = "ownerOK"
-      taskData.ownerOK = true
+      taskCompleteStatus = "ownerCompleteTask"
+      taskInfo.takerCompleteTask = true
     } else {
-      owner = "takerOK"
-      taskData.takerOK = true
+      taskCompleteStatus = "takerCompleteTask"
+      taskInfo.takerCompleteTask = true
     }
     
     let group = DispatchGroup()
     
-    //  這邊再處理ownerOK 或者 takerOK
     group.enter()
-    updateTaskData(uid: taskData.uid, status: true, identity: owner) {
+    updateTaskData(uid: taskInfo.uid, status: true, identity: taskCompleteStatus) {
       group.leave()
     }
-
+    
     if status == 1 {
       group.enter()
-      readUserInfo(uid: taskData.missionTaker, isSelf: false) { [weak self] accountInfo in
+      readUserInfo(uid: taskInfo.missionTaker, isSelf: false) { [weak self] accountInfo in
         guard let account = accountInfo,
-             let strongSelf = self else { return }
-        strongSelf.destination = account.fcmToken
+          let strongSelf = self else { return }
+        strongSelf.destinationFcmToken = account.fcmToken
         group.leave()
       }
-      
     } else if status == 2 {
       group.enter()
-      destination = taskData.fcmToken
+      destinationFcmToken = taskInfo.fcmToken
       group.leave()
     } else { group.leave() }
     
     group.notify(queue: DispatchQueue.main) {
       
-      guard let task = self.detailData else { return }
-      if task.ownerOK && task.takerOK {
+      guard let taskInfo = self.detailData else { return }
+      if taskInfo.ownerCompleteTask && taskInfo.takerCompleteTask {
         self.finishMissionAlert(title: "恭喜", message: "任務完成", viewController: self)
       } else {
         let sender = PushNotificationSender()
-        sender.sendPushNotification(to: self.destination, body: "對方任務完成")
+        sender.sendPushNotification(to: self.destinationFcmToken, body: "對方任務完成")
         
         let controller = UIAlertController(title: "恭喜", message: "等待對方完成", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "ok", style: .default) { [weak self] _ in
           guard let strongSelf = self else { return }
           
-          guard let judgeVC = strongSelf.storyboard?.instantiateViewController(identifier: "judge") as? JudgeMissionViewController,
-            let taskInfo = strongSelf.detailData  else { return }
-          
-          judgeVC.detailData = taskInfo
-          NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
-          strongSelf.present(judgeVC, animated: true, completion: nil)
+          strongSelf.gotoJudgePage()
         }
         controller.addAction(okAction)
         self.present(controller, animated: true, completion: nil)
@@ -300,8 +291,34 @@ class MissionDetailViewController: UIViewController {
     }
   }
   
+  func gotoJudgePage() {
+    guard let judgeVC = storyboard?.instantiateViewController(identifier: "judge") as? JudgeMissionViewController,
+         let taskInfo = detailData  else { return }
+         judgeVC.detailData = taskInfo
+         NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
+         present(judgeVC, animated: true, completion: nil)
+  }
+  
+  @IBAction func giveUpmissionAct(_ sender: Any) {
+    
+    let controller = UIAlertController(title: "您確定要放棄任務？", message: "將會扣您星星總評分1分", preferredStyle: .alert)
+    
+    let okAction = UIAlertAction(title: "ok", style: .default) { [weak self]_ in
+      guard let strongSelf = self else { return }
+      strongSelf.giveUpMission()
+    }
+    
+    let cancelAct = UIAlertAction(title: "back", style: .cancel, handler: nil)
+    controller.addAction(okAction)
+    controller.addAction(cancelAct)
+    self.present(controller, animated: true, completion: nil)
+  }
+  
+  @IBAction func finishMissionAct(_ sender: Any) {
+    completeMission()
+  }
+  
   @IBAction func backAct(_ sender: Any) {
-    NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
     self.dismiss(animated: true, completion: nil)
   }
   
@@ -340,11 +357,19 @@ class MissionDetailViewController: UIViewController {
     }
   }
   
-  func setUpData() {
+  func backTosignIn() {
+    let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "main") as? ViewController
+    
+    UserManager.shared.isTourist = true
+    UserDefaults.standard.removeObject(forKey: "login")
+    self.view.window?.rootViewController = signInVC
+  }
+  
+  func fetchTaskData() {
     
     if UserManager.shared.isTourist {
       missionStackView.isHidden = true
-      setUpall()
+      setUpView()
       
     } else {
       guard let userInfo = UserManager.shared.currentUserInfo else {
@@ -353,37 +378,32 @@ class MissionDetailViewController: UIViewController {
         
         readUserInfo(uid: uid, isSelf: true) { [weak self] _ in
           guard let strongSelf = self else { return }
-         if Auth.auth().currentUser == nil {
-           SwiftMes.shared.showWarningMessage(body: "請先登入", seconds: 1.0)
-           DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-             let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "main") as? ViewController
-             
-             UserManager.shared.isTourist = true
-             UserDefaults.standard.removeObject(forKey: "login")
-             strongSelf.view.window?.rootViewController = signInVC
-           }
-         }
-         
-         guard let status = UserManager.shared.currentUserInfo?.status else { return }
-         
-         if status == 0 {
-           SwiftMes.shared.showSuccessMessage(body: "該任務已經完成", seconds: 1.0)
-           DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-             let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
-             strongSelf.view.window?.rootViewController = mapView
-           }
-         } else {
-           UserManager.shared.statusJudge = status
-           strongSelf.callTaskData()
-         }
+          if Auth.auth().currentUser == nil {
+            SwiftMes.shared.showWarningMessage(body: "請先登入", seconds: 1.0)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+              guard let strongSelf = self else { return }
+              strongSelf.backTosignIn()
+            }
+          }
+          
+          guard let status = UserManager.shared.currentUserInfo?.status else { return }
+          
+          if status == 0 {
+            SwiftMes.shared.showSuccessMessage(body: "該任務已經完成", seconds: 1.0)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+              let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
+              strongSelf.view.window?.rootViewController = mapView
+            }
+          } else {
+            UserManager.shared.statusJudge = status
+            strongSelf.callTaskData()
+          }
         }
         return
       }
       
-      NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
-      
       if userInfo.status == 0 {
-        setUpall()
+        setUpView()
       } else {
         UserManager.shared.statusJudge = userInfo.status
         self.callTaskData()
@@ -409,10 +429,10 @@ class MissionDetailViewController: UIViewController {
       case .success(let taskInfo):
         strongSelf.detailData = taskInfo
         strongSelf.receiveTime = TaskManager.shared.timeConverter(time: taskInfo.time)
-        strongSelf.getPhoto()
-        strongSelf.setUpall()
+        strongSelf.fetchTaskOwnerPhoto()
+        strongSelf.setUpView()
         if strongSelf.isMissionON {
-          strongSelf.setUpListener()
+           strongSelf.setUpListenerToTask()
         }
         
       case .failure(let error):
@@ -422,8 +442,8 @@ class MissionDetailViewController: UIViewController {
           
           let alert = UIAlertController(title: "注意", message: "本次任務已完成", preferredStyle: .alert)
           let okAction = UIAlertAction(title: "ok", style: .default) { _ in
-            let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
             
+            let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
             strongSelf.view.window?.rootViewController = mapView
           }
           alert.addAction(okAction)
@@ -440,9 +460,7 @@ class MissionDetailViewController: UIViewController {
     UserManager.shared.readUserInfo(uid: uid, isSelf: isSelf) { result in
       switch result {
       case .success(let takerAccount):
-        
         completion(takerAccount)
-
       case .failure:
         completion(nil)
       }
@@ -471,27 +489,27 @@ class MissionDetailViewController: UIViewController {
     }
   }
   
-  func setUpall() {
-    setUp()
+  func setUpView() {
+    setUpCommectionAndTableView()
     setUpBtn()
     setUppageControll()
     detailTableView.reloadData()
   }
   
-  func setUp() {
-    testcollection.delegate = self
-    testcollection.dataSource = self
+  func setUpCommectionAndTableView() {
+    missionPhotoCollectionView.delegate = self
+    missionPhotoCollectionView.dataSource = self
     detailTableView.delegate = self
     detailTableView.dataSource = self
-    testcollection.isPagingEnabled = true
+    missionPhotoCollectionView.isPagingEnabled = true
     detailTableView.rowHeight = UITableView.automaticDimension
     detailTableView.register(UINib(nibName: "StartMissionTableViewCell", bundle: nil), forCellReuseIdentifier: "startMission")
-    testcollection.register(UINib(nibName: "MissionDetailCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "detail")
-    headerView.addSubview(testcollection)
+    missionPhotoCollectionView.register(UINib(nibName: "MissionDetailCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "detail")
+    headerView.addSubview(missionPhotoCollectionView)
     detailTableView.tableHeaderView = headerView
   }
   
-  func setUpListener() {
+  func setUpListenerToTask() {
     guard let data = detailData else { return }
     dbF.collection("Tasks").document(data.uid).addSnapshotListener { querySnapshot, error in
       guard let snapshot = querySnapshot else {
@@ -500,15 +518,10 @@ class MissionDetailViewController: UIViewController {
       }
       
       TaskManager.shared.reFactDataSpec(quary: snapshot) { [weak self] result in
-        
         guard let strongSelf = self else { return }
-        
         switch result {
-          
         case .success(let dataReturn):
-          
           strongSelf.detailData = dataReturn
-
         case .failure:
           print("error")
         }
@@ -517,9 +530,7 @@ class MissionDetailViewController: UIViewController {
   }
   
   func changeStatus() {
-    
     guard let task = detailData else { return }
-    
     LKProgressHUD.show(controller: self)
     
     let group = DispatchGroup()
@@ -537,7 +548,7 @@ class MissionDetailViewController: UIViewController {
     updateStatus(uid: task.missionTaker, status: 0) {
       group.leave()
     }
-
+    
     group.notify(queue: DispatchQueue.main) {
       LKProgressHUD.dismiss()
     }
@@ -561,38 +572,38 @@ class MissionDetailViewController: UIViewController {
       strongSelf.updateTaskData(uid: task.uid, status: true, identity: "isComplete") {
         group.leave()
       }
-
+      
       strongSelf.updateStatus(uid: task.uid, status: 0) {
         group.leave()
       }
-
+      
       strongSelf.updateStatus(uid: task.missionTaker, status: 0) {
         group.leave()
       }
-  
+      
       if currentUserStatus == 1 {
         group.enter()
         
         strongSelf.readUserInfo(uid: task.missionTaker, isSelf: false) { accountInfo in
           guard let account = accountInfo else { return }
-          strongSelf.destination = account.fcmToken
+          strongSelf.destinationFcmToken = account.fcmToken
           group.leave()
         }
         
       } else if currentUserStatus == 2 {
         group.enter()
-        strongSelf.destination = task.fcmToken
+        strongSelf.destinationFcmToken = task.fcmToken
         group.leave()
       } else {  group.leave() }
       
       group.notify(queue: DispatchQueue.main) {
         
         let sender = PushNotificationSender()
-        sender.sendPushNotification(to: strongSelf.destination, body: "任務完成")
+        sender.sendPushNotification(to: strongSelf.destinationFcmToken, body: "任務完成")
         LKProgressHUD.dismiss()
         
         guard let judgeVC = strongSelf.storyboard?.instantiateViewController(identifier: "judge") as? JudgeMissionViewController,
-          let taskInfo = strongSelf.detailData else { return }
+             let taskInfo = strongSelf.detailData else { return }
         
         judgeVC.detailData = taskInfo
         NotificationCenter.default.post(name: Notification.Name("hideMes"), object: nil)
@@ -608,15 +619,9 @@ class MissionDetailViewController: UIViewController {
   func startMissionSetupBtn() {
     
     guard let task = detailData,
-      let status = UserManager.shared.currentUserInfo?.status else { return }
+         let status = UserManager.shared.currentUserInfo?.status else { return }
     
-    if status == 1 && task.ownerOK {
-      finishMissionBtn.isEnabled = false
-      finishMissionBtn.backgroundColor = UIColor.LG1
-      giveUpmissionBtn.isEnabled = false
-      giveUpmissionBtn.setTitle("已經完成", for: .normal)
-      finishMissionBtn.setTitle("等待對方完成", for: .normal)
-    } else if status == 2 && task.takerOK {
+    if status == 1 && task.ownerCompleteTask || status == 2 && task.takerCompleteTask {
       finishMissionBtn.isEnabled = false
       finishMissionBtn.backgroundColor = UIColor.LG1
       giveUpmissionBtn.isEnabled = false
@@ -647,19 +652,16 @@ class MissionDetailViewController: UIViewController {
     var isRequseter = false
     
     for requester in task.requester where requester == user.uid {
-      isRequseter = true
+       isRequseter = true
     }
     
-    if UserManager.shared.isTourist {
-      
-      UserManager.shared.goSignInPage(viewController: self)
-    } else if isRequseter {
+   if isRequseter {
       takeMissionBtn.isHidden = false
       takeMissionBtn.backgroundColor = .lightGray
       takeMissionBtn.setTitle("您已申請此任務", for: .normal)
       takeMissionBtn.tintColor = .black
       takeMissionBtn.isEnabled = false
-    } else if user.status == 1  || user.status == 2 {
+    } else if user.status == 1 || user.status == 2 {
       takeMissionBtn.backgroundColor = .lightGray
       takeMissionBtn.setTitle("請先完成當前任務", for: .normal)
       takeMissionBtn.tintColor = .black
@@ -709,29 +711,40 @@ class MissionDetailViewController: UIViewController {
     ])
   }
   
-  func getPhoto() {
+  func fetchTaskOwnerPhoto() {
     guard let status = UserManager.shared.currentUserInfo?.status,
-      let taskinfo = detailData else { return }
+         let taskinfo = detailData else { return }
+    
+    var uid = ""
+    
     if status == 1 {
-      
-      readUserInfo(uid: taskinfo.missionTaker, isSelf: false) { [weak self] accountInfo in
-        guard let account = accountInfo,
-             let strongSelf = self else { return }
-        strongSelf.reversePhoto = account.photo
-      }
-
+      uid = taskinfo.missionTaker
     } else if status == 2 {
-      
-      readUserInfo(uid: taskinfo.uid, isSelf: false) { [weak self] accountInfo in
-        guard let account = accountInfo,
-             let strongSelf = self else { return }
-        strongSelf.reversePhoto = account.photo
-      }
+      uid = taskinfo.uid
     }
+    
+    readUserInfo(uid: uid, isSelf: false) { [weak self] accountInfo in
+      guard let account = accountInfo,
+        let strongSelf = self else { return }
+      strongSelf.reversePhoto = account.photo
+    }
+//
+//    if status == 1 {
+//      readUserInfo(uid: taskinfo.missionTaker, isSelf: false) { [weak self] accountInfo in
+//        guard let account = accountInfo,
+//          let strongSelf = self else { return }
+//        strongSelf.reversePhoto = account.photo
+//      }
+//    } else if status == 2 {
+//      readUserInfo(uid: taskinfo.uid, isSelf: false) { [weak self] accountInfo in
+//        guard let account = accountInfo,
+//             let strongSelf = self else { return }
+//        strongSelf.reversePhoto = account.photo
+//      }
+//    }
   }
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    
     if segue.identifier == "chat" {
       guard let chatVC = segue.destination as? ChatViewController,
         let taskInfo = detailData else { return }
@@ -739,6 +752,94 @@ class MissionDetailViewController: UIViewController {
       chatVC.receiverPhoto = reversePhoto
     }
   }
+  
+  func removeLayer(cell: MissionDetailCollectionViewCell) {
+    guard let layers = cell.layer.sublayers else { return }
+    for layer in layers {
+      if let avPlayerLayer = layer as? AVPlayerLayer {
+        avPlayerLayer.removeFromSuperlayer()
+      }
+    }
+  }
+  
+  func addToBlackList(alreadyReport: Bool) {
+    
+    guard var userInfo = UserManager.shared.currentUserInfo,
+         let taskInfo = detailData else { return }
+      
+      if alreadyReport {
+        SwiftMes.shared.showWarningMessage(body: "該用戶已在黑名單", seconds: 1.5)
+      } else {
+        
+        preventTap()
+        let group = DispatchGroup()
+        
+        if userInfo.status == 1 {
+          userInfo.blacklist.append(taskInfo.missionTaker)
+          reverse = taskInfo.missionTaker
+        } else {
+          userInfo.blacklist.append(taskInfo.uid)
+          reverse = taskInfo.uid
+        }
+        
+        group.enter()
+        updateUserInfo(userInfo: userInfo) {
+          group.leave()
+        }
+        
+        group.enter()
+        UserManager.shared.updateOppoBlackList(uid: reverse, isSelf: false) { result in
+          switch result {
+          case .success:
+            group.leave()
+          case .failure:
+            group.leave()
+            print("error")
+          }
+        }
+        
+        group.notify(queue: DispatchQueue.main) {
+          UserManager.shared.currentUserInfo = userInfo
+          LKProgressHUD.dismiss()
+        }
+      }
+  }
+  
+  func reportUser() {
+    guard let user = UserManager.shared.currentUserInfo,
+         let taskInfo =  detailData else { return }
+         
+    var alreadyReport = false
+    var compare = ""
+    
+    if user.status == 1 {
+      compare = taskInfo.missionTaker
+    } else {
+      compare = taskInfo.uid
+    }
+    
+    for badMan in user.blacklist where badMan == compare {
+      alreadyReport = true
+    }
+    
+    let alert = UIAlertController(title: "檢舉系統", message: "請選擇要做的行動", preferredStyle: .actionSheet)
+    
+    let report = UIAlertAction(title: "檢舉", style: .default) { _ in
+      LKProgressHUD.showSuccess(text: "系統已到您的通知", controller: self)
+    }
+    let blackList = UIAlertAction(title: "加入黑名單", style: .default) { [weak self] _ in
+      
+      guard let strongSelf = self else { return }
+      strongSelf.addToBlackList(alreadyReport: alreadyReport)
+    }
+    
+    let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
+    alert.addAction(report)
+    alert.addAction(blackList)
+    alert.addAction(cancelAction)
+    present(alert, animated: true, completion: nil)
+  }
+  
 }
 
 extension MissionDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -763,34 +864,19 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "detail", for: indexPath) as? MissionDetailCollectionViewCell,
-      let data = detailData else { return UICollectionViewCell() }
+         let data = detailData else { return UICollectionViewCell() }
+    
+    removeLayer(cell: cell)
     
     let typeManager = data.taskPhoto[indexPath.row].components(separatedBy: "mov")
     if typeManager.count > 1 {
-      
+      guard let video = URL(string: data.taskPhoto[indexPath.row]) else { return UICollectionViewCell() }
       cell.detailImage.isHidden = true
       cell.backView.backgroundColor = UIColor.black
-      guard let video = URL(string: data.taskPhoto[indexPath.row]) else { return UICollectionViewCell() }
-      
-      let playQueue = AVQueuePlayer()
-      let platItem = AVPlayerItem(url: video)
-      plaverLooper = AVPlayerLooper(player: playQueue, templateItem: platItem)
-      let playerLayer = AVPlayerLayer(player: playQueue)
-      
-      playerLayer.frame = cell.contentView.bounds
-      cell.layer.addSublayer(playerLayer)
-      
-      playQueue.play()
+      cell.setUpLooper(video: video)
       
     } else {
-      
       cell.detailImage.isHidden = false
-      guard let layers = cell.layer.sublayers else { return UICollectionViewCell() }
-      for layer in layers {
-        if let avPlayerLayer = layer as? AVPlayerLayer {
-          avPlayerLayer.removeFromSuperlayer()
-        }
-      }
       cell.detailImage.loadImage(data.taskPhoto[indexPath.row], placeHolder: UIImage(named: "Image_PlaceHolder") )
       cell.detailImage.contentMode = .scaleAspectFill
     }
@@ -814,8 +900,7 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return 4
   }
-  // swiftlint:disable cyclomatic_complexity
-  // swiftlint:disable_rule:line_length
+  
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     guard let data = detailData,
@@ -844,79 +929,11 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
       
       cell.tapReprt = { [weak self] in
         
-        guard let user = UserManager.shared.currentUserInfo,
-          let strongSelf = self else { return }
-        
-        var compare = ""
-        
-        if user.status == 1 {
-          compare = taskData.missionTaker
-        } else {
-          compare = taskData.uid
-        }
-        
-        for badMan in user.blacklist where badMan == compare {
-          strongSelf.alreadyReport = true
-        }
-        
-        let alert = UIAlertController(title: "檢舉系統", message: "請選擇要做的行動", preferredStyle: .actionSheet)
-        
-        let report = UIAlertAction(title: "檢舉", style: .default) { _ in
-          LKProgressHUD.showSuccess(text: "系統已到您的通知", controller: strongSelf)
-        }
-        let blackList = UIAlertAction(title: "加入黑名單", style: .default) { [weak self] _ in
-          
-          guard let strongSelf = self else { return }
-          guard var userInfo = UserManager.shared.currentUserInfo,
-            let taskInfo = strongSelf.detailData else { return }
-          
-          if strongSelf.alreadyReport {
-            SwiftMes.shared.showWarningMessage(body: "該用戶已在黑名單", seconds: 1.5)
-          } else {
-            
-            strongSelf.preventTap()
-            
-            let group = DispatchGroup()
-            group.enter()
-            group.enter()
-            
-            if userInfo.status == 1 {
-              userInfo.blacklist.append(taskInfo.missionTaker)
-              strongSelf.reverse = taskInfo.missionTaker
-            } else {
-              userInfo.blacklist.append(taskInfo.uid)
-              strongSelf.reverse = taskInfo.uid
-            }
-            
-            strongSelf.updateUserInfo(userInfo: userInfo) {
-              group.leave()
-            }
-            
-            UserManager.shared.updateOppoBlackList(uid: strongSelf.reverse, isSelf: false) { result in
-              switch result {
-              case .success:
-                group.leave()
-              case .failure:
-                group.leave()
-                print("error")
-              }
-            }
-            
-            group.notify(queue: DispatchQueue.main) {
-              UserManager.shared.currentUserInfo = userInfo
-              LKProgressHUD.dismiss()
-            }
-          }
-        }
-        
-        let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
-        alert.addAction(report)
-        alert.addAction(blackList)
-        alert.addAction(cancelAction)
-        strongSelf.present(alert, animated: true, completion: nil)
+        guard let strongSelf = self else { return }
+        strongSelf.reportUser()
       }
       
-      cell.tapOnButton = { [weak self ] in
+      cell.chatroomHandler = { [weak self ] in
         guard let strongSelf = self else { return }
         
         guard let chatVC = UIStoryboard(name: "Chat", bundle: nil).instantiateViewController(identifier: "ChatViewController") as? ChatViewController,
@@ -927,11 +944,11 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
         strongSelf.show(chatVC, sender: nil)
       }
       
-      cell.tapOnNavi = { [weak self]in
+      cell.navigationHandler = { [weak self]in
         
         guard let strongSelf = self else { return }
         guard let originalLocation = strongSelf.myLocationManager.location?.coordinate,
-             let taskInfo = strongSelf.detailData else { return }
+          let taskInfo = strongSelf.detailData else { return }
         
         let originCor = "\(originalLocation.latitude),\(originalLocation.longitude)"
         let destination = "\(taskInfo.lat),\(taskInfo.long)"
@@ -946,7 +963,7 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
       }
       cell.backgroundColor = .clear
       return cell
-    
+      
     case .normal :
       guard let cell = tableView.dequeueReusableCell(withIdentifier: "missionDetail", for: indexPath) as? MissionDetailTableViewCell else { return UITableViewCell() }
       cell.setUp(title: categorys.title, content: time)
@@ -963,8 +980,7 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
       return UITableViewCell()
     }
   }
-  // swiftlint:enable_rule:line_length
-  // swiftlint:enable cyclomatic_complexity
+
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
     
     let spring = UISpringTimingParameters(dampingRatio: 0.7, initialVelocity: CGVector(dx: 1.0, dy: 0.2))

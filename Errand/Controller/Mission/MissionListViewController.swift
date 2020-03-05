@@ -25,8 +25,6 @@ class MissionListViewController: UIViewController {
       guard let strongSelf = self else { return }
       strongSelf.getTaskData()
     }
-    
-    NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("getMissionList"), object: nil)
   }
   
@@ -39,7 +37,7 @@ class MissionListViewController: UIViewController {
     super.viewWillAppear(animated)
     currentBtnSelect = false
     setUpBtn()
-    startAnimate(sender: allMissionBtn)
+    startBtnAnimate(sender: allMissionBtn)
   }
   
   @IBOutlet weak var searchingLabel: UILabel!
@@ -55,11 +53,11 @@ class MissionListViewController: UIViewController {
     preventTap()
     getTaskData()
     UserManager.shared.checkDetailBtn = !UserManager.shared.checkDetailBtn
-    startAnimate(sender: sender)
+    startBtnAnimate(sender: sender)
   }
   
   @IBAction func currentMission(_ sender: UIButton) {
-    startAnimate(sender: sender)
+    startBtnAnimate(sender: sender)
     currentBtnSelect = true
     UserManager.shared.checkDetailBtn = !UserManager.shared.checkDetailBtn
     if UserManager.shared.currentUserInfo?.status == 0 {
@@ -231,7 +229,7 @@ class MissionListViewController: UIViewController {
     }
   }
   
-  func startAnimate(sender: UIButton) {
+  func startBtnAnimate(sender: UIButton) {
     let move = UIViewPropertyAnimator(duration: 0.1, curve: .easeInOut) {
       self.indicatorCon?.isActive = false
       self.indicatorCon = self.indicatorView.centerXAnchor.constraint(equalTo: sender.centerXAnchor)
@@ -285,11 +283,11 @@ class MissionListViewController: UIViewController {
           let filterData = taskData.filter { taskInfo in
             var isMatch = false
             for badMan in userinfo.blacklist where badMan == taskInfo.uid {
-              isMatch =  true
+               isMatch =  true
             }
             
             for oppoBadman in userinfo.oppoBlacklist where oppoBadman == taskInfo.uid {
-              isMatch = true
+               isMatch = true
             }
             if isMatch { return false } else { return true}
           }
@@ -387,11 +385,6 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
         let time = self.timeString else { return }
       detailVC.detailData = detailData
       detailVC.receiveTime = time
-      if detailData?.missionTaker != "" {
-        detailVC.isMissionON = true
-      } else {
-        detailVC.isMissionON = false
-      }
     }
   }
 }

@@ -190,20 +190,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
         
         guard let conversationVC = storyboard.instantiateViewController(withIdentifier: "detailViewController") as? MissionDetailViewController,
           let tabBarController = self.window?.rootViewController as? TabBarViewController,
-          let navi = tabBarController.selectedViewController as? UINavigationController else {
+          let navigationController = tabBarController.selectedViewController as? UINavigationController else {
             
             return
         }
         
-        if navi.visibleViewController is MissionDetailViewController == false {
+        if navigationController.visibleViewController is MissionDetailViewController == false {
       
           if tabBarController.presentedViewController == nil {
             tabBarController.dismiss(animated: true) {
-              //  navi.popViewController(animated: true)
               conversationVC.modalPresentationStyle = .fullScreen
               UserManager.shared.currentUserInfo?.status = 2
-              conversationVC.isMissionON = true
-              conversationVC.isNavi = true
+//              conversationVC.isMissionON = true
               tabBarController.present(conversationVC, animated: true, completion: nil)
             }
           } else {
@@ -211,8 +209,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
               tabBarController.dismiss(animated: true) {
                 UserManager.shared.currentUserInfo = nil
                 conversationVC.modalPresentationStyle = .fullScreen
-                conversationVC.isNavi = true
-                conversationVC.isMissionON = true
+//                conversationVC.isMissionON = true
                 tabBarController.present(conversationVC, animated: true, completion: nil)
               }
             })
@@ -223,11 +220,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
   }
   
   @objc func lkprogressShowHudeTab() {
-    
     guard let tabBar = self.window?.rootViewController as? TabBarViewController  else { return }
-    
     LKProgressHUD.show(controller: tabBar)
-    
   }
   
   func backGroundNoti(title: String, body: String) {

@@ -172,7 +172,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
     }
     
     group.notify(queue: DispatchQueue.main) {
-//      NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
+      NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
       UserManager.shared.currentUserInfo?.status = 0
       LKProgressHUD.dismiss()
       SwiftMes.shared.showSuccessMessage(body: "恭喜刪除 返回任務頁面中", seconds: 1.7)
@@ -393,7 +393,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
             
           case .success:
             UserManager.shared.currentUserInfo?.status = 1
-//            NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
+            NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
             LKProgressHUD.dismiss()
             SwiftMes.shared.showSuccessMessage(body: "返回任務頁面中", seconds: 1.7)
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {

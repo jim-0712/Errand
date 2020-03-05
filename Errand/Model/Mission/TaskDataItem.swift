@@ -66,9 +66,9 @@ struct TaskInfo {
   
   var status: Int
   
-  var ownerOK: Bool
+  var ownerCompleteTask: Bool
   
-  var takerOK: Bool
+  var takerCompleteTask: Bool
   
   var ownerAskFriend: Bool
   
@@ -142,9 +142,9 @@ struct TaskInfo {
                
                "isComplete": isComplete,
                
-               "ownerOK": ownerOK,
+               "ownerCompleteTask": ownerCompleteTask,
                
-               "takerOK": takerOK,
+               "takerCompleteTask": takerCompleteTask,
                
                "star": star,
                

@@ -373,7 +373,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       guard let missionDetailVC = segue.destination as? MissionDetailViewController else { return }
       missionDetailVC.modalPresentationStyle = .fullScreen
       missionDetailVC.detailData = specificData[0]
-      missionDetailVC.isNavi = true
       missionDetailVC.receiveTime =  TaskManager.shared.timeConverter(time: specificData[0].time)
     }
   }
