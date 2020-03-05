@@ -412,7 +412,6 @@ class TaskManager {
   
   func updateJudge(owner: String, classified: Int, judge: String, star: Double, date: Int, completion: @escaping (Result<String, Error>) -> Void) {
 
-    
     let info = JudgeInfo(owner: owner, judge: judge, star: star, classified: classified, date: date)
     
     dbF.collection("Judge").addDocument(data: info.toDict) { _  in

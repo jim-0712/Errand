@@ -97,8 +97,6 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    NotificationCenter.default.addObserver(self, selector: #selector(hideNoti), name: Notification.Name("hide"), object: nil)
-    
     viewControllers = tabs.map({ $0.controller() })
     
     delegate = self
@@ -147,7 +145,6 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
       
       UserManager.shared.currentUserInfo = dataReturn
       UserManager.shared.isChange = !UserManager.shared.isChange
-      NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
      
     }
   }
@@ -164,17 +161,5 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
       else { return true }
     
     return true
-  }
-}
-
-extension TabBarViewController {
-  @objc func hideNoti() {
-    alert.isHidden = true
-    notiView.isHidden = true
-    lengthyLabel.isHidden = true
-    
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-      LKProgressHUD.dismiss()
-    }
   }
 }

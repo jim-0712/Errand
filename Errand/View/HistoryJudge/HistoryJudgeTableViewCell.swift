@@ -33,7 +33,6 @@ class HistoryJudgeTableViewCell: UITableViewCell {
   
   @IBOutlet weak var timeLabel: UILabel!
   
-  
   func setUp(starCount: Double, judge: String, classified: String, time: String) {
     
     if starCount == -0.1 {

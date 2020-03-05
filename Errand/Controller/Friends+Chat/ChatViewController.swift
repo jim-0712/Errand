@@ -19,6 +19,16 @@ class ChatViewController: MessagesViewController {
   
   var personPhoto = ""
   
+  var detailData: TaskInfo?
+  
+  var selfSender: String?
+  
+  var receiver: String?
+  
+  var counter = 0
+  
+  var receiverPhoto: String = ""
+  
   private var messages: [Message] = []
   private var messageListener: ListenerRegistration?
 
@@ -48,16 +58,6 @@ class ChatViewController: MessagesViewController {
       }
     }
   }
-  
-  var detailData: TaskInfo?
-  
-  var selfSender: String?
-  
-  var receiver: String?
-  
-  var counter = 0
-  
-  var receiverPhoto: String = ""
   
   func preSetUp() {
     guard let userInfo = UserManager.shared.currentUserInfo,
