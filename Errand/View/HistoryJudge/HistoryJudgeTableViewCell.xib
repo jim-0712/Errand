@@ -56,12 +56,12 @@
                         <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eu7-yr-cPK">
-                        <rect key="frame" x="384" y="22.5" width="150" height="17"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eu7-yr-cPK">
+                        <rect key="frame" x="386" y="24" width="150" height="14.5"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="150" id="JXL-JW-sG0"/>
                         </constraints>
-                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
@@ -82,7 +82,7 @@
                     <constraint firstItem="jkf-vT-Auc" firstAttribute="top" secondItem="REf-h3-xaH" secondAttribute="bottom" constant="-6" id="sRI-xc-Uqr"/>
                     <constraint firstItem="jkf-vT-Auc" firstAttribute="leading" secondItem="1SU-4l-Nzn" secondAttribute="trailing" constant="16" id="wLX-Yp-Gdo"/>
                     <constraint firstItem="1SU-4l-Nzn" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="16" id="y7D-kF-4Zw"/>
-                    <constraint firstAttribute="trailing" secondItem="Eu7-yr-cPK" secondAttribute="trailing" constant="20" id="yTL-uu-5RC"/>
+                    <constraint firstAttribute="trailing" secondItem="Eu7-yr-cPK" secondAttribute="trailing" constant="18" id="yTL-uu-5RC"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>

@@ -66,7 +66,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   
   let myLocationManager = CLLocationManager()
   
-  let directionManager = MapManager.shared
+  let directionManager = APImanager.shared
   
   let screenwidth = UIScreen.main.bounds.width
   
@@ -147,7 +147,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
         TaskManager.shared.taskData = []
         strongSelf.taskDataReturn = taskData.filter({ [weak self] info in
           guard let strongSelf = self else { return false }
-          let distance = MapManager.shared.getDistance(lat1: info.lat, lng1: info.long, lat2: strongSelf.currentPositionLatitude, lng2: strongSelf.currentPositionLongtitude)
+          let distance = APImanager.shared.getDistance(lat1: info.lat, lng1: info.long, lat2: strongSelf.currentPositionLatitude, lng2: strongSelf.currentPositionLongtitude)
           
           if strongSelf.missionClassifiedIndex == 0 && distance <= limitDistance {
             return true
@@ -399,7 +399,7 @@ extension GoogleMapViewController: GMSMapViewDelegate {
         
         self.specificData = [info]
         
-        let distance = MapManager.shared.getDistance(lat1: info.lat, lng1: info.long, lat2: lat, lng2: long)
+        let distance = APImanager.shared.getDistance(lat1: info.lat, lng1: info.long, lat2: lat, lng2: long)
         
         let returnString = String(format: "%.2f", distance)
         

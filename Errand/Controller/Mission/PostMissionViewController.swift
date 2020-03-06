@@ -202,8 +202,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
   
   var longitude: Double?
   
-  var plaverLooper: AVPlayerLooper?
-  
   let screenwidth = UIScreen.main.bounds.width
   
   let screenheight = UIScreen.main.bounds.height
@@ -520,8 +518,9 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
       guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photo", for: indexPath) as? PhotoCollectionViewCell else { return UICollectionViewCell() }
       
       cell.delegate = self
+      removeLayer(cell: cell)
+      
       if fileURLmix.isEmpty {
-        removeLayer(cell: cell)
         cell.indexRow = 0
         cell.backgroundColor = .white
         cell.deleteBtn.isHidden = true
@@ -531,7 +530,6 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
         return cell
         
       } else if indexPath.row != fileURLmix.count && ((fileURLmix[indexPath.row] as? UIImage) != nil) {
-        removeLayer(cell: cell)
         guard let image = fileURLmix[indexPath.row] as? UIImage else { return UICollectionViewCell() }
         cell.backgroundColor = .clear
         cell.deleteBtn.isHidden = false
@@ -553,7 +551,6 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
         return cell
         
       } else {
-        removeLayer(cell: cell)
         cell.deleteBtn.isHidden = true
         cell.indexRow = indexPath.row
         cell.addPhotoBtn.isHidden = false
@@ -586,7 +583,6 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
 extension PostMissionViewController: UICollectionViewDelegateFlowLayout {
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    
     if collectionView == self.missionGroupCollectionView {
       return CGSize(width: screenwidth / 2.5, height: screenheight / 20)
     } else {

@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class RequesterViewController: UIViewController {
   
   @IBOutlet weak var noRequesterLabel: UILabel!
@@ -205,8 +204,6 @@ extension RequesterViewController: UITableViewDelegate, UITableViewDataSource {
       averageStar = (user.totalStar / Double(user.taskCount - user.noJudgeCount)) - user.minusStar
     }
     
-    
-        
     cell.setUp(nickName: user.nickname, starcount: averageStar, image: userInfo[indexPath.row].photo, index: indexPath.row, taskCount: user.taskCount, noJudge: noJudge)
     
     cell.delegate = self

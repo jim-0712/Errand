@@ -408,8 +408,28 @@ class UserManager: NSObject {
       completion(.success(dataReturn))
     }
   }
+  
   func preventTap(viewController: UIViewController) {
     guard let tabVC = viewController.view.window?.rootViewController as? TabBarViewController else { return }
     LKProgressHUD.show(controller: tabVC)
+  }
+  
+  func checkFriends(nameRef: DocumentReference, completion: @escaping ((Result<Bool, Error>)) -> Void) {
+    
+    UserManager.shared.getFriends { result in
+      switch result {
+      case .success(let friends):
+        
+        var isFriends = false
+        for friend in friends where friend.nameREF == nameRef {
+          isFriends = true
+          break
+        }
+        completion(.success(isFriends))
+    
+      case .failure:
+        print("friendsError")
+      }
+    }
   }
 }

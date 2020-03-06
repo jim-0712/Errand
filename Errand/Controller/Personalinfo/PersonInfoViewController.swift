@@ -100,8 +100,11 @@ class PersonInfoViewController: UIViewController {
                 
               case .success:
                 
-                let sender = PushNotificationSender()
-                sender.sendPushNotification(to: user.fcmToken, body: "任務接受成功")
+//                let sender = PushNotificationSender()
+//                sender.sendPushNotification(to: user.fcmToken, body: "任務接受成功")
+                
+                APImanager.shared.postNotification(to: user.fcmToken, body: "任務接受成功")
+                
                 NotificationCenter.default.post(name: Notification.Name("requester"), object: nil)
                 strongSelf.navigationController?.popViewController(animated: false)
                 
@@ -148,8 +151,9 @@ class PersonInfoViewController: UIViewController {
       case .success:
         
         NotificationCenter.default.post(name: Notification.Name("refuseRequester"), object: nil)
-        let sender = PushNotificationSender()
-        sender.sendPushNotification(to: user.fcmToken, body: "您已被拒絕")
+//        let sender = PushNotificationSender()
+//        sender.sendPushNotification(to: user.fcmToken, body: "您已被拒絕")
+        APImanager.shared.postNotification(to: user.fcmToken, body: "您已被拒絕")
         NotificationCenter.default.post(name: Notification.Name("requester"), object: nil)
         strongSelf.navigationController?.popViewController(animated: false)
         
@@ -399,14 +403,12 @@ extension PersonInfoViewController: UIImagePickerControllerDelegate, UINavigatio
             }
             
             storageRef.downloadURL { (url, error) in
-              
               if error != nil {
                 LKProgressHUD.dismiss()
                 LKProgressHUD.showFailure(text: "Error", controller: strongSelf)
                 return }
               
               guard let urlBack = url else { return }
-              
               UserManager.shared.updatePersonPhotoURL(photo: urlBack) { result in
                 
                 switch result {

@@ -19,6 +19,8 @@ enum GoogleApiError: Error {
 enum STHTTPHeaderField: String {
   
   case GET
+  
+  case POST
 }
 
 protocol STRequest {
@@ -26,7 +28,6 @@ protocol STRequest {
   var body: Data? { get }
   var method: String { get }
   var urlString: String { get }
-  
 }
 
 extension STRequest {
@@ -42,86 +43,65 @@ extension STRequest {
 
 enum APIRequest: STRequest {
   
-  case directionAPI(origin: String, destination: String, key: String)
-  
   case location(latitude: String, longitude: String)
+  
+  case notification(token: String, body: String)
   
   var headers: [String: String] {
     switch self {
-    case .directionAPI, .location:
+    case .location:
       return ["Content-Type": "application/json"]
-      
+    
+    case .notification:
+      return ["Content-Type": "application/json",
+              "Authorization": "key=AAAAY-GQkaQ:APA91bGnEGseSWOnzukgSP4M6AfWadP3fUqPYiMCHHRkK28WoRBkeqhOmfkH1tDRetPZ58OGV2KzTG3tkNwG3IY9kQmUgVtPMuat7qV47uoZlKS7i5QAFB8VDgS24u6KHBnzNx_rS5_y"
+            ]
     }
   }
   
   var body: Data? {
     
     switch self {
-    case .directionAPI, .location:
+    case .location:
       return nil
+    case .notification(let token, let body):
+      let requestBody: [String: Any] = ["to": token,
+                "notification": ["title": "任務通知", "body": body],
+                                      "data": ["user": "test_id"]
+      ]
+      return try? JSONSerialization.data(withJSONObject: requestBody, options: .prettyPrinted)
     }
   }
   
   var method: String {
     switch self {
-    case .directionAPI, .location: return STHTTPHeaderField.GET.rawValue
+    case .location: return STHTTPHeaderField.GET.rawValue
+    case .notification: return STHTTPHeaderField.POST.rawValue
     }
   }
   
   var urlString: String {
     switch self {
       
-    case .directionAPI(let origin, let destination, let key):
-      return "https://maps.googleapis.com/maps/api/directions/json?origin=\(origin)&destination=\(destination)&key=\(key)&mode=driving"
-      
     case .location(let latitude, let longitude):
       
       return "https://maps.googleapis.com/maps/api/geocode/json?latlng=\(latitude),\(longitude)&key=AIzaSyBbTnBn0MHPMnioaL4y68Da3d41JlaSY-g&language=zh-tw"
       
+    case .notification:
+      return "https://fcm.googleapis.com/fcm/send"
     }
   }
 }
 
-class MapManager {
+class APImanager {
   
-  static let shared = MapManager()
+  static let shared = APImanager()
   
   let key = "AIzaSyCR-Y_YZQakVbRAHn-DstXRUmy883ZcsG4"
   
   var totalMin = 0
   
   let decoder = JSONDecoder()
-  
-  func getDirection(origin: CLLocationCoordinate2D, destination: CLLocationCoordinate2D, completion: @escaping ((Result<Welcome, Error>) -> Void)) {
-    
-    let originString = "\(origin.latitude),\(origin.longitude)"
-    
-    let destinationString = "\(destination.latitude),\(destination.longitude)"
-    
-    URLSession.shared.dataTask(with: APIRequest.makeRequest(APIRequest.directionAPI(origin: originString, destination: destinationString, key: key))()) { (data, response, error) in
-      
-      guard let response = response as? HTTPURLResponse, response.statusCode == 200 else { return }
-      
-      if error != nil {
-        
-        completion(.failure(GoogleApiError.comnnectError))
-        
-      } else {
-        
-        guard let data = data else { return }
-        do {
-          
-          let result = try self.decoder.decode(Welcome.self, from: data)
-          
-          completion(.success(result))
-          
-        } catch {
-          
-          completion(.failure(GoogleApiError.comnnectError))
-        }
-      }
-    }.resume()
-  }
   
   func getLocation(latitude: String, longitude: String, completion: @escaping ((Result<Address, Error>) -> Void)) {
     
@@ -147,6 +127,14 @@ class MapManager {
         }
       }
     }.resume()
+  }
+  
+func postNotification(to token: String, body: String) {
+    
+    URLSession.shared.dataTask(with: APIRequest.makeRequest(APIRequest.notification(token: token, body: body))()) { data, response, error in
+      guard let response = response as? HTTPURLResponse, response.statusCode == 200 else { return }
+        
+      }.resume()
   }
   
   func radian(inputDouble: Double) -> Double {

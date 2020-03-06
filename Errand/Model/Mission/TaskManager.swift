@@ -377,7 +377,7 @@ class TaskManager {
           switch result {
           case .success(var taskInfo):
             
-            if identity == "ownerOK" {
+            if identity == "ownerCompleteTask" {
 
               taskInfo.ownerCompleteTask = status
 
@@ -410,11 +410,9 @@ class TaskManager {
     }
   }
   
-  func updateJudge(owner: String, classified: Int, judge: String, star: Double, date: Int, completion: @escaping (Result<String, Error>) -> Void) {
-
-    let info = JudgeInfo(owner: owner, judge: judge, star: star, classified: classified, date: date)
+  func updateJudge(judge: JudgeInfo, completion: @escaping (Result<String, Error>) -> Void) {
     
-    dbF.collection("Judge").addDocument(data: info.toDict) { _  in
+    dbF.collection("Judge").addDocument(data: judge.toDict) { _  in
       
       completion(Result.success("Success"))
     }

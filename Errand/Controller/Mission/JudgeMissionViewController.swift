@@ -56,8 +56,8 @@ class JudgeMissionViewController: UIViewController {
   
   @IBAction func backAct(_ sender: Any) {
     
-    guard let taskData = self.detailData,
-      let judge = judgeTextView.text else { return }
+  guard let taskData = self.detailData,
+       let judge = judgeTextView.text else { return }
     
     let date = Int(Date().timeIntervalSince1970)
     let status = UserManager.shared.statusJudge
@@ -73,7 +73,9 @@ class JudgeMissionViewController: UIViewController {
     group.enter()
     group.enter()
     
-    TaskManager.shared.updateJudge(owner: judgerOwner, classified: taskData.classfied, judge: judge, star: -0.1, date: date ) { (result) in
+    let judgeInfo = JudgeInfo(owner: judgerOwner, judge: judge, star: -0.1, classified: taskData.classfied, date: date)
+    
+    TaskManager.shared.updateJudge(judge: judgeInfo) { (result) in
       switch result {
       case .success:
         group.leave()
@@ -135,22 +137,14 @@ class JudgeMissionViewController: UIViewController {
       nameRef = self.dbF.collection("Users").document(taskInfo.uid)
     }
     
-    var isFriends = false
+    guard let nameReference = nameRef else { return }
     
-    UserManager.shared.getFriends { result in
+    UserManager.shared.checkFriends(nameRef: nameReference) { result in
       switch result {
-      case .success(let friends):
-        
-        guard let nameRe = nameRef else { return }
-        
-        for friend in friends where friend.nameREF == nameRe {
-          isFriends = true
-        }
+      case .success(let isFriends):
         
         if !isFriends {
-          if status == 1 && taskInfo.ownerAskFriend {
-            TaskManager.shared.showAlert(title: "等待中", message: "您已送出邀請", viewController: self)
-          } else if status == 2 && taskInfo.takerAskFriend {
+          if status == 1 && taskInfo.ownerAskFriend || status == 2 && taskInfo.takerAskFriend {
             TaskManager.shared.showAlert(title: "等待中", message: "您已送出邀請", viewController: self)
           } else {
             let controller = UIAlertController(title: "好友", message: "確定送出好友邀請？", preferredStyle: .alert)
@@ -168,7 +162,7 @@ class JudgeMissionViewController: UIViewController {
         }
         
       case .failure:
-        print("friendsError")
+        print("error")
       }
     }
   }
@@ -267,7 +261,10 @@ class JudgeMissionViewController: UIViewController {
     
     let group = DispatchGroup()
     group.enter()
-    TaskManager.shared.updateJudge(owner: judgerOwner, classified: taskData.classfied, judge: judge, star: starView.rating, date: date) { (result) in
+    
+    let judgeInfo = JudgeInfo(owner: judgerOwner, judge: judge, star: starView.rating, classified: taskData.classfied, date: date)
+    
+    TaskManager.shared.updateJudge(judge: judgeInfo) { (result) in
       switch result {
       case .success:
         print("ok")

@@ -31,8 +31,6 @@ class MissionDetailViewController: UIViewController {
   
   let myLocationManager = CLLocationManager()
   
-  var plaverLooper: AVPlayerLooper?
-  
   var receiveTime: String?
   
   var detailData: TaskInfo?
@@ -65,6 +63,18 @@ class MissionDetailViewController: UIViewController {
     header.backgroundColor = .pink
     return header
   }()
+  
+  @IBOutlet weak var takeMissionBtn: UIButton!
+  
+  @IBOutlet weak var detailTableView: UITableView!
+  
+  @IBOutlet weak var backBtn: UIButton!
+  
+  @IBOutlet weak var missionStackView: UIStackView!
+  
+  @IBOutlet weak var finishMissionBtn: UIButton!
+  
+  @IBOutlet weak var giveUpmissionBtn: UIButton!
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -104,20 +114,24 @@ class MissionDetailViewController: UIViewController {
     super.viewWillAppear(animated)
     if navigationController == nil {
           backBtn.isHidden = false
+          takeMissionBtn.isHidden = true
         } else {
           backBtn.isHidden = true
         }
-  }
-  
-  @objc func backToList() {
-    self.navigationController?.popViewController(animated: true)
   }
   
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     guard let taskData = detailData else { return }
     if taskData.ownerCompleteTask && taskData.takerCompleteTask {
-       changeStatus()
+      MutipleFuncManager.shared.changeStatus(task: taskData) { result in
+        switch result {
+        case .success:
+          print("goodOK")
+        case .failure:
+          print("error")
+        }
+      }
     }
   }
   
@@ -126,177 +140,8 @@ class MissionDetailViewController: UIViewController {
     pageControl.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
   }
   
-  @IBOutlet weak var takeMissionBtn: UIButton!
-  
-  @IBOutlet weak var detailTableView: UITableView!
-  
-  @IBOutlet weak var backBtn: UIButton!
-  
-  @IBOutlet weak var missionStackView: UIStackView!
-  
-  @IBOutlet weak var finishMissionBtn: UIButton!
-  
-  @IBOutlet weak var giveUpmissionBtn: UIButton!
-  
-  func giveUpMission() {
-    
-    guard let user = UserManager.shared.currentUserInfo,
-         var taskInfo = detailData else {
-         return
-      }
-    
-    LKProgressHUD.show(controller: self)
-    let group = DispatchGroup()
-    let missionTaker = taskInfo.missionTaker
-    
-    if user.status == 1 {
-      group.enter()
-      destinationFcmToken = missionTaker
-      TaskManager.shared.deleteTask(uid: user.uid) { result in
-        switch result {
-        case .success:
-          group.leave()
-        case .failure:
-          group.leave()
-        }
-      }
-      
-      group.enter()
-      readUserInfo(uid: missionTaker, isSelf: false) { [weak self]accountInfo in
-        guard let account = accountInfo,
-             let strongSelf = self else { return }
-        strongSelf.destinationFcmToken = account.fcmToken
-        group.leave()
-      }
-      
-      group.enter()
-      updateStatus(uid: user.uid, status: 0) {
-        group.leave()
-      }
-      
-      group.enter()
-      updateStatus(uid: missionTaker, status: 0) {
-        group.leave()
-      }
-    } else {
-      
-      destinationFcmToken = taskInfo.fcmToken
-      taskInfo.missionTaker = ""
-      taskInfo.status = 0
-      taskInfo.ownerCompleteTask = false
-      taskInfo.takerCompleteTask = false
-      
-      group.enter()
-      TaskManager.shared.updateWholeTask(task: taskInfo, uid: taskInfo.uid) { result in
-        switch result {
-        case .success:
-          group.leave()
-        case .failure:
-          group.leave()
-        }
-      }
-      
-      group.enter()
-      updateStatus(uid: missionTaker, status: 0) {
-        group.leave()
-      }
-      
-      group.notify(queue: DispatchQueue.main) {
-        
-        UserManager.shared.readUserInfo(uid: user.uid, isSelf: true) {[weak self]result in
-          guard let strongSelf = self else { return }
-          switch result {
-          case .success(var accountInfo):
-            
-            if accountInfo.totalStar != 0 {
-               accountInfo.totalStar -= 1.0
-            }
-            
-            strongSelf.updateUserInfo(userInfo: accountInfo) { }
-            
-          case .failure:
-            print("error")
-          }
-        }
-        
-        let sender = PushNotificationSender()
-        sender.sendPushNotification(to: self.destinationFcmToken, body: "對方放棄任務")
-        LKProgressHUD.dismiss()
-        let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
-        self.view.window?.rootViewController = mapView
-      }
-    }
-  }
-  
-  func completeMission() {
-    
-    guard var taskInfo = detailData,
-         let status = UserManager.shared.currentUserInfo?.status else {
-        return
-    }
-    
-    var taskCompleteStatus = ""
-    
-    if status == 1 {
-      taskCompleteStatus = "ownerCompleteTask"
-      taskInfo.takerCompleteTask = true
-    } else {
-      taskCompleteStatus = "takerCompleteTask"
-      taskInfo.takerCompleteTask = true
-    }
-    
-    let group = DispatchGroup()
-    
-    group.enter()
-    updateTaskData(uid: taskInfo.uid, status: true, identity: taskCompleteStatus) {
-      group.leave()
-    }
-    
-    if status == 1 {
-      group.enter()
-      readUserInfo(uid: taskInfo.missionTaker, isSelf: false) { [weak self] accountInfo in
-        guard let account = accountInfo,
-          let strongSelf = self else { return }
-        strongSelf.destinationFcmToken = account.fcmToken
-        group.leave()
-      }
-    } else if status == 2 {
-      group.enter()
-      destinationFcmToken = taskInfo.fcmToken
-      group.leave()
-    } else { group.leave() }
-    
-    group.notify(queue: DispatchQueue.main) {
-      
-      guard let taskInfo = self.detailData else { return }
-      if taskInfo.ownerCompleteTask && taskInfo.takerCompleteTask {
-        self.finishMissionAlert(title: "恭喜", message: "任務完成", viewController: self)
-      } else {
-        let sender = PushNotificationSender()
-        sender.sendPushNotification(to: self.destinationFcmToken, body: "對方任務完成")
-        
-        let controller = UIAlertController(title: "恭喜", message: "等待對方完成", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "ok", style: .default) { [weak self] _ in
-          guard let strongSelf = self else { return }
-          
-          strongSelf.gotoJudgePage()
-        }
-        controller.addAction(okAction)
-        self.present(controller, animated: true, completion: nil)
-        self.finishMissionBtn.isEnabled = false
-        self.finishMissionBtn.backgroundColor = UIColor.LG1
-        self.finishMissionBtn.setTitle("等待對方完成", for: .normal)
-        self.giveUpmissionBtn.isEnabled = false
-      }
-    }
-  }
-  
-  func gotoJudgePage() {
-    guard let judgeVC = storyboard?.instantiateViewController(identifier: "judge") as? JudgeMissionViewController,
-         let taskInfo = detailData  else { return }
-         judgeVC.detailData = taskInfo
-         NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
-         present(judgeVC, animated: true, completion: nil)
+  @objc func backToList() {
+    self.navigationController?.popViewController(animated: true)
   }
   
   @IBAction func giveUpmissionAct(_ sender: Any) {
@@ -304,8 +149,10 @@ class MissionDetailViewController: UIViewController {
     let controller = UIAlertController(title: "您確定要放棄任務？", message: "將會扣您星星總評分1分", preferredStyle: .alert)
     
     let okAction = UIAlertAction(title: "ok", style: .default) { [weak self]_ in
-      guard let strongSelf = self else { return }
-      strongSelf.giveUpMission()
+      guard let strongSelf = self,
+           let taskInfo = strongSelf.detailData else { return }
+      
+      strongSelf.giveUpMission(taskInfo: taskInfo)
     }
     
     let cancelAct = UIAlertAction(title: "back", style: .cancel, handler: nil)
@@ -336,9 +183,10 @@ class MissionDetailViewController: UIViewController {
         
       case .success:
         
-        let sender = PushNotificationSender()
-        sender.sendPushNotification(to: taskInfo.fcmToken, body: "有人申請任務")
+//        let sender = PushNotificationSender()
+//        sender.sendPushNotification(to: taskInfo.fcmToken, body: "有人申請任務")
         strongSelf.setUpBtnEnable()
+        APImanager.shared.postNotification(to: taskInfo.fcmToken, body: "有人申請任務")
         
         let controller = UIAlertController(title: "恭喜", message: "您已申請", preferredStyle: .alert)
         let okAction = UIAlertAction(title: "ok", style: .default) { (_) in
@@ -359,10 +207,64 @@ class MissionDetailViewController: UIViewController {
   
   func backTosignIn() {
     let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "main") as? ViewController
-    
     UserManager.shared.isTourist = true
     UserDefaults.standard.removeObject(forKey: "login")
     self.view.window?.rootViewController = signInVC
+  }
+  
+  func gotoJudgePage() {
+    guard let judgeVC = storyboard?.instantiateViewController(identifier: "judge") as? JudgeMissionViewController,
+         let taskInfo = detailData  else { return }
+         judgeVC.detailData = taskInfo
+         NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
+         present(judgeVC, animated: true, completion: nil)
+  }
+  
+  func giveUpMission(taskInfo: TaskInfo) {
+    MutipleFuncManager.shared.giveUpMission(taskData: taskInfo) { [weak self]result in
+      guard let strongSelf = self else { return }
+      switch result {
+      case .success:
+        LKProgressHUD.dismiss()
+        let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
+        strongSelf.view.window?.rootViewController = mapView
+      case .failure:
+        LKProgressHUD.showFailure(text: "Can't give up", controller: strongSelf)
+      }
+    }
+  }
+  
+  func completeMission() {
+    guard let taskInfo = detailData else { return }
+    MutipleFuncManager.shared.completeMission(taskData: taskInfo) { [weak self] result in
+      guard let strongSelf = self else { return }
+      switch result {
+      case .success:
+              guard let taskInfo = strongSelf.detailData else { return }
+              if taskInfo.ownerCompleteTask && taskInfo.takerCompleteTask {
+                strongSelf.finishMissionAlert(title: "恭喜", message: "任務完成", viewController: strongSelf)
+              } else {
+//                let sender = PushNotificationSender()
+//                sender.sendPushNotification(to: strongSelf.destinationFcmToken, body: "對方任務完成")
+                APImanager.shared.postNotification(to: strongSelf.destinationFcmToken, body: "對方任務完成")
+        
+                let controller = UIAlertController(title: "恭喜", message: "等待對方完成", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "ok", style: .default) { [weak self] _ in
+                  guard let strongSelf = self else { return }
+        
+                  strongSelf.gotoJudgePage()
+                }
+                controller.addAction(okAction)
+                strongSelf.present(controller, animated: true, completion: nil)
+                strongSelf.finishMissionBtn.isEnabled = false
+                strongSelf.finishMissionBtn.backgroundColor = UIColor.LG1
+                strongSelf.finishMissionBtn.setTitle("等待對方完成", for: .normal)
+                strongSelf.giveUpmissionBtn.isEnabled = false
+                }
+      case.failure:
+        LKProgressHUD.showFailure(text: "error", controller: strongSelf)
+      }
+    }
   }
   
   func fetchTaskData() {
@@ -411,17 +313,6 @@ class MissionDetailViewController: UIViewController {
     }
   }
   
-  func updateUserInfo(userInfo: AccountInfo, completion: @escaping (() -> Void)) {
-    UserManager.shared.updateOppoInfo(userInfo: userInfo) { result in
-      switch result {
-      case .success:
-        completion()
-      case .failure:
-        completion()
-      }
-    }
-  }
-  
   func callTaskData() {
     TaskManager.shared.setUpStatusData { [weak self] result in
       guard let strongSelf = self else { return }
@@ -432,7 +323,7 @@ class MissionDetailViewController: UIViewController {
         strongSelf.fetchTaskOwnerPhoto()
         strongSelf.setUpView()
         if strongSelf.isMissionON {
-           strongSelf.setUpListenerToTask()
+          strongSelf.setUpListenerToTask()
         }
         
       case .failure(let error):
@@ -466,29 +357,7 @@ class MissionDetailViewController: UIViewController {
       }
     }
   }
-  
-  func updateStatus(uid: String, status: Int, completion: @escaping (() -> Void)) {
-    UserManager.shared.updateStatus(uid: uid, status: status) { result in
-      switch result {
-      case .success:
-        completion()
-      case .failure:
-        completion()
-      }
-    }
-  }
-  
-  func updateTaskData(uid: String, status: Bool, identity: String, completion: @escaping (() -> Void)) {
-    TaskManager.shared.taskUpdateData(uid: uid, status: status, identity: identity) { (result) in
-      switch result {
-      case .success:
-        completion()
-      case .failure:
-        completion()
-      }
-    }
-  }
-  
+
   func setUpView() {
     setUpCommectionAndTableView()
     setUpBtn()
@@ -528,88 +397,13 @@ class MissionDetailViewController: UIViewController {
       }
     }
   }
-  
-  func changeStatus() {
-    guard let task = detailData else { return }
-    LKProgressHUD.show(controller: self)
-    
-    let group = DispatchGroup()
-    group.enter()
-    updateTaskData(uid: task.uid, status: true, identity: "isComplete") {
-      group.leave()
-    }
-    
-    group.enter()
-    updateStatus(uid: task.uid, status: 0) {
-      group.leave()
-    }
-    
-    group.enter()
-    updateStatus(uid: task.missionTaker, status: 0) {
-      group.leave()
-    }
-    
-    group.notify(queue: DispatchQueue.main) {
-      LKProgressHUD.dismiss()
-    }
-  }
-  
+
   func finishMissionAlert(title: String, message: String, viewController: UIViewController) {
     let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
     let okAction = UIAlertAction(title: "ok", style: .default) { [weak self]_ in
-      NotificationCenter.default.post(name: Notification.Name("finishTask"), object: nil)
       guard let strongSelf = self else { return }
-      guard let task = strongSelf.detailData,
-        let  currentUserStatus = UserManager.shared.currentUserInfo?.status else { return }
       
-      LKProgressHUD.show(controller: strongSelf)
-      
-      let group = DispatchGroup()
-      
-      group.enter()
-      group.enter()
-      group.enter()
-      strongSelf.updateTaskData(uid: task.uid, status: true, identity: "isComplete") {
-        group.leave()
-      }
-      
-      strongSelf.updateStatus(uid: task.uid, status: 0) {
-        group.leave()
-      }
-      
-      strongSelf.updateStatus(uid: task.missionTaker, status: 0) {
-        group.leave()
-      }
-      
-      if currentUserStatus == 1 {
-        group.enter()
-        
-        strongSelf.readUserInfo(uid: task.missionTaker, isSelf: false) { accountInfo in
-          guard let account = accountInfo else { return }
-          strongSelf.destinationFcmToken = account.fcmToken
-          group.leave()
-        }
-        
-      } else if currentUserStatus == 2 {
-        group.enter()
-        strongSelf.destinationFcmToken = task.fcmToken
-        group.leave()
-      } else {  group.leave() }
-      
-      group.notify(queue: DispatchQueue.main) {
-        
-        let sender = PushNotificationSender()
-        sender.sendPushNotification(to: strongSelf.destinationFcmToken, body: "任務完成")
-        LKProgressHUD.dismiss()
-        
-        guard let judgeVC = strongSelf.storyboard?.instantiateViewController(identifier: "judge") as? JudgeMissionViewController,
-             let taskInfo = strongSelf.detailData else { return }
-        
-        judgeVC.detailData = taskInfo
-        NotificationCenter.default.post(name: Notification.Name("hideMes"), object: nil)
-        strongSelf.present(judgeVC, animated: true, completion: nil)
-        
-      }
+      strongSelf.gotoJudgePage()
     }
     
     controller.addAction(okAction)
@@ -717,10 +511,13 @@ class MissionDetailViewController: UIViewController {
     
     var uid = ""
     
-    if status == 1 {
+    switch status {
+    case 1:
       uid = taskinfo.missionTaker
-    } else if status == 2 {
+    case 2:
       uid = taskinfo.uid
+    default:
+      print("error")
     }
     
     readUserInfo(uid: uid, isSelf: false) { [weak self] accountInfo in
@@ -728,20 +525,6 @@ class MissionDetailViewController: UIViewController {
         let strongSelf = self else { return }
       strongSelf.reversePhoto = account.photo
     }
-//
-//    if status == 1 {
-//      readUserInfo(uid: taskinfo.missionTaker, isSelf: false) { [weak self] accountInfo in
-//        guard let account = accountInfo,
-//          let strongSelf = self else { return }
-//        strongSelf.reversePhoto = account.photo
-//      }
-//    } else if status == 2 {
-//      readUserInfo(uid: taskinfo.uid, isSelf: false) { [weak self] accountInfo in
-//        guard let account = accountInfo,
-//             let strongSelf = self else { return }
-//        strongSelf.reversePhoto = account.photo
-//      }
-//    }
   }
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -763,46 +546,22 @@ class MissionDetailViewController: UIViewController {
   }
   
   func addToBlackList(alreadyReport: Bool) {
+    preventTap()
+    guard let taskInfo = detailData else { return }
     
-    guard var userInfo = UserManager.shared.currentUserInfo,
-         let taskInfo = detailData else { return }
-      
-      if alreadyReport {
-        SwiftMes.shared.showWarningMessage(body: "該用戶已在黑名單", seconds: 1.5)
-      } else {
-        
-        preventTap()
-        let group = DispatchGroup()
-        
-        if userInfo.status == 1 {
-          userInfo.blacklist.append(taskInfo.missionTaker)
-          reverse = taskInfo.missionTaker
-        } else {
-          userInfo.blacklist.append(taskInfo.uid)
-          reverse = taskInfo.uid
-        }
-        
-        group.enter()
-        updateUserInfo(userInfo: userInfo) {
-          group.leave()
-        }
-        
-        group.enter()
-        UserManager.shared.updateOppoBlackList(uid: reverse, isSelf: false) { result in
-          switch result {
-          case .success:
-            group.leave()
-          case .failure:
-            group.leave()
-            print("error")
-          }
-        }
-        
-        group.notify(queue: DispatchQueue.main) {
-          UserManager.shared.currentUserInfo = userInfo
+    MutipleFuncManager.shared.addToBlackList(alreadyReport: alreadyReport, taskInfo: taskInfo) { [weak self]result in
+      guard let strongSelf = self else { return }
+      switch result {
+      case .success(let successMessage):
+        if successMessage == "already" {
           LKProgressHUD.dismiss()
+          SwiftMes.shared.showWarningMessage(body: "該用戶已在黑名單", seconds: 1.5)
         }
+        LKProgressHUD.dismiss()
+      case .failure:
+        LKProgressHUD.showFailure(text: "Error", controller: strongSelf)
       }
+    }
   }
   
   func reportUser() {
@@ -823,12 +582,10 @@ class MissionDetailViewController: UIViewController {
     }
     
     let alert = UIAlertController(title: "檢舉系統", message: "請選擇要做的行動", preferredStyle: .actionSheet)
-    
     let report = UIAlertAction(title: "檢舉", style: .default) { _ in
       LKProgressHUD.showSuccess(text: "系統已到您的通知", controller: self)
     }
     let blackList = UIAlertAction(title: "加入黑名單", style: .default) { [weak self] _ in
-      
       guard let strongSelf = self else { return }
       strongSelf.addToBlackList(alreadyReport: alreadyReport)
     }
@@ -838,6 +595,22 @@ class MissionDetailViewController: UIViewController {
     alert.addAction(blackList)
     alert.addAction(cancelAction)
     present(alert, animated: true, completion: nil)
+  }
+  
+  func gotoNavigation() {
+    guard let originalLocation = myLocationManager.location?.coordinate,
+         let taskInfo = detailData else { return }
+    
+    let originCor = "\(originalLocation.latitude),\(originalLocation.longitude)"
+    let destination = "\(taskInfo.lat),\(taskInfo.long)"
+    let url = URL(string: "comgooglemaps://?saddr=\(originCor)&daddr=\(destination)&directionsmode=driving")
+    
+    if UIApplication.shared.canOpenURL(url!) {
+      UIApplication.shared.open(url!, options: [:], completionHandler: nil)
+    } else {
+      let appStoreGoogleMapURL = URL(string: "itms-apps://itunes.apple.com/app/id585027354")!
+      UIApplication.shared.open(appStoreGoogleMapURL, options: [:], completionHandler: nil)
+    }
   }
   
 }
@@ -852,7 +625,6 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
   }
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    
     guard let data = detailData else { return 0 }
     return data.taskPhoto.count
   }
@@ -937,7 +709,7 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
         guard let strongSelf = self else { return }
         
         guard let chatVC = UIStoryboard(name: "Chat", bundle: nil).instantiateViewController(identifier: "ChatViewController") as? ChatViewController,
-          let taskInfo = strongSelf.detailData else { return }
+             let taskInfo = strongSelf.detailData else { return }
         
         chatVC.detailData = taskInfo
         chatVC.receiverPhoto = strongSelf.reversePhoto
@@ -945,22 +717,10 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
       }
       
       cell.navigationHandler = { [weak self]in
-        
         guard let strongSelf = self else { return }
-        guard let originalLocation = strongSelf.myLocationManager.location?.coordinate,
-          let taskInfo = strongSelf.detailData else { return }
-        
-        let originCor = "\(originalLocation.latitude),\(originalLocation.longitude)"
-        let destination = "\(taskInfo.lat),\(taskInfo.long)"
-        let url = URL(string: "comgooglemaps://?saddr=\(originCor)&daddr=\(destination)&directionsmode=driving")
-        
-        if UIApplication.shared.canOpenURL(url!) {
-          UIApplication.shared.open(url!, options: [:], completionHandler: nil)
-        } else {
-          let appStoreGoogleMapURL = URL(string: "itms-apps://itunes.apple.com/app/id585027354")!
-          UIApplication.shared.open(appStoreGoogleMapURL, options: [:], completionHandler: nil)
-        }
+        strongSelf.gotoNavigation()
       }
+      
       cell.backgroundColor = .clear
       return cell
       
