@@ -131,7 +131,7 @@ class APImanager {
   
 func postNotification(to token: String, body: String) {
     
-    URLSession.shared.dataTask(with: APIRequest.makeRequest(APIRequest.notification(token: token, body: body))()) { data, response, error in
+    URLSession.shared.dataTask(with: APIRequest.makeRequest(APIRequest.notification(token: token, body: body))()) { _, response, _ in
       guard let response = response as? HTTPURLResponse, response.statusCode == 200 else { return }
         
       }.resume()

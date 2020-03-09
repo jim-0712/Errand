@@ -35,7 +35,6 @@
 		FB50C55223F81FF5002325BC /* Friend.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB50C55123F81FF5002325BC /* Friend.storyboard */; };
 		FB50C55423F82034002325BC /* FriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB50C55323F82034002325BC /* FriendViewController.swift */; };
 		FB53F30B23EA51A70041C49D /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB53F30A23EA51A70041C49D /* NotificationManager.swift */; };
-		FB53F30D23EA7D630041C49D /* PushNotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB53F30C23EA7D630041C49D /* PushNotificationSender.swift */; };
 		FB53F31123EAAE3C0041C49D /* Requester.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB53F31023EAAE3C0041C49D /* Requester.storyboard */; };
 		FB53F31423EAAEA40041C49D /* RequesterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB53F31323EAAEA40041C49D /* RequesterViewController.swift */; };
 		FB53F31823EAAFC20041C49D /* RequesterTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB53F31623EAAFC20041C49D /* RequesterTableViewCell.xib */; };
@@ -97,6 +96,7 @@
 		FBBCEEA62404B5C70068410C /* LogoutTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBCEEA42404B5C70068410C /* LogoutTableViewCell.swift */; };
 		FBBCEEA72404B5C70068410C /* LogoutTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBBCEEA52404B5C70068410C /* LogoutTableViewCell.xib */; };
 		FBE543482410DE2600CD4ECF /* AlternateFuncTaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE543472410DE2600CD4ECF /* AlternateFuncTaskManager.swift */; };
+		FBE5434A2412232B00CD4ECF /* CustomTransitioningManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE543492412232B00CD4ECF /* CustomTransitioningManager.swift */; };
 		FBEC726123FA376400A6AF86 /* FriendsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEC725F23FA376400A6AF86 /* FriendsTableViewCell.swift */; };
 		FBEC726223FA376400A6AF86 /* FriendsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBEC726023FA376400A6AF86 /* FriendsTableViewCell.xib */; };
 		FBEC726423FA664800A6AF86 /* FriendChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEC726323FA664800A6AF86 /* FriendChatViewController.swift */; };
@@ -166,7 +166,6 @@
 		FB50C55123F81FF5002325BC /* Friend.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Friend.storyboard; sourceTree = "<group>"; };
 		FB50C55323F82034002325BC /* FriendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendViewController.swift; sourceTree = "<group>"; };
 		FB53F30A23EA51A70041C49D /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
-		FB53F30C23EA7D630041C49D /* PushNotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationSender.swift; sourceTree = "<group>"; };
 		FB53F31023EAAE3C0041C49D /* Requester.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Requester.storyboard; sourceTree = "<group>"; };
 		FB53F31323EAAEA40041C49D /* RequesterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequesterViewController.swift; sourceTree = "<group>"; };
 		FB53F31623EAAFC20041C49D /* RequesterTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RequesterTableViewCell.xib; sourceTree = "<group>"; };
@@ -228,6 +227,7 @@
 		FBBCEEA42404B5C70068410C /* LogoutTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutTableViewCell.swift; sourceTree = "<group>"; };
 		FBBCEEA52404B5C70068410C /* LogoutTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LogoutTableViewCell.xib; sourceTree = "<group>"; };
 		FBE543472410DE2600CD4ECF /* AlternateFuncTaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlternateFuncTaskManager.swift; sourceTree = "<group>"; };
+		FBE543492412232B00CD4ECF /* CustomTransitioningManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTransitioningManager.swift; sourceTree = "<group>"; };
 		FBEC725F23FA376400A6AF86 /* FriendsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsTableViewCell.swift; sourceTree = "<group>"; };
 		FBEC726023FA376400A6AF86 /* FriendsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FriendsTableViewCell.xib; sourceTree = "<group>"; };
 		FBEC726323FA664800A6AF86 /* FriendChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendChatViewController.swift; sourceTree = "<group>"; };
@@ -451,6 +451,7 @@
 				FBF7AB5923D58AB4004B521A /* Map */,
 				FB387C5423CF520100B6D8C4 /* User */,
 				FB387C4E23CF0E4B00B6D8C4 /* Register */,
+				FBE543492412232B00CD4ECF /* CustomTransitioningManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -513,7 +514,6 @@
 			isa = PBXGroup;
 			children = (
 				FB53F30A23EA51A70041C49D /* NotificationManager.swift */,
-				FB53F30C23EA7D630041C49D /* PushNotificationSender.swift */,
 			);
 			path = NotificationManager;
 			sourceTree = "<group>";
@@ -1010,7 +1010,6 @@
 			files = (
 				FB24EC1223D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift in Sources */,
 				FB479DA1240D029700C43E50 /* WebViewController.swift in Sources */,
-				FB53F30D23EA7D630041C49D /* PushNotificationSender.swift in Sources */,
 				FB53F33023EBD5230041C49D /* PersonRateTableViewCell.swift in Sources */,
 				FB50C55423F82034002325BC /* FriendViewController.swift in Sources */,
 				FB387C5623CF521D00B6D8C4 /* UserManager.swift in Sources */,
@@ -1060,6 +1059,7 @@
 				FBA557F723ED17A400521B89 /* RequesterRateTableViewCell.swift in Sources */,
 				FBBCEEA62404B5C70068410C /* LogoutTableViewCell.swift in Sources */,
 				FB69552D23F000BE0049DB14 /* UIImage+Additions.swift in Sources */,
+				FBE5434A2412232B00CD4ECF /* CustomTransitioningManager.swift in Sources */,
 				FB387C1A23CEEF0E00B6D8C4 /* Errand.xcdatamodeld in Sources */,
 				FB69553123F001350049DB14 /* Channel.swift in Sources */,
 				FB4A50E323D6D19A0028BC82 /* UserDataItem.swift in Sources */,
@@ -1179,7 +1179,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1233,7 +1233,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -1250,7 +1250,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Errand/Errand.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6V9XMJR84F;
 				INFOPLIST_FILE = Errand/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1258,7 +1258,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.JimFu.Errand;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1273,7 +1273,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Errand/Errand.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6V9XMJR84F;
 				INFOPLIST_FILE = Errand/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1281,7 +1281,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2;
+				MARKETING_VERSION = 1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.JimFu.Errand;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

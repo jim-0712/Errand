@@ -106,7 +106,7 @@ class RequesterViewController: UIViewController {
     let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
     let okAction = UIAlertAction(title: "ok", style: .default) { _ in
       
-      let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
+      let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(withIdentifier: "tab")
       
       self.view.window?.rootViewController = mapView
     }
@@ -217,7 +217,7 @@ extension RequesterViewController: CheckPersonalInfoManager {
     
     indexRow = index
     
-    guard let userVC = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(identifier: "PersonInfoViewController") as? PersonInfoViewController,
+    guard let userVC = UIStoryboard(name: "Profile", bundle: nil).instantiateViewController(withIdentifier: "PersonInfoViewController") as? PersonInfoViewController,
       let taskinfoData = taskinfo else { return }
     UserManager.shared.isRequester = true
     UserManager.shared.requesterInfo = userInfo[indexRow]

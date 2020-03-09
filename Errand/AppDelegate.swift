@@ -56,14 +56,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     // Override point for customization after application launch.
     
-    NotificationCenter.default.addObserver(self, selector: #selector(perFormPushVC), name: Notification.Name("popVC"), object: nil)
-    
-    NotificationCenter.default.addObserver(self, selector: #selector(lkprogressShowHudeTab), name: Notification.Name("test"), object: nil)
-    
-    NotificationCenter.default.addObserver(self, selector: #selector(backToRootRefuse), name: Notification.Name("refusePOP"), object: nil)
-    
-     NotificationCenter.default.addObserver(self, selector: #selector(jumpOut), name: Notification.Name("giveUpCome"), object: nil)
-    
     FirebaseApp.configure()
     
     GMSServices.provideAPIKey("AIzaSyBbTnBn0MHPMnioaL4y68Da3d41JlaSY-g")
@@ -86,7 +78,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     
     if UserDefaults.standard.value(forKey: "login") as? Bool != nil {
       
-      firstVC = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? TabBarViewController
+      firstVC = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(withIdentifier: "tab") as? TabBarViewController
       
       UserManager.shared.isTourist = false
       
@@ -97,7 +89,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
       return true
     } else {
       
-      firstVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "main") as? ViewController
+      firstVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "main") as? ViewController
       
       window?.rootViewController = firstVC
       
@@ -124,122 +116,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     }
     completionHandler(.newData)
   }
-  
-  @objc func perFormPushVC() {
-    
-    guard let uid = Auth.auth().currentUser?.uid else { return }
-    
-    UserManager.shared.readUserInfo(uid: uid, isSelf: true) { result in
-      switch result {
-      case .success:
-        self.gotoDetail()
-      case .failure:
-        print("error")
-      }
-    }
-  }
-  
-  @objc func backToRootRefuse () {
-    _ = UIStoryboard(name: "Mission", bundle: nil)
-    guard let tabBarController = self.window?.rootViewController as? TabBarViewController,
-      let _ = tabBarController.selectedViewController as? UINavigationController else {
-        
-        return
-    }
-    tabBarController.dismiss(animated: true)
-  }
-  
-  @objc func jumpOut() {
-    
-    guard let tabBarController = self.window?.rootViewController as? TabBarViewController,
-      let navi = tabBarController.selectedViewController as? UINavigationController else {
-        return
-    }
-    
-    if navi.visibleViewController is MissionDetailViewController == true {
-      
-      guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? TabBarViewController else { return }
-        self.window?.rootViewController = mapVc
-    }
-  }
-  
-  func gotoDetail() {
-    
-    guard let uid = Auth.auth().currentUser?.uid else { return }
-    
-    let group = DispatchGroup()
-    
-    group.enter()
-    
-    var status = 0
-    
-    UserManager.shared.readUserInfo(uid: uid, isSelf: true) { result in
-      switch result {
-      case .success(let userInfo):
-        status = userInfo.status
-        group.leave()
-      case .failure:
-        print("error")
-      }
-    }
-    
-    group.notify(queue: DispatchQueue.main) {
-      
-      if status != 0 {
-        let storyboard = UIStoryboard(name: "Mission", bundle: nil)
-        
-        guard let conversationVC = storyboard.instantiateViewController(withIdentifier: "detailViewController") as? MissionDetailViewController,
-          let tabBarController = self.window?.rootViewController as? TabBarViewController,
-          let navigationController = tabBarController.selectedViewController as? UINavigationController else {
-            
-            return
-        }
-        
-        if navigationController.visibleViewController is MissionDetailViewController == false {
-      
-          if tabBarController.presentedViewController == nil {
-            tabBarController.dismiss(animated: true) {
-              conversationVC.modalPresentationStyle = .fullScreen
-              UserManager.shared.currentUserInfo?.status = 2
-//              conversationVC.isMissionON = true
-              tabBarController.present(conversationVC, animated: true, completion: nil)
-            }
-          } else {
-            tabBarController.presentedViewController?.dismiss(animated: true, completion: {
-              tabBarController.dismiss(animated: true) {
-                UserManager.shared.currentUserInfo = nil
-                conversationVC.modalPresentationStyle = .fullScreen
-//                conversationVC.isMissionON = true
-                tabBarController.present(conversationVC, animated: true, completion: nil)
-              }
-            })
-          }
-        }
-      }
-    }
-  }
-  
-  @objc func lkprogressShowHudeTab() {
-    guard let tabBar = self.window?.rootViewController as? TabBarViewController  else { return }
-    LKProgressHUD.show(controller: tabBar)
-  }
-  
-  func backGroundNoti(title: String, body: String) {
-    
-    let center = UNUserNotificationCenter.current()
-    let content = UNMutableNotificationContent()
-    content.title = "背景"
-    content.body = "背景"
-    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 10, repeats: false)
-    let request = UNNotificationRequest(identifier: "Errand", content: content, trigger: trigger)
-    center.add(request) { error in
-      if error != nil {
-        print(error?.localizedDescription ?? "error")
-      }
-      print("ya")
-    }
-  }
-  
+
   lazy var persistentContainer: NSPersistentContainer = {
     
     let container = NSPersistentContainer(name: "Errand")

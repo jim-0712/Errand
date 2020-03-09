@@ -99,10 +99,7 @@ class PersonInfoViewController: UIViewController {
               switch result {
                 
               case .success:
-                
-//                let sender = PushNotificationSender()
-//                sender.sendPushNotification(to: user.fcmToken, body: "任務接受成功")
-                
+
                 APImanager.shared.postNotification(to: user.fcmToken, body: "任務接受成功")
                 
                 NotificationCenter.default.post(name: Notification.Name("requester"), object: nil)
@@ -151,8 +148,6 @@ class PersonInfoViewController: UIViewController {
       case .success:
         
         NotificationCenter.default.post(name: Notification.Name("refuseRequester"), object: nil)
-//        let sender = PushNotificationSender()
-//        sender.sendPushNotification(to: user.fcmToken, body: "您已被拒絕")
         APImanager.shared.postNotification(to: user.fcmToken, body: "您已被拒絕")
         NotificationCenter.default.post(name: Notification.Name("requester"), object: nil)
         strongSelf.navigationController?.popViewController(animated: false)

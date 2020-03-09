@@ -7,12 +7,15 @@
 //
 
 import UIKit
-import CryptoKit
 import GoogleSignIn
 import FirebaseAuth
 import FBSDKLoginKit
 import IQKeyboardManager
 import AuthenticationServices
+//#if canImport(CryptoKit)
+import CryptoKit
+//#endif
+//import CommonCrypto
 
 class ViewController: UIViewController {
   
@@ -31,7 +34,11 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     setUpBtn()
-    setUpAppleBtn()
+    if #available(iOS 13.0, *) {
+      createBtn()
+    } else {
+      appleView.isHidden = true
+    }
     IQKeyboardManager.shared().isEnabled = true
     NotificationCenter.default.addObserver(self, selector: #selector(gotoMapPage), name: Notification.Name("userInfo"), object: nil)
   }
@@ -46,7 +53,7 @@ class ViewController: UIViewController {
   }
   
   @IBAction func privacyAct(_ sender: Any) {
-    guard let webView = storyboard?.instantiateViewController(identifier: "WebViewController") as? WebViewController else { return }
+    guard let webView = storyboard?.instantiateViewController(withIdentifier: "WebViewController") as? WebViewController else { return }
     self.present(webView, animated: true, completion: nil)    
   }
   
@@ -144,21 +151,15 @@ class ViewController: UIViewController {
     }
   }
   
-  let appleButton: ASAuthorizationAppleIDButton = {
-    let button = ASAuthorizationAppleIDButton()
-    button.addTarget(self, action: #selector(startSignInWithAppleFlow), for: .touchUpInside)
-    button.layer.cornerRadius = button.bounds.height / 2
-    return button
-  }()
-  
-  func setUpBtn() {
-    fbLoginBtn.layer.cornerRadius = fbLoginBtn.bounds.height / 10
-    googleLoginBtn.layer.cornerRadius = googleLoginBtn.bounds.height / 10
-    visitorBtn.layer.cornerRadius = visitorBtn.bounds.height / 10
-    GIDSignIn.sharedInstance()?.presentingViewController = self
-  }
-  
-  func setUpAppleBtn() {
+   @available(iOS 13.0, *)
+  func createBtn() {
+    let appleButton: ASAuthorizationAppleIDButton = {
+      let button = ASAuthorizationAppleIDButton()
+      button.addTarget(self, action: #selector(startSignInWithAppleFlow), for: .touchUpInside)
+      button.layer.cornerRadius = button.bounds.height / 2
+      return button
+    }()
+    
     appleView.backgroundColor = .clear
     appleView.addSubview(appleButton)
     appleButton.translatesAutoresizingMaskIntoConstraints = false
@@ -170,12 +171,38 @@ class ViewController: UIViewController {
       appleButton.trailingAnchor.constraint(equalTo: appleView.trailingAnchor, constant: 0)
     ])
   }
+ 
+  func setUpBtn() {
+    fbLoginBtn.layer.cornerRadius = fbLoginBtn.bounds.height / 10
+    googleLoginBtn.layer.cornerRadius = googleLoginBtn.bounds.height / 10
+    visitorBtn.layer.cornerRadius = visitorBtn.bounds.height / 10
+    GIDSignIn.sharedInstance()?.presentingViewController = self
+  }
+  
+//  @available(iOS 13.0, *)
+//  func setUpAppleBtn() {
+//    appleView.backgroundColor = .clear
+//    appleView.addSubview(appleButton)
+//    appleButton.translatesAutoresizingMaskIntoConstraints = false
+//
+//    NSLayoutConstraint.activate([
+//      appleButton.topAnchor.constraint(equalTo: appleView.topAnchor, constant: 0),
+//      appleButton.bottomAnchor.constraint(equalTo: appleView.bottomAnchor, constant: 0),
+//      appleButton.leadingAnchor.constraint(equalTo: appleView.leadingAnchor, constant: 0),
+//      appleButton.trailingAnchor.constraint(equalTo: appleView.trailingAnchor, constant: 0)
+//    ])
+//  }
   
   @objc func gotoMapPage () {
     preventTap()
     UserManager.shared.isTourist = false
     guard let uid = Auth.auth().currentUser?.uid else { return }
     readData(uid: uid, isApple: false, isFB: false)
+  }
+  
+  func gotoMap(viewController: UIViewController) {
+    guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(withIdentifier: "tab") as? TabBarViewController else { return }
+    self.view.window?.rootViewController = mapVc
   }
   
   func createDataBase(isApple: Bool, isFB: Bool, completion: @escaping (Result<String, Error>) -> Void) {
@@ -252,6 +279,7 @@ class ViewController: UIViewController {
   
   fileprivate var currentNonce: String?
   
+  @available(iOS 13.0, *)
   @objc func startSignInWithAppleFlow() {
     let nonce = randomNonceString()
     currentNonce = nonce
@@ -266,6 +294,7 @@ class ViewController: UIViewController {
     authorizationController.performRequests()
   }
   
+  @available(iOS 13.0, *)
   private func sha256(_ input: String) -> String {
     let inputData = Data(input.utf8)
     let hashedData = SHA256.hash(data: inputData)
@@ -276,6 +305,7 @@ class ViewController: UIViewController {
   }
 }
 
+@available(iOS 13.0, *)
 extension ViewController: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
   func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
     return self.view.window!
@@ -329,10 +359,5 @@ extension ViewController: ASAuthorizationControllerDelegate, ASAuthorizationCont
   
   func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
     print("Sign in with Apple errored: \(error)")
-  }
-  
-  func gotoMap(viewController: UIViewController) {
-    guard let mapVc  = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab") as? TabBarViewController else { return }
-    self.view.window?.rootViewController = mapVc
   }
 }

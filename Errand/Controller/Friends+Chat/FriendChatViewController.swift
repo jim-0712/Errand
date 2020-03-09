@@ -189,7 +189,11 @@ extension FriendChatViewController: MessagesLayoutDelegate {
 extension FriendChatViewController: MessagesDisplayDelegate {
   
   func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
-    return isFromCurrentSender(message: message) ? .primary : .incomingMessage
+    return isFromCurrentSender(message: message) ? UIColor.Y1 ?? .red  : .incomingMessage
+  }
+  
+  func textColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+    return .darkGray
   }
   
   func shouldDisplayHeader(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> Bool {
@@ -199,7 +203,7 @@ extension FriendChatViewController: MessagesDisplayDelegate {
   func messageStyle(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageStyle {
     
     let corner: MessageStyle.TailCorner = isFromCurrentSender(message: message) ? .bottomRight : .bottomLeft
-    return .bubbleTail(corner, .curved)
+    return .bubbleTail(corner, .pointedEdge)
   }
 }
 

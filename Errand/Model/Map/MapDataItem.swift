@@ -30,7 +30,6 @@ struct GeocodedWaypoint: Codable {
     }
 }
 
-
 struct Route: Codable {
     let bounds: Bounds
     let copyrights: String
@@ -109,7 +108,6 @@ enum TravelMode: String, Codable {
     case driving = "DRIVING"
 }
 
-
 struct Address: Codable {
     let plusCode: PlusCode
     let results: [Outcome]
@@ -131,7 +129,6 @@ struct PlusCode: Codable {
     }
 }
 
-
 struct Outcome: Codable {
     let addressComponents: [AddressComponent]
     let formattedAddress: String
@@ -150,7 +147,6 @@ struct Outcome: Codable {
     }
 }
 
-
 struct AddressComponent: Codable {
     let longName, shortName: String
     let types: [String]
@@ -161,7 +157,6 @@ struct AddressComponent: Codable {
         case types
     }
 }
-
 
 struct Geometry: Codable {
     let location: Location
@@ -175,7 +170,6 @@ struct Geometry: Codable {
         case viewport, bounds
     }
 }
-
 
 struct Edge: Codable {
     let northeast, southwest: Location

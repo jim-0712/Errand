@@ -183,8 +183,6 @@ class MissionDetailViewController: UIViewController {
         
       case .success:
         
-//        let sender = PushNotificationSender()
-//        sender.sendPushNotification(to: taskInfo.fcmToken, body: "有人申請任務")
         strongSelf.setUpBtnEnable()
         APImanager.shared.postNotification(to: taskInfo.fcmToken, body: "有人申請任務")
         
@@ -206,14 +204,14 @@ class MissionDetailViewController: UIViewController {
   }
   
   func backTosignIn() {
-    let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "main") as? ViewController
+    let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "main") as? ViewController
     UserManager.shared.isTourist = true
     UserDefaults.standard.removeObject(forKey: "login")
     self.view.window?.rootViewController = signInVC
   }
   
   func gotoJudgePage() {
-    guard let judgeVC = storyboard?.instantiateViewController(identifier: "judge") as? JudgeMissionViewController,
+    guard let judgeVC = storyboard?.instantiateViewController(withIdentifier: "judge") as? JudgeMissionViewController,
          let taskInfo = detailData  else { return }
          judgeVC.detailData = taskInfo
          NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
@@ -226,7 +224,7 @@ class MissionDetailViewController: UIViewController {
       switch result {
       case .success:
         LKProgressHUD.dismiss()
-        let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
+        let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(withIdentifier: "tab")
         strongSelf.view.window?.rootViewController = mapView
       case .failure:
         LKProgressHUD.showFailure(text: "Can't give up", controller: strongSelf)
@@ -239,14 +237,13 @@ class MissionDetailViewController: UIViewController {
     MutipleFuncManager.shared.completeMission(taskData: taskInfo) { [weak self] result in
       guard let strongSelf = self else { return }
       switch result {
-      case .success:
+      case .success(let destinationFcmToken):
               guard let taskInfo = strongSelf.detailData else { return }
               if taskInfo.ownerCompleteTask && taskInfo.takerCompleteTask {
                 strongSelf.finishMissionAlert(title: "恭喜", message: "任務完成", viewController: strongSelf)
               } else {
-//                let sender = PushNotificationSender()
-//                sender.sendPushNotification(to: strongSelf.destinationFcmToken, body: "對方任務完成")
-                APImanager.shared.postNotification(to: strongSelf.destinationFcmToken, body: "對方任務完成")
+                
+              APImanager.shared.postNotification(to: destinationFcmToken, body: "對方任務完成")
         
                 let controller = UIAlertController(title: "恭喜", message: "等待對方完成", preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "ok", style: .default) { [weak self] _ in
@@ -293,7 +290,7 @@ class MissionDetailViewController: UIViewController {
           if status == 0 {
             SwiftMes.shared.showSuccessMessage(body: "該任務已經完成", seconds: 1.0)
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-              let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
+              let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(withIdentifier: "tab")
               strongSelf.view.window?.rootViewController = mapView
             }
           } else {
@@ -334,7 +331,7 @@ class MissionDetailViewController: UIViewController {
           let alert = UIAlertController(title: "注意", message: "本次任務已完成", preferredStyle: .alert)
           let okAction = UIAlertAction(title: "ok", style: .default) { _ in
             
-            let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
+            let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(withIdentifier: "tab")
             strongSelf.view.window?.rootViewController = mapView
           }
           alert.addAction(okAction)
@@ -708,7 +705,7 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
       cell.chatroomHandler = { [weak self ] in
         guard let strongSelf = self else { return }
         
-        guard let chatVC = UIStoryboard(name: "Chat", bundle: nil).instantiateViewController(identifier: "ChatViewController") as? ChatViewController,
+        guard let chatVC = UIStoryboard(name: "Chat", bundle: nil).instantiateViewController(withIdentifier: "ChatViewController") as? ChatViewController,
              let taskInfo = strongSelf.detailData else { return }
         
         chatVC.detailData = taskInfo

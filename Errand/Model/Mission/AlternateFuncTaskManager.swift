@@ -29,10 +29,10 @@ class MutipleFuncManager {
      
      if user.status == 1 {
        group.enter()
-       destinationFcmToken = missionTaker
        TaskManager.shared.deleteTask(uid: user.uid) { result in
          switch result {
          case .success:
+          print("1")
            group.leave()
          case .failure:
            group.leave()
@@ -42,7 +42,9 @@ class MutipleFuncManager {
       group.enter()
       UserManager.shared.readUserInfo(uid: missionTaker, isSelf: false) { result in
         switch result {
-        case .success:
+        case .success(let takerAccountInfo):
+          print("2")
+          destinationFcmToken = takerAccountInfo.fcmToken
           group.leave()
         case .failure:
           group.leave()
@@ -53,6 +55,7 @@ class MutipleFuncManager {
       UserManager.shared.updateStatus(uid: user.uid, status: 0) { result in
         switch result {
         case .success:
+          print("3")
           group.leave()
         case .failure:
           group.leave()
@@ -63,6 +66,7 @@ class MutipleFuncManager {
       UserManager.shared.updateStatus(uid: missionTaker, status: 0) { result in
         switch result {
         case .success:
+          print("4")
           group.leave()
         case .failure:
           group.leave()
@@ -95,6 +99,7 @@ class MutipleFuncManager {
           group.leave()
         }
       }
+    }
        
        group.notify(queue: DispatchQueue.main) {
          UserManager.shared.readUserInfo(uid: user.uid, isSelf: true) { result in
@@ -108,8 +113,6 @@ class MutipleFuncManager {
             UserManager.shared.updateOppoInfo(userInfo: accountInfo) { result in
               switch result {
               case .success:
-//                let sender = PushNotificationSender()
-//                sender.sendPushNotification(to: destinationFcmToken, body: "對方放棄任務")
                 APImanager.shared.postNotification(to: destinationFcmToken, body: "對方放棄任務")
                 completion(.success("good"))
               case .failure:
@@ -122,8 +125,7 @@ class MutipleFuncManager {
          }
        }
      }
-   }
-  
+
   func completeMission(taskData: TaskInfo, completion: @escaping ((Result<String, Error>) -> Void)) {
 
     guard let status = UserManager.shared.currentUserInfo?.status else {
@@ -171,7 +173,7 @@ class MutipleFuncManager {
     } else { group.leave() }
     
     group.notify(queue: DispatchQueue.main) {
-      completion(.success("good"))
+      completion(.success(destinationFcmToken))
     }
   }
   
@@ -268,8 +270,6 @@ class MutipleFuncManager {
     } else {  group.leave() }
     
     group.notify(queue: DispatchQueue.main) {
-//      let sender = PushNotificationSender()
-//      sender.sendPushNotification(to: destinationFcmToken, body: "任務完成")
       APImanager.shared.postNotification(to: destinationFcmToken, body: "任務完成")
       completion(.success("good"))
     }

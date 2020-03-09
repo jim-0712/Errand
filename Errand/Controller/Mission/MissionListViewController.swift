@@ -9,12 +9,13 @@
 import UIKit
 import FirebaseAuth
 
-class MissionListViewController: UIViewController {
+class MissionListViewController: UIViewController, UIViewControllerTransitioningDelegate {
   
   var observation: NSKeyValueObservation?
   
   override func viewDidLoad() {
     super.viewDidLoad()
+
     setUpSearch()
     setUp()
     setUpindicatorView()
@@ -31,6 +32,7 @@ class MissionListViewController: UIViewController {
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     currentBtnSelect = false
+    getTaskData()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -72,6 +74,30 @@ class MissionListViewController: UIViewController {
   
   @IBOutlet weak var postMissionBtn: UIButton!
   
+  let circleAnimation = CircularTransition()
+  
+  func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    
+    circleAnimation.transitionMode = .dismiss
+    
+    circleAnimation.startingPoint = CGPoint(x: 0, y: 0)
+    
+    circleAnimation.circleColor = .lightGray
+    
+    return circleAnimation
+  }
+  
+  func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    
+    circleAnimation.transitionMode = .present
+    
+    circleAnimation.circleColor = .lightGray
+    
+    circleAnimation.startingPoint = postMissionBtn.center
+
+    return circleAnimation
+  }
+  
   @IBAction func postMissionBtn(_ sender: Any) {
     
     if UserManager.shared.isTourist {
@@ -79,6 +105,7 @@ class MissionListViewController: UIViewController {
       UserManager.shared.goSignInPage(viewController: self)
       
     } else if UserManager.shared.currentUserInfo?.status == 0 {
+      
       performSegue(withIdentifier: "post", sender: nil)
     } else if UserManager.shared.currentUserInfo?.status == 1 {
       
@@ -90,13 +117,16 @@ class MissionListViewController: UIViewController {
           if taskInfo.missionTaker != "" {
             TaskManager.shared.showAlert(title: "警告", message: "任務已被接受，不能隨意更改", viewController: self)
           } else {
-            guard let editVC = self.storyboard?.instantiateViewController(identifier: "post") as? PostMissionViewController,
+            guard let editVC = self.storyboard?.instantiateViewController(withIdentifier: "post") as? PostMissionViewController,
               let status = UserManager.shared.currentUserInfo?.status else { return }
             if status == 1 {
               editVC.isEditing = true
             } else {
               editVC.isEditing = false
             }
+            
+            editVC.transitioningDelegate = self
+            editVC.modalPresentationStyle = .custom
             self.present(editVC, animated: true, completion: nil)
           }
         case .failure:

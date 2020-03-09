@@ -135,7 +135,7 @@ class ChildInfoViewController: UIViewController {
   }
   
   func logIn() {
-    let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "main") as? ViewController
+    let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "main") as? ViewController
     self.view.window?.rootViewController = signInVC
   }
   
@@ -151,7 +151,7 @@ class ChildInfoViewController: UIViewController {
       } catch {
         print("Error")
       }
-      let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "main") as? ViewController
+      let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "main") as? ViewController
       
       UserManager.shared.isTourist = true
       UserManager.shared.currentUserInfo = nil

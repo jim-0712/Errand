@@ -106,7 +106,8 @@ class JudgeMissionViewController: UIViewController {
     
     group.notify(queue: DispatchQueue.main) {
       LKProgressHUD.dismiss()
-      let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
+      let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(withIdentifier: "tab")
+      
       self.view.window?.rootViewController = mapView
     }
   }
@@ -301,7 +302,7 @@ class JudgeMissionViewController: UIViewController {
     let controller = UIAlertController(title: "恭喜", message: "已完成評分", preferredStyle: .alert)
     let okAction = UIAlertAction(title: "ok", style: .default) { _ in
       
-      let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
+      let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(withIdentifier: "tab")
       
       self.view.window?.rootViewController = mapView
     }

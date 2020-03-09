@@ -87,6 +87,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    getTaskData()
     arrangeTextField.delegate = self
     preSetup()
     changeConstraints()
@@ -106,15 +107,10 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
     setUpArrangeTextField()
   }
   
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    getTaskData()
-  }
-  
-  override func viewDidAppear(_ animated: Bool) {
-    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
-    LKProgressHUD.show(controller: tabVC)
-  }
+//  override func viewDidAppear(_ animated: Bool) {
+//    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
+//    LKProgressHUD.show(controller: tabVC)
+//  }
   
   @IBAction func tapRadarCheckAuth(_ sender: Any) {
     if CLLocationManager.locationServicesEnabled() {
