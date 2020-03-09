@@ -12,6 +12,35 @@ class BlacklistViewController: UIViewController {
   
   @IBOutlet weak var blackListTable: UITableView!
   
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    setUpTable()
+    readBlackData()
+    setUpNavigation()
+    if UserDefaults.standard.value(forKey: "black") as? Bool == nil {
+      showAlert()
+    }
+    guard let blackList = UserManager.shared.currentUserInfo?.blacklist else { return }
+    blackuid = blackList
+  }
+  
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    
+    UserManager.shared.currentUserInfo?.blacklist = blackuid
+    
+    guard let userInfo = UserManager.shared.currentUserInfo else { return }
+    
+    UserManager.shared.updateOppoInfo(userInfo: userInfo) { result in
+      switch result {
+      case .success:
+        print("Good")
+      case .failure:
+        print("no")
+      }
+    }
+  }
+  
   var blacklistinfo: [AccountInfo] = [] {
     didSet {
       if blacklistinfo.isEmpty {
@@ -27,16 +56,8 @@ class BlacklistViewController: UIViewController {
   
   var removeBlack: [String] = []
   
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    setUpTable()
-    readBlackData()
-    setUpNavigation()
-    if UserDefaults.standard.value(forKey: "black") as? Bool == nil {
-      showAlert()
-    }
-    guard let blackList = UserManager.shared.currentUserInfo?.blacklist else { return }
-    blackuid = blackList
+  @objc func back() {
+    self.navigationController?.popViewController(animated: false)
   }
   
   func showAlert() {
@@ -48,39 +69,10 @@ class BlacklistViewController: UIViewController {
     present(alert, animated: true, completion: nil)
   }
   
-  override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillDisappear(animated)
-    
-    UserManager.shared.currentUserInfo?.blacklist = blackuid
-    
-    guard let userInfo = UserManager.shared.currentUserInfo else { return }
-    
-    UserManager.shared.updateOppoInfo(userInfo: userInfo) { result in
-      switch result {
-      case .success:
-        print("Good")
-      case .failure:
-        print("fuck")
-      }
-    }
-//    UserManager.shared.updateUserInfo { result in
-//      switch result {
-//      case .success:
-//        print("Good")
-//      case .failure:
-//        print("fuck")
-//      }
-//    }
-  }
-  
   func setUpNavigation() {
     navigationItem.setHidesBackButton(true, animated: true)
     navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(back))
     navigationItem.leftBarButtonItem?.tintColor = .black
-  }
-    
-  @objc func back() {
-    self.navigationController?.popViewController(animated: false)
   }
 
   func setUpTable() {
@@ -110,18 +102,6 @@ class BlacklistViewController: UIViewController {
           print("error")
         }
       }
-//      UserManager.shared.readBlackData(uid: uid) { [weak self] result in
-//        guard let strongSelf = self else { return }
-//        switch result {
-//        case .success(let accountInfo):
-//          blacklistCounter.append(accountInfo)
-//          if blacklistCounter.count == blackList.count {
-//            strongSelf.blacklistinfo = blacklistCounter
-//          }
-//        case .failure:
-//          print("error")
-//        }
-//      }
     }
   }
 }
@@ -169,29 +149,6 @@ extension BlacklistViewController: UITableViewDelegate, UITableViewDataSource {
           LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
         }
       }
-      
-//      UserManager.shared.readBlackData(uid: blackuid[indexPath.item]) { [weak self] result in
-//        guard let strongSelf = self,
-//             let currentUser = UserManager.shared.currentUserInfo?.uid else { return }
-//
-//        switch result {
-//        case .success(var accountInfo):
-//
-//          accountInfo.oppoBlacklist = accountInfo.oppoBlacklist.filter({ $0 != currentUser})
-//
-//          UserManager.shared.updateOppoInfo(userInfo: accountInfo) { result in
-//            switch result {
-//            case .success:
-//              print("good")
-//            case .failure:
-//              print("error")
-//            }
-//          }
-//
-//        case .failure(let error):
-//          LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
-//        }
-//      }
       blacklistinfo.remove(at: indexPath.item)
       blackuid.remove(at: indexPath.item)
       blackListTable.deleteRows(at: [indexPath], with: .automatic)

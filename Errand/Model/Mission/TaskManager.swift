@@ -1,11 +1,3 @@
-//
-//  TaskManager.swift
-//  Errand
-//
-//  Created by Jim on 2020/1/24.
-//  Copyright © 2020 Jim. All rights reserved.
-//
-
 import UIKit
 import Foundation
 import Firebase
@@ -49,7 +41,7 @@ class TaskManager {
       let long = coordinate.longitude as Double
       let personPhoto = "\(photo)"
     
-    let info = TaskInfo(email: email, nickname: nickname, gender: 0, taskPhoto: taskPhoto, time: taskData[0], detail: detail, lat: lat, long: long, money: taskData[1], classfied: taskData[2], status: taskData[3], ownerOK: false, takerOK: false, ownerAskFriend: false, takerAskFriend: false, fileType: fileType, personPhoto: personPhoto, requester: [], fcmToken: fcmToken, missionTaker: "", refuse: [], uid: uid, chatRoom: "", isFrirndsNow: false, isComplete: false, star: 0.0, ownerJudge: false, takerJudge: false)
+    let info = TaskInfo(email: email, nickname: nickname, gender: 0, taskPhoto: taskPhoto, time: taskData[0], detail: detail, lat: lat, long: long, money: taskData[1], classfied: taskData[2], status: taskData[3], ownerCompleteTask: false, takerCompleteTask: false, ownerAskFriend: false, takerAskFriend: false, fileType: fileType, personPhoto: personPhoto, requester: [], fcmToken: fcmToken, missionTaker: "", refuse: [], uid: uid, chatRoom: "", isFrirndsNow: false, isComplete: false, star: 0.0, ownerJudge: false, takerJudge: false)
     
       dbF.collection("Tasks").document(uid).setData(info.toDict) { error in
       
@@ -81,7 +73,7 @@ class TaskManager {
         
         guard let quary = querySnapshot else {return }
         
-        strongSelf.reFactData(quary: quary)
+        strongSelf.reFactDatanormal(quary: quary)
         
         completion(.success(strongSelf.taskData))
       }
@@ -134,10 +126,10 @@ class TaskManager {
     }
   }
   
-  func reFactData(quary: QuerySnapshot) {
+  func reFactDatanormal(quary: QuerySnapshot) {
     
     self.taskData = []
-    var storeData: [TaskInfo] = []
+      var storeData: [TaskInfo] = []
     for info in quary.documents {
       
       self.reFactDataSpec(quary: info) { result in
@@ -202,8 +194,8 @@ class TaskManager {
       let uid = quary["uid"] as? String,
       let chatRoom = quary["chatRoom"] as? String,
       let isComplete = quary["isComplete"] as? Bool,
-      let ownerOK = quary["ownerOK"] as? Bool,
-      let takerOK = quary["takerOK"] as? Bool,
+      let ownerOK = quary["ownerCompleteTask"] as? Bool,
+      let takerOK = quary["takerCompleteTask"] as? Bool,
       let star = quary["star"] as? Double,
       let ownerAskFriend = quary["ownerAskFriend"] as? Bool,
       let takerAskFriend = quary["takerAskFriend"] as? Bool,
@@ -211,7 +203,7 @@ class TaskManager {
       let ownerJudge = quary["ownerJudge"] as? Bool,
       let takerJudge = quary["takerJudge"] as? Bool else { return }
     
-    let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, ownerOK: ownerOK, takerOK: takerOK, ownerAskFriend: ownerAskFriend, takerAskFriend: takerAskFriend, fileType: fileType, personPhoto: personPhoto, requester: requester, fcmToken: fcmToken, missionTaker: missionTaker, refuse: refuse, uid: uid, chatRoom: chatRoom, isFrirndsNow: isFrirndsNow, isComplete: isComplete, star: star, ownerJudge: ownerJudge, takerJudge: takerJudge)
+    let dataReturn = TaskInfo(email: email, nickname: nickname, gender: gender, taskPhoto: taskPhoto, time: time, detail: detail, lat: lat, long: long, money: money, classfied: classfied, status: status, ownerCompleteTask: ownerOK, takerCompleteTask: takerOK, ownerAskFriend: ownerAskFriend, takerAskFriend: takerAskFriend, fileType: fileType, personPhoto: personPhoto, requester: requester, fcmToken: fcmToken, missionTaker: missionTaker, refuse: refuse, uid: uid, chatRoom: chatRoom, isFrirndsNow: isFrirndsNow, isComplete: isComplete, star: star, ownerJudge: ownerJudge, takerJudge: takerJudge)
     
     completion(.success(dataReturn))
   }
@@ -345,7 +337,7 @@ class TaskManager {
         
       }
       
-      let taskNewVersion = TaskInfo(email: task.email, nickname: task.nickname, gender: task.gender, taskPhoto: task.taskPhoto, time: task.time, detail: task.detail, lat: task.lat, long: task.long, money: task.money, classfied: task.classfied, status: task.status, ownerOK: task.ownerOK, takerOK: task.takerOK, ownerAskFriend: task.ownerAskFriend, takerAskFriend: task.takerAskFriend, fileType: task.fileType, personPhoto: task.personPhoto, requester: task.requester, fcmToken: task.fcmToken, missionTaker: task.missionTaker, refuse: task.refuse, uid: task.uid, chatRoom: task.chatRoom, isFrirndsNow: task.isFrirndsNow, isComplete: task.isComplete, star: task.star, ownerJudge: task.ownerJudge, takerJudge: task.takerJudge)
+      let taskNewVersion = TaskInfo(email: task.email, nickname: task.nickname, gender: task.gender, taskPhoto: task.taskPhoto, time: task.time, detail: task.detail, lat: task.lat, long: task.long, money: task.money, classfied: task.classfied, status: task.status, ownerCompleteTask: task.ownerCompleteTask, takerCompleteTask: task.takerCompleteTask, ownerAskFriend: task.ownerAskFriend, takerAskFriend: task.takerAskFriend, fileType: task.fileType, personPhoto: task.personPhoto, requester: task.requester, fcmToken: task.fcmToken, missionTaker: task.missionTaker, refuse: task.refuse, uid: task.uid, chatRoom: task.chatRoom, isFrirndsNow: task.isFrirndsNow, isComplete: task.isComplete, star: task.star, ownerJudge: task.ownerJudge, takerJudge: task.takerJudge)
       
       if let querySnapshot = querySnapshot {
         
@@ -385,16 +377,16 @@ class TaskManager {
           switch result {
           case .success(var taskInfo):
             
-            if identity == "ownerOK" {
+            if identity == "ownerCompleteTask" {
 
-              taskInfo.ownerOK = status
+              taskInfo.ownerCompleteTask = status
 
             } else if identity == "isComplete"{
-              taskInfo.takerOK = status
-              taskInfo.ownerOK = status
+              taskInfo.takerCompleteTask = status
+              taskInfo.ownerCompleteTask = status
               taskInfo.isComplete = status
             } else {
-              taskInfo.takerOK = status
+              taskInfo.takerCompleteTask = status
             }
 
             document.reference.updateData(taskInfo.toDict) { (error) in
@@ -418,11 +410,9 @@ class TaskManager {
     }
   }
   
-  func updateJudge(owner: String, classified: Int, judge: String, star: Double, completion: @escaping (Result<String, Error>) -> Void) {
+  func updateJudge(judge: JudgeInfo, completion: @escaping (Result<String, Error>) -> Void) {
     
-    let info = JudgeInfo(owner: owner, judge: judge, star: star, classified: classified)
-    
-    dbF.collection("Judge").addDocument(data: info.toDict) { _  in
+    dbF.collection("Judge").addDocument(data: judge.toDict) { _  in
       
       completion(Result.success("Success"))
     }
@@ -474,7 +464,7 @@ class TaskManager {
     }
   }
   
-  func  readJudgeData(uid: String, completion: @escaping (Result<[JudgeInfo], Error>) -> Void) {
+  func readJudgeData(uid: String, completion: @escaping (Result<[JudgeInfo], Error>) -> Void) {
   
     dbF.collection("Judge").whereField("owner", isEqualTo: uid).getDocuments { quarySnapShot, error in
       
@@ -491,15 +481,22 @@ class TaskManager {
         guard let owner = quary["owner"] as? String,
              let judge = quary["judge"] as? String,
              let star = quary["star"] as? Double,
-             let classified = quary["classified"] as? Int else { return }
+             let classified = quary["classified"] as? Int,
+             let date = quary["date"] as? Int else { return }
         
-          let data = JudgeInfo(owner: owner, judge: judge, star: star, classified: classified)
+        let data = JudgeInfo(owner: owner, judge: judge, star: star, classified: classified, date: date)
           dataStore.append(data)
       }
       
+      dataStore.sort { (first, second) -> Bool in
+        if first.date > second.date {
+          return true
+        } else {
+          return false
+        }
+      }
       completion(.success(dataStore))
     
     }
   }
-  
 }

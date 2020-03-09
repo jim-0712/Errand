@@ -8,8 +8,7 @@
 
 import Foundation
 
-// MARK: - Welcome
-struct Welcome: Codable {
+struct Direction: Codable {
     let geocodedWaypoints: [GeocodedWaypoint]
     let routes: [Route]
     let status: String
@@ -20,7 +19,6 @@ struct Welcome: Codable {
     }
 }
 
-// MARK: - GeocodedWaypoint
 struct GeocodedWaypoint: Codable {
     let geocoderStatus, placeID: String
     let types: [String]
@@ -32,7 +30,6 @@ struct GeocodedWaypoint: Codable {
     }
 }
 
-// MARK: - Route
 struct Route: Codable {
     let bounds: Bounds
     let copyrights: String
@@ -49,17 +46,14 @@ struct Route: Codable {
     }
 }
 
-// MARK: - Bounds
 struct Bounds: Codable {
     let northeast, southwest: Northeast
 }
 
-// MARK: - Northeast
 struct Northeast: Codable {
     let lat, lng: Double
 }
 
-// MARK: - Leg
 struct Leg: Codable {
     let distance, duration: Distance
     let endAddress: String
@@ -81,13 +75,11 @@ struct Leg: Codable {
     }
 }
 
-// MARK: - Distance
 struct Distance: Codable {
     let text: String
     let value: Int
 }
 
-// MARK: - Step
 struct Step: Codable {
     let distance, duration: Distance
     let endLocation: Northeast
@@ -107,7 +99,7 @@ struct Step: Codable {
         case maneuver
     }
 }
-// MARK: - Polyline
+
 struct Polyline: Codable {
     let points: String
 }
@@ -116,7 +108,6 @@ enum TravelMode: String, Codable {
     case driving = "DRIVING"
 }
 
-// MARK: - Welcome
 struct Address: Codable {
     let plusCode: PlusCode
     let results: [Outcome]
@@ -138,7 +129,6 @@ struct PlusCode: Codable {
     }
 }
 
-// MARK: - Result
 struct Outcome: Codable {
     let addressComponents: [AddressComponent]
     let formattedAddress: String
@@ -157,7 +147,6 @@ struct Outcome: Codable {
     }
 }
 
-// MARK: - AddressComponent
 struct AddressComponent: Codable {
     let longName, shortName: String
     let types: [String]
@@ -169,7 +158,6 @@ struct AddressComponent: Codable {
     }
 }
 
-// MARK: - Geometry
 struct Geometry: Codable {
     let location: Location
     let locationType: String
@@ -183,12 +171,10 @@ struct Geometry: Codable {
     }
 }
 
-// MARK: - Bounds
 struct Edge: Codable {
     let northeast, southwest: Location
 }
 
-// MARK: - Location
 struct Location: Codable {
     let lat, lng: Double
 }

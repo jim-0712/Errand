@@ -22,8 +22,19 @@ class LogoutTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    
+  
+  @IBOutlet weak var logOutBtn: UIButton!
+  
     @IBAction func tapOnLogOut(_ sender: Any) {
       self.touchHandler?()
+  }
+  
+  func setUp(isTourist: Bool) {
+  
+    if isTourist {
+      logOutBtn.setTitle("登入", for: .normal)
+    } else {
+      logOutBtn.setTitle("登出", for: .normal)
+    }
   }
 }

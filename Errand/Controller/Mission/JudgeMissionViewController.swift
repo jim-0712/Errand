@@ -56,9 +56,10 @@ class JudgeMissionViewController: UIViewController {
   
   @IBAction func backAct(_ sender: Any) {
     
-    guard let taskData = self.detailData,
-      let judge = judgeTextView.text else { return }
+  guard let taskData = self.detailData,
+       let judge = judgeTextView.text else { return }
     
+    let date = Int(Date().timeIntervalSince1970)
     let status = UserManager.shared.statusJudge
     var judgerOwner = ""
     if status == 1 {
@@ -72,7 +73,9 @@ class JudgeMissionViewController: UIViewController {
     group.enter()
     group.enter()
     
-    TaskManager.shared.updateJudge(owner: judgerOwner, classified: taskData.classfied, judge: judge, star: -0.1 ) { (result) in
+    let judgeInfo = JudgeInfo(owner: judgerOwner, judge: judge, star: -0.1, classified: taskData.classfied, date: date)
+    
+    TaskManager.shared.updateJudge(judge: judgeInfo) { (result) in
       switch result {
       case .success:
         group.leave()
@@ -103,7 +106,8 @@ class JudgeMissionViewController: UIViewController {
     
     group.notify(queue: DispatchQueue.main) {
       LKProgressHUD.dismiss()
-      let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
+      let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(withIdentifier: "tab")
+      
       self.view.window?.rootViewController = mapView
     }
   }
@@ -115,7 +119,6 @@ class JudgeMissionViewController: UIViewController {
   
   @IBOutlet weak var addFriendBtn: UIButton!
   
-  // swiftlint:disable cyclomatic_complexity
   @IBAction func addFriendsBtn(_ sender: Any) {
     
     guard let taskInfo = self.detailData else { return }
@@ -135,22 +138,14 @@ class JudgeMissionViewController: UIViewController {
       nameRef = self.dbF.collection("Users").document(taskInfo.uid)
     }
     
-    var isFriends = false
+    guard let nameReference = nameRef else { return }
     
-    UserManager.shared.getFriends { result in
+    UserManager.shared.checkFriends(nameRef: nameReference) { result in
       switch result {
-      case .success(let friends):
-        
-        guard let nameRe = nameRef else { return }
-        
-        for friend in friends where friend.nameREF == nameRe {
-          isFriends = true
-        }
+      case .success(let isFriends):
         
         if !isFriends {
-          if status == 1 && taskInfo.ownerAskFriend {
-            TaskManager.shared.showAlert(title: "等待中", message: "您已送出邀請", viewController: self)
-          } else if status == 2 && taskInfo.takerAskFriend {
+          if status == 1 && taskInfo.ownerAskFriend || status == 2 && taskInfo.takerAskFriend {
             TaskManager.shared.showAlert(title: "等待中", message: "您已送出邀請", viewController: self)
           } else {
             let controller = UIAlertController(title: "好友", message: "確定送出好友邀請？", preferredStyle: .alert)
@@ -168,7 +163,7 @@ class JudgeMissionViewController: UIViewController {
         }
         
       case .failure:
-        print("friendsError")
+        print("error")
       }
     }
   }
@@ -256,6 +251,7 @@ class JudgeMissionViewController: UIViewController {
     guard let taskData = self.detailData,
       let judge = judgeTextView.text else { return }
     
+    let date = Int(Date().timeIntervalSince1970)
     let status = UserManager.shared.statusJudge
     var judgerOwner = ""
     if status == 1 {
@@ -266,9 +262,10 @@ class JudgeMissionViewController: UIViewController {
     
     let group = DispatchGroup()
     group.enter()
-    group.enter()
     
-    TaskManager.shared.updateJudge(owner: judgerOwner, classified: taskData.classfied, judge: judge, star: starView.rating) { (result) in
+    let judgeInfo = JudgeInfo(owner: judgerOwner, judge: judge, star: starView.rating, classified: taskData.classfied, date: date)
+    
+    TaskManager.shared.updateJudge(judge: judgeInfo) { (result) in
       switch result {
       case .success:
         print("ok")
@@ -278,6 +275,7 @@ class JudgeMissionViewController: UIViewController {
       }
     }
     
+    group.enter()
     UserManager.shared.readUserInfo(uid: judgerOwner, isSelf: false) { [weak self]result in
       guard let strongSelf = self else { return }
       switch result {
@@ -304,7 +302,7 @@ class JudgeMissionViewController: UIViewController {
     let controller = UIAlertController(title: "恭喜", message: "已完成評分", preferredStyle: .alert)
     let okAction = UIAlertAction(title: "ok", style: .default) { _ in
       
-      let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(identifier: "tab")
+      let mapView = UIStoryboard(name: "Content", bundle: nil).instantiateViewController(withIdentifier: "tab")
       
       self.view.window?.rootViewController = mapView
     }

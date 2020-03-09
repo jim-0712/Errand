@@ -22,3 +22,20 @@ enum MissionError: Error {
   
   case completeMission
 }
+
+enum CellType {
+  case detail
+  case rate
+  case about
+  case logout
+  case miniPhoto
+  case startMission
+  case normal
+  case purpose
+  case blacklist
+}
+
+struct CellContent {
+  var type: CellType
+  var title: String
+}

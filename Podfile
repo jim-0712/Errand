@@ -18,6 +18,7 @@ target 'Errand' do
   pod 'Firebase/Core'
   pod 'Firebase/Auth'
   #pod 'Firebase/AdMob'
+  # pod 'Google-Mobile-Ads-SDK'
   pod 'Firebase/Messaging'
   pod 'FBSDKLoginKit'
   pod 'GoogleSignIn'

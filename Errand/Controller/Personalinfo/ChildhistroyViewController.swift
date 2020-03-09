@@ -75,8 +75,9 @@ extension ChildhistroyViewController: UITableViewDelegate, UITableViewDataSource
     
     let groupImage = TaskManager.shared.filterClassified(classified: judgeData[indexPath.row].classified + 1)
     let data = judgeData[indexPath.row]
+    let date = TaskManager.shared.timeConverter(time: judgeData[indexPath.row].date)
     
-    cell.setUp(starCount: data.star, judge: data.judge, classified: groupImage[1])
+      cell.setUp(starCount: data.star, judge: data.judge, classified: groupImage[1], time: date)
     return cell
   }
 }

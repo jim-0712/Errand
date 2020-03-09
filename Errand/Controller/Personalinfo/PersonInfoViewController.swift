@@ -12,10 +12,6 @@ import MobileCoreServices
 
 class PersonInfoViewController: UIViewController {
   
-  @IBOutlet weak var photoTableView: UITableView!
-  
-  @IBOutlet weak var cornerView: UIView!
-  
   let imagePickerController = UIImagePickerController()
   
   let indicatorView = UIView()
@@ -35,6 +31,10 @@ class PersonInfoViewController: UIViewController {
   var settingOn: UIBarButtonItem!
   
   var settingOff: UIBarButtonItem!
+  
+  @IBOutlet weak var photoTableView: UITableView!
+  
+  @IBOutlet weak var cornerView: UIView!
   
   @IBOutlet weak var btnStack: UIStackView!
   
@@ -57,9 +57,14 @@ class PersonInfoViewController: UIViewController {
   }
   
   @IBAction func historyMissionAct(_ sender: UIButton) {
-    historyContainer.alpha = 1.0
-    userContainer.alpha = 0.0
-    startAnimate(sender: sender)
+    if UserManager.shared.isTourist {
+      SwiftMes.shared.showWarningMessage(body: "當前沒有登入", seconds: 0.8)
+      
+    } else {
+      historyContainer.alpha = 1.0
+      userContainer.alpha = 0.0
+      startAnimate(sender: sender)
+    }
   }
   
   @IBAction func acceptAct(_ sender: Any) {
@@ -94,10 +99,9 @@ class PersonInfoViewController: UIViewController {
               switch result {
                 
               case .success:
+
+                APImanager.shared.postNotification(to: user.fcmToken, body: "任務接受成功")
                 
-                NotificationCenter.default.post(name: Notification.Name("hide"), object: nil)
-                let sender = PushNotificationSender()
-                sender.sendPushNotification(to: user.fcmToken, body: "任務接受成功")
                 NotificationCenter.default.post(name: Notification.Name("requester"), object: nil)
                 strongSelf.navigationController?.popViewController(animated: false)
                 
@@ -144,8 +148,7 @@ class PersonInfoViewController: UIViewController {
       case .success:
         
         NotificationCenter.default.post(name: Notification.Name("refuseRequester"), object: nil)
-        let sender = PushNotificationSender()
-        sender.sendPushNotification(to: user.fcmToken, body: "您已被拒絕")
+        APImanager.shared.postNotification(to: user.fcmToken, body: "您已被拒絕")
         NotificationCenter.default.post(name: Notification.Name("requester"), object: nil)
         strongSelf.navigationController?.popViewController(animated: false)
         
@@ -166,20 +169,11 @@ class PersonInfoViewController: UIViewController {
     historyContainer.alpha = 0.0  
   }
   
-  @objc func back() {
-    self.navigationController?.popViewController(animated: false)
-  }
-  
   override func viewWillLayoutSubviews() {
     super.viewWillLayoutSubviews()
     cornerView.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 500, y: 340, width: 1000, height: 1000)
     cornerView.backgroundColor = UIColor.white
     cornerView.layer.cornerRadius = cornerView.bounds.width / 2
-  }
-  
-  @objc func backToEdit() {
-    self.navigationItem.setRightBarButtonItems([self.settingOff], animated: false)
-    isSetting = false
   }
   
   override func viewDidLayoutSubviews() {
@@ -210,20 +204,30 @@ class PersonInfoViewController: UIViewController {
       photo = user.photo
       btnBackgroundView.isHidden = true
     }
-    
     NotificationCenter.default.post(name: Notification.Name("hideLog"), object: nil)
+  }
+  
+  @objc func back() {
+    self.navigationController?.popViewController(animated: false)
+  }
+  
+  @objc func backToEdit() {
+    self.navigationItem.setRightBarButtonItems([self.settingOff], animated: false)
+    isSetting = false
   }
   
   func setUpNavigationItem() {
     
-    if !UserManager.shared.isRequester {
+    if UserManager.shared.isTourist {
+      
+    } else if !UserManager.shared.isRequester {
       settingOff = UIBarButtonItem(title: "編輯", style: .plain, target: self, action: #selector(tapSet))
       settingOn = UIBarButtonItem(image: UIImage(named: "tick-2"), style: .plain, target: self, action: #selector(tapSet))
       settingOn.tintColor = .black
       settingOff.tintColor = .black
       self.navigationItem.rightBarButtonItems = [self.settingOff]
     } else {
-      self.navigationItem.setHidesBackButton(true, animated: true)
+      navigationItem.setHidesBackButton(true, animated: true)
       NotificationCenter.default.addObserver(self, selector: #selector(backToEdit), name: Notification.Name("CompleteEdit"), object: nil)
       navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(back))
       navigationItem.leftBarButtonItem?.tintColor = .black
@@ -349,7 +353,9 @@ extension PersonInfoViewController: UITableViewDelegate, UITableViewDataSource {
     
     guard let cell = tableView.dequeueReusableCell(withIdentifier: "personPhoto", for: indexPath) as? PhotoTableViewCell else { return UITableViewCell() }
     
-    if isRequester {
+    if UserManager.shared.isTourist {
+      name = "遊客"
+    } else if isRequester {
       guard let requester = UserManager.shared.requesterInfo else { return UITableViewCell() }
       name = requester.nickname
       email = requester.email
@@ -360,6 +366,7 @@ extension PersonInfoViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     cell.setUpView(isRequester: isRequester, personPhoto: photo, nickName: name, email: email)
+    cell.choosePhotoBtn.isHidden = UserManager.shared.isTourist
     cell.choosePhotoBtn.addTarget(self, action: #selector(pickImage), for: .touchUpInside)
     cell.backgroundColor = .clear
     return cell
@@ -391,14 +398,12 @@ extension PersonInfoViewController: UIImagePickerControllerDelegate, UINavigatio
             }
             
             storageRef.downloadURL { (url, error) in
-              
               if error != nil {
                 LKProgressHUD.dismiss()
                 LKProgressHUD.showFailure(text: "Error", controller: strongSelf)
                 return }
               
               guard let urlBack = url else { return }
-              
               UserManager.shared.updatePersonPhotoURL(photo: urlBack) { result in
                 
                 switch result {

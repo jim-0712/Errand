@@ -24,6 +24,8 @@ struct JudgeInfo {
   
   var classified: Int
   
+  var date: Int
+  
   var toDict: [String: Any] {
     
     return [
@@ -33,7 +35,9 @@ struct JudgeInfo {
       
       "star": star,
       
-      "classified": classified
+      "classified": classified,
+      
+      "date": date
     ]
   }
 }
@@ -62,9 +66,9 @@ struct TaskInfo {
   
   var status: Int
   
-  var ownerOK: Bool
+  var ownerCompleteTask: Bool
   
-  var takerOK: Bool
+  var takerCompleteTask: Bool
   
   var ownerAskFriend: Bool
   
@@ -138,9 +142,9 @@ struct TaskInfo {
                
                "isComplete": isComplete,
                
-               "ownerOK": ownerOK,
+               "ownerCompleteTask": ownerCompleteTask,
                
-               "takerOK": takerOK,
+               "takerCompleteTask": takerCompleteTask,
                
                "star": star,
                

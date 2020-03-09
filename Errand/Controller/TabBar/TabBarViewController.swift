@@ -97,12 +97,10 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    NotificationCenter.default.addObserver(self, selector: #selector(hideNoti), name: Notification.Name("hide"), object: nil)
-    
     viewControllers = tabs.map({ $0.controller() })
     
     delegate = self
- 
+    
     setUpListener()
   }
   
@@ -145,74 +143,10 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
       
       let dataReturn = AccountInfo(email: email, nickname: nickname, noJudgeCount: noJudgeCount, task: task, minusStar: minusStar, photo: photo, report: report, blacklist: blacklist, oppoBlacklist: oppoBlacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
       
-      if dataReturn.status != 0 {
-        NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
-      }
-      
       UserManager.shared.currentUserInfo = dataReturn
+      UserManager.shared.isChange = !UserManager.shared.isChange
+     
     }
-  }
-  
-  func setUpView() {
-    notiView.frame = CGRect(x: 10, y: 35, width: self.view.frame.size.width, height: 50)
-    notiView.autoresizingMask = [.flexibleWidth, .flexibleBottomMargin]
-    notiView.backgroundColor = .clear
-    self.view.addSubview(notiView)
-    
-    alert.image = UIImage(named: "bell")
-    
-    lengthyLabel.type = .continuous
-    lengthyLabel.speed = .duration(3.0)
-    lengthyLabel.animationCurve = .easeInOut
-    lengthyLabel.fadeLength = 0.0
-    lengthyLabel.leadingBuffer = 5.0
-    lengthyLabel.trailingBuffer = 5.0
-    lengthyLabel.backgroundColor = .white
-    lengthyLabel.text = " 提醒親愛的用戶，您的任務進行中   "
-    
-    notiView.addSubview(lengthyLabel)
-    lengthyLabel.translatesAutoresizingMaskIntoConstraints = false
-    
-    NSLayoutConstraint.activate([
-      lengthyLabel.centerXAnchor.constraint(equalTo: notiView.centerXAnchor, constant: 0),
-      lengthyLabel.centerYAnchor.constraint(equalTo: notiView.centerYAnchor, constant: 0),
-      lengthyLabel.heightAnchor.constraint(equalToConstant: 50),
-      lengthyLabel.widthAnchor.constraint(equalToConstant: 280)
-    ])
-    
-    notiView.addSubview(alert)
-    alert.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-      alert.trailingAnchor.constraint(equalTo: lengthyLabel.leadingAnchor, constant: -10),
-      alert.centerYAnchor.constraint(equalTo: lengthyLabel.centerYAnchor),
-      alert.widthAnchor.constraint(equalToConstant: 30),
-      alert.heightAnchor.constraint(equalToConstant: 30)
-    ])
-  }
-  
-  @objc func setUpLabe() {
-    
-    guard let userStatus = UserManager.shared.currentUserInfo?.status else {
-      self.showNotificationView(isON: false)
-      return }
-    if userStatus != 0 {
-      self.setUpView()
-      self.showNotificationView(isON: true)
-    } else {
-      self.showNotificationView(isON: false)
-    }
-  }
-  
-  func showNotificationView(isON: Bool) {
-    if isON {
-          alert.isHidden = !isON
-          notiView.isHidden = !isON
-          lengthyLabel.isHidden = !isON
-        } else {
-          alert.isHidden = isON
-          notiView.isHidden = isON
-          lengthyLabel.isHidden = isON
-        }
   }
   
   // MARK: - UITabBarControllerDelegate
@@ -227,17 +161,5 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
       else { return true }
     
     return true
-  }
-}
-
-extension TabBarViewController {
-  @objc func hideNoti() {
-    alert.isHidden = true
-    notiView.isHidden = true
-    lengthyLabel.isHidden = true
-    
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-      LKProgressHUD.dismiss()
-    }
   }
 }

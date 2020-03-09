@@ -66,7 +66,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   
   let myLocationManager = CLLocationManager()
   
-  let directionManager = MapManager.shared
+  let directionManager = APImanager.shared
   
   let screenwidth = UIScreen.main.bounds.width
   
@@ -87,6 +87,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    getTaskData()
     arrangeTextField.delegate = self
     preSetup()
     changeConstraints()
@@ -106,15 +107,10 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
     setUpArrangeTextField()
   }
   
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    getTaskData()
-  }
-  
-  override func viewDidAppear(_ animated: Bool) {
-    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
-    LKProgressHUD.show(controller: tabVC)
-  }
+//  override func viewDidAppear(_ animated: Bool) {
+//    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
+//    LKProgressHUD.show(controller: tabVC)
+//  }
   
   @IBAction func tapRadarCheckAuth(_ sender: Any) {
     if CLLocationManager.locationServicesEnabled() {
@@ -147,7 +143,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
         TaskManager.shared.taskData = []
         strongSelf.taskDataReturn = taskData.filter({ [weak self] info in
           guard let strongSelf = self else { return false }
-          let distance = MapManager.shared.getDistance(lat1: info.lat, lng1: info.long, lat2: strongSelf.currentPositionLatitude, lng2: strongSelf.currentPositionLongtitude)
+          let distance = APImanager.shared.getDistance(lat1: info.lat, lng1: info.long, lat2: strongSelf.currentPositionLatitude, lng2: strongSelf.currentPositionLongtitude)
           
           if strongSelf.missionClassifiedIndex == 0 && distance <= limitDistance {
             return true
@@ -373,7 +369,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       guard let missionDetailVC = segue.destination as? MissionDetailViewController else { return }
       missionDetailVC.modalPresentationStyle = .fullScreen
       missionDetailVC.detailData = specificData[0]
-      missionDetailVC.isNavi = true
       missionDetailVC.receiveTime =  TaskManager.shared.timeConverter(time: specificData[0].time)
     }
   }
@@ -400,7 +395,7 @@ extension GoogleMapViewController: GMSMapViewDelegate {
         
         self.specificData = [info]
         
-        let distance = MapManager.shared.getDistance(lat1: info.lat, lng1: info.long, lat2: lat, lng2: long)
+        let distance = APImanager.shared.getDistance(lat1: info.lat, lng1: info.long, lat2: lat, lng2: long)
         
         let returnString = String(format: "%.2f", distance)
         

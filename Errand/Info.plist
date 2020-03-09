@@ -39,6 +39,8 @@
 	<string>473880586821358</string>
 	<key>FacebookDisplayName</key>
 	<string>Errand</string>
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-4679664534359802~5254877015</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>

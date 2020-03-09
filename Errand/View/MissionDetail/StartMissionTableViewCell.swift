@@ -21,11 +21,11 @@ class StartMissionTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
   
-  var tapOnButton: (() -> Void)?
+  var chatroomHandler: (() -> Void)?
   
   var tapReprt: (() -> Void)?
   
-  var tapOnNavi: (() -> Void)?
+  var navigationHandler: (() -> Void)?
   
   @IBOutlet weak var missionOwnerImage: UIImageView!
   
@@ -62,7 +62,7 @@ class StartMissionTableViewCell: UITableViewCell {
   }
   
   @IBAction func chatAct(_ sender: Any) {
-    self.tapOnButton?()
+    self.chatroomHandler?()
   }
   
   @IBAction func reportAct(_ sender: Any) {
@@ -71,6 +71,6 @@ class StartMissionTableViewCell: UITableViewCell {
   }
   
   @IBAction func tapNavi(_ sender: Any) {
-    self.tapOnNavi?()
+    self.navigationHandler?()
   }
 }

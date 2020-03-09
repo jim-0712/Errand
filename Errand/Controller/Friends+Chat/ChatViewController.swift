@@ -19,6 +19,16 @@ class ChatViewController: MessagesViewController {
   
   var personPhoto = ""
   
+  var detailData: TaskInfo?
+  
+  var selfSender: String?
+  
+  var receiver: String?
+  
+  var counter = 0
+  
+  var receiverPhoto: String = ""
+  
   private var messages: [Message] = []
   private var messageListener: ListenerRegistration?
 
@@ -29,7 +39,6 @@ class ChatViewController: MessagesViewController {
   private let storage = Storage.storage().reference()
   
   override func viewDidLoad() {
-
     super.viewDidLoad()
     setUpListener()
     setUpMessage()
@@ -49,16 +58,6 @@ class ChatViewController: MessagesViewController {
       }
     }
   }
-  
-  var detailData: TaskInfo?
-  
-  var selfSender: String?
-  
-  var receiver: String?
-  
-  var counter = 0
-  
-  var receiverPhoto: String = ""
   
   func preSetUp() {
     guard let userInfo = UserManager.shared.currentUserInfo,
@@ -187,11 +186,11 @@ extension ChatViewController: MessagesLayoutDelegate {
 extension ChatViewController: MessagesDisplayDelegate {
   
   func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
-    return isFromCurrentSender(message: message) ? .primary : .incomingMessage
+    return isFromCurrentSender(message: message) ? UIColor.Y1 ?? .red  : .incomingMessage
   }
   
-  func shouldDisplayHeader(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> Bool {
-    return false
+  func textColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+    return .darkGray
   }
   
   func messageStyle(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageStyle {
@@ -199,7 +198,6 @@ extension ChatViewController: MessagesDisplayDelegate {
     let corner: MessageStyle.TailCorner = isFromCurrentSender(message: message) ? .bottomRight : .bottomLeft
     return .bubbleTail(corner, .curved)
   }
-
 }
 
 extension ChatViewController: MessageInputBarDelegate {
