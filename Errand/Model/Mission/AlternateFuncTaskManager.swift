@@ -32,7 +32,6 @@ class MutipleFuncManager {
        TaskManager.shared.deleteTask(uid: user.uid) { result in
          switch result {
          case .success:
-          print("1")
            group.leave()
          case .failure:
            group.leave()
@@ -43,7 +42,6 @@ class MutipleFuncManager {
       UserManager.shared.readUserInfo(uid: missionTaker, isSelf: false) { result in
         switch result {
         case .success(let takerAccountInfo):
-          print("2")
           destinationFcmToken = takerAccountInfo.fcmToken
           group.leave()
         case .failure:
@@ -55,7 +53,6 @@ class MutipleFuncManager {
       UserManager.shared.updateStatus(uid: user.uid, status: 0) { result in
         switch result {
         case .success:
-          print("3")
           group.leave()
         case .failure:
           group.leave()
@@ -66,7 +63,6 @@ class MutipleFuncManager {
       UserManager.shared.updateStatus(uid: missionTaker, status: 0) { result in
         switch result {
         case .success:
-          print("4")
           group.leave()
         case .failure:
           group.leave()
@@ -114,13 +110,13 @@ class MutipleFuncManager {
               switch result {
               case .success:
                 APImanager.shared.postNotification(to: destinationFcmToken, body: "對方放棄任務")
-                completion(.success("good"))
+                completion(.success("Success on update userInfo"))
               case .failure:
                 completion(.failure(FireBaseUpdateError.updateError))
               }
             }
            case .failure:
-             print("error")
+             print("Fail on update userInfo")
            }
          }
        }

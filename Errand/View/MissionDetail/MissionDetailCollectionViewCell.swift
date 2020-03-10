@@ -13,7 +13,8 @@ import AVFoundation
 class MissionDetailCollectionViewCell: UICollectionViewCell {
   
   var playerLooper: AVPlayerLooper?
-
+  @IBOutlet weak var imageHeight: NSLayoutConstraint!
+  
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

@@ -34,9 +34,9 @@ class BlacklistViewController: UIViewController {
     UserManager.shared.updateOppoInfo(userInfo: userInfo) { result in
       switch result {
       case .success:
-        print("Good")
+        print("Success on update userInfo")
       case .failure:
-        print("no")
+        print("Fail on update userInfo")
       }
     }
   }

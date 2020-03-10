@@ -117,6 +117,8 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
   func setUpListener() {
     guard let uid = Auth.auth().currentUser?.uid else { return }
     
+    LKProgressHUD.show(controller: self)
+    
     dbF.collection("Users").document(uid).addSnapshotListener { querySnapshot, error in
       guard querySnapshot != nil else {
         print("Error listening for channel updates: \(error?.localizedDescription ?? "No error")")
@@ -143,6 +145,7 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
       
       let dataReturn = AccountInfo(email: email, nickname: nickname, noJudgeCount: noJudgeCount, task: task, minusStar: minusStar, photo: photo, report: report, blacklist: blacklist, oppoBlacklist: oppoBlacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
       
+      LKProgressHUD.dismiss()
       UserManager.shared.currentUserInfo = dataReturn
       UserManager.shared.isChange = !UserManager.shared.isChange
      

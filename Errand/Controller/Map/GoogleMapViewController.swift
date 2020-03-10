@@ -87,7 +87,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    getTaskData()
+    fetchTaskData()
     arrangeTextField.delegate = self
     preSetup()
     changeConstraints()
@@ -187,7 +187,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
     }
   }
   
-  func getTaskData() {
+  func fetchTaskData() {
     
     TaskManager.shared.fetchTaskData { [weak self] result in
       guard let strongSelf = self else { return }
@@ -438,7 +438,7 @@ extension GoogleMapViewController: UICollectionViewDelegate, UICollectionViewDat
       
       missionClassifiedIndex = 0
       
-      self.getTaskData()
+      self.fetchTaskData()
     } else {
       
       missionClassifiedIndex = indexPath.row

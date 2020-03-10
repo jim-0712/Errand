@@ -40,7 +40,6 @@ class PersonRateTableViewCell: UITableViewCell {
     starView.settings.emptyImage = UIImage(named: "star-2")?.withRenderingMode(.alwaysOriginal)
     starView.settings.filledImage = UIImage(named: "star-3")?.withRenderingMode(.alwaysOriginal)
     
-    
     if UserManager.shared.isTourist {
       newUserLabel.text = "遊客"
     } else {

@@ -21,6 +21,12 @@ class MissionDetailViewController: UIViewController {
                                  CellContent(type: .normal, title: "發布時間"),
                                  CellContent(type: .purpose, title: "任務細節") ]
   
+  var playerLooper: [AVPlayerLooper] = []
+  
+  var productDetailImage = UIImageView()
+  
+  let emptyView = UIView()
+  
   var isRequester = false
   
   var isMissionON = false
@@ -47,23 +53,8 @@ class MissionDetailViewController: UIViewController {
   
   let dbF = Firestore.firestore()
   
-  lazy var missionPhotoCollectionView: UICollectionView = {
-    let layout = UICollectionViewFlowLayout()
-    let collection = UICollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300), collectionViewLayout: layout)
-    layout.scrollDirection = .horizontal
-    collection.translatesAutoresizingMaskIntoConstraints = false
-    collection.showsVerticalScrollIndicator = false
-    collection.showsHorizontalScrollIndicator = false
-    return collection
-  }()
-  
-  let headerView: UIView = {
-    let header = UIView()
-    header.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300)
-    header.backgroundColor = .pink
-    return header
-  }()
-  
+  var scrollView = UIScrollView()
+
   @IBOutlet weak var takeMissionBtn: UIButton!
   
   @IBOutlet weak var detailTableView: UITableView!
@@ -108,6 +99,7 @@ class MissionDetailViewController: UIViewController {
     fetchTaskOwnerPhoto()
     setUpView()
     setUpListenerToTask()
+    self.view.addSubview(pageControl)
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -127,7 +119,7 @@ class MissionDetailViewController: UIViewController {
       MutipleFuncManager.shared.changeStatus(task: taskData) { result in
         switch result {
         case .success:
-          print("goodOK")
+          print("Success on change Status")
         case .failure:
           print("error")
         }
@@ -208,6 +200,63 @@ class MissionDetailViewController: UIViewController {
     UserManager.shared.isTourist = true
     UserDefaults.standard.removeObject(forKey: "login")
     self.view.window?.rootViewController = signInVC
+  }
+
+  func setUpScrollView() {
+    
+    self.scrollView.addSubview(pageControl)
+    
+    var missionImage = UIImageView()
+    var missionView = UIView()
+    
+    guard let data = detailData else { return }
+    let counter = data.taskPhoto.count
+    
+    for counter in 0 ..< data.taskPhoto.count {
+      missionImage = UIImageView(frame: CGRect(x: 0, y: 88, width: fullSize.width, height: 350))
+      missionImage.contentMode = .scaleAspectFill
+      missionImage.clipsToBounds = true
+      missionImage.center = CGPoint(x: fullSize.width * (0.5 + CGFloat(counter)), y: 175)
+      missionView = UIView(frame: CGRect(x: 0, y: 88, width: fullSize.width, height: 350))
+      missionView.clipsToBounds = true
+      missionView.center = CGPoint(x: fullSize.width * (0.5 + CGFloat(counter)), y: 175)
+      scrollView.addSubview(missionView)
+      scrollView.addSubview(missionImage)
+      
+      let typeManager = data.taskPhoto[counter].components(separatedBy: "mov")
+      
+      if typeManager.count > 1 {
+        missionImage.isHidden = true
+        guard let video = URL(string: data.taskPhoto[counter]) else { return }
+        setUpLooper(view: missionView, video: video)
+      } else {
+        missionImage.isHidden = false
+        missionImage.loadImage(data.taskPhoto[counter], placeHolder: UIImage(named: "Image_PlaceHolder"))
+      }
+    }
+    
+    scrollView.delegate = self
+    self.view.addSubview(scrollView)
+    scrollView.frame = CGRect(x: 0, y: 88, width: fullSize.width, height: 350)
+    scrollView.contentSize = CGSize(width: fullSize.width * CGFloat(data.taskPhoto.count), height: 350)
+    scrollView.isPagingEnabled = true
+    scrollView.bounces = true
+    scrollView.delegate = self
+    scrollView.showsHorizontalScrollIndicator = false
+    scrollView.showsVerticalScrollIndicator = false
+    scrollView.contentInsetAdjustmentBehavior = .never
+  }
+  
+  func setUpLooper(view: UIView, video: URL) {
+    let playQueue = AVQueuePlayer()
+    let platItem = AVPlayerItem(url: video)
+    let playerLooper = AVPlayerLooper(player: playQueue, templateItem: platItem)
+    let playerLayer = AVPlayerLayer(player: playQueue)
+    playerLayer.frame = view.bounds
+    playerLayer.backgroundColor = UIColor.black.cgColor
+    view.layer.addSublayer(playerLayer)
+    self.playerLooper.append(playerLooper)
+    playQueue.play()
   }
   
   func gotoJudgePage() {
@@ -356,6 +405,7 @@ class MissionDetailViewController: UIViewController {
   }
 
   func setUpView() {
+    setUpScrollView()
     setUpCommectionAndTableView()
     setUpBtn()
     setUppageControll()
@@ -363,16 +413,11 @@ class MissionDetailViewController: UIViewController {
   }
   
   func setUpCommectionAndTableView() {
-    missionPhotoCollectionView.delegate = self
-    missionPhotoCollectionView.dataSource = self
     detailTableView.delegate = self
     detailTableView.dataSource = self
-    missionPhotoCollectionView.isPagingEnabled = true
+    detailTableView.contentInset = UIEdgeInsets(top: scrollView.frame.size.height, left: 0, bottom: 0, right: 0)
     detailTableView.rowHeight = UITableView.automaticDimension
     detailTableView.register(UINib(nibName: "StartMissionTableViewCell", bundle: nil), forCellReuseIdentifier: "startMission")
-    missionPhotoCollectionView.register(UINib(nibName: "MissionDetailCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "detail")
-    headerView.addSubview(missionPhotoCollectionView)
-    detailTableView.tableHeaderView = headerView
   }
   
   func setUpListenerToTask() {
@@ -486,25 +531,26 @@ class MissionDetailViewController: UIViewController {
   
   func setUppageControll() {
     guard let data = detailData else { return }
-    self.headerView.addSubview(pageControl)
-    pageControl.translatesAutoresizingMaskIntoConstraints = false
     pageControl.currentPage = 0
     pageControl.layer.cornerRadius = 10
     pageControl.pageIndicatorTintColor = .lightGray
     pageControl.numberOfPages = data.taskPhoto.count
     pageControl.currentPageIndicatorTintColor = .black
     pageControl.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
-    NSLayoutConstraint.activate([
-      pageControl.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: 0),
-      pageControl.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -10),
-      pageControl.heightAnchor.constraint(equalToConstant: 30),
-      pageControl.widthAnchor.constraint(equalToConstant: 100)
-    ])
+    pageControl.frame = CGRect(x: (UIScreen.main.bounds.width / 2) - 50, y: 400, width: 100, height: 40)
+    pageControl.addTarget(self, action: #selector(pageChanged(sender:)), for: .valueChanged)
   }
   
+  @objc func pageChanged(sender: UIPageControl) {
+    var frame = scrollView.frame
+    frame.origin.x = frame.size.width * CGFloat(sender.currentPage)
+    frame.origin.y = 0
+    scrollView.scrollRectToVisible(frame, animated: true)
+  }
+
   func fetchTaskOwnerPhoto() {
     guard let status = UserManager.shared.currentUserInfo?.status,
-         let taskinfo = detailData else { return }
+          let taskinfo = detailData else { return }
     
     var uid = ""
     
@@ -530,15 +576,6 @@ class MissionDetailViewController: UIViewController {
         let taskInfo = detailData else { return }
       chatVC.detailData = taskInfo
       chatVC.receiverPhoto = reversePhoto
-    }
-  }
-  
-  func removeLayer(cell: MissionDetailCollectionViewCell) {
-    guard let layers = cell.layer.sublayers else { return }
-    for layer in layers {
-      if let avPlayerLayer = layer as? AVPlayerLayer {
-        avPlayerLayer.removeFromSuperlayer()
-      }
     }
   }
   
@@ -612,60 +649,23 @@ class MissionDetailViewController: UIViewController {
   
 }
 
-extension MissionDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension MissionDetailViewController {
+  
+  func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    let page = Int(scrollView.contentOffset.x / scrollView.frame.size.width)
+    pageControl.currentPage = page
+  }
   
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    let offSet = scrollView.contentOffset.x
-    let width = scrollView.frame.width
-    let horizontalCenter = width / 2
-    pageControl.currentPage = Int(offSet + horizontalCenter) / Int(width)
     
-//    missionPhotoCollectionView.visibleCells.forEach { info in
-//      info.frame.height = 
-//    }
-//    
-  }
-  
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    guard let data = detailData else { return 0 }
-    return data.taskPhoto.count
-  }
-  
-  func numberOfSections(in collectionView: UICollectionView) -> Int {
-    return 1
-  }
-  
-  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    
-    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "detail", for: indexPath) as? MissionDetailCollectionViewCell,
-         let data = detailData else { return UICollectionViewCell() }
-    
-    removeLayer(cell: cell)
-    
-    let typeManager = data.taskPhoto[indexPath.row].components(separatedBy: "mov")
-    if typeManager.count > 1 {
-      guard let video = URL(string: data.taskPhoto[indexPath.row]) else { return UICollectionViewCell() }
-      cell.detailImage.isHidden = true
-      cell.backView.backgroundColor = UIColor.black
-      cell.setUpLooper(video: video)
+    if scrollView.contentOffset.y < -350 {
       
-    } else {
-      cell.detailImage.isHidden = false
-      cell.detailImage.loadImage(data.taskPhoto[indexPath.row], placeHolder: UIImage(named: "Image_PlaceHolder") )
-      cell.detailImage.contentMode = .scaleAspectFill
+      pageControl.frame.origin.y = 400 + (-scrollView.contentOffset.y - 350)
+      self.scrollView.frame.size.height = -scrollView.contentOffset.y
+      self.scrollView.subviews.forEach { imageView in
+        imageView.frame.size.height = -scrollView.contentOffset.y
+      }
     }
-    return cell
-  }
-  
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-    return 0
-  }
-}
-
-extension MissionDetailViewController: UICollectionViewDelegateFlowLayout {
-  
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    return CGSize(width: UIScreen.main.bounds.width, height: 300)
   }
 }
 
