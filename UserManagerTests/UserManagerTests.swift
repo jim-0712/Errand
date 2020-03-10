@@ -16,6 +16,10 @@ class FakeFirebaseManager: FirebaseManager {
   override func fetchData(uid: String, completion: @escaping (Result<AccountInfo, Error>) -> Void) {
     completion(.success(AccountInfo(email: "", nickname: "", noJudgeCount: 0, task: [], minusStar: 0.0, photo: "", report: 0, blacklist: [], oppoBlacklist: [], onTask: false, fcmToken: "", status: 0, about: "", taskCount: 0, totalStar: 0.0, uid: "")))
   }
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 4f604db... unit_test on UserManager_readUserInfo func
 }
 
 class UserManagerTests: XCTestCase {

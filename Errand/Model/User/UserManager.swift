@@ -37,7 +37,7 @@ class FirebaseManager {
           completion(.failure(FireBaseDownloadError.downloadError))
           
         } else {
-          
+
           UserManager.shared.dataParser(query: query) { result in
             switch result {
             case .success(let account):
@@ -248,7 +248,6 @@ class UserManager: NSObject {
       guard let strongSelf = self else { return }
       
       switch result {
-        
       case .success(let query):
         
          guard let document = query.documents.first else { return }
@@ -260,7 +259,7 @@ class UserManager: NSObject {
             print(error.localizedDescription)
           }
         }
-        
+
       case .failure:
         print("error")
       }
@@ -333,6 +332,7 @@ class UserManager: NSObject {
     }
   }
   
+
   func dataParser(query: QuerySnapshot, completion: @escaping (Result<AccountInfo, Error>) -> Void) {
 
     guard let onTask = query.documents.first?.data()["onTask"] as? Bool,
@@ -351,6 +351,7 @@ class UserManager: NSObject {
       let taskCount = query.documents.first?.data()["taskCount"] as? Int,
       let uid = query.documents.first?.data()["uid"] as? String,
       let oppoBlacklist = query.documents.first?.data()["oppoBlacklist"] as? [String] else { return }
+
 
     let dataReturn = AccountInfo(email: email, nickname: nickname, noJudgeCount: noJudgeCount, task: task, minusStar: minusStar, photo: photo, report: report, blacklist: blacklist, oppoBlacklist: oppoBlacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
 
@@ -441,6 +442,7 @@ class UserManager: NSObject {
     }
     
     firebaseManager.addFriend(owneruid: takerUid, takerUid: ownerUid, data: ownerFriend.toDict) { result in
+
       switch result {
       case .success:
         group.leave()
@@ -471,8 +473,9 @@ class UserManager: NSObject {
       for count in 0 ..< quary.documents.count {
         
         guard let chatroomID = quary.documents[count].data()["chatRoomID"] as? String,
+          
               let nameRef = quary.documents[count].data()["nameREF"] as? DocumentReference else { return }
-        
+
         let dataReturn = Friends(nameREF: nameRef, chatRoomID: chatroomID)
         
         friendsList.append(dataReturn)
