@@ -184,8 +184,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
   
   let imagePickerController = UIImagePickerController()
   
-  let backgroundManager = BackgroundManager.shared
-  
   var isChange = false
   
   var fileURL: [String] = []
@@ -274,7 +272,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
     } else {
       
       guard let latitude = latitude,
-        let longitude = longitude else { return }
+            let longitude = longitude else { return }
       
       if isPost {
         self.preventTap()
@@ -398,6 +396,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
               strongSelf.navigationController?.popViewController(animated: true)
               strongSelf.dismiss(animated: true, completion: nil)
             }
+            
           case .failure(let error):
             
             LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)

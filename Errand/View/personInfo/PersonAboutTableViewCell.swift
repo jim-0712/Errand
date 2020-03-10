@@ -33,15 +33,14 @@ class PersonAboutTableViewCell: UITableViewCell {
   weak var delegate: ProfileAboutManager?
   
   func setUpView(isSetting: Bool, titleLabel: String, content: String) {
+    contTextView.text = content
     contTextView.delegate = self
     detailLabel.text = titleLabel
-    contTextView.text = content
     contTextView.isEditable = isSetting
-    contTextView.layer.borderColor = isSetting ? UIColor.lightGray.cgColor : UIColor.clear.cgColor
-    contTextView.layer.cornerRadius = contTextView.bounds.width / 25
     contTextView.layer.borderWidth = 1.0
-    
     contentView.layer.cornerRadius = contentView.bounds.height / 6
+    contTextView.layer.cornerRadius = contTextView.bounds.width / 25
+    contTextView.layer.borderColor = isSetting ? UIColor.lightGray.cgColor : UIColor.clear.cgColor
   }
 }
 

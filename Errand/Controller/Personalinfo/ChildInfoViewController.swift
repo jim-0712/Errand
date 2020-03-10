@@ -19,7 +19,7 @@ class ChildInfoViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     setUpTableView()
-    readJudge()
+    fetchHistoryJudge()
     UserManager.shared.isEditNameEmpty = false
     NotificationCenter.default.addObserver(self, selector: #selector(changeEdit), name: Notification.Name("editing"), object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("hideLog"), object: nil)
@@ -106,16 +106,16 @@ class ChildInfoViewController: UIViewController {
           NotificationCenter.default.post(name: Notification.Name("CompleteEdit"), object: nil)
           strongSelf.infoTableView.reloadData()
         case .failure:
-          print("error")
+          print("update userInfo error")
         }
       }
     }
   }
   
-  func readJudge() {
+  func fetchHistoryJudge() {
     
     guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
-    TaskManager.shared.readJudgeData(uid: uid) {[weak self] result in
+    TaskManager.shared.fetchHistoryJudge(uid: uid) {[weak self] result in
       guard let strongSelf = self else { return }
       switch result {
       case .success(let judgeData):
@@ -129,7 +129,7 @@ class ChildInfoViewController: UIViewController {
         strongSelf.infoTableView.reloadData()
         
       case .failure:
-        print("error")
+        print("Fetch judge error")
       }
     }
   }
@@ -149,7 +149,7 @@ class ChildInfoViewController: UIViewController {
       do {
         try Auth.auth().signOut()
       } catch {
-        print("Error")
+        print("Login out error")
       }
       let signInVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "main") as? ViewController
       

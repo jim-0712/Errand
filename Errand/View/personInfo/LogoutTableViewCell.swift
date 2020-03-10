@@ -30,11 +30,10 @@ class LogoutTableViewCell: UITableViewCell {
   }
   
   func setUp(isTourist: Bool) {
+    
+    let title = isTourist ? "登入" : "登出"
+    
+    logOutBtn.setTitle(title, for: .normal)
   
-    if isTourist {
-      logOutBtn.setTitle("登入", for: .normal)
-    } else {
-      logOutBtn.setTitle("登出", for: .normal)
-    }
   }
 }

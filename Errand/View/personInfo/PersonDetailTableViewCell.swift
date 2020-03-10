@@ -35,14 +35,14 @@ class PersonDetailTableViewCell: UITableViewCell {
   weak var delegate: ProfileManager?
   
   func setUpView(isSetting: Bool, detailTitle: String, content: String) {
+    contentText.text = content
     contentText.delegate = self
     detailLabel.text = detailTitle
-    contentText.text = content
+    contentText.layer.borderWidth = 1.0
     contentText.isScrollEnabled = false
     contentText.isEditable = isSetting ? true : false
-    contentText.layer.borderColor = isSetting ? UIColor.lightGray.cgColor : UIColor.clear.cgColor
     contentText.layer.cornerRadius = contentText.bounds.width / 25
-    contentText.layer.borderWidth = 1.0
+    contentText.layer.borderColor = isSetting ? UIColor.lightGray.cgColor : UIColor.clear.cgColor
   }
 }
 

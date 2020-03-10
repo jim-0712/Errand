@@ -193,7 +193,7 @@ class JudgeMissionViewController: UIViewController {
     let statusss = UserManager.shared.statusJudge
     if taskInfo.takerAskFriend && taskInfo.ownerAskFriend && !taskInfo.isFrirndsNow {
       
-      UserManager.shared.getFriends { result in
+      UserManager.shared.fetchFriends { result in
         switch result {
         case .success(let friends):
           

@@ -28,12 +28,13 @@ class MissionPersonTableViewCell: UITableViewCell {
   
   func setUp(personURL: String, name: String) {
     
+    nickName.text = name
+    
+    personImage.contentMode = .scaleAspectFill
+    
     personImage.layer.cornerRadius = personImage.bounds.height / 3
     
     personImage.loadImage(personURL, placeHolder: UIImage(named: "photographer"))
     
-    personImage.contentMode = .scaleAspectFill
-    
-    nickName.text = name
   }
 }

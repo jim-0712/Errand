@@ -51,35 +51,35 @@ class ListTableViewCell: UITableViewCell {
   
   func setUp(missionImage: String, author: String, missionLabel: String, priceTimeInt: [Int], time: String) {
     
-    backgorundVisibleView.layer.shadowOpacity = 0.3
-  
-    backgorundVisibleView.layer.shadowOffset = CGSize(width: 3, height: 3)
-    
-    backgorundVisibleView.layer.shadowColor = UIColor.black.cgColor
-    
-    backgorundVisibleView.clipsToBounds = false
-  
-    backgorundVisibleView.layer.cornerRadius = 10
-    
-    self.timeStorage = priceTimeInt[1]
-    
     self.author = author
     
-    missionGroupImage.image = UIImage(named: missionImage)
-    
-    authorLabel.text = "發文者 : \(author)"
-    
-    missionGroupLabel.text = "任務種類 : \(missionLabel)"
-    
-    priceLabel.text = "價格 : \(priceTimeInt[0])"
+    self.timeStorage = priceTimeInt[1]
     
     timeLabel.text = "發布時間 : \(time)"
     
     seeDetailBtn.layer.borderWidth = 1.0
     
+    seeDetailBtn.layer.cornerRadius = 10
+    
+    authorLabel.text = "發文者 : \(author)"
+    
+    priceLabel.text = "價格 : \(priceTimeInt[0])"
+    backgorundVisibleView.clipsToBounds = false
+    
+    backgorundVisibleView.layer.cornerRadius = 10
+    
+    backgorundVisibleView.layer.shadowOpacity = 0.3
+    
+    missionGroupLabel.text = "任務種類 : \(missionLabel)"
+    
     seeDetailBtn.layer.borderColor = UIColor.G1?.cgColor
     
-    seeDetailBtn.layer.cornerRadius = 10
+    missionGroupImage.image = UIImage(named: missionImage)
+    
+    backgorundVisibleView.layer.shadowColor = UIColor.black.cgColor
+  
+    backgorundVisibleView.layer.shadowOffset = CGSize(width: 3, height: 3)
+    
   }
   
   @IBAction func seeDetailAction(_ sender: Any) {

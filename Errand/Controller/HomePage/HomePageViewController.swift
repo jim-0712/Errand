@@ -19,8 +19,6 @@ import CryptoKit
 
 class ViewController: UIViewController {
   
-  let backgroundManager = BackgroundManager.shared
-  
   @IBOutlet weak var logoLabel: UILabel!
   
   @IBOutlet weak var fbLoginBtn: UIButton!

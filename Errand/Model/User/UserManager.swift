@@ -12,86 +12,6 @@ import Firebase
 import FirebaseAuth
 import FirebaseFirestore
 
-protocol FireBaseParser {
-  
-  var path: String { get }
-  
-  var whereUid: String { get }
-  
-  var takerUid: String { get }
-  
-  var ownerUid: String { get }
-}
-
-extension FireBaseParser {
-
-  func getFriendQuery(dbF: Firestore) -> DocumentReference {
-
-    return dbF.collection(path).document(takerUid).collection("Friends").document(ownerUid)
-  }
-  
-  func makeQuery(dbF: Firestore) -> Query {
-    return dbF.collection(path).whereField("uid", isEqualTo: whereUid)
-  }
-}
-
-enum FirebaseRequest: FireBaseParser {
-    
-  case fetchUserInfo(path: String, uid: String)
-  
-  case getFriends(ownerUid: String, takerUid: String)
-  
-  var path: String {
-    switch self {
-      
-    case .fetchUserInfo(let path, _):
-      
-      return path
-      
-    case .getFriends:
-      
-      return "Users"
-    }
-  }
-  
-  var takerUid: String {
-    switch self {
-      
-    case .fetchUserInfo:
-      
-      return ""
-      
-    case .getFriends(_, let takerUid):
-      
-      return takerUid
-    }
-  }
-  
-  var ownerUid: String {
-    switch self {
-    case .fetchUserInfo:
-      
-      return ""
-      
-    case .getFriends(let ownerUid, _):
-      
-      return ownerUid
-    }
-  }
-  
-  var whereUid: String {
-    switch self {
-    case .fetchUserInfo(_, let uid):
-      
-      return uid
-      
-    case .getFriends:
-      
-      return ""
-    }
-  }
-}
-
 class FirebaseManager {
   
   let dbf: Firestore
@@ -118,7 +38,7 @@ class FirebaseManager {
           
         } else {
           
-          UserManager.shared.dataParser(quary: query) { result in
+          UserManager.shared.dataParser(query: query) { result in
             switch result {
             case .success(let account):
               completion(.success(account))
@@ -413,24 +333,24 @@ class UserManager: NSObject {
     }
   }
   
-  func dataParser(quary: QuerySnapshot, completion: @escaping (Result<AccountInfo, Error>) -> Void) {
+  func dataParser(query: QuerySnapshot, completion: @escaping (Result<AccountInfo, Error>) -> Void) {
 
-    guard let onTask = quary.documents.first?.data()["onTask"] as? Bool,
-      let email = quary.documents.first?.data()["email"] as? String,
-      let nickname = quary.documents.first?.data()["nickname"] as? String,
-      let noJudgeCount = quary.documents.first?.data()["noJudgeCount"] as? Int,
-      let task = quary.documents.first?.data()["task"] as? [String],
-      let minusStar = quary.documents.first?.data()["minusStar"] as? Double,
-      let photo = quary.documents.first?.data()["photo"] as? String,
-      let blacklist = quary.documents.first?.data()["blacklist"] as? [String],
-      let report = quary.documents.first?.data()["report"] as? Int,
-      let fcmToken = quary.documents.first?.data()["fcmToken"] as? String,
-      let status = quary.documents.first?.data()["status"] as? Int,
-      let about = quary.documents.first?.data()["about"] as? String,
-      let totalStar = quary.documents.first?.data()["totalStar"] as? Double,
-      let taskCount = quary.documents.first?.data()["taskCount"] as? Int,
-      let uid = quary.documents.first?.data()["uid"] as? String,
-      let oppoBlacklist = quary.documents.first?.data()["oppoBlacklist"] as? [String] else { return }
+    guard let onTask = query.documents.first?.data()["onTask"] as? Bool,
+      let email = query.documents.first?.data()["email"] as? String,
+      let nickname = query.documents.first?.data()["nickname"] as? String,
+      let noJudgeCount = query.documents.first?.data()["noJudgeCount"] as? Int,
+      let task = query.documents.first?.data()["task"] as? [String],
+      let minusStar = query.documents.first?.data()["minusStar"] as? Double,
+      let photo = query.documents.first?.data()["photo"] as? String,
+      let blacklist = query.documents.first?.data()["blacklist"] as? [String],
+      let report = query.documents.first?.data()["report"] as? Int,
+      let fcmToken = query.documents.first?.data()["fcmToken"] as? String,
+      let status = query.documents.first?.data()["status"] as? Int,
+      let about = query.documents.first?.data()["about"] as? String,
+      let totalStar = query.documents.first?.data()["totalStar"] as? Double,
+      let taskCount = query.documents.first?.data()["taskCount"] as? Int,
+      let uid = query.documents.first?.data()["uid"] as? String,
+      let oppoBlacklist = query.documents.first?.data()["oppoBlacklist"] as? [String] else { return }
 
     let dataReturn = AccountInfo(email: email, nickname: nickname, noJudgeCount: noJudgeCount, task: task, minusStar: minusStar, photo: photo, report: report, blacklist: blacklist, oppoBlacklist: oppoBlacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
 
@@ -534,7 +454,7 @@ class UserManager: NSObject {
     }
   }
   
-  func getFriends(completion: @escaping (Result<[Friends], Error>) -> Void) {
+  func fetchFriends(completion: @escaping (Result<[Friends], Error>) -> Void) {
     
     guard let uid = Auth.auth().currentUser?.uid else { return }
     
@@ -562,15 +482,15 @@ class UserManager: NSObject {
     }
   }
   
-  func getPhoto(nameRef: DocumentReference, completion: @escaping (Result<AccountInfo, Error>) -> Void) {
-    nameRef.getDocument { (quary, error) in
+  func fetchPersonPhoto(nameRef: DocumentReference, completion: @escaping (Result<AccountInfo, Error>) -> Void) {
+    nameRef.getDocument { (query, error) in
       
       if error != nil {
         completion(.failure(FireBaseDownloadError.downloadError))
       }
       
-      guard let data = quary?.data() else { return }
-      
+      guard let data = query?.data() else { return }
+            
       guard let onTask = data["onTask"] as? Bool,
         let email = data["email"] as? String,
         let nickname = data["nickname"] as? String,
@@ -588,7 +508,7 @@ class UserManager: NSObject {
         let uid = data["uid"] as? String,
         let oppoBlacklist = data["oppoBlacklist"] as? [String] else { return }
       
-      let dataReturn = AccountInfo(email: email, nickname: nickname, noJudgeCount: noJudgeCount, task: task, minusStar: minusStar, photo: photo, report: report, blacklist: blacklist, oppoBlacklist: oppoBlacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
+        let dataReturn = AccountInfo(email: email, nickname: nickname, noJudgeCount: noJudgeCount, task: task, minusStar: minusStar, photo: photo, report: report, blacklist: blacklist, oppoBlacklist: oppoBlacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
       
       completion(.success(dataReturn))
     }
@@ -601,13 +521,13 @@ class UserManager: NSObject {
   
   func checkFriends(nameRef: DocumentReference, completion: @escaping ((Result<Bool, Error>)) -> Void) {
     
-    UserManager.shared.getFriends { result in
+    UserManager.shared.fetchFriends { result in
       switch result {
       case .success(let friends):
         
         var isFriends = false
         for friend in friends where friend.nameREF == nameRef {
-          isFriends = true
+            isFriends = true
           break
         }
         completion(.success(isFriends))

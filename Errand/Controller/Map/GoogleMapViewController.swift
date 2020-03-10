@@ -134,7 +134,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
          let limitDistance = Double(limit) else { return }
     
     googleMapView.clear()
-    TaskManager.shared.readData { [weak self] result in
+    TaskManager.shared.fetchTaskData { [weak self] result in
       guard let strongSelf = self else { return }
       switch result {
         
@@ -189,7 +189,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   
   func getTaskData() {
     
-    TaskManager.shared.readData { [weak self] result in
+    TaskManager.shared.fetchTaskData { [weak self] result in
       guard let strongSelf = self else { return }
       switch result {
       case .success(let taskData):
@@ -443,7 +443,7 @@ extension GoogleMapViewController: UICollectionViewDelegate, UICollectionViewDat
       
       missionClassifiedIndex = indexPath.row
       TaskManager.shared.taskData = []
-      TaskManager.shared.readSpecificData(parameter: "classfied", parameterDataInt: indexPath.row - 1) { [weak self] result in
+      TaskManager.shared.fetchSpecificData(parameter: "classfied", parameterDataInt: indexPath.row - 1) { [weak self] result in
         guard let strongSelf = self else { return }
         switch result {
         case .success(let taskData):

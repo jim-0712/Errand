@@ -28,7 +28,7 @@ class RequesterViewController: UIViewController {
     }
   }
   
-  var storeInfo = [AccountInfo]()
+  var storeAccountInfo = [AccountInfo]()
   
   let segueIdentifier = "requesterInfo"
   
@@ -62,7 +62,7 @@ class RequesterViewController: UIViewController {
       noRequesterLabel.text = "當前您是任務接受者"
     } else {
       noRequesterLabel.text = ""
-      readRequester()
+      fetchRequester()
     }
   }
   
@@ -84,11 +84,11 @@ class RequesterViewController: UIViewController {
   }
   
   @objc func reload() {
-    readRequester()
+    fetchRequester()
   }
   
   @objc func loadData() {
-    readRequester()
+    fetchRequester()
   }
   
   func setUpTable() {
@@ -114,10 +114,10 @@ class RequesterViewController: UIViewController {
     viewController.present(controller, animated: true, completion: nil)
   }
   
-  func readRequester() {
+  func fetchRequester() {
     guard let uid = UserManager.shared.currentUserInfo?.uid else { return }
     
-    TaskManager.shared.readSpecificData(parameter: "uid", parameterString: uid) { [weak self] result in
+    TaskManager.shared.fetchSpecificParameterData(parameter: "uid", parameterString: uid) { [weak self] result in
       
       guard let strongSelf = self else { return }
       
@@ -126,11 +126,9 @@ class RequesterViewController: UIViewController {
       case .success(let taskInfo):
         
         let taskOnGoing = taskInfo.filter { info in
-          if info.isComplete {
-            return false
-          } else {
-            return true
-          }
+          
+          return info.isComplete ? false : true
+
         }
         
         strongSelf.handleRequesterData(taskInfo: taskOnGoing)
@@ -168,11 +166,11 @@ class RequesterViewController: UIViewController {
             
           case .success(let accountInfo):
             
-            strongSelf.storeInfo = []
-            strongSelf.storeInfo.append(accountInfo)
+            strongSelf.storeAccountInfo = []
+            strongSelf.storeAccountInfo.append(accountInfo)
             if count == taskInfo[0].requester.count - 1 {
               LKProgressHUD.dismiss()
-              strongSelf.userInfo = strongSelf.storeInfo
+              strongSelf.userInfo = strongSelf.storeAccountInfo
             }
             
           case .failure(let error):

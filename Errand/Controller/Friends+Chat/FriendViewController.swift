@@ -64,7 +64,7 @@ class FriendViewController: UIViewController {
     
     self.friendsData = []
     
-    UserManager.shared.getFriends { result in
+    UserManager.shared.fetchFriends { result in
       switch result {
       case .success(let friends):
         
@@ -74,7 +74,7 @@ class FriendViewController: UIViewController {
         }
         
         friends.forEach { friend in
-          UserManager.shared.getPhoto(nameRef: friend.nameREF) { result in
+          UserManager.shared.fetchPersonPhoto(nameRef: friend.nameREF) { result in
             switch result {
             case .success(let info):
               self.friendsPhoto.append(info.photo)
@@ -85,14 +85,14 @@ class FriendViewController: UIViewController {
               LKProgressHUD.dismiss()
             case .failure:
               LKProgressHUD.dismiss()
-              print("error")
+              print("Error on fetchPhoto")
             }
           }
         }
         self.friend = friends
       case .failure:
         LKProgressHUD.dismiss()
-        print("error")
+        print("Error on Fetch Friends")
       }
     }
   }

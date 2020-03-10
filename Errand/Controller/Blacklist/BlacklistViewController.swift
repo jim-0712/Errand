@@ -139,9 +139,9 @@ extension BlacklistViewController: UITableViewDelegate, UITableViewDataSource {
           UserManager.shared.updateOppoInfo(userInfo: accountInfo) { result in
             switch result {
             case .success:
-              print("good")
+              print("Success update Blacklist")
             case .failure:
-              print("error")
+              print("Error on update Blacklist")
             }
           }
           

@@ -619,6 +619,11 @@ extension MissionDetailViewController: UICollectionViewDelegate, UICollectionVie
     let width = scrollView.frame.width
     let horizontalCenter = width / 2
     pageControl.currentPage = Int(offSet + horizontalCenter) / Int(width)
+    
+//    missionPhotoCollectionView.visibleCells.forEach { info in
+//      info.frame.height = 
+//    }
+//    
   }
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {

@@ -186,24 +186,21 @@ class PersonInfoViewController: UIViewController {
     cornerView.clipsToBounds = true
     
     if UserManager.shared.isRequester {
-      readTask()
-      btnBackgroundView.isHidden = false
-    } else {
-      btnBackgroundView.isHidden = true
+      fetchTask()
     }
     
+    btnBackgroundView.isHidden = !UserManager.shared.isRequester
+    UserManager.shared.isRequester = isRequester
+    btnBackgroundView.isHidden = !isRequester
+    
     if isRequester {
-      UserManager.shared.isRequester = true
       guard let requester = UserManager.shared.requesterInfo else { return }
       photo = requester.photo
-      btnBackgroundView.isHidden = false
-      
     } else {
-      UserManager.shared.isRequester = false
       guard let user = UserManager.shared.currentUserInfo else { return }
       photo = user.photo
-      btnBackgroundView.isHidden = true
     }
+    
     NotificationCenter.default.post(name: Notification.Name("hideLog"), object: nil)
   }
   
@@ -234,11 +231,11 @@ class PersonInfoViewController: UIViewController {
     }
   }
   
-  func readTask() {
+  func fetchTask() {
     
     guard let uid = Auth.auth().currentUser?.uid else { return }
     
-    TaskManager.shared.readSpecificData(parameter: "uid", parameterString: uid) { result in
+    TaskManager.shared.fetchSpecificParameterData(parameter: "uid", parameterString: uid) { result in
       switch result {
         
       case .success(let data):

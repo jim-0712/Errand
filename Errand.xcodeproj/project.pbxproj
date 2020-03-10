@@ -79,7 +79,6 @@
 		FB69553823F1461D0049DB14 /* StartMissionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB69553623F1461D0049DB14 /* StartMissionTableViewCell.swift */; };
 		FB69553923F1461D0049DB14 /* StartMissionTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB69553723F1461D0049DB14 /* StartMissionTableViewCell.xib */; };
 		FB752ABB23D5DFB200BF3852 /* PermanentMarker.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */; };
-		FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB752ABD23D5E57900BF3852 /* Background.swift */; };
 		FB93F4E8240B8A1B001BC2F9 /* BlacklistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB93F4E7240B8A1B001BC2F9 /* BlacklistViewController.swift */; };
 		FB93F4F6240B9C53001BC2F9 /* BlackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB93F4F4240B9C53001BC2F9 /* BlackTableViewCell.swift */; };
 		FB93F4F7240B9C53001BC2F9 /* BlackTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB93F4F5240B9C53001BC2F9 /* BlackTableViewCell.xib */; };
@@ -227,7 +226,6 @@
 		FB69553623F1461D0049DB14 /* StartMissionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartMissionTableViewCell.swift; sourceTree = "<group>"; };
 		FB69553723F1461D0049DB14 /* StartMissionTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StartMissionTableViewCell.xib; sourceTree = "<group>"; };
 		FB752ABA23D5DFB200BF3852 /* PermanentMarker.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = PermanentMarker.ttf; sourceTree = "<group>"; };
-		FB752ABD23D5E57900BF3852 /* Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		FB93F4E7240B8A1B001BC2F9 /* BlacklistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlacklistViewController.swift; sourceTree = "<group>"; };
 		FB93F4F4240B9C53001BC2F9 /* BlackTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlackTableViewCell.swift; sourceTree = "<group>"; };
 		FB93F4F5240B9C53001BC2F9 /* BlackTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BlackTableViewCell.xib; sourceTree = "<group>"; };
@@ -464,7 +462,6 @@
 				FB638D7C23E56F6900030CB2 /* Map */,
 				FB4BF7B223E286FD00C4C05A /* MissionList */,
 				FB24EC1023D96CED00FA3F02 /* PostMission */,
-				FB752ABC23D5E55600BF3852 /* Background */,
 				FB6365FF23E2CF45008555BC /* MissionDetail */,
 				FB387C1523CEEF0E00B6D8C4 /* Main.storyboard */,
 				FB387C5723CF551A00B6D8C4 /* Content.storyboard */,
@@ -643,14 +640,6 @@
 				FB69553023F001350049DB14 /* Message.swift */,
 			);
 			path = Chat;
-			sourceTree = "<group>";
-		};
-		FB752ABC23D5E55600BF3852 /* Background */ = {
-			isa = PBXGroup;
-			children = (
-				FB752ABD23D5E57900BF3852 /* Background.swift */,
-			);
-			path = Background;
 			sourceTree = "<group>";
 		};
 		FB93F4E6240B89E6001BC2F9 /* Blacklist */ = {
@@ -1086,7 +1075,6 @@
 				FB24EC1923DAB72500FA3F02 /* TaskManager.swift in Sources */,
 				FB93F4F6240B9C53001BC2F9 /* BlackTableViewCell.swift in Sources */,
 				FB24EC0F23D96B8500FA3F02 /* PostMissionViewController.swift in Sources */,
-				FB752ABE23D5E57A00BF3852 /* Background.swift in Sources */,
 				FB638D7F23E56FC000030CB2 /* CategoryCollectionViewCell.swift in Sources */,
 				FB69553323F001350049DB14 /* Message.swift in Sources */,
 				FBF24FCF23FD9C39002A56A4 /* MissionDetailCollectionViewCell.swift in Sources */,

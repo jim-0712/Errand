@@ -21,9 +21,9 @@ class StartMissionTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
   
-  var chatroomHandler: (() -> Void)?
-  
   var tapReprt: (() -> Void)?
+  
+  var chatroomHandler: (() -> Void)?
   
   var navigationHandler: (() -> Void)?
   
