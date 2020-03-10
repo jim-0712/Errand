@@ -8,10 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		35D6F10C7FD31F054E953DEB /* Pods_Errand.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE91492BEFF455014401A8A6 /* Pods_Errand.framework */; };
-		40EA5FF204EA3BECE8D92AF4 /* Pods_Errand_ErrandUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A85AAEF02EB4115272C07D69 /* Pods_Errand_ErrandUITests.framework */; };
+		4811AA52FF90941380C26DC9 /* Pods_UserManagerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBFFF8F321CDA38EA3AE3792 /* Pods_UserManagerTests.framework */; };
+		65A74B08A2CB06E3AB644513 /* Pods_ErrandUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B1EBB3EBE34656BC45D893B /* Pods_ErrandUITests.framework */; };
 		CBC2C481F6F57033AC62AEB1 /* Pods_ErrandTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 608A5BF50BFFACEF7C1D807F /* Pods_ErrandTests.framework */; };
 		FB0749D92405943F001751A2 /* HistoryJudgeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB0749D72405943F001751A2 /* HistoryJudgeTableViewCell.swift */; };
 		FB0749DA2405943F001751A2 /* HistoryJudgeTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB0749D82405943F001751A2 /* HistoryJudgeTableViewCell.xib */; };
+		FB113E722415E90000047090 /* UserManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB113E712415E90000047090 /* UserManagerTests.swift */; };
 		FB24EC0F23D96B8500FA3F02 /* PostMissionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24EC0E23D96B8500FA3F02 /* PostMissionViewController.swift */; };
 		FB24EC1223D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24EC1123D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift */; };
 		FB24EC1423D9B19300FA3F02 /* CustomeColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24EC1323D9B19300FA3F02 /* CustomeColor.swift */; };
@@ -109,6 +111,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		FB113E742415E90000047090 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FB387C0423CEEF0E00B6D8C4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FB387C0B23CEEF0E00B6D8C4;
+			remoteInfo = Errand;
+		};
 		FB387C2623CEEF1000B6D8C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FB387C0423CEEF0E00B6D8C4 /* Project object */;
@@ -126,17 +135,27 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		006887E1B0376666EDF88891 /* Pods-UserManagerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UserManagerTests.debug.xcconfig"; path = "Target Support Files/Pods-UserManagerTests/Pods-UserManagerTests.debug.xcconfig"; sourceTree = "<group>"; };
+		099EDE6A450D4FB0C2B8B86D /* Pods-UserManagerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UserManagerTests.release.xcconfig"; path = "Target Support Files/Pods-UserManagerTests/Pods-UserManagerTests.release.xcconfig"; sourceTree = "<group>"; };
+		0B1EBB3EBE34656BC45D893B /* Pods_ErrandUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ErrandUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		30BE8232E4BC5C97D85B3CD8 /* Pods-ErrandTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ErrandTests.release.xcconfig"; path = "Target Support Files/Pods-ErrandTests/Pods-ErrandTests.release.xcconfig"; sourceTree = "<group>"; };
 		3FC969191AA2FA7BAE88A3F9 /* Pods-Errand-ErrandUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Errand-ErrandUITests.release.xcconfig"; path = "Target Support Files/Pods-Errand-ErrandUITests/Pods-Errand-ErrandUITests.release.xcconfig"; sourceTree = "<group>"; };
 		608A5BF50BFFACEF7C1D807F /* Pods_ErrandTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ErrandTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		772286D6B134A495099BBE7B /* Pods-ErrandUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ErrandUITests.release.xcconfig"; path = "Target Support Files/Pods-ErrandUITests/Pods-ErrandUITests.release.xcconfig"; sourceTree = "<group>"; };
 		7EB46717043DD3A5C631E2AA /* Pods-ErrandTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ErrandTests.debug.xcconfig"; path = "Target Support Files/Pods-ErrandTests/Pods-ErrandTests.debug.xcconfig"; sourceTree = "<group>"; };
 		9EBB17268953F51CE7F8DE54 /* Pods-Errand.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Errand.release.xcconfig"; path = "Target Support Files/Pods-Errand/Pods-Errand.release.xcconfig"; sourceTree = "<group>"; };
-		A85AAEF02EB4115272C07D69 /* Pods_Errand_ErrandUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Errand_ErrandUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A53AEEC25EB6783B8B25ACEB /* Pods-Errand-UserManagerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Errand-UserManagerTests.debug.xcconfig"; path = "Target Support Files/Pods-Errand-UserManagerTests/Pods-Errand-UserManagerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		BE91492BEFF455014401A8A6 /* Pods_Errand.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Errand.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C005EC9B9038E3AE11D122FE /* Pods-Errand-UserManagerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Errand-UserManagerTests.release.xcconfig"; path = "Target Support Files/Pods-Errand-UserManagerTests/Pods-Errand-UserManagerTests.release.xcconfig"; sourceTree = "<group>"; };
+		DBFFF8F321CDA38EA3AE3792 /* Pods_UserManagerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UserManagerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		ECDC6023D2E586E21C627681 /* Pods-ErrandUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ErrandUITests.debug.xcconfig"; path = "Target Support Files/Pods-ErrandUITests/Pods-ErrandUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		F10FE434B9C4A84CFF81C162 /* Pods-Errand.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Errand.debug.xcconfig"; path = "Target Support Files/Pods-Errand/Pods-Errand.debug.xcconfig"; sourceTree = "<group>"; };
 		F997A91DF0A4410BFFBEDA80 /* Pods-Errand-ErrandUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Errand-ErrandUITests.debug.xcconfig"; path = "Target Support Files/Pods-Errand-ErrandUITests/Pods-Errand-ErrandUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		FB0749D72405943F001751A2 /* HistoryJudgeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryJudgeTableViewCell.swift; sourceTree = "<group>"; };
 		FB0749D82405943F001751A2 /* HistoryJudgeTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HistoryJudgeTableViewCell.xib; sourceTree = "<group>"; };
+		FB113E6F2415E90000047090 /* UserManagerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UserManagerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB113E712415E90000047090 /* UserManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManagerTests.swift; sourceTree = "<group>"; };
+		FB113E732415E90000047090 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FB24EC0E23D96B8500FA3F02 /* PostMissionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostMissionViewController.swift; sourceTree = "<group>"; };
 		FB24EC1123D96E6300FA3F02 /* MissionGroupCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionGroupCollectionViewCell.swift; sourceTree = "<group>"; };
 		FB24EC1323D9B19300FA3F02 /* CustomeColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomeColor.swift; sourceTree = "<group>"; };
@@ -240,6 +259,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		FB113E6C2415E90000047090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4811AA52FF90941380C26DC9 /* Pods_UserManagerTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FB387C0923CEEF0E00B6D8C4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -262,7 +289,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				40EA5FF204EA3BECE8D92AF4 /* Pods_Errand_ErrandUITests.framework in Frameworks */,
+				65A74B08A2CB06E3AB644513 /* Pods_ErrandUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,6 +305,12 @@
 				3FC969191AA2FA7BAE88A3F9 /* Pods-Errand-ErrandUITests.release.xcconfig */,
 				7EB46717043DD3A5C631E2AA /* Pods-ErrandTests.debug.xcconfig */,
 				30BE8232E4BC5C97D85B3CD8 /* Pods-ErrandTests.release.xcconfig */,
+				A53AEEC25EB6783B8B25ACEB /* Pods-Errand-UserManagerTests.debug.xcconfig */,
+				C005EC9B9038E3AE11D122FE /* Pods-Errand-UserManagerTests.release.xcconfig */,
+				ECDC6023D2E586E21C627681 /* Pods-ErrandUITests.debug.xcconfig */,
+				772286D6B134A495099BBE7B /* Pods-ErrandUITests.release.xcconfig */,
+				006887E1B0376666EDF88891 /* Pods-UserManagerTests.debug.xcconfig */,
+				099EDE6A450D4FB0C2B8B86D /* Pods-UserManagerTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -288,8 +321,9 @@
 				FB63664A23E3ED77008555BC /* NetworkExtension.framework */,
 				FB9A2BFF23D0729400553D97 /* MapKit.framework */,
 				BE91492BEFF455014401A8A6 /* Pods_Errand.framework */,
-				A85AAEF02EB4115272C07D69 /* Pods_Errand_ErrandUITests.framework */,
 				608A5BF50BFFACEF7C1D807F /* Pods_ErrandTests.framework */,
+				0B1EBB3EBE34656BC45D893B /* Pods_ErrandUITests.framework */,
+				DBFFF8F321CDA38EA3AE3792 /* Pods_UserManagerTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -301,6 +335,15 @@
 				FB0749D82405943F001751A2 /* HistoryJudgeTableViewCell.xib */,
 			);
 			path = HistoryJudge;
+			sourceTree = "<group>";
+		};
+		FB113E702415E90000047090 /* UserManagerTests */ = {
+			isa = PBXGroup;
+			children = (
+				FB113E712415E90000047090 /* UserManagerTests.swift */,
+				FB113E732415E90000047090 /* Info.plist */,
+			);
+			path = UserManagerTests;
 			sourceTree = "<group>";
 		};
 		FB24EC0D23D96A0400FA3F02 /* TabBar */ = {
@@ -336,6 +379,7 @@
 				FB387C0E23CEEF0E00B6D8C4 /* Errand */,
 				FB387C2823CEEF1000B6D8C4 /* ErrandTests */,
 				FB387C3323CEEF1000B6D8C4 /* ErrandUITests */,
+				FB113E702415E90000047090 /* UserManagerTests */,
 				FB387C0D23CEEF0E00B6D8C4 /* Products */,
 				4BA59E1762DDFE6F5D189F03 /* Pods */,
 				D6CA3CD977931CCA5629628A /* Frameworks */,
@@ -348,6 +392,7 @@
 				FB387C0C23CEEF0E00B6D8C4 /* Errand.app */,
 				FB387C2523CEEF1000B6D8C4 /* ErrandTests.xctest */,
 				FB387C3023CEEF1000B6D8C4 /* ErrandUITests.xctest */,
+				FB113E6F2415E90000047090 /* UserManagerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -677,6 +722,25 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		FB113E6E2415E90000047090 /* UserManagerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FB113E782415E90000047090 /* Build configuration list for PBXNativeTarget "UserManagerTests" */;
+			buildPhases = (
+				2C34D3AFCB0B4058BA163BE8 /* [CP] Check Pods Manifest.lock */,
+				FB113E6B2415E90000047090 /* Sources */,
+				FB113E6C2415E90000047090 /* Frameworks */,
+				FB113E6D2415E90000047090 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FB113E752415E90000047090 /* PBXTargetDependency */,
+			);
+			name = UserManagerTests;
+			productName = UserManagerTests;
+			productReference = FB113E6F2415E90000047090 /* UserManagerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		FB387C0B23CEEF0E00B6D8C4 /* Errand */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = FB387C3923CEEF1000B6D8C4 /* Build configuration list for PBXNativeTarget "Errand" */;
@@ -726,8 +790,6 @@
 				FB387C2C23CEEF1000B6D8C4 /* Sources */,
 				FB387C2D23CEEF1000B6D8C4 /* Frameworks */,
 				FB387C2E23CEEF1000B6D8C4 /* Resources */,
-				277223EA286F432F9B8A9000 /* [CP] Embed Pods Frameworks */,
-				90880273EFC2B1E28AF7B7CF /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -749,6 +811,10 @@
 				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = Jim;
 				TargetAttributes = {
+					FB113E6E2415E90000047090 = {
+						CreatedOnToolsVersion = 11.3.1;
+						TestTargetID = FB387C0B23CEEF0E00B6D8C4;
+					};
 					FB387C0B23CEEF0E00B6D8C4 = {
 						CreatedOnToolsVersion = 11.3;
 					};
@@ -778,11 +844,19 @@
 				FB387C0B23CEEF0E00B6D8C4 /* Errand */,
 				FB387C2423CEEF1000B6D8C4 /* ErrandTests */,
 				FB387C2F23CEEF1000B6D8C4 /* ErrandUITests */,
+				FB113E6E2415E90000047090 /* UserManagerTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		FB113E6D2415E90000047090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FB387C0A23CEEF0E00B6D8C4 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -847,28 +921,33 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Errand-ErrandUITests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-ErrandUITests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		277223EA286F432F9B8A9000 /* [CP] Embed Pods Frameworks */ = {
+		2C34D3AFCB0B4058BA163BE8 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Errand-ErrandUITests/Pods-Errand-ErrandUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Errand-ErrandUITests/Pods-Errand-ErrandUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-UserManagerTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Errand-ErrandUITests/Pods-Errand-ErrandUITests-frameworks.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		74C14ED52E29D0F622B01A39 /* [CP] Embed Pods Frameworks */ = {
@@ -886,23 +965,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Errand/Pods-Errand-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		90880273EFC2B1E28AF7B7CF /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Errand-ErrandUITests/Pods-Errand-ErrandUITests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Errand-ErrandUITests/Pods-Errand-ErrandUITests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Errand-ErrandUITests/Pods-Errand-ErrandUITests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9FF3D19317DE8E9FA4835BC3 /* [CP] Check Pods Manifest.lock */ = {
@@ -1004,6 +1066,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		FB113E6B2415E90000047090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FB113E722415E90000047090 /* UserManagerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FB387C0823CEEF0E00B6D8C4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1097,6 +1167,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		FB113E752415E90000047090 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FB387C0B23CEEF0E00B6D8C4 /* Errand */;
+			targetProxy = FB113E742415E90000047090 /* PBXContainerItemProxy */;
+		};
 		FB387C2723CEEF1000B6D8C4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = FB387C0B23CEEF0E00B6D8C4 /* Errand */;
@@ -1129,6 +1204,50 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		FB113E762415E90000047090 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 006887E1B0376666EDF88891 /* Pods-UserManagerTests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6V9XMJR84F;
+				INFOPLIST_FILE = UserManagerTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.JimFu.UserManagerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Errand.app/Errand";
+			};
+			name = Debug;
+		};
+		FB113E772415E90000047090 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 099EDE6A450D4FB0C2B8B86D /* Pods-UserManagerTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6V9XMJR84F;
+				INFOPLIST_FILE = UserManagerTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.JimFu.UserManagerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Errand.app/Errand";
+			};
+			name = Release;
+		};
 		FB387C3723CEEF1000B6D8C4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1337,7 +1456,7 @@
 		};
 		FB387C4023CEEF1000B6D8C4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F997A91DF0A4410BFFBEDA80 /* Pods-Errand-ErrandUITests.debug.xcconfig */;
+			baseConfigurationReference = ECDC6023D2E586E21C627681 /* Pods-ErrandUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1358,7 +1477,7 @@
 		};
 		FB387C4123CEEF1000B6D8C4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3FC969191AA2FA7BAE88A3F9 /* Pods-Errand-ErrandUITests.release.xcconfig */;
+			baseConfigurationReference = 772286D6B134A495099BBE7B /* Pods-ErrandUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -1380,6 +1499,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		FB113E782415E90000047090 /* Build configuration list for PBXNativeTarget "UserManagerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FB113E762415E90000047090 /* Debug */,
+				FB113E772415E90000047090 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		FB387C0723CEEF0E00B6D8C4 /* Build configuration list for PBXProject "Errand" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

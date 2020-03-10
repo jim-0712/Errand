@@ -62,6 +62,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     
     Fabric.sharedSDK().debug = true
     
+    Fabric.with([Crashlytics.self])
+    
     GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
     
     GIDSignIn.sharedInstance().delegate = self

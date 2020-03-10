@@ -48,6 +48,16 @@
                ReferencedContainer = "container:Errand.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "FB113E6E2415E90000047090"
+               BuildableName = "UserManagerTests.xctest"
+               BlueprintName = "UserManagerTests"
+               ReferencedContainer = "container:Errand.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
