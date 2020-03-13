@@ -58,14 +58,10 @@ class RequesterTableViewCell: UITableViewCell {
       starView.isHidden = true
     }
     
-    if noJudge {
-      describeLabel.isHidden = false
-      describeLabel.text = "此用戶尚未被評價"
-      starView.isHidden = true
-    } else {
-      describeLabel.isHidden = true
-    }
-    
+    describeLabel.isHidden = !noJudge
+    describeLabel.text = "此用戶尚未被評價"
+    starView.isHidden = noJudge
+
     self.index = index
     
     self.contentView.backgroundColor = UIColor.LG1

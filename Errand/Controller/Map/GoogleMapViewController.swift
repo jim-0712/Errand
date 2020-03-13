@@ -87,7 +87,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    getTaskData()
+    fetchTaskData()
     arrangeTextField.delegate = self
     preSetup()
     changeConstraints()
@@ -106,11 +106,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
     setUpSearchView()
     setUpArrangeTextField()
   }
-  
-//  override func viewDidAppear(_ animated: Bool) {
-//    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
-//    LKProgressHUD.show(controller: tabVC)
-//  }
   
   @IBAction func tapRadarCheckAuth(_ sender: Any) {
     if CLLocationManager.locationServicesEnabled() {
@@ -134,7 +129,7 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
          let limitDistance = Double(limit) else { return }
     
     googleMapView.clear()
-    TaskManager.shared.readData { [weak self] result in
+    TaskManager.shared.fetchTaskData { [weak self] result in
       guard let strongSelf = self else { return }
       switch result {
         
@@ -170,7 +165,12 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   }
   
   @IBAction func checkDetailAct(_ sender: Any) {
-    performSegue(withIdentifier: segueMapdetail, sender: nil)
+    guard let missionDetailVC = UIStoryboard.init(name: "Mission", bundle: nil).instantiateViewController(withIdentifier: "detailViewController") as? MissionDetailViewController else { return }
+         missionDetailVC.isMap = true
+         missionDetailVC.detailData = specificData[0]
+         missionDetailVC.receiveTime =  TaskManager.shared.timeConverter(time: specificData[0].time)
+     
+    self.present(missionDetailVC, animated: true, completion: nil)
   }
   
   func changeConstraints() {
@@ -187,9 +187,9 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
     }
   }
   
-  func getTaskData() {
+  func fetchTaskData() {
     
-    TaskManager.shared.readData { [weak self] result in
+    TaskManager.shared.fetchTaskData { [weak self] result in
       guard let strongSelf = self else { return }
       switch result {
       case .success(let taskData):
@@ -363,15 +363,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       marker.map = googleMapView
     }
   }
-  
-  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    if segue.identifier == segueMapdetail {
-      guard let missionDetailVC = segue.destination as? MissionDetailViewController else { return }
-      missionDetailVC.modalPresentationStyle = .fullScreen
-      missionDetailVC.detailData = specificData[0]
-      missionDetailVC.receiveTime =  TaskManager.shared.timeConverter(time: specificData[0].time)
-    }
-  }
 }
 
 extension GoogleMapViewController: GMSMapViewDelegate {
@@ -438,12 +429,12 @@ extension GoogleMapViewController: UICollectionViewDelegate, UICollectionViewDat
       
       missionClassifiedIndex = 0
       
-      self.getTaskData()
+      self.fetchTaskData()
     } else {
       
       missionClassifiedIndex = indexPath.row
       TaskManager.shared.taskData = []
-      TaskManager.shared.readSpecificData(parameter: "classfied", parameterDataInt: indexPath.row - 1) { [weak self] result in
+      TaskManager.shared.fetchSpecificData(parameter: "classfied", parameterDataInt: indexPath.row - 1) { [weak self] result in
         guard let strongSelf = self else { return }
         switch result {
         case .success(let taskData):

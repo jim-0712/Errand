@@ -12,6 +12,8 @@ import MobileCoreServices
 
 class PersonInfoViewController: UIViewController {
   
+  var observation: NSKeyValueObservation?
+  
   let imagePickerController = UIImagePickerController()
   
   let indicatorView = UIView()
@@ -49,6 +51,51 @@ class PersonInfoViewController: UIViewController {
   @IBOutlet weak var btnBackgroundView: UIView!
   
   @IBOutlet weak var backViewHeight: NSLayoutConstraint!
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    UserManager.shared.isEditNameEmpty = true
+    setUpTableView()
+    setUpImagePicker()
+    setUpIndicatorView()
+    setUpNavigationItem()
+    historyContainer.alpha = 0.0
+    observation = UserManager.shared.observe(\.isChange) { [weak self] (_, _) in
+      guard let strongSelf = self else { return }
+      strongSelf.photoTableView.reloadData()
+    }
+  }
+  
+  override func viewWillLayoutSubviews() {
+    super.viewWillLayoutSubviews()
+    cornerView.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 500, y: 340, width: 1000, height: 1000)
+    cornerView.backgroundColor = UIColor.white
+    cornerView.layer.cornerRadius = cornerView.bounds.width / 2
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    cornerView.clipsToBounds = true
+    
+    if UserManager.shared.isRequester {
+      fetchTask()
+    }
+    
+    btnBackgroundView.isHidden = !UserManager.shared.isRequester
+    UserManager.shared.isRequester = isRequester
+    btnBackgroundView.isHidden = !isRequester
+    
+    if isRequester {
+      guard let requester = UserManager.shared.requesterInfo else { return }
+      photo = requester.photo
+    } else {
+      guard let user = UserManager.shared.currentUserInfo else { return }
+      photo = user.photo
+    }
+    
+    NotificationCenter.default.post(name: Notification.Name("hideLog"), object: nil)
+  }
   
   @IBAction func personInfoAct(_ sender: UIButton) {
     historyContainer.alpha = 0.0
@@ -159,54 +206,6 @@ class PersonInfoViewController: UIViewController {
     }
   }
   
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    UserManager.shared.isEditNameEmpty = true
-    setUpTableView()
-    setUpImagePicker()
-    setUpIndicatorView()
-    setUpNavigationItem()
-    historyContainer.alpha = 0.0  
-  }
-  
-  override func viewWillLayoutSubviews() {
-    super.viewWillLayoutSubviews()
-    cornerView.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 500, y: 340, width: 1000, height: 1000)
-    cornerView.backgroundColor = UIColor.white
-    cornerView.layer.cornerRadius = cornerView.bounds.width / 2
-  }
-  
-  override func viewDidLayoutSubviews() {
-    super.viewDidLayoutSubviews()
-  }
-  
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    
-    cornerView.clipsToBounds = true
-    
-    if UserManager.shared.isRequester {
-      readTask()
-      btnBackgroundView.isHidden = false
-    } else {
-      btnBackgroundView.isHidden = true
-    }
-    
-    if isRequester {
-      UserManager.shared.isRequester = true
-      guard let requester = UserManager.shared.requesterInfo else { return }
-      photo = requester.photo
-      btnBackgroundView.isHidden = false
-      
-    } else {
-      UserManager.shared.isRequester = false
-      guard let user = UserManager.shared.currentUserInfo else { return }
-      photo = user.photo
-      btnBackgroundView.isHidden = true
-    }
-    NotificationCenter.default.post(name: Notification.Name("hideLog"), object: nil)
-  }
-  
   @objc func back() {
     self.navigationController?.popViewController(animated: false)
   }
@@ -234,11 +233,11 @@ class PersonInfoViewController: UIViewController {
     }
   }
   
-  func readTask() {
+  func fetchTask() {
     
     guard let uid = Auth.auth().currentUser?.uid else { return }
     
-    TaskManager.shared.readSpecificData(parameter: "uid", parameterString: uid) { result in
+    TaskManager.shared.fetchSpecificParameterData(parameter: "uid", parameterString: uid) { result in
       switch result {
         
       case .success(let data):

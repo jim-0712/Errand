@@ -12,6 +12,21 @@ class BlacklistViewController: UIViewController {
   
   @IBOutlet weak var blackListTable: UITableView!
   
+  var blacklistinfo: [AccountInfo] = [] {
+    didSet {
+      if blacklistinfo.isEmpty {
+        LKProgressHUD.dismiss()
+      } else {
+        LKProgressHUD.dismiss()
+        blackListTable.reloadData()
+      }
+    }
+  }
+  
+  var blackuid: [String] = []
+  
+  var removeBlack: [String] = []
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     setUpTable()
@@ -34,27 +49,12 @@ class BlacklistViewController: UIViewController {
     UserManager.shared.updateOppoInfo(userInfo: userInfo) { result in
       switch result {
       case .success:
-        print("Good")
+        print("Success on update userInfo")
       case .failure:
-        print("no")
+        print("Fail on update userInfo")
       }
     }
   }
-  
-  var blacklistinfo: [AccountInfo] = [] {
-    didSet {
-      if blacklistinfo.isEmpty {
-        LKProgressHUD.dismiss()
-      } else {
-        LKProgressHUD.dismiss()
-        blackListTable.reloadData()
-      }
-    }
-  }
-  
-  var blackuid: [String] = []
-  
-  var removeBlack: [String] = []
   
   @objc func back() {
     self.navigationController?.popViewController(animated: false)
@@ -139,9 +139,9 @@ extension BlacklistViewController: UITableViewDelegate, UITableViewDataSource {
           UserManager.shared.updateOppoInfo(userInfo: accountInfo) { result in
             switch result {
             case .success:
-              print("good")
+              print("Success update Blacklist")
             case .failure:
-              print("error")
+              print("Error on update Blacklist")
             }
           }
           

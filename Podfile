@@ -41,6 +41,12 @@ target 'Errand' do
   end
 
   target 'ErrandUITests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+  target 'UserManagerTests' do
+    inherit! :search_paths
     # Pods for testing
   end
 

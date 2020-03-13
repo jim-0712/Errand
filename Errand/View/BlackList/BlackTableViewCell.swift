@@ -30,8 +30,8 @@ class BlackTableViewCell: UITableViewCell {
   @IBOutlet weak var seperateLine: UIView!
   
   func setUpcell(image: String, nickname: String, email: String) {
-    nickNameLabel.text = nickname
     emailLabel.text = email
+    nickNameLabel.text = nickname
     personImageView.contentMode = .scaleAspectFill
     personImageView.layer.cornerRadius = personImageView.bounds.width / 2
     personImageView.loadImage(image, placeHolder: UIImage(named: "photographer"))

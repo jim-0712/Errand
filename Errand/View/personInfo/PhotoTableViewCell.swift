@@ -33,15 +33,11 @@ class PhotoTableViewCell: UITableViewCell {
   
   func setUpView(isRequester: Bool, personPhoto: String, nickName: String, email: String) {
     
-    if isRequester {
-      choosePhotoBtn.isHidden = true
-    } else {
-      choosePhotoBtn.isHidden = false
-    }
-    personPhotoImage.loadImage(personPhoto, placeHolder: UIImage(named: "photographer"))
-    personPhotoImage.layer.cornerRadius = personPhotoImage.bounds.width / 2
-    personPhotoImage.contentMode = .scaleAspectFill
-    nickNameLabel.text = nickName
     emailLabel.text = email
+    nickNameLabel.text = nickName
+    choosePhotoBtn.isHidden = isRequester
+    personPhotoImage.contentMode = .scaleAspectFill
+    personPhotoImage.layer.cornerRadius = personPhotoImage.bounds.width / 2
+    personPhotoImage.loadImage(personPhoto, placeHolder: UIImage(named: "photographer"))
   }
 }

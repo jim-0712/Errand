@@ -21,13 +21,13 @@ class MissionDetailViewController: UIViewController {
                                  CellContent(type: .normal, title: "發布時間"),
                                  CellContent(type: .purpose, title: "任務細節") ]
   
-  var isRequester = false
+  var playerLooper: [AVPlayerLooper] = []
   
   var isMissionON = false
   
-  var destinationFcmToken = ""
+  var isMap = false
   
-  var reverse = ""
+  var destinationFcmToken = ""
   
   let myLocationManager = CLLocationManager()
   
@@ -47,22 +47,7 @@ class MissionDetailViewController: UIViewController {
   
   let dbF = Firestore.firestore()
   
-  lazy var missionPhotoCollectionView: UICollectionView = {
-    let layout = UICollectionViewFlowLayout()
-    let collection = UICollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300), collectionViewLayout: layout)
-    layout.scrollDirection = .horizontal
-    collection.translatesAutoresizingMaskIntoConstraints = false
-    collection.showsVerticalScrollIndicator = false
-    collection.showsHorizontalScrollIndicator = false
-    return collection
-  }()
-  
-  let headerView: UIView = {
-    let header = UIView()
-    header.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300)
-    header.backgroundColor = .pink
-    return header
-  }()
+  var scrollView = UIScrollView()
   
   @IBOutlet weak var takeMissionBtn: UIButton!
   
@@ -78,6 +63,7 @@ class MissionDetailViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
     navigationItem.setHidesBackButton(true, animated: true)
     navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(backToList))
     navigationItem.leftBarButtonItem?.tintColor = .black
@@ -100,7 +86,6 @@ class MissionDetailViewController: UIViewController {
     } else {
       missionStackView.isHidden = true
       takeMissionBtn.isHidden = false
-      setUpBtnEnable()
     }
     
     UserManager.shared.statusJudge = status
@@ -108,28 +93,34 @@ class MissionDetailViewController: UIViewController {
     fetchTaskOwnerPhoto()
     setUpView()
     setUpListenerToTask()
+    self.view.addSubview(pageControl)
   }
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    if navigationController == nil {
-          backBtn.isHidden = false
-          takeMissionBtn.isHidden = true
-        } else {
-          backBtn.isHidden = true
-        }
+    
+    if isMap {
+      backBtn.isHidden = false
+    } else if navigationController == nil {
+      backBtn.isHidden = false
+      takeMissionBtn.isHidden = true
+    } else {
+      backBtn.isHidden = true
+    }
   }
   
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
-    guard let taskData = detailData else { return }
-    if taskData.ownerCompleteTask && taskData.takerCompleteTask {
-      MutipleFuncManager.shared.changeStatus(task: taskData) { result in
-        switch result {
-        case .success:
-          print("goodOK")
-        case .failure:
-          print("error")
+    if isMissionON {
+      guard let taskData = detailData else { return }
+      if taskData.ownerCompleteTask && taskData.takerCompleteTask {
+        MutipleFuncManager.shared.changeStatus(task: taskData) { result in
+          switch result {
+          case .success:
+            print("Success on change Status")
+          case .failure:
+            print("error")
+          }
         }
       }
     }
@@ -150,7 +141,7 @@ class MissionDetailViewController: UIViewController {
     
     let okAction = UIAlertAction(title: "ok", style: .default) { [weak self]_ in
       guard let strongSelf = self,
-           let taskInfo = strongSelf.detailData else { return }
+        let taskInfo = strongSelf.detailData else { return }
       
       strongSelf.giveUpMission(taskInfo: taskInfo)
     }
@@ -210,12 +201,84 @@ class MissionDetailViewController: UIViewController {
     self.view.window?.rootViewController = signInVC
   }
   
+  func setUpScrollView() {
+    
+    self.scrollView.addSubview(pageControl)
+    
+    var missionImage = UIImageView()
+    var missionView = UIView()
+    
+    guard let data = detailData else { return }
+    
+    for counter in 0 ..< data.taskPhoto.count {
+      
+      if isMap {
+        guard let yPos = self.navigationController?.navigationBar.frame.height else { return }
+        missionImage = UIImageView(frame: CGRect(x: 0, y: yPos, width: fullSize.width, height: 300))
+        missionView = UIView(frame: CGRect(x: 0, y: yPos, width: fullSize.width, height: 300))
+      } else {
+        missionImage = UIImageView(frame: CGRect(x: 0, y: 88, width: fullSize.width, height: 300))
+        missionView = UIView(frame: CGRect(x: 0, y: 88, width: fullSize.width, height: 300))
+      }
+      missionImage.contentMode = .scaleAspectFill
+      missionImage.clipsToBounds = true
+      missionImage.center = CGPoint(x: fullSize.width * (0.5 + CGFloat(counter)), y: 150)
+      missionView = UIView(frame: CGRect(x: 0, y: self.navigationController?.navigationBar.frame.height ?? 0, width: fullSize.width, height: 300))
+      missionView.clipsToBounds = true
+      missionView.center = CGPoint(x: fullSize.width * (0.5 + CGFloat(counter)), y: 150)
+      scrollView.addSubview(missionView)
+      scrollView.addSubview(missionImage)
+      
+      let typeManager = data.taskPhoto[counter].components(separatedBy: "mov")
+      
+      if typeManager.count > 1 {
+        missionImage.isHidden = true
+        guard let video = URL(string: data.taskPhoto[counter]) else { return }
+        setUpLooper(view: missionView, video: video)
+      } else {
+        missionImage.isHidden = false
+        missionImage.loadImage(data.taskPhoto[counter], placeHolder: UIImage(named: "Image_PlaceHolder"))
+      }
+    }
+    
+    scrollView.delegate = self
+    self.view.addSubview(scrollView)
+    let yPos = isMap ? self.navigationController?.navigationBar.frame.height : 88
+    scrollView.frame = CGRect(x: 0, y: self.navigationController?.navigationBar.frame.height ?? 0, width: fullSize.width, height: 300)
+    
+    if isMap {
+      guard let yPos = self.navigationController?.navigationBar.frame.height else { return }
+      scrollView.frame = CGRect(x: 0, y: yPos, width: fullSize.width, height: 300)
+    } else {
+      scrollView.frame = CGRect(x: 0, y: 88, width: fullSize.width, height: 300)
+    }
+    scrollView.contentSize = CGSize(width: fullSize.width * CGFloat(data.taskPhoto.count), height: 300)
+    scrollView.isPagingEnabled = true
+    scrollView.bounces = true
+    scrollView.delegate = self
+    scrollView.showsHorizontalScrollIndicator = false
+    scrollView.showsVerticalScrollIndicator = false
+    scrollView.contentInsetAdjustmentBehavior = .never
+  }
+  
+  func setUpLooper(view: UIView, video: URL) {
+    let playQueue = AVQueuePlayer()
+    let platItem = AVPlayerItem(url: video)
+    let playerLooper = AVPlayerLooper(player: playQueue, templateItem: platItem)
+    let playerLayer = AVPlayerLayer(player: playQueue)
+    playerLayer.frame = view.bounds
+    playerLayer.backgroundColor = UIColor.black.cgColor
+    view.layer.addSublayer(playerLayer)
+    self.playerLooper.append(playerLooper)
+    playQueue.play()
+  }
+  
   func gotoJudgePage() {
     guard let judgeVC = storyboard?.instantiateViewController(withIdentifier: "judge") as? JudgeMissionViewController,
-         let taskInfo = detailData  else { return }
-         judgeVC.detailData = taskInfo
-         NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
-         present(judgeVC, animated: true, completion: nil)
+          let taskInfo = detailData  else { return }
+    judgeVC.detailData = taskInfo
+    NotificationCenter.default.post(name: Notification.Name("getMissionList"), object: nil)
+    present(judgeVC, animated: true, completion: nil)
   }
   
   func giveUpMission(taskInfo: TaskInfo) {
@@ -238,26 +301,26 @@ class MissionDetailViewController: UIViewController {
       guard let strongSelf = self else { return }
       switch result {
       case .success(let destinationFcmToken):
-              guard let taskInfo = strongSelf.detailData else { return }
-              if taskInfo.ownerCompleteTask && taskInfo.takerCompleteTask {
-                strongSelf.finishMissionAlert(title: "恭喜", message: "任務完成", viewController: strongSelf)
-              } else {
-                
-              APImanager.shared.postNotification(to: destinationFcmToken, body: "對方任務完成")
-        
-                let controller = UIAlertController(title: "恭喜", message: "等待對方完成", preferredStyle: .alert)
-                let okAction = UIAlertAction(title: "ok", style: .default) { [weak self] _ in
-                  guard let strongSelf = self else { return }
-        
-                  strongSelf.gotoJudgePage()
-                }
-                controller.addAction(okAction)
-                strongSelf.present(controller, animated: true, completion: nil)
-                strongSelf.finishMissionBtn.isEnabled = false
-                strongSelf.finishMissionBtn.backgroundColor = UIColor.LG1
-                strongSelf.finishMissionBtn.setTitle("等待對方完成", for: .normal)
-                strongSelf.giveUpmissionBtn.isEnabled = false
-                }
+        guard let taskInfo = strongSelf.detailData else { return }
+        if taskInfo.ownerCompleteTask && taskInfo.takerCompleteTask {
+          strongSelf.finishMissionAlert(title: "恭喜", message: "任務完成", viewController: strongSelf)
+        } else {
+          
+          APImanager.shared.postNotification(to: destinationFcmToken, body: "對方任務完成")
+          
+          let controller = UIAlertController(title: "恭喜", message: "等待對方完成", preferredStyle: .alert)
+          let okAction = UIAlertAction(title: "ok", style: .default) { [weak self] _ in
+            guard let strongSelf = self else { return }
+            
+            strongSelf.gotoJudgePage()
+          }
+          controller.addAction(okAction)
+          strongSelf.present(controller, animated: true, completion: nil)
+          strongSelf.finishMissionBtn.isEnabled = false
+          strongSelf.finishMissionBtn.backgroundColor = UIColor.LG1
+          strongSelf.finishMissionBtn.setTitle("等待對方完成", for: .normal)
+          strongSelf.giveUpmissionBtn.isEnabled = false
+        }
       case.failure:
         LKProgressHUD.showFailure(text: "error", controller: strongSelf)
       }
@@ -354,8 +417,9 @@ class MissionDetailViewController: UIViewController {
       }
     }
   }
-
+  
   func setUpView() {
+    setUpScrollView()
     setUpCommectionAndTableView()
     setUpBtn()
     setUppageControll()
@@ -363,16 +427,11 @@ class MissionDetailViewController: UIViewController {
   }
   
   func setUpCommectionAndTableView() {
-    missionPhotoCollectionView.delegate = self
-    missionPhotoCollectionView.dataSource = self
     detailTableView.delegate = self
     detailTableView.dataSource = self
-    missionPhotoCollectionView.isPagingEnabled = true
+    detailTableView.contentInset = UIEdgeInsets(top: scrollView.frame.size.height, left: 0, bottom: 0, right: 0)
     detailTableView.rowHeight = UITableView.automaticDimension
     detailTableView.register(UINib(nibName: "StartMissionTableViewCell", bundle: nil), forCellReuseIdentifier: "startMission")
-    missionPhotoCollectionView.register(UINib(nibName: "MissionDetailCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "detail")
-    headerView.addSubview(missionPhotoCollectionView)
-    detailTableView.tableHeaderView = headerView
   }
   
   func setUpListenerToTask() {
@@ -394,7 +453,7 @@ class MissionDetailViewController: UIViewController {
       }
     }
   }
-
+  
   func finishMissionAlert(title: String, message: String, viewController: UIViewController) {
     let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
     let okAction = UIAlertAction(title: "ok", style: .default) { [weak self]_ in
@@ -402,7 +461,6 @@ class MissionDetailViewController: UIViewController {
       
       strongSelf.gotoJudgePage()
     }
-    
     controller.addAction(okAction)
     viewController.present(controller, animated: true, completion: nil)
   }
@@ -410,7 +468,7 @@ class MissionDetailViewController: UIViewController {
   func startMissionSetupBtn() {
     
     guard let task = detailData,
-         let status = UserManager.shared.currentUserInfo?.status else { return }
+          let status = UserManager.shared.currentUserInfo?.status else { return }
     
     if status == 1 && task.ownerCompleteTask || status == 2 && task.takerCompleteTask {
       finishMissionBtn.isEnabled = false
@@ -438,15 +496,15 @@ class MissionDetailViewController: UIViewController {
     }
     
     guard let user = UserManager.shared.currentUserInfo,
-         let task = detailData else { return }
+          let task = detailData else { return }
     
     var isRequseter = false
     
     for requester in task.requester where requester == user.uid {
-       isRequseter = true
+      isRequseter = true
     }
     
-   if isRequseter {
+    if isRequseter {
       takeMissionBtn.isHidden = false
       takeMissionBtn.backgroundColor = .lightGray
       takeMissionBtn.setTitle("您已申請此任務", for: .normal)
@@ -458,7 +516,7 @@ class MissionDetailViewController: UIViewController {
       takeMissionBtn.tintColor = .black
       takeMissionBtn.isEnabled = false
     } else {
-      takeMissionBtn.backgroundColor = UIColor(red: 246.0/255.0, green: 212/255.0, blue: 95/255.0, alpha: 1.0)
+      takeMissionBtn.backgroundColor = UIColor.Y1
       takeMissionBtn.setTitle("接受任務", for: .normal)
       takeMissionBtn.tintColor = .black
       takeMissionBtn.isEnabled = true
@@ -486,25 +544,27 @@ class MissionDetailViewController: UIViewController {
   
   func setUppageControll() {
     guard let data = detailData else { return }
-    self.headerView.addSubview(pageControl)
-    pageControl.translatesAutoresizingMaskIntoConstraints = false
     pageControl.currentPage = 0
     pageControl.layer.cornerRadius = 10
     pageControl.pageIndicatorTintColor = .lightGray
     pageControl.numberOfPages = data.taskPhoto.count
     pageControl.currentPageIndicatorTintColor = .black
     pageControl.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
-    NSLayoutConstraint.activate([
-      pageControl.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: 0),
-      pageControl.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -10),
-      pageControl.heightAnchor.constraint(equalToConstant: 30),
-      pageControl.widthAnchor.constraint(equalToConstant: 100)
-    ])
+    let height = isMap ? scrollView.frame.height - 40 : scrollView.frame.height + 50
+    pageControl.frame = CGRect(x: (fullSize.width / 2) - 50, y: height, width: 100, height: 40)
+    pageControl.addTarget(self, action: #selector(pageChanged(sender:)), for: .valueChanged)
+  }
+  
+  @objc func pageChanged(sender: UIPageControl) {
+    var frame = scrollView.frame
+    frame.origin.x = frame.size.width * CGFloat(sender.currentPage)
+    frame.origin.y = 0
+    scrollView.scrollRectToVisible(frame, animated: true)
   }
   
   func fetchTaskOwnerPhoto() {
     guard let status = UserManager.shared.currentUserInfo?.status,
-         let taskinfo = detailData else { return }
+          let taskinfo = detailData else { return }
     
     var uid = ""
     
@@ -519,7 +579,7 @@ class MissionDetailViewController: UIViewController {
     
     readUserInfo(uid: uid, isSelf: false) { [weak self] accountInfo in
       guard let account = accountInfo,
-        let strongSelf = self else { return }
+            let strongSelf = self else { return }
       strongSelf.reversePhoto = account.photo
     }
   }
@@ -533,19 +593,9 @@ class MissionDetailViewController: UIViewController {
     }
   }
   
-  func removeLayer(cell: MissionDetailCollectionViewCell) {
-    guard let layers = cell.layer.sublayers else { return }
-    for layer in layers {
-      if let avPlayerLayer = layer as? AVPlayerLayer {
-        avPlayerLayer.removeFromSuperlayer()
-      }
-    }
-  }
-  
   func addToBlackList(alreadyReport: Bool) {
     preventTap()
     guard let taskInfo = detailData else { return }
-    
     MutipleFuncManager.shared.addToBlackList(alreadyReport: alreadyReport, taskInfo: taskInfo) { [weak self]result in
       guard let strongSelf = self else { return }
       switch result {
@@ -563,8 +613,8 @@ class MissionDetailViewController: UIViewController {
   
   func reportUser() {
     guard let user = UserManager.shared.currentUserInfo,
-         let taskInfo =  detailData else { return }
-         
+          let taskInfo =  detailData else { return }
+    
     var alreadyReport = false
     var compare = ""
     
@@ -596,7 +646,7 @@ class MissionDetailViewController: UIViewController {
   
   func gotoNavigation() {
     guard let originalLocation = myLocationManager.location?.coordinate,
-         let taskInfo = detailData else { return }
+          let taskInfo = detailData else { return }
     
     let originCor = "\(originalLocation.latitude),\(originalLocation.longitude)"
     let destination = "\(taskInfo.lat),\(taskInfo.long)"
@@ -612,60 +662,24 @@ class MissionDetailViewController: UIViewController {
   
 }
 
-extension MissionDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension MissionDetailViewController {
+  func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    let page = Int(scrollView.contentOffset.x / scrollView.frame.size.width)
+    pageControl.currentPage = page
+  }
   
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    let offSet = scrollView.contentOffset.x
-    let width = scrollView.frame.width
-    let horizontalCenter = width / 2
-    pageControl.currentPage = Int(offSet + horizontalCenter) / Int(width)
-  }
-  
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    guard let data = detailData else { return 0 }
-    return data.taskPhoto.count
-  }
-  
-  func numberOfSections(in collectionView: UICollectionView) -> Int {
-    return 1
-  }
-  
-  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    
-    guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "detail", for: indexPath) as? MissionDetailCollectionViewCell,
-         let data = detailData else { return UICollectionViewCell() }
-    
-    removeLayer(cell: cell)
-    
-    let typeManager = data.taskPhoto[indexPath.row].components(separatedBy: "mov")
-    if typeManager.count > 1 {
-      guard let video = URL(string: data.taskPhoto[indexPath.row]) else { return UICollectionViewCell() }
-      cell.detailImage.isHidden = true
-      cell.backView.backgroundColor = UIColor.black
-      cell.setUpLooper(video: video)
-      
-    } else {
-      cell.detailImage.isHidden = false
-      cell.detailImage.loadImage(data.taskPhoto[indexPath.row], placeHolder: UIImage(named: "Image_PlaceHolder") )
-      cell.detailImage.contentMode = .scaleAspectFill
+    if scrollView.contentOffset.y < -300 {
+      pageControl.frame.origin.y = 350 + (-scrollView.contentOffset.y - 300)
+      self.scrollView.frame.size.height = -scrollView.contentOffset.y
+      self.scrollView.subviews.forEach { imageView in
+        imageView.frame.size.height = -scrollView.contentOffset.y
+      }
     }
-    return cell
-  }
-  
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-    return 0
-  }
-}
-
-extension MissionDetailViewController: UICollectionViewDelegateFlowLayout {
-  
-  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-    return CGSize(width: UIScreen.main.bounds.width, height: 300)
   }
 }
 
 extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSource {
-  
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return 4
   }
@@ -673,7 +687,7 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     guard let data = detailData,
-         let time = self.receiveTime else { return UITableViewCell() }
+      let time = self.receiveTime else { return UITableViewCell() }
     
     category[0].type = isMissionON ? .startMission : .miniPhoto
     
@@ -706,7 +720,7 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
         guard let strongSelf = self else { return }
         
         guard let chatVC = UIStoryboard(name: "Chat", bundle: nil).instantiateViewController(withIdentifier: "ChatViewController") as? ChatViewController,
-             let taskInfo = strongSelf.detailData else { return }
+          let taskInfo = strongSelf.detailData else { return }
         
         chatVC.detailData = taskInfo
         chatVC.receiverPhoto = strongSelf.reversePhoto
@@ -737,9 +751,8 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
       return UITableViewCell()
     }
   }
-
+  
   func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-    
     let spring = UISpringTimingParameters(dampingRatio: 0.7, initialVelocity: CGVector(dx: 1.0, dy: 0.2))
     let animator = UIViewPropertyAnimator(duration: 0.5, timingParameters: spring)
     cell.alpha = 0

@@ -38,10 +38,10 @@ class FriendsTableViewCell: UITableViewCell {
   }
   
   func setUpCell(image: String, nickName: String, account: String) {
-    friendPhotoImage.loadImage(image, placeHolder: UIImage(named: "photographer"))
     friendsNameLabel.text = nickName
     friendsAccountLabel.text = account
     friendPhotoImage.layer.cornerRadius = friendPhotoImage.bounds.width / 2
+    friendPhotoImage.loadImage(image, placeHolder: UIImage(named: "photographer"))
   }
   
 }

@@ -30,13 +30,13 @@ class RequesterRateTableViewCell: UITableViewCell {
   
   func setUp(averageStar: Double, titleLabel: String, notYetJudge: Bool, taskCount: Int) {
     
-    starView.settings.updateOnTouch = false
     starView.rating = averageStar
+    detailLabel.text = titleLabel
     starView.settings.totalStars = 5
     starView.settings.fillMode = .precise
+    starView.settings.updateOnTouch = false
     starView.settings.emptyImage = UIImage(named: "star-2")?.withRenderingMode(.alwaysOriginal)
     starView.settings.filledImage = UIImage(named: "star-3")?.withRenderingMode(.alwaysOriginal)
-    detailLabel.text = titleLabel
     
     starView.isHidden = notYetJudge
     describeLabel.isHidden = !notYetJudge

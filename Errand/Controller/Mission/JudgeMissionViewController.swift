@@ -193,7 +193,7 @@ class JudgeMissionViewController: UIViewController {
     let statusss = UserManager.shared.statusJudge
     if taskInfo.takerAskFriend && taskInfo.ownerAskFriend && !taskInfo.isFrirndsNow {
       
-      UserManager.shared.getFriends { result in
+      UserManager.shared.fetchFriends { result in
         switch result {
         case .success(let friends):
           
@@ -233,7 +233,7 @@ class JudgeMissionViewController: UIViewController {
           case .success :
             LKProgressHUD.dismiss()
           case .failure :
-            print("no")
+            print("Fail on update friends")
           }
         }
         
@@ -241,7 +241,7 @@ class JudgeMissionViewController: UIViewController {
         self.refreshTask(task: reFaceData, uid: taskInfo.uid)
         
       case .failure:
-        print("no")
+        print("Fail on create chatroom")
       }
     }
   }
@@ -268,10 +268,10 @@ class JudgeMissionViewController: UIViewController {
     TaskManager.shared.updateJudge(judge: judgeInfo) { (result) in
       switch result {
       case .success:
-        print("ok")
+        print("Success on update judge")
         group.leave()
       case .failure:
-        print("error")
+        print("Fail on update judge")
       }
     }
     
@@ -285,15 +285,14 @@ class JudgeMissionViewController: UIViewController {
         
         UserManager.shared.updateOppoInfo(userInfo: judgeOwnerInfo) { result in
           switch result {
-          case .success(let info):
-            print(info)
+          case .success:
             group.leave()
           case .failure:
-            print("error")
+            print("Fail on update userInfo")
           }
         }
       case .failure:
-        print("error")
+        print("Fail on read userInfo")
       }
     }
     
@@ -357,10 +356,10 @@ class JudgeMissionViewController: UIViewController {
     TaskManager.shared.updateWholeTask(task: task, uid: uid) { result in
       switch result {
       case .success:
-        print("ya")
+        print("Success on update Task")
         LKProgressHUD.dismiss()
       case .failure:
-        print("error")
+        print("Fail on update Task")
       }
     }
   }

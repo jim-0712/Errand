@@ -30,22 +30,16 @@ class PersonStarTableViewCell: UITableViewCell {
   
   func setUp(isFirst: Bool, averageStar: Double, titleLabel: String) {
     
-    starView.settings.updateOnTouch = false
+    starView.isHidden = isFirst
+    detailLabel.text = titleLabel
     starView.rating = averageStar
+    newUserLabel.isHidden = !isFirst
     starView.settings.totalStars = 5
     starView.settings.fillMode = .precise
+    starView.settings.updateOnTouch = false
     starView.settings.emptyImage = UIImage(named: "star-2")?.withRenderingMode(.alwaysOriginal)
     starView.settings.filledImage = UIImage(named: "star-3")?.withRenderingMode(.alwaysOriginal)
-    detailLabel.text = titleLabel
-    
-    if isFirst {
-      newUserLabel.isHidden = false
-      starView.isHidden = true
-    } else {
-      newUserLabel.isHidden = true
-      starView.isHidden = false
-    }
-    
+      
     if UserManager.shared.isTourist {
       newUserLabel.text = "遊客"
     } else {

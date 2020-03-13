@@ -57,7 +57,7 @@ class TaskManager {
     }
   }
   
-  func readData(completion: @escaping ((Result<[TaskInfo], Error>) -> Void)) {
+  func fetchTaskData(completion: @escaping ((Result<[TaskInfo], Error>) -> Void)) {
     
     self.taskData = []
     
@@ -80,7 +80,7 @@ class TaskManager {
     }
   }
   
-  func readSpecificData(parameter: String, parameterDataInt: Int, completion: @escaping ((Result<[TaskInfo], Error>) -> Void)) {
+  func fetchSpecificData(parameter: String, parameterDataInt: Int, completion: @escaping ((Result<[TaskInfo], Error>) -> Void)) {
     
     self.taskData = []
     
@@ -103,7 +103,7 @@ class TaskManager {
     }
   }
   
-  func readSpecificData(parameter: String, parameterString: String, completion: @escaping ((Result<[TaskInfo], Error>) -> Void)) {
+  func fetchSpecificParameterData(parameter: String, parameterString: String, completion: @escaping ((Result<[TaskInfo], Error>) -> Void)) {
     
     self.taskData = []
     
@@ -154,7 +154,6 @@ class TaskManager {
   func reFactDataSpec(quary: QuerySnapshot) {
     
     self.taskData = []
-    
     for info in quary.documents {
       
       self.reFactDataSpec(quary: info) { result in
@@ -438,7 +437,7 @@ class TaskManager {
     
     if userInfo.status == 1 {
       
-      TaskManager.shared.readSpecificData(parameter: "uid", parameterString: userInfo.uid) { result in
+      TaskManager.shared.fetchSpecificParameterData(parameter: "uid", parameterString: userInfo.uid) { result in
         
         switch result {
         case .success(let taskInfo):
@@ -450,7 +449,7 @@ class TaskManager {
         }
       }
     } else if userInfo.status == 2 {
-      TaskManager.shared.readSpecificData(parameter: "missionTaker", parameterString: userInfo.uid) { result in
+      TaskManager.shared.fetchSpecificParameterData(parameter: "missionTaker", parameterString: userInfo.uid) { result in
         
         switch result {
         case .success(let taskInfo):
@@ -464,7 +463,7 @@ class TaskManager {
     }
   }
   
-  func readJudgeData(uid: String, completion: @escaping (Result<[JudgeInfo], Error>) -> Void) {
+  func fetchHistoryJudge(uid: String, completion: @escaping (Result<[JudgeInfo], Error>) -> Void) {
   
     dbF.collection("Judge").whereField("owner", isEqualTo: uid).getDocuments { quarySnapShot, error in
       

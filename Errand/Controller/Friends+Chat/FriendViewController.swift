@@ -38,33 +38,33 @@ class FriendViewController: UIViewController {
     }
   }
   
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    self.view.backgroundColor = .LG1
-    
-    if UserManager.shared.isTourist {
-      noFreindsLabel.text = "請先去個人頁登入享有好友"
-      friendListTable.backgroundColor = .clear
-    } else {
-      noFreindsLabel.text = "搜尋好友中"
-      setUpTable()
-      getFriend()
-      
-      self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "ban"), style: .plain, target: self, action: #selector(enterBlacklist))
-      self.navigationItem.rightBarButtonItem?.tintColor = .red
-      
-    }
-  }
-  
   @IBOutlet weak var friendListTable: UITableView!
   
   @IBOutlet weak var noFreindsLabel: UILabel!
+  
+  override func viewDidLoad() {
+     super.viewDidLoad()
+     self.view.backgroundColor = .LG1
+     
+     if UserManager.shared.isTourist {
+       noFreindsLabel.text = "請先去個人頁登入享有好友"
+       friendListTable.backgroundColor = .clear
+     } else {
+       noFreindsLabel.text = "搜尋好友中"
+       setUpTable()
+       getFriend()
+       
+       self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "ban"), style: .plain, target: self, action: #selector(enterBlacklist))
+       self.navigationItem.rightBarButtonItem?.tintColor = .red
+       
+     }
+   }
   
   @objc func getFriend() {
     
     self.friendsData = []
     
-    UserManager.shared.getFriends { result in
+    UserManager.shared.fetchFriends { result in
       switch result {
       case .success(let friends):
         
@@ -74,7 +74,7 @@ class FriendViewController: UIViewController {
         }
         
         friends.forEach { friend in
-          UserManager.shared.getPhoto(nameRef: friend.nameREF) { result in
+          UserManager.shared.fetchPersonPhoto(nameRef: friend.nameREF) { result in
             switch result {
             case .success(let info):
               self.friendsPhoto.append(info.photo)
@@ -85,14 +85,14 @@ class FriendViewController: UIViewController {
               LKProgressHUD.dismiss()
             case .failure:
               LKProgressHUD.dismiss()
-              print("error")
+              print("Error on fetchPhoto")
             }
           }
         }
         self.friend = friends
       case .failure:
         LKProgressHUD.dismiss()
-        print("error")
+        print("Error on Fetch Friends")
       }
     }
   }

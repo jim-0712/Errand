@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7n7-IY-5Uq">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -592,13 +591,13 @@
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hEK-bo-55A">
                                 <rect key="frame" x="10" y="93" width="40" height="40"/>
-                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="40" id="5kQ-lH-IzM"/>
                                     <constraint firstAttribute="height" constant="40" id="wqM-HG-XQY"/>
                                 </constraints>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" image="Icons_24px_Back02"/>
+                                <state key="normal" image="Icons_24px_Close-1"/>
                                 <connections>
                                     <action selector="backAct:" destination="gg9-hF-MfY" eventType="touchUpInside" id="AJc-cA-x7A"/>
                                 </connections>
@@ -1104,8 +1103,8 @@
     </scenes>
     <resources>
         <image name="37670" width="5000" height="3000"/>
-        <image name="Icons_24px_Back02" width="24" height="24"/>
         <image name="Icons_24px_Close" width="24" height="24"/>
+        <image name="Icons_24px_Close-1" width="24" height="24"/>
         <image name="alert" width="32" height="32"/>
         <image name="friend" width="512" height="512"/>
         <image name="marker" width="512" height="512"/>

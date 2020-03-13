@@ -16,11 +16,11 @@ class MissionGroupCollectionViewCell: UICollectionViewCell {
   
   func setUpContent(label: String, color: UIColor) {
     
-    self.layer.cornerRadius = UIScreen.main.bounds.width / 40
-    
     groupLabel.text = label
     
     groupColorBlock.backgroundColor = color
+    
+    self.layer.cornerRadius = UIScreen.main.bounds.width / 40
     
     groupColorBlock.layer.cornerRadius = UIScreen.main.bounds.width / 40
   }

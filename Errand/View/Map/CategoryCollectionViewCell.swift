@@ -30,9 +30,10 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     
     colorBlock.backgroundColor = color
     
+    self.contentView.backgroundColor = UIColor.G1
+    
     colorBlock.layer.cornerRadius = UIScreen.main.bounds.width / 40
   
-    self.contentView.backgroundColor = UIColor.G1
   }
   
 }

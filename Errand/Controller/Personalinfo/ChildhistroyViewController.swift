@@ -11,7 +11,9 @@ import Firebase
 
 class ChildhistroyViewController: UIViewController {
 
-    override func viewDidLoad() {
+  @IBOutlet weak var historyTableView: UITableView!
+  
+  override func viewDidLoad() {
         super.viewDidLoad()
     }
   
@@ -20,15 +22,13 @@ class ChildhistroyViewController: UIViewController {
     setUpTable()
     if UserManager.shared.isRequester {
       guard let uid = UserManager.shared.requesterInfo?.uid else { return }
-      readJudge(uid: uid)
+      fetchHistoryJudge(uid: uid)
       
     } else {
       guard let uid = Auth.auth().currentUser?.uid else { return }
-      readJudge(uid: uid)
+      fetchHistoryJudge(uid: uid)
     }
   }
-    
-  @IBOutlet weak var historyTableView: UITableView!
   
   var judgeData: [JudgeInfo] = [] {
     
@@ -42,14 +42,14 @@ class ChildhistroyViewController: UIViewController {
     }
   }
   
-  func readJudge(uid: String) {
-    TaskManager.shared.readJudgeData(uid: uid) {[weak self] result in
+  func fetchHistoryJudge(uid: String) {
+    TaskManager.shared.fetchHistoryJudge(uid: uid) {[weak self] result in
       guard let strongSelf = self else { return }
       switch result {
       case .success(let judge):
         strongSelf.judgeData = judge
       case .failure:
-        print("error")
+        print("Fetch judge error")
       }
     }
   }
