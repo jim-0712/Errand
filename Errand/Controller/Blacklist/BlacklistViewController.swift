@@ -12,6 +12,21 @@ class BlacklistViewController: UIViewController {
   
   @IBOutlet weak var blackListTable: UITableView!
   
+  var blacklistinfo: [AccountInfo] = [] {
+    didSet {
+      if blacklistinfo.isEmpty {
+        LKProgressHUD.dismiss()
+      } else {
+        LKProgressHUD.dismiss()
+        blackListTable.reloadData()
+      }
+    }
+  }
+  
+  var blackuid: [String] = []
+  
+  var removeBlack: [String] = []
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     setUpTable()
@@ -40,21 +55,6 @@ class BlacklistViewController: UIViewController {
       }
     }
   }
-  
-  var blacklistinfo: [AccountInfo] = [] {
-    didSet {
-      if blacklistinfo.isEmpty {
-        LKProgressHUD.dismiss()
-      } else {
-        LKProgressHUD.dismiss()
-        blackListTable.reloadData()
-      }
-    }
-  }
-  
-  var blackuid: [String] = []
-  
-  var removeBlack: [String] = []
   
   @objc func back() {
     self.navigationController?.popViewController(animated: false)

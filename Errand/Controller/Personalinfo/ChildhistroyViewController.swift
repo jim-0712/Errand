@@ -11,7 +11,9 @@ import Firebase
 
 class ChildhistroyViewController: UIViewController {
 
-    override func viewDidLoad() {
+  @IBOutlet weak var historyTableView: UITableView!
+  
+  override func viewDidLoad() {
         super.viewDidLoad()
     }
   
@@ -27,8 +29,6 @@ class ChildhistroyViewController: UIViewController {
       fetchHistoryJudge(uid: uid)
     }
   }
-    
-  @IBOutlet weak var historyTableView: UITableView!
   
   var judgeData: [JudgeInfo] = [] {
     

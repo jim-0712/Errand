@@ -107,11 +107,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
     setUpArrangeTextField()
   }
   
-//  override func viewDidAppear(_ animated: Bool) {
-//    guard let tabVC = self.view.window?.rootViewController as? TabBarViewController else { return }
-//    LKProgressHUD.show(controller: tabVC)
-//  }
-  
   @IBAction func tapRadarCheckAuth(_ sender: Any) {
     if CLLocationManager.locationServicesEnabled() {
       checkLocationAuth(isRadar: true)
@@ -170,7 +165,12 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   }
   
   @IBAction func checkDetailAct(_ sender: Any) {
-    performSegue(withIdentifier: segueMapdetail, sender: nil)
+    guard let missionDetailVC = UIStoryboard.init(name: "Mission", bundle: nil).instantiateViewController(withIdentifier: "detailViewController") as? MissionDetailViewController else { return }
+         missionDetailVC.isMap = true
+         missionDetailVC.detailData = specificData[0]
+         missionDetailVC.receiveTime =  TaskManager.shared.timeConverter(time: specificData[0].time)
+     
+    self.present(missionDetailVC, animated: true, completion: nil)
   }
   
   func changeConstraints() {
@@ -361,15 +361,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
       marker.title =  markerTitle[0]
       marker.snippet = info.nickname
       marker.map = googleMapView
-    }
-  }
-  
-  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    if segue.identifier == segueMapdetail {
-      guard let missionDetailVC = segue.destination as? MissionDetailViewController else { return }
-      missionDetailVC.modalPresentationStyle = .fullScreen
-      missionDetailVC.detailData = specificData[0]
-      missionDetailVC.receiveTime =  TaskManager.shared.timeConverter(time: specificData[0].time)
     }
   }
 }

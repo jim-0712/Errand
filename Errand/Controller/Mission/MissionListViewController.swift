@@ -13,34 +13,73 @@ class MissionListViewController: UIViewController, UIViewControllerTransitioning
   
   var observation: NSKeyValueObservation?
   
-  override func viewDidLoad() {
-    super.viewDidLoad()
-
-    setUpSearch()
-    setUpTableView()
-    setUpindicatorView()
-    searchingLabel.isHidden = true
-    fetchTaskData()
-    
-    observation = UserManager.shared.observe(\.isChange) { [weak self] (_, _) in
-      guard let strongSelf = self else { return }
-      strongSelf.fetchTaskData()
+  @IBOutlet weak var taskListTable: UITableView!
+  
+  @IBOutlet weak var postMissionBtn: UIButton!
+  
+  var indicatorCon: NSLayoutConstraint?
+  
+  let indicatorView = UIView()
+  
+  var refreshControl: UIRefreshControl!
+  
+  let taskMan = TaskManager.shared
+  
+  var detailData: TaskInfo?
+  
+  var containerrTask: TaskInfo?
+  
+  var timeString: String?
+  
+  var currentBtnSelect = false
+  
+  var shouldShowSearchResults = false {
+    didSet {
+      self.taskListTable.reloadData()
     }
-    NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("getMissionList"), object: nil)
   }
   
-  override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillDisappear(animated)
-    currentBtnSelect = false
-    fetchTaskData()
+  let searchCustom = UISearchController(searchResultsController: nil)
+  
+  var taskDataReturn = [TaskInfo]() {
+    didSet {
+      if taskDataReturn.isEmpty {
+        self.postMissionBtn.isHidden = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+          LKProgressHUD.dismiss()
+          self.refreshControl.endRefreshing()
+        }
+        self.taskListTable.reloadData()
+      } else {
+        DispatchQueue.main.async {
+          self.postMissionBtn.isHidden = false
+          self.refreshControl.endRefreshing()
+          self.taskListTable.reloadData()
+          LKProgressHUD.dismiss()
+          guard let status = UserManager.shared.currentUserInfo?.status else { return }
+          self.postMissionBtn.isHidden = status == 2 ? true : false
+          
+        }
+      }
+    }
   }
   
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    currentBtnSelect = false
-    setUpBtn()
-    startBtnAnimate(sender: allMissionBtn)
+  var filteredArray = [TaskInfo]() {
+    didSet {
+      if taskDataReturn.isEmpty {
+        self.postMissionBtn.isHidden = true
+        LKProgressHUD.dismiss()
+      } else {
+        DispatchQueue.main.async {
+          self.postMissionBtn.isHidden = false
+          self.taskListTable.reloadData()
+          LKProgressHUD.dismiss()
+        }
+      }
+    }
   }
+  
+  let circleAnimation = CircularTransition()
   
   @IBOutlet weak var searchingLabel: UILabel!
   
@@ -49,6 +88,35 @@ class MissionListViewController: UIViewController, UIViewControllerTransitioning
   @IBOutlet weak var currentBtn: UIButton!
   
   @IBOutlet weak var btnStackView: UIStackView!
+  
+   override func viewDidLoad() {
+     super.viewDidLoad()
+
+     setUpSearch()
+     setUpTableView()
+     setUpindicatorView()
+     searchingLabel.isHidden = true
+     fetchTaskData()
+     
+     observation = UserManager.shared.observe(\.isChange) { [weak self] (_, _) in
+       guard let strongSelf = self else { return }
+       strongSelf.fetchTaskData()
+     }
+     NotificationCenter.default.addObserver(self, selector: #selector(reloadTable), name: Notification.Name("getMissionList"), object: nil)
+   }
+   
+   override func viewWillDisappear(_ animated: Bool) {
+     super.viewWillDisappear(animated)
+     currentBtnSelect = false
+     fetchTaskData()
+   }
+   
+   override func viewWillAppear(_ animated: Bool) {
+     super.viewWillAppear(animated)
+     currentBtnSelect = false
+     setUpBtn()
+     startBtnAnimate(sender: allMissionBtn)
+   }
   
   @IBAction func allMissionAct(_ sender: UIButton) {
     currentBtnSelect = false
@@ -68,11 +136,6 @@ class MissionListViewController: UIViewController, UIViewControllerTransitioning
     fetchMissionStartData()
   }
   
-  @IBOutlet weak var taskListTable: UITableView!
-  
-  @IBOutlet weak var postMissionBtn: UIButton!
-  
-  let circleAnimation = CircularTransition()
   
   func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
     
@@ -133,69 +196,6 @@ class MissionListViewController: UIViewController, UIViewControllerTransitioning
       }
     } else {
       TaskManager.shared.showAlert(title: "任務進行中", message: "請完成當前任務", viewController: self)
-    }
-  }
-  
-  var indicatorCon: NSLayoutConstraint?
-  
-  let indicatorView = UIView()
-  
-  var refreshControl: UIRefreshControl!
-  
-  let taskMan = TaskManager.shared
-  
-  var detailData: TaskInfo?
-  
-  var containerrTask: TaskInfo?
-  
-  var timeString: String?
-  
-  var currentBtnSelect = false
-  
-  var shouldShowSearchResults = false {
-    didSet {
-      self.taskListTable.reloadData()
-    }
-  }
-  
-  let searchCustom = UISearchController(searchResultsController: nil)
-  
-  var taskDataReturn = [TaskInfo]() {
-    didSet {
-      if taskDataReturn.isEmpty {
-        self.postMissionBtn.isHidden = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-          LKProgressHUD.dismiss()
-          self.refreshControl.endRefreshing()
-        }
-        self.taskListTable.reloadData()
-      } else {
-        DispatchQueue.main.async {
-          self.postMissionBtn.isHidden = false
-          self.refreshControl.endRefreshing()
-          self.taskListTable.reloadData()
-          LKProgressHUD.dismiss()
-          guard let status = UserManager.shared.currentUserInfo?.status else { return }
-          
-          self.postMissionBtn.isHidden = status == 2 ? true : false
-          
-        }
-      }
-    }
-  }
-  
-  var filteredArray = [TaskInfo]() {
-    didSet {
-      if taskDataReturn.isEmpty {
-        self.postMissionBtn.isHidden = true
-        LKProgressHUD.dismiss()
-      } else {
-        DispatchQueue.main.async {
-          self.postMissionBtn.isHidden = false
-          self.taskListTable.reloadData()
-          LKProgressHUD.dismiss()
-        }
-      }
     }
   }
   
@@ -408,7 +408,7 @@ extension MissionListViewController: UITableViewDataSource, UITableViewDelegate 
     if segue.identifier == "detail" {
       
       guard let detailVC = segue.destination as? MissionDetailViewController,
-        let time = self.timeString else { return }
+            let time = self.timeString else { return }
       detailVC.detailData = detailData
       detailVC.receiveTime = time
     }

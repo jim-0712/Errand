@@ -38,6 +38,8 @@ class RequesterViewController: UIViewController {
   
   var indexRow = 0
   
+  @IBOutlet weak var requesterTable: UITableView!
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     self.view.backgroundColor = UIColor.LG1
@@ -70,8 +72,6 @@ class RequesterViewController: UIViewController {
     super.viewWillDisappear(animated)
     UserManager.shared.isRequester = false
   }
-  
-  @IBOutlet weak var requesterTable: UITableView!
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if segue.identifier == segueIdentifier {

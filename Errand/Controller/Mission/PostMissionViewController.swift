@@ -17,14 +17,37 @@ import FirebaseDatabase
 import FirebaseStorage
 import IQKeyboardManager
 
-struct MediaManager {
-  
-  let type: Int
-  
-  let mediaURL: String
-}
-
 class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDelegate, UITextViewDelegate {
+  
+   let imagePickerController = UIImagePickerController()
+   
+   var isChange = false
+   
+   var fileURL: [String] = []
+   
+   var fileType: [Int] = []
+   
+   var fileURLmix: [Any] = []
+   
+   var selectIndex = 0
+   
+   var indexRow = 0
+   
+   var latitude: Double?
+   
+   var longitude: Double?
+   
+   let screenwidth = UIScreen.main.bounds.width
+   
+   let screenheight = UIScreen.main.bounds.height
+   
+   let myLocationManager = CLLocationManager()
+   
+   var statusOneData: TaskInfo?
+   
+   var judge = [Bool](repeating: false, count: 8)
+   
+   var isEdit = false
   
   @IBOutlet weak var giveUpBtn: UIButton!
   
@@ -34,10 +57,35 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
   
   @IBOutlet weak var changeAddressBtn: UIButton!
   
-  @IBAction func changeAddressAct(_ sender: Any) {
-    
-    performSegue(withIdentifier: "addlocation", sender: nil)
-  }
+  @IBOutlet weak var pinImage: UIImageView!
+  
+  @IBOutlet weak var plusBtn: UIButton!
+  
+  @IBOutlet weak var photoCollectionView: UICollectionView!
+  
+  @IBOutlet weak var photoUploadText: UILabel!
+  
+  @IBOutlet weak var chooseGroupText: UILabel!
+  
+  @IBOutlet weak var missionGroupCollectionView: UICollectionView!
+  
+  @IBOutlet weak var uploadPhotoBtn: UIButton!
+  
+  @IBOutlet weak var editBackBtn: UIButton!
+  
+  @IBOutlet weak var priceLabel: UILabel!
+  
+  @IBOutlet weak var priceTextField: UITextField!
+  
+  @IBOutlet weak var missionLabel: UILabel!
+  
+  @IBOutlet weak var missionContentTextView: UITextView!
+  
+  @IBOutlet weak var postBtn: UIButton!
+  
+  @IBOutlet weak var stackNTDView: UIStackView!
+  
+  @IBOutlet weak var addressLabel: UILabel!
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -101,35 +149,10 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
     LKProgressHUD.dismiss()
   }
   
-  @IBOutlet weak var pinImage: UIImageView!
-  
-  @IBOutlet weak var plusBtn: UIButton!
-  
-  @IBOutlet weak var photoCollectionView: UICollectionView!
-  
-  @IBOutlet weak var photoUploadText: UILabel!
-  
-  @IBOutlet weak var chooseGroupText: UILabel!
-  
-  @IBOutlet weak var missionGroupCollectionView: UICollectionView!
-  
-  @IBOutlet weak var uploadPhotoBtn: UIButton!
-  
-  @IBOutlet weak var editBackBtn: UIButton!
-  
-  @IBOutlet weak var priceLabel: UILabel!
-  
-  @IBOutlet weak var priceTextField: UITextField!
-  
-  @IBOutlet weak var missionLabel: UILabel!
-  
-  @IBOutlet weak var missionContentTextView: UITextView!
-  
-  @IBOutlet weak var postBtn: UIButton!
-  
-  @IBOutlet weak var stackNTDView: UIStackView!
-  
-  @IBOutlet weak var addressLabel: UILabel!
+  @IBAction func changeAddressAct(_ sender: Any) {
+    
+    performSegue(withIdentifier: "addlocation", sender: nil)
+  }
   
   @IBAction func editBackAct(_ sender: Any) {
     self.dismiss(animated: true, completion: nil)
@@ -167,7 +190,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
         group.leave()
       case .failure:
         group.leave()
-        
       }
     }
     
@@ -181,36 +203,6 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
       }
     }
   }
-  
-  let imagePickerController = UIImagePickerController()
-  
-  var isChange = false
-  
-  var fileURL: [String] = []
-  
-  var fileType: [Int] = []
-  
-  var fileURLmix: [Any] = []
-  
-  var selectIndex = 0
-  
-  var indexRow = 0
-  
-  var latitude: Double?
-  
-  var longitude: Double?
-  
-  let screenwidth = UIScreen.main.bounds.width
-  
-  let screenheight = UIScreen.main.bounds.height
-  
-  let myLocationManager = CLLocationManager()
-  
-  var statusOneData: TaskInfo?
-  
-  var judge = [Bool](repeating: false, count: 8)
-  
-  var isEdit = false
   
   func setUpall() {
     setUp()

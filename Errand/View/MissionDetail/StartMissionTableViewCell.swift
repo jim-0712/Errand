@@ -66,7 +66,6 @@ class StartMissionTableViewCell: UITableViewCell {
   }
   
   @IBAction func reportAct(_ sender: Any) {
-    
     self.tapReprt?()
   }
   

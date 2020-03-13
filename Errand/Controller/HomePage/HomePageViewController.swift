@@ -11,6 +11,7 @@ import GoogleSignIn
 import FirebaseAuth
 import FBSDKLoginKit
 import IQKeyboardManager
+import FirebaseStorage
 import AuthenticationServices
 //#if canImport(CryptoKit)
 import CryptoKit
@@ -62,7 +63,7 @@ class ViewController: UIViewController {
       case .success(let accessToken):
         
         strongSelf.loginDBwithFB(accessToken: accessToken, viewController: strongSelf)
-
+        
       case .failure(let error):
         
         LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
@@ -121,7 +122,7 @@ class ViewController: UIViewController {
         
       case .failure(let error):
         
-        if error.localizedDescription == "The operation couldn’t be completed. (Errand.RegiError error 3.)" {
+        if error.localizedDescription == "The operation couldn’t be completed. (Errand.FireBaseDownloadError error 0.)" {
           strongSelf.setUpDataBase(isApple: isApple, isFB: isFB)
         } else {
           print("error")
@@ -149,7 +150,7 @@ class ViewController: UIViewController {
     }
   }
   
-   @available(iOS 13.0, *)
+  @available(iOS 13.0, *)
   func createBtn() {
     let appleButton: ASAuthorizationAppleIDButton = {
       let button = ASAuthorizationAppleIDButton()
@@ -169,27 +170,13 @@ class ViewController: UIViewController {
       appleButton.trailingAnchor.constraint(equalTo: appleView.trailingAnchor, constant: 0)
     ])
   }
- 
+  
   func setUpBtn() {
     fbLoginBtn.layer.cornerRadius = fbLoginBtn.bounds.height / 10
     googleLoginBtn.layer.cornerRadius = googleLoginBtn.bounds.height / 10
     visitorBtn.layer.cornerRadius = visitorBtn.bounds.height / 10
     GIDSignIn.sharedInstance()?.presentingViewController = self
   }
-  
-//  @available(iOS 13.0, *)
-//  func setUpAppleBtn() {
-//    appleView.backgroundColor = .clear
-//    appleView.addSubview(appleButton)
-//    appleButton.translatesAutoresizingMaskIntoConstraints = false
-//
-//    NSLayoutConstraint.activate([
-//      appleButton.topAnchor.constraint(equalTo: appleView.topAnchor, constant: 0),
-//      appleButton.bottomAnchor.constraint(equalTo: appleView.bottomAnchor, constant: 0),
-//      appleButton.leadingAnchor.constraint(equalTo: appleView.leadingAnchor, constant: 0),
-//      appleButton.trailingAnchor.constraint(equalTo: appleView.trailingAnchor, constant: 0)
-//    ])
-//  }
   
   @objc func gotoMapPage () {
     preventTap()
@@ -203,6 +190,10 @@ class ViewController: UIViewController {
     self.view.window?.rootViewController = mapVc
   }
   
+  func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
+    URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
+  }
+  
   func createDataBase(isApple: Bool, isFB: Bool, completion: @escaping (Result<String, Error>) -> Void) {
     
     var photo = ""
@@ -211,38 +202,86 @@ class ViewController: UIViewController {
     
     if isApple {  } else if isFB {
       guard let photoBack = UserManager.shared.FBData?.image,
-           let name = UserManager.shared.FBData?.name else { return }
-
+            let name = UserManager.shared.FBData?.name else { return }
+      
       photo = "\(photoBack)\(size)"
       userName = name
     } else {
-      guard let userImage = Auth.auth().currentUser?.photoURL?.absoluteString else { return }
-      photo = "\(userImage + size)"
+//      guard let userImage = Auth.auth().currentUser?.photoURL?.absoluteString else { return }
+//
+//      photo = "\(userImage + size)"
       userName = "使用者"
     }
     
-    guard let email = Auth.auth().currentUser?.email,
-         let uid = Auth.auth().currentUser?.uid else { return }
-    
-    UserManager.shared.readUserInfo(uid: uid, isSelf: true) {result in
-      switch result {
-      case .success:
-        completion(.success("good"))
-      case .failure(let error):
+    let group = DispatchGroup()
+    group.enter()
+    if isFB {
+      guard let url = URL(string: photo) else { return }
+      getData(from: url) { (data, response, error) in
         
-        if error.localizedDescription == "The operation couldn’t be completed. (Errand.RegiError error 3.)" {
-          DataBaseManager.shared.createDataBase(classification: "Users", nickName: userName, email: email, photo: photo) { result in
-            switch result {
-            case .success:
-              completion(.success("good"))
-              
-            case .failure:
-              
-              completion(.failure(RegiError.registFailed))
-            }
+        guard let data = data,
+          let image = UIImage(data: data),
+          let imageData = image.jpegData(compressionQuality: 0.5) else {
+            group.leave()
+            return }
+        let id = UUID().uuidString
+        let storageRef = Storage.storage().reference().child("TaskFinder").child("\(id).jpeg")
+        storageRef.putData(imageData, metadata: nil ) { (_, error) in
+          
+          if error != nil {
+            LKProgressHUD.dismiss()
+            return
           }
-        } else { print(error.localizedDescription)}
+          
+          storageRef.downloadURL { [weak self](url, error) in
+            
+            guard let strongSelf = self else { return }
+            
+            if error != nil {
+              LKProgressHUD.dismiss()
+              LKProgressHUD.showFailure(text: "Error", controller: strongSelf)
+              return }
+            
+            guard let urlBack = url else { return }
+            
+            let stringUrl = "\(urlBack)"
+            
+            photo = stringUrl
+            
+            group.leave()
+          }
+        }
       }
+    } else {
+      group.leave()
+    }
+    
+    group.notify(queue: DispatchQueue.main) {
+      
+      guard let email = Auth.auth().currentUser?.email,
+             let uid = Auth.auth().currentUser?.uid else { return }
+      
+      UserManager.shared.readUserInfo(uid: uid, isSelf: true) {result in
+        switch result {
+        case .success:
+          completion(.success("good"))
+        case .failure(let error):
+          
+          if error.localizedDescription == "The operation couldn’t be completed. (Errand.FireBaseDownloadError error 0.)" {
+            DataBaseManager.shared.createDataBase(classification: "Users", nickName: userName, email: email, photo: photo) { result in
+              switch result {
+              case .success:
+                completion(.success("good"))
+                
+              case .failure:
+                
+                completion(.failure(RegiError.registFailed))
+              }
+            }
+          } else { print(error.localizedDescription)}
+        }
+      }
+      
     }
   }
   
