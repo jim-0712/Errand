@@ -4,11 +4,16 @@
 
 
 
-## **ErrandBee**
+# **ErrandBee**
 If you have talents but nowhere to show. **ErrandBee** is a mission-based platform that users can take pleasure in helping others anytime and anywhere
 ## Features & ScreenShots
 
 ### Map
+* **FilterMissionType**: You can select any type mission you want on the top Cell
 
-[<img src="https://i.imgur.com/DuGEETo.gif" width="200" height="355" align=center>]()
 
+* **Map**: You can tap on pin and see the content about the mission
+* **FilterMissionRange**: You can search mission by limiting distance on the radar button
+* **Re-locate**: You can re-locate your position on the bottom right button
+
+ <img src="https://github.com/jim-0712/Errand/blob/master/GIF/Map.gif" width="300">
