@@ -27,6 +27,8 @@ class MissionDetailViewController: UIViewController {
   
   var isMap = false
   
+  var isRemoteNotification = false
+  
   var destinationFcmToken = ""
   
   let myLocationManager = CLLocationManager()
@@ -48,6 +50,16 @@ class MissionDetailViewController: UIViewController {
   let dbF = Firestore.firestore()
   
   var scrollView = UIScrollView()
+  
+  var notificationBtn: UIButton = {
+    let backBtn = UIButton()
+    backBtn.addTarget(self, action: #selector(back), for: .touchUpInside)
+    backBtn.frame = CGRect(x: 20, y: 40, width: 40, height: 40)
+    backBtn.setImage(UIImage(named: "Icons_24px_Close"), for: .normal)
+    backBtn.backgroundColor = .lightGray
+    backBtn.layer.cornerRadius = backBtn.layer.frame.height / 2
+    return backBtn
+  }()
   
   @IBOutlet weak var takeMissionBtn: UIButton!
   
@@ -99,7 +111,7 @@ class MissionDetailViewController: UIViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
-    if isMap {
+    if isMap || isRemoteNotification {
       backBtn.isHidden = false
     } else if navigationController == nil {
       backBtn.isHidden = false
@@ -133,6 +145,10 @@ class MissionDetailViewController: UIViewController {
   
   @objc func backToList() {
     self.navigationController?.popViewController(animated: true)
+  }
+  
+  @objc func back() {
+    self.dismiss(animated: true, completion: nil)
   }
   
   @IBAction func giveUpmissionAct(_ sender: Any) {
@@ -216,21 +232,23 @@ class MissionDetailViewController: UIViewController {
         guard let yPos = self.navigationController?.navigationBar.frame.height else { return }
         missionImage = UIImageView(frame: CGRect(x: 0, y: yPos, width: fullSize.width, height: 300))
         missionView = UIView(frame: CGRect(x: 0, y: yPos, width: fullSize.width, height: 300))
+      } else if isRemoteNotification {
+        missionImage = UIImageView(frame: CGRect(x: 0, y: 0, width: fullSize.width, height: 300))
+        missionView = UIView(frame: CGRect(x: 0, y: 88, width: fullSize.width, height: 300))
       } else {
         missionImage = UIImageView(frame: CGRect(x: 0, y: 88, width: fullSize.width, height: 300))
         missionView = UIView(frame: CGRect(x: 0, y: 88, width: fullSize.width, height: 300))
       }
+      
       missionImage.contentMode = .scaleAspectFill
       missionImage.clipsToBounds = true
       missionImage.center = CGPoint(x: fullSize.width * (0.5 + CGFloat(counter)), y: 150)
-      missionView = UIView(frame: CGRect(x: 0, y: self.navigationController?.navigationBar.frame.height ?? 0, width: fullSize.width, height: 300))
       missionView.clipsToBounds = true
       missionView.center = CGPoint(x: fullSize.width * (0.5 + CGFloat(counter)), y: 150)
       scrollView.addSubview(missionView)
       scrollView.addSubview(missionImage)
       
       let typeManager = data.taskPhoto[counter].components(separatedBy: "mov")
-      
       if typeManager.count > 1 {
         missionImage.isHidden = true
         guard let video = URL(string: data.taskPhoto[counter]) else { return }
@@ -243,15 +261,23 @@ class MissionDetailViewController: UIViewController {
     
     scrollView.delegate = self
     self.view.addSubview(scrollView)
-    let yPos = isMap ? self.navigationController?.navigationBar.frame.height : 88
-    scrollView.frame = CGRect(x: 0, y: self.navigationController?.navigationBar.frame.height ?? 0, width: fullSize.width, height: 300)
+    
+    if isRemoteNotification {
+      self.view.addSubview(notificationBtn)
+      
+      notificationBtn.frame = CGRect(x: 20, y: 40, width: 40, height: 40)
+      notificationBtn.setImage(UIImage(named: "Icons_24px_Close"), for: .normal)
+    }
     
     if isMap {
       guard let yPos = self.navigationController?.navigationBar.frame.height else { return }
       scrollView.frame = CGRect(x: 0, y: yPos, width: fullSize.width, height: 300)
+    } else if isRemoteNotification {
+      scrollView.frame = CGRect(x: 0, y: 0, width: fullSize.width, height: 300)
     } else {
       scrollView.frame = CGRect(x: 0, y: 88, width: fullSize.width, height: 300)
     }
+    
     scrollView.contentSize = CGSize(width: fullSize.width * CGFloat(data.taskPhoto.count), height: 300)
     scrollView.isPagingEnabled = true
     scrollView.bounces = true
@@ -363,6 +389,8 @@ class MissionDetailViewController: UIViewController {
         }
         return
       }
+        takeMissionBtn.isHidden = isRemoteNotification
+        backBtn.isHidden = false
       
       if userInfo.status == 0 {
         setUpView()
@@ -429,7 +457,10 @@ class MissionDetailViewController: UIViewController {
   func setUpCommectionAndTableView() {
     detailTableView.delegate = self
     detailTableView.dataSource = self
-    detailTableView.contentInset = UIEdgeInsets(top: scrollView.frame.size.height, left: 0, bottom: 0, right: 0)
+    
+    let top = isRemoteNotification ? scrollView.frame.size.height - 40 : scrollView.frame.size.height
+    
+    detailTableView.contentInset = UIEdgeInsets(top: top, left: 0, bottom: 0, right: 0)
     detailTableView.rowHeight = UITableView.automaticDimension
     detailTableView.register(UINib(nibName: "StartMissionTableViewCell", bundle: nil), forCellReuseIdentifier: "startMission")
   }
@@ -515,6 +546,8 @@ class MissionDetailViewController: UIViewController {
       takeMissionBtn.setTitle("請先完成當前任務", for: .normal)
       takeMissionBtn.tintColor = .black
       takeMissionBtn.isEnabled = false
+    } else if isRemoteNotification {
+      takeMissionBtn.isHidden = isRemoteNotification
     } else {
       takeMissionBtn.backgroundColor = UIColor.Y1
       takeMissionBtn.setTitle("接受任務", for: .normal)

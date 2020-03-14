@@ -366,6 +366,7 @@ extension PersonInfoViewController: UITableViewDelegate, UITableViewDataSource {
     
     cell.setUpView(isRequester: isRequester, personPhoto: photo, nickName: name, email: email)
     cell.choosePhotoBtn.isHidden = UserManager.shared.isTourist
+    cell.choosePhotoBtn.isHidden = isRequester
     cell.choosePhotoBtn.addTarget(self, action: #selector(pickImage), for: .touchUpInside)
     cell.backgroundColor = .clear
     return cell
@@ -374,7 +375,7 @@ extension PersonInfoViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension PersonInfoViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
-  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
     
     preventTap()
     
