@@ -52,12 +52,12 @@ If you have talents but nowhere to show. **ErrandBee** is a mission-based platfo
  ### Friends Page 
  * **Friends Page**: You can check who is your friend and start a new conversation with they
  
- <img src=" https://github.com/jim-0712/Errand/blob/master/GIF/Judge.gif" width="300"></a><img src=" https://github.com/jim-0712/Errand/blob/master/GIF/Friendslist.png" width="300">
+ <img src="https://github.com/jim-0712/Errand/blob/master/GIF/Judge.gif" width="300"></a><img src=" https://github.com/jim-0712/Errand/blob/master/GIF/Friendslist.png" width="300">
  
  ### Personinfo Page 
  * **Personinfo Page**: You can check your history record and edit your personal info on your own
  
- <img src=" https://github.com/jim-0712/Errand/blob/master/GIF/PersonPage.gif" width="300">
+ <img src="https://github.com/jim-0712/Errand/blob/master/GIF/PersonPage.gif" width="300">
  
  
  # Library
