@@ -33,20 +33,52 @@ If you have talents but nowhere to show. **ErrandBee** is a mission-based platfo
  ### Mission Content
 * **Mission Content**: You can see the content about the mission and apply to author for taking the mission
 
- <img src="https://github.com/jim-0712/Errand/blob/master/GIF/MissionDetail.gif" width="300">
+ <img src="https://github.com/jim-0712/Errand/blob/master/GIF/MissionDetail.gif" width="300"></a><img src=" https://github.com/jim-0712/Errand/blob/master/GIF/TakeMission.gif" width="300">
+
  
 ### Requster Page
 * **Requster Page**: You can review the requster information who want to take the mission
 * **Requster info**: You can check more information about the requster, such as history record and average score.
+* **Remote Notification**: Requster can receive the remote notification when mission author decide you to start the mission
 
- <img src="https://github.com/jim-0712/Errand/blob/master/GIF/Requster.gif" width="300">
+ <img src="https://github.com/jim-0712/Errand/blob/master/GIF/Requster.gif" width="300"></a><img src=" https://github.com/jim-0712/Errand/blob/master/GIF/Notification.gif" width="300">
  
  
+ ### Judge Page 
+ * **Judge Page**: You can judge other side and have some comment on this page. You can also send a friends request to each other.
+ 
+ <img src=" https://github.com/jim-0712/Errand/blob/master/GIF/Judge.gif" width="300">
+ 
+ ### Friends Page 
+ * **Friends Page**: You can check who is your friend and start a new conversation with they
+ 
+ <img src=" https://github.com/jim-0712/Errand/blob/master/GIF/Judge.gif" width="300"></a><img src=" https://github.com/jim-0712/Errand/blob/master/GIF/Friendslist.png" width="300">
+ 
+ ### Personinfo Page 
+ * **Personinfo Page**: You can check your history record and edit your personal info on your own
+ 
+ <img src=" https://github.com/jim-0712/Errand/blob/master/GIF/PersonPage.gif" width="300">
  
  
- 
- 
- 
- 
+ # Library
+* Kingfisher
+* Crashlytics
+* IQKeyboardManagerSwift
+* SwiftLInt
+* Firebase
+* MessageKit
+* GoogleMaps
+* Fabric
+* Cosmos
+* SwiftMessages
+* KMPlaceholderTextView
+
+
+# Requirements
+* iOS 13.0+
+* Xcode 11.0+
+
+# Contacts
+Jim Fu [jimmykingogo@gmail.com](jimmykingogo@gmail.com)
  
 
