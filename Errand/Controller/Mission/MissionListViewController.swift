@@ -136,7 +136,6 @@ class MissionListViewController: UIViewController, UIViewControllerTransitioning
     fetchMissionStartData()
   }
   
-  
   func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
     
     circleAnimation.transitionMode = .dismiss
