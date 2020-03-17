@@ -103,7 +103,7 @@ class APImanager {
   
   let decoder = JSONDecoder()
   
-  func getLocation(latitude: String, longitude: String, completion: @escaping ((Result<Address, Error>) -> Void)) {
+  func getLocation<T: Decodable>(of type: T.Type, latitude: String, longitude: String, completion: @escaping ((Result<T, Error>) -> Void)) {
     
     URLSession.shared.dataTask(with: APIRequest.makeRequest(APIRequest.location(latitude: latitude, longitude: longitude))()) { (data, response, error) in
       guard let response = response as? HTTPURLResponse, response.statusCode == 200 else { return }
@@ -117,7 +117,7 @@ class APImanager {
         guard let data = data else { return }
         do {
           
-          let result = try self.decoder.decode(Address.self, from: data)
+          let result = try self.decoder.decode(T.self, from: data)
           
           completion(.success(result))
           

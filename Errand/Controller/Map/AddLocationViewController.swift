@@ -48,7 +48,7 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
     
     let long = "\(destinationLongtitude)"
     
-    APImanager.shared.getLocation(latitude: lat, longitude: long) { [weak self](result) in
+    APImanager.shared.getLocation(of: Address.self, latitude: lat, longitude: long) { [weak self](result) in
       
       guard let strongSelf = self else { return }
       

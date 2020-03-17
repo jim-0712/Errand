@@ -25,7 +25,7 @@ class TaskManager {
     TaskGroup(color: .blue, title: "水電維修", image: "fix"),
     TaskGroup(color: .lightGray, title: "科技維修", image: "tools"),
     TaskGroup(color: .pink, title: "驅趕害蟲", image: "bug"),
-    TaskGroup(color: .lightPurple, title: "一日陪伴", image: "develop"),
+    TaskGroup(color: .lightPurple, title: "外送食物", image: "develop"),
     TaskGroup(color: .orange, title: "交通接送", image: "drive"),
     TaskGroup(color: .green, title: "其他種類", image: "questions")
   ]

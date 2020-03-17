@@ -8,7 +8,6 @@
 
 import UIKit
 import Firebase
-import MarqueeLabel
 
 private enum Tab {
   
@@ -103,12 +102,6 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     
     setUpListener()
   }
-  
-  let notiView = UIView()
-  
-  let lengthyLabel = MarqueeLabel()
-  
-  let alert = UIImageView()
   
   private var reference: CollectionReference?
   
