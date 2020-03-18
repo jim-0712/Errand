@@ -47,6 +47,10 @@ class MissionDetailViewController: UIViewController {
   
   let fullSize = UIScreen.main.bounds.size
   
+  let calcHeight = UIScreen.main.bounds.size.height * 300 / 896
+  
+  let naviHeight = UIScreen.main.bounds.size.height * 88 / 896
+  
   let dbF = Firestore.firestore()
   
   var scrollView = UIScrollView()
@@ -229,22 +233,21 @@ class MissionDetailViewController: UIViewController {
     for counter in 0 ..< data.taskPhoto.count {
       
       if isMap {
-        guard let yPos = self.navigationController?.navigationBar.frame.height else { return }
-        missionImage = UIImageView(frame: CGRect(x: 0, y: yPos, width: fullSize.width, height: 300))
-        missionView = UIView(frame: CGRect(x: 0, y: yPos, width: fullSize.width, height: 300))
+        missionImage = UIImageView(frame: CGRect(x: 0, y: 0, width: fullSize.width, height: calcHeight))
+        missionView = UIView(frame: CGRect(x: 0, y: 0, width: fullSize.width, height: calcHeight))
       } else if isRemoteNotification {
-        missionImage = UIImageView(frame: CGRect(x: 0, y: 0, width: fullSize.width, height: 300))
-        missionView = UIView(frame: CGRect(x: 0, y: 88, width: fullSize.width, height: 300))
+        missionImage = UIImageView(frame: CGRect(x: 0, y: 0, width: fullSize.width, height: calcHeight))
+        missionView = UIView(frame: CGRect(x: 0, y: naviHeight, width: fullSize.width, height: calcHeight))
       } else {
-        missionImage = UIImageView(frame: CGRect(x: 0, y: 88, width: fullSize.width, height: 300))
-        missionView = UIView(frame: CGRect(x: 0, y: 88, width: fullSize.width, height: 300))
+        missionImage = UIImageView(frame: CGRect(x: 0, y: naviHeight, width: fullSize.width, height: calcHeight))
+        missionView = UIView(frame: CGRect(x: 0, y: naviHeight, width: fullSize.width, height: calcHeight))
       }
       
       missionImage.contentMode = .scaleAspectFill
       missionImage.clipsToBounds = true
-      missionImage.center = CGPoint(x: fullSize.width * (0.5 + CGFloat(counter)), y: 150)
+      missionImage.center = CGPoint(x: fullSize.width * (0.5 + CGFloat(counter)), y: calcHeight / 2)
       missionView.clipsToBounds = true
-      missionView.center = CGPoint(x: fullSize.width * (0.5 + CGFloat(counter)), y: 150)
+      missionView.center = CGPoint(x: fullSize.width * (0.5 + CGFloat(counter)), y: calcHeight / 2)
       scrollView.addSubview(missionView)
       scrollView.addSubview(missionImage)
       
@@ -270,15 +273,14 @@ class MissionDetailViewController: UIViewController {
     }
     
     if isMap {
-      guard let yPos = self.navigationController?.navigationBar.frame.height else { return }
-      scrollView.frame = CGRect(x: 0, y: yPos, width: fullSize.width, height: 300)
+      scrollView.frame = CGRect(x: 0, y: 0, width: fullSize.width, height: calcHeight)
     } else if isRemoteNotification {
-      scrollView.frame = CGRect(x: 0, y: 0, width: fullSize.width, height: 300)
+      scrollView.frame = CGRect(x: 0, y: 0, width: fullSize.width, height: calcHeight)
     } else {
-      scrollView.frame = CGRect(x: 0, y: 88, width: fullSize.width, height: 300)
+      scrollView.frame = CGRect(x: 0, y: naviHeight, width: fullSize.width, height: calcHeight)
     }
     
-    scrollView.contentSize = CGSize(width: fullSize.width * CGFloat(data.taskPhoto.count), height: 300)
+    scrollView.contentSize = CGSize(width: fullSize.width * CGFloat(data.taskPhoto.count), height: calcHeight)
     scrollView.isPagingEnabled = true
     scrollView.bounces = true
     scrollView.delegate = self
@@ -702,8 +704,10 @@ extension MissionDetailViewController {
   }
   
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
-    if scrollView.contentOffset.y < -300 {
-      pageControl.frame.origin.y = 350 + (-scrollView.contentOffset.y - 300)
+    
+    let pageClac = fullSize.height * 50 / 896
+    if scrollView.contentOffset.y < -calcHeight {
+      pageControl.frame.origin.y = calcHeight + pageClac + (-scrollView.contentOffset.y - calcHeight)
       self.scrollView.frame.size.height = -scrollView.contentOffset.y
       self.scrollView.subviews.forEach { imageView in
         imageView.frame.size.height = -scrollView.contentOffset.y
@@ -720,7 +724,7 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     
     guard let data = detailData,
-      let time = self.receiveTime else { return UITableViewCell() }
+         let time = self.receiveTime else { return UITableViewCell() }
     
     category[0].type = isMissionON ? .startMission : .miniPhoto
     
@@ -769,8 +773,14 @@ extension MissionDetailViewController: UITableViewDelegate, UITableViewDataSourc
       return cell
       
     case .normal :
+      
       guard let cell = tableView.dequeueReusableCell(withIdentifier: "missionDetail", for: indexPath) as? MissionDetailTableViewCell else { return UITableViewCell() }
-      cell.setUp(title: categorys.title, content: time)
+      
+      if indexPath.row == 1 {
+        cell.setUp(title: categorys.title, content: "\(data.money)")
+      } else {
+        cell.setUp(title: categorys.title, content: time)
+      }
       return cell
       
     case .purpose :
