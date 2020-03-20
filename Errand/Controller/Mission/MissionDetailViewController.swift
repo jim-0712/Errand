@@ -123,7 +123,7 @@ class MissionDetailViewController: UIViewController {
     } else {
       backBtn.isHidden = true
    }
-    if fullSize.height <= 800 || isMap {
+    if fullSize.height <= 800 {
       pageControl.isHidden = true
     }
   }
@@ -226,7 +226,7 @@ class MissionDetailViewController: UIViewController {
   
   func setUpScrollView() {
     
-    self.scrollView.addSubview(pageControl)
+//    self.scrollView.addSubview(pageControl)
     
     var missionImage = UIImageView()
     var missionView = UIView()
@@ -268,7 +268,7 @@ class MissionDetailViewController: UIViewController {
     scrollView.delegate = self
     self.view.addSubview(scrollView)
     
-    if isRemoteNotification {
+    if isRemoteNotification || isMap {
       self.view.addSubview(notificationBtn)
       
       notificationBtn.frame = CGRect(x: 20, y: 40, width: 40, height: 40)
@@ -276,9 +276,9 @@ class MissionDetailViewController: UIViewController {
     }
     
     if isMap {
-      scrollView.frame = CGRect(x: 0, y: 0, width: fullSize.width, height: calcHeight)
+      scrollView.frame = CGRect(x: 0, y: 0, width: fullSize.width, height: calcHeight + 100 )
     } else if isRemoteNotification {
-      scrollView.frame = CGRect(x: 0, y: 0, width: fullSize.width, height: calcHeight)
+      scrollView.frame = CGRect(x: 0, y: 0, width: fullSize.width, height: calcHeight + 100 )
     } else {
       scrollView.frame = CGRect(x: 0, y: naviHeight, width: fullSize.width, height: calcHeight)
     }
@@ -589,9 +589,20 @@ class MissionDetailViewController: UIViewController {
     pageControl.currentPageIndicatorTintColor = .black
     pageControl.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
     var height = isMap ? scrollView.frame.height - 40 : scrollView.frame.height + 50
+    if fullSize.height <= 800 {
+          height = 100
+       }
     pageControl.frame = CGRect(x: (fullSize.width / 2) - 50, y: height, width: 100, height: 40)
     pageControl.addTarget(self, action: #selector(pageChanged(sender:)), for: .valueChanged)
   }
+  
+//  override func viewDidAppear(_ animated: Bool) {
+//    super.viewDidAppear(animated)
+//    if fullSize.height <= 800 {
+//      pageControl.frame.origin.y = 200
+//    }
+//    print(pageControl.frame)
+//  }
   
   @objc func pageChanged(sender: UIPageControl) {
     var frame = scrollView.frame
