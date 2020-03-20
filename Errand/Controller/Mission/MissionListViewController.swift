@@ -239,7 +239,7 @@ class MissionListViewController: UIViewController, UIViewControllerTransitioning
   }
   
   func fetchCurrentUserTaskData(parameter: String, uid: String) {
-    taskMan.fetchSpecificParameterData(parameter: parameter, parameterString: uid) { [weak self](result) in
+    taskMan.fetchCurrentTask(parameter: parameter, parameterString: uid) { [weak self](result) in
       guard let strongSelf = self else { return }
       switch result {
         

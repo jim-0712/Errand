@@ -165,12 +165,26 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   }
   
   @IBAction func checkDetailAct(_ sender: Any) {
-    guard let missionDetailVC = UIStoryboard.init(name: "Mission", bundle: nil).instantiateViewController(withIdentifier: "detailViewController") as? MissionDetailViewController else { return }
-         missionDetailVC.isMap = true
-         missionDetailVC.detailData = specificData[0]
-         missionDetailVC.receiveTime =  TaskManager.shared.timeConverter(time: specificData[0].time)
-     
-    self.present(missionDetailVC, animated: true, completion: nil)
+//    guard let missionDetailVC = UIStoryboard.init(name: "Mission", bundle: nil).instantiateViewController(withIdentifier: "detailViewController") as? MissionDetailViewController else { return }
+//         missionDetailVC.isMap = true
+//
+//         missionDetailVC.detailData = specificData[0]
+//         missionDetailVC.receiveTime =  TaskManager.shared.timeConverter(time: specificData[0].time)
+//
+//    self.present(missionDetailVC, animated: true, completion: nil)
+    performSegue(withIdentifier: "Mapdetail", sender: nil)
+  }
+  
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    
+    if  segue.identifier == "Mapdetail" {
+      
+      guard let missionDetailVC = segue.destination as? MissionDetailViewController else { return }
+               missionDetailVC.isMap = true
+               missionDetailVC.detailData = specificData[0]
+               missionDetailVC.receiveTime =  TaskManager.shared.timeConverter(time: specificData[0].time)
+    
+    }
   }
   
   func changeConstraints() {
@@ -459,6 +473,7 @@ extension GoogleMapViewController: UICollectionViewDelegateFlowLayout {
   }
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+    
     return UIEdgeInsets(top: 5, left: 20, bottom: 0, right: 20)
   }
 }

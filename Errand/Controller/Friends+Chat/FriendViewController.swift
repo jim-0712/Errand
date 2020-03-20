@@ -62,34 +62,50 @@ class FriendViewController: UIViewController {
   
   @objc func getFriend() {
     
-    self.friendsData = []
+//    self.friendsData = []
     
     UserManager.shared.fetchFriends { result in
       switch result {
       case .success(let friends):
         
-        if friends.isEmpty {
-          self.friendInfo = []
+        if friends.count == self.friendsData.count {
+          self.refreshControl.endRefreshing()
           LKProgressHUD.dismiss()
-        }
-        
-        friends.forEach { friend in
-          UserManager.shared.fetchPersonPhoto(nameRef: friend.nameREF) { result in
-            switch result {
-            case .success(let info):
-              self.friendsPhoto.append(info.photo)
-              self.friendsData.append(info)
-              if self.friendsData.count == friends.count {
-                self.friendInfo = self.friendsData
-              }
+        } else {
+          self.friendsData = []
+          if friends.isEmpty {
+              self.friendInfo = []
               LKProgressHUD.dismiss()
-            case .failure:
-              LKProgressHUD.dismiss()
-              print("Error on fetchPhoto")
             }
-          }
+            
+            friends.forEach { friend in
+              UserManager.shared.fetchPersonPhoto(nameRef: friend.nameREF) { result in
+                switch result {
+                case .success(let info):
+                  self.friendsPhoto.append(info.photo)
+                  self.friendsData.append(info)
+          
+                  if self.friendsData.count == friends.count {
+                    for count in 0 ..< self.friend.count {
+                      for count2 in 0 ..< self.friendsData.count {
+                        let ref = Firestore.firestore().collection("Users").document(self.friendsData[count2].uid)
+                        if ref == self.friend[count].nameREF {
+                          self.friendsData.swapAt(count2, count)
+                          self.friendsPhoto.swapAt(count2, count)
+                        }
+                      }
+                    }
+                    self.friendInfo = self.friendsData
+                  }
+                  LKProgressHUD.dismiss()
+                case .failure:
+                  LKProgressHUD.dismiss()
+                  print("Error on fetchPhoto")
+                }
+              }
+            }
+            self.friend = friends
         }
-        self.friend = friends
       case .failure:
         LKProgressHUD.dismiss()
         print("Error on Fetch Friends")

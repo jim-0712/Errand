@@ -103,6 +103,30 @@ class TaskManager {
     }
   }
   
+  
+  func fetchCurrentTask(parameter: String, parameterString: String, completion: @escaping ((Result<[TaskInfo], Error>) -> Void)) {
+    
+    self.taskData = []
+    
+    dbF.collection("Tasks").whereField(parameter, isEqualTo: parameterString).whereField("isComplete",isEqualTo: false).getDocuments { [weak self] (querySnapshot, err) in
+      
+      guard let strongSelf = self else { return }
+      
+      if err != nil {
+        
+        completion(.failure(ReadDataError.readDataError))
+        
+      } else {
+        
+        guard let quary = querySnapshot else {return }
+        
+        strongSelf.reFactDataSpec(quary: quary)
+        
+        completion(.success(strongSelf.taskData))
+      }
+    }
+  }
+  
   func fetchSpecificParameterData(parameter: String, parameterString: String, completion: @escaping ((Result<[TaskInfo], Error>) -> Void)) {
     
     self.taskData = []

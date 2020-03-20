@@ -13,10 +13,10 @@ import FBSDKLoginKit
 import IQKeyboardManager
 import FirebaseStorage
 import AuthenticationServices
-//#if canImport(CryptoKit)
+#if canImport(CryptoKit)
 import CryptoKit
-//#endif
-//import CommonCrypto
+#endif
+import CommonCrypto
 
 class ViewController: UIViewController {
   

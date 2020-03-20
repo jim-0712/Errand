@@ -431,7 +431,7 @@ class UserManager: NSObject {
     group.enter()
     group.enter()
     
-    firebaseManager.addFriend(owneruid: ownerUid, takerUid: takerUid, data: ownerFriend.toDict) { result in
+    firebaseManager.addFriend(owneruid: ownerUid, takerUid: takerUid, data: takerFriend.toDict) { result in
       switch result {
       case .success:
         group.leave()
@@ -440,7 +440,7 @@ class UserManager: NSObject {
       }
     }
     
-    firebaseManager.addFriend(owneruid: takerUid, takerUid: ownerUid, data: takerFriend.toDict) { result in
+    firebaseManager.addFriend(owneruid: takerUid, takerUid: ownerUid, data: ownerFriend.toDict) { result in
       switch result {
       case .success:
         group.leave()
@@ -463,7 +463,7 @@ class UserManager: NSObject {
       if error != nil {
         completion(.failure(FireBaseDownloadError.downloadError))
       }
-      
+     
       guard let quary = quaryData else {return }
       
       var friendsList: [Friends] = []
@@ -471,7 +471,7 @@ class UserManager: NSObject {
       for count in 0 ..< quary.documents.count {
         
         guard let chatroomID = quary.documents[count].data()["chatRoomID"] as? String,
-             let nameRef = quary.documents[count].data()["nameREF"] as? DocumentReference else { return }
+              let nameRef = quary.documents[count].data()["nameREF"] as? DocumentReference else { return }
         
         let dataReturn = Friends(nameREF: nameRef, chatRoomID: chatroomID)
         
