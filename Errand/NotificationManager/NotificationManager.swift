@@ -28,7 +28,7 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
     } else {
       let settings: UIUserNotificationSettings =
         UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
-      UIApplication.shared.registerUserNotificationSettings(settings)
+        UIApplication.shared.registerUserNotificationSettings(settings)
     }
     UIApplication.shared.registerForRemoteNotifications()
     updateFirestorePushTokenIfNeeded()
@@ -41,8 +41,8 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
       UserDefaults.standard.set(token, forKey: "fcmToken")
       UserManager.shared.updatefcmToken()
     }
-    
   }
+  
   func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
     updateFirestorePushTokenIfNeeded()
   }

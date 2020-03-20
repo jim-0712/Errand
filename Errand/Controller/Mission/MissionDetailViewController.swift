@@ -122,6 +122,9 @@ class MissionDetailViewController: UIViewController {
       takeMissionBtn.isHidden = true
     } else {
       backBtn.isHidden = true
+   }
+    if fullSize.height <= 800 || isMap {
+      pageControl.isHidden = true
     }
   }
   
@@ -585,7 +588,7 @@ class MissionDetailViewController: UIViewController {
     pageControl.numberOfPages = data.taskPhoto.count
     pageControl.currentPageIndicatorTintColor = .black
     pageControl.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
-    let height = isMap ? scrollView.frame.height - 40 : scrollView.frame.height + 50
+    var height = isMap ? scrollView.frame.height - 40 : scrollView.frame.height + 50
     pageControl.frame = CGRect(x: (fullSize.width / 2) - 50, y: height, width: 100, height: 40)
     pageControl.addTarget(self, action: #selector(pageChanged(sender:)), for: .valueChanged)
   }
@@ -705,7 +708,8 @@ extension MissionDetailViewController {
   
   func scrollViewDidScroll(_ scrollView: UIScrollView) {
     
-    let pageClac = fullSize.height * 50 / 896
+    let pageClac = fullSize.height * 40 / 896
+
     if scrollView.contentOffset.y < -calcHeight {
       pageControl.frame.origin.y = calcHeight + pageClac + (-scrollView.contentOffset.y - calcHeight)
       self.scrollView.frame.size.height = -scrollView.contentOffset.y
