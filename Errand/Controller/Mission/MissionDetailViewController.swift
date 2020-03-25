@@ -23,6 +23,8 @@ class MissionDetailViewController: UIViewController {
   
   var isRequester = false
   
+//
+  
   var isMissionON = false
   
   var destinationFcmToken = ""
