@@ -97,6 +97,13 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
     preventReuseCellBug[0] = true
   }
   
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    taskPersonPhoto.layer.cornerRadius = taskPersonPhoto.bounds.width / 2
+    backgroundView.layer.cornerRadius = backgroundView.bounds.width / 2
+    radarBackView.layer.cornerRadius = radarBackView.bounds.width / 2
+  }
+  
   func preSetup() {
     setUpBtn()
     setUpView()

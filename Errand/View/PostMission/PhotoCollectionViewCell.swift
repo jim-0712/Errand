@@ -23,9 +23,9 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     
     super.init(frame: frame)
     
-    self.contentView.layer.borderColor = UIColor.black.cgColor
-    
-    self.contentView.layer.borderWidth = 1.0
+//    self.contentView.layer.borderColor = UIColor.black.cgColor
+////
+//    self.contentView.layer.borderWidth = 1.0
   }
   
   var indexRow = 0
@@ -37,8 +37,8 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     super.init(coder: coder)
     
     self.contentView.layer.borderColor = UIColor.black.cgColor
-       
-    self.contentView.layer.borderWidth = 1.0
+
+    self.contentView.layer.borderWidth = 1
   }
   
   weak var delegate: UploadDataManager?
@@ -62,7 +62,6 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     let platItem = AVPlayerItem(url: video)
     playerLooper = AVPlayerLooper(player: playQueue, templateItem: platItem)
     let playerLayer = AVPlayerLayer(player: playQueue)
-    
     playerLayer.frame = self.contentView.bounds
     self.layer.addSublayer(playerLayer)
     playQueue.play()
