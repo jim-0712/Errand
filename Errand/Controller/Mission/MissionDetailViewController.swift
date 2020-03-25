@@ -16,57 +16,6 @@ import CoreLocation
 
 class MissionDetailViewController: UIViewController {
   
-  var category: [CellContent] = [CellContent(type: .miniPhoto, title: "大頭貼"),
-                                 CellContent(type: .normal, title: "懸賞價格"),
-                                 CellContent(type: .normal, title: "發布時間"),
-                                 CellContent(type: .purpose, title: "任務細節") ]
-  
-  var playerLooper: [AVPlayerLooper] = []
-  
-//
-  
-  var isMissionON = false
-  
-  var isMap = false
-  
-  var isRemoteNotification = false
-  
-  var destinationFcmToken = ""
-  
-  let myLocationManager = CLLocationManager()
-  
-  var receiveTime: String?
-  
-  var detailData: TaskInfo?
-  
-  var reversePhoto = ""
-  
-  var arrangementPhoto: [String] = []
-  
-  var arrangementVideo: [String] = []
-  
-  let pageControl = UIPageControl()
-  
-  let fullSize = UIScreen.main.bounds.size
-  
-  let calcHeight = UIScreen.main.bounds.size.height * 300 / 896
-  
-  let naviHeight = UIScreen.main.bounds.size.height * 88 / 896
-  
-  let dbF = Firestore.firestore()
-  
-  var scrollView = UIScrollView()
-  
-  var notificationBtn: UIButton = {
-    let backBtn = UIButton()
-    backBtn.addTarget(self, action: #selector(back), for: .touchUpInside)
-    backBtn.frame = CGRect(x: 20, y: 40, width: 40, height: 40)
-    backBtn.setImage(UIImage(named: "Icons_24px_Close"), for: .normal)
-    backBtn.backgroundColor = .lightGray
-    backBtn.layer.cornerRadius = backBtn.layer.frame.height / 2
-    return backBtn
-  }()
-  
   @IBOutlet weak var takeMissionBtn: UIButton!
   
   @IBOutlet weak var detailTableView: UITableView!
@@ -78,6 +27,116 @@ class MissionDetailViewController: UIViewController {
   @IBOutlet weak var finishMissionBtn: UIButton!
   
   @IBOutlet weak var giveUpmissionBtn: UIButton!
+  
+  @IBAction func giveUpmissionAct(_ sender: Any) {
+    
+    let controller = UIAlertController(title: "您確定要放棄任務？", message: "將會扣您星星總評分1分", preferredStyle: .alert)
+    
+    let okAction = UIAlertAction(title: "ok", style: .default) { [weak self]_ in
+      guard let strongSelf = self,
+        let taskInfo = strongSelf.detailData else { return }
+      
+      strongSelf.giveUpMission(taskInfo: taskInfo)
+    }
+    
+    let cancelAct = UIAlertAction(title: "back", style: .cancel, handler: nil)
+    controller.addAction(okAction)
+    controller.addAction(cancelAct)
+    self.present(controller, animated: true, completion: nil)
+  }
+  
+  @IBAction func finishMissionAct(_ sender: Any) {
+    completeMission()
+  }
+  
+  @IBAction func backAct(_ sender: Any) {
+    self.dismiss(animated: true, completion: nil)
+  }
+  
+  @IBAction func takeMissionAct(_ sender: Any) {
+    
+    LKProgressHUD.show(controller: self)
+    
+    guard let taskInfo = detailData else { return }
+    
+    TaskManager.shared.updateTaskRequest(owner: taskInfo.uid) { [weak self ]result in
+      
+      guard let strongSelf = self else { return }
+      
+      switch result {
+        
+      case .success:
+        
+        strongSelf.setUpBtnEnable()
+        APImanager.shared.postNotification(to: taskInfo.fcmToken, body: "有人申請任務")
+        
+        let controller = UIAlertController(title: "恭喜", message: "您已申請", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "ok", style: .default) { (_) in
+          self?.navigationController?.popViewController(animated: true)
+        }
+        controller.addAction(okAction)
+        strongSelf.present(controller, animated: true, completion: nil)
+        
+        LKProgressHUD.dismiss()
+        
+      case .failure(let error):
+        
+        LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
+        
+      }
+    }
+  }
+  
+  var category: [CellContent] = [CellContent(type: .miniPhoto, title: "大頭貼"),
+                                   CellContent(type: .normal, title: "懸賞價格"),
+                                   CellContent(type: .normal, title: "發布時間"),
+                                   CellContent(type: .purpose, title: "任務細節") ]
+    
+    var playerLooper: [AVPlayerLooper] = []
+    
+  //
+    
+    var isMissionON = false
+    
+    var isMap = false
+    
+    var isRemoteNotification = false
+    
+    var destinationFcmToken = ""
+    
+    let myLocationManager = CLLocationManager()
+    
+    var receiveTime: String?
+    
+    var detailData: TaskInfo?
+    
+    var reversePhoto = ""
+    
+    var arrangementPhoto: [String] = []
+    
+    var arrangementVideo: [String] = []
+    
+    let pageControl = UIPageControl()
+    
+    let fullSize = UIScreen.main.bounds.size
+    
+    let calcHeight = UIScreen.main.bounds.size.height * 300 / 896
+    
+    let naviHeight = UIScreen.main.bounds.size.height * 88 / 896
+    
+    let dbF = Firestore.firestore()
+    
+    var scrollView = UIScrollView()
+    
+    var notificationBtn: UIButton = {
+      let backBtn = UIButton()
+      backBtn.addTarget(self, action: #selector(back), for: .touchUpInside)
+      backBtn.frame = CGRect(x: 20, y: 40, width: 40, height: 40)
+      backBtn.setImage(UIImage(named: "Icons_24px_Close"), for: .normal)
+      backBtn.backgroundColor = .lightGray
+      backBtn.layer.cornerRadius = backBtn.layer.frame.height / 2
+      return backBtn
+    }()
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -158,65 +217,6 @@ class MissionDetailViewController: UIViewController {
   
   @objc func back() {
     self.dismiss(animated: true, completion: nil)
-  }
-  
-  @IBAction func giveUpmissionAct(_ sender: Any) {
-    
-    let controller = UIAlertController(title: "您確定要放棄任務？", message: "將會扣您星星總評分1分", preferredStyle: .alert)
-    
-    let okAction = UIAlertAction(title: "ok", style: .default) { [weak self]_ in
-      guard let strongSelf = self,
-        let taskInfo = strongSelf.detailData else { return }
-      
-      strongSelf.giveUpMission(taskInfo: taskInfo)
-    }
-    
-    let cancelAct = UIAlertAction(title: "back", style: .cancel, handler: nil)
-    controller.addAction(okAction)
-    controller.addAction(cancelAct)
-    self.present(controller, animated: true, completion: nil)
-  }
-  
-  @IBAction func finishMissionAct(_ sender: Any) {
-    completeMission()
-  }
-  
-  @IBAction func backAct(_ sender: Any) {
-    self.dismiss(animated: true, completion: nil)
-  }
-  
-  @IBAction func takeMissionAct(_ sender: Any) {
-    
-    LKProgressHUD.show(controller: self)
-    
-    guard let taskInfo = detailData else { return }
-    
-    TaskManager.shared.updateTaskRequest(owner: taskInfo.uid) { [weak self ]result in
-      
-      guard let strongSelf = self else { return }
-      
-      switch result {
-        
-      case .success:
-        
-        strongSelf.setUpBtnEnable()
-        APImanager.shared.postNotification(to: taskInfo.fcmToken, body: "有人申請任務")
-        
-        let controller = UIAlertController(title: "恭喜", message: "您已申請", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "ok", style: .default) { (_) in
-          self?.navigationController?.popViewController(animated: true)
-        }
-        controller.addAction(okAction)
-        strongSelf.present(controller, animated: true, completion: nil)
-        
-        LKProgressHUD.dismiss()
-        
-      case .failure(let error):
-        
-        LKProgressHUD.showFailure(text: error.localizedDescription, controller: strongSelf)
-        
-      }
-    }
   }
   
   func backTosignIn() {
