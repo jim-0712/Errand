@@ -23,6 +23,8 @@ class MissionDetailViewController: UIViewController {
   
   var playerLooper: [AVPlayerLooper] = []
   
+//
+  
   var isMissionON = false
   
   var isMap = false
