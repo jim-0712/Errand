@@ -64,6 +64,7 @@ class ListTableViewCell: UITableViewCell {
     authorLabel.text = "發文者 : \(author)"
     
     priceLabel.text = "價格 : \(priceTimeInt[0])"
+    
     backgorundVisibleView.clipsToBounds = false
     
     backgorundVisibleView.layer.cornerRadius = 10
@@ -78,7 +79,7 @@ class ListTableViewCell: UITableViewCell {
     
     backgorundVisibleView.layer.shadowColor = UIColor.black.cgColor
   
-    backgorundVisibleView.layer.shadowOffset = CGSize(width: 3, height: 3)
+    backgorundVisibleView.layer.shadowOffset = CGSize(width: 1, height: 1)
     
   }
   

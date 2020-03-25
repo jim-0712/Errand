@@ -575,9 +575,9 @@ extension PostMissionViewController: UICollectionViewDelegateFlowLayout {
   
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
     if collectionView == self.missionGroupCollectionView {
-      return CGSize(width: screenwidth / 2.5, height: screenheight / 20)
+      return CGSize(width: screenwidth / 2.5, height: screenheight / 22)
     } else {
-      return CGSize(width: 120, height: 120)
+      return CGSize(width: screenwidth / 4.5, height: screenwidth / 4.5)
     }
   }
   

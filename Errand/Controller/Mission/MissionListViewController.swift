@@ -335,7 +335,7 @@ class MissionListViewController: UIViewController, UIViewControllerTransitioning
     taskListTable.dataSource = self
     taskListTable.translatesAutoresizingMaskIntoConstraints = false
     taskListTable.rowHeight = UITableView.automaticDimension
-    taskListTable.estimatedRowHeight = 200
+    taskListTable.estimatedRowHeight = UIScreen.main.bounds.height * ( 160 / 896 )
   }
   
   func setUpBtn() {
