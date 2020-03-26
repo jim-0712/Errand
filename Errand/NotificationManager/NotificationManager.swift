@@ -159,7 +159,7 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
               conversationVC.modalPresentationStyle = .fullScreen
               UserManager.shared.currentUserInfo?.status = 2
               conversationVC.isMissionON = true
-              conversationVC.isRemoteNotification = true
+//              conversationVC.isRemoteNotification = true
               tabBarController.present(conversationVC, animated: true, completion: nil)
             }
           } else {
@@ -168,7 +168,7 @@ class PushNotificationManager: NSObject, MessagingDelegate, UNUserNotificationCe
                 UserManager.shared.currentUserInfo = nil
                 conversationVC.modalPresentationStyle = .fullScreen
                 conversationVC.isMissionON = true
-                conversationVC.isRemoteNotification = true
+//                conversationVC.isRemoteNotification = true
                 tabBarController.present(conversationVC, animated: true, completion: nil)
               }
             })
