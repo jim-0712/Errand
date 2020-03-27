@@ -192,9 +192,9 @@ class MissionDetailViewController: UIViewController {
          MutipleFuncManager.shared.changeStatus(task: taskData) { result in
            switch result {
            case .success:
-             print("goodOK")
+             print("mission complete")
            case .failure:
-             print("error")
+             print("mission fail")
            }
          }
        }
