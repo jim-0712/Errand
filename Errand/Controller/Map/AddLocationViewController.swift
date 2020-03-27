@@ -67,7 +67,7 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
         
       case .failure:
         
-        print("No")
+        print("get distance fail")
       }
     }
     

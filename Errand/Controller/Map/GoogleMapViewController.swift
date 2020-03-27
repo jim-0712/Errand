@@ -172,13 +172,6 @@ class GoogleMapViewController: UIViewController, CLLocationManagerDelegate, UITe
   }
   
   @IBAction func checkDetailAct(_ sender: Any) {
-//    guard let missionDetailVC = UIStoryboard.init(name: "Mission", bundle: nil).instantiateViewController(withIdentifier: "detailViewController") as? MissionDetailViewController else { return }
-//         missionDetailVC.isMap = true
-//
-//         missionDetailVC.detailData = specificData[0]
-//         missionDetailVC.receiveTime =  TaskManager.shared.timeConverter(time: specificData[0].time)
-//
-//    self.present(missionDetailVC, animated: true, completion: nil)
     performSegue(withIdentifier: "Mapdetail", sender: nil)
   }
   
