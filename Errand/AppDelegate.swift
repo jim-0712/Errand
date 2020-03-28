@@ -58,6 +58,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     
     FirebaseApp.configure()
     
+    UINavigationBar.appearance().barTintColor = .G1
+    
+    UINavigationBar.appearance().tintColor = .black
+    
+    UINavigationBar.appearance().isTranslucent = false
+    
     GMSServices.provideAPIKey("AIzaSyBbTnBn0MHPMnioaL4y68Da3d41JlaSY-g")
     
     Fabric.sharedSDK().debug = true
@@ -143,5 +149,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
       }
     }
   }
-  
 }

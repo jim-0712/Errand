@@ -56,4 +56,8 @@ class SwiftMes {
     config.preferredStatusBarStyle = .lightContent
     SwiftMessages.show(config: config, view: view)
   }
+  
+  func dismiss(){
+    SwiftMessages.hide()
+  }
 }

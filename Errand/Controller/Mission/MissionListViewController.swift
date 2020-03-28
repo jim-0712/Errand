@@ -91,7 +91,7 @@ class MissionListViewController: UIViewController, UIViewControllerTransitioning
   
    override func viewDidLoad() {
      super.viewDidLoad()
-
+    
      setUpSearch()
      setUpTableView()
      setUpindicatorView()
@@ -107,6 +107,7 @@ class MissionListViewController: UIViewController, UIViewControllerTransitioning
    
    override func viewWillDisappear(_ animated: Bool) {
      super.viewWillDisappear(animated)
+     UINavigationBar.appearance().tintColor = UIColor.G1
      currentBtnSelect = false
      fetchTaskData()
    }
@@ -285,7 +286,28 @@ class MissionListViewController: UIViewController, UIViewControllerTransitioning
     self.navigationItem.searchController = searchCustom
     searchCustom.searchBar.searchBarStyle = .prominent
     searchCustom.searchBar.delegate = self
+    
+    searchCustom.searchBar.isTranslucent = false
+    navigationController?.navigationBar.isTranslucent = false
+    navigationController?.navigationBar.backgroundColor = .G1
+    
+    if #available(iOS 13.0, *) {
+
+       let statusBar1 =  UIView()
+       
+      guard let frameS = UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame
+        else { return }
+      
+       statusBar1.frame = frameS
+       statusBar1.backgroundColor = UIColor.G1
+
+       UIApplication.shared.keyWindow?.addSubview(statusBar1)
+
+    }
+    
     searchCustom.searchBar.placeholder = "搜尋發文主"
+    searchCustom.hidesNavigationBarDuringPresentation = false
+    searchCustom.searchBar.searchTextField.delegate = self
     searchCustom.searchResultsUpdater = self
     searchCustom.searchBar.sizeToFit()
     searchCustom.obscuresBackgroundDuringPresentation = false
@@ -343,12 +365,12 @@ class MissionListViewController: UIViewController, UIViewControllerTransitioning
     
     if status == 1 {
       postMissionBtn.isHidden = false
-      postMissionBtn.setImage(UIImage(named: "wheel-2"), for: .normal)
+      postMissionBtn.setImage(UIImage(named: "support "), for: .normal)
     } else if status == 2 {
       postMissionBtn.isHidden = true
     } else {
       postMissionBtn.isHidden = false
-      postMissionBtn.setImage(UIImage(named: "plus"), for: .normal)
+      postMissionBtn.setImage(UIImage(named: "add-3"), for: .normal)
     }
   }
 }
@@ -434,6 +456,7 @@ extension MissionListViewController: UISearchBarDelegate {
   
   func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
     shouldShowSearchResults = true
+    self.navigationController?.navigationBar.backgroundColor = .G1
   }
   
   func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {

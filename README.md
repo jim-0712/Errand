@@ -3,64 +3,64 @@
 <a href="https://apps.apple.com/tw/app/errandbee/id1500517852"><img src="https://i.imgur.com/Pc1KdHw.png" height="58"></a>
 
 # **ErrandBee**
-If you have talents but nowhere to show, **ErrandBee** is a mission-based platform that users can take pleasure in helping others anytime and anywhere.
-## Features & ScreenShots
+如果你有才能卻無處施展, **ErrandBee** 是一個任務平台App，讓使用者可以在任何時間、任何地點去享受幫助別人的快感 
+## 特色 & 截圖
 
-### Map Page
+### 地圖頁面
 
-* **Filter mission type**: You can select any type of missions you want on the top bar.
-* **Map**: You can tap on the pin and see the content about the mission.
-* **Filter mission range**: You can search missions by limiting distance on the radar button.
-* **Re-locate**: You can re-locate your position on the bottom right button.
+* **篩選任務種類**: 可以在上方的種類方塊去選擇你想搜尋的種類
+* **地圖**: 可以在地圖上的大頭針知道附近的任務，也可以點擊大頭針的內文知道任務較詳細的內容
+* **篩選任務距離限制**: 可以點擊雷達按鈕搜尋固定範圍之內的任務
+* **重新定位**: 可以點擊右下角定位按鈕去重新定位當前所在地
 
  <img src="https://github.com/jim-0712/Errand/blob/master/GIF/Map.gif" width="300">
  
- ### Missionlist Page
+ ### 任務列表頁面
 
-* **Search mission owner**: You can search mission owner by name on the search bar.
-* **Mission list**: You can see all the missions or the mission you own.
-* **Post mission**: You can post missions on the bottom right button.
+* **搜尋任務發文者**: 可以在搜索條上針對人物發文主的名字做搜尋
+* **任務列表** 可以看到所有的任務，或你當前的任務
+* **發布任務**: 可以點擊加號按鈕去發布任務
 
  <img src="https://github.com/jim-0712/Errand/blob/master/GIF/MissionList.gif" width="300">
  
- ### Post Mission Page
+ ### 發布任務頁面
 
-* **Post mission page**: You can create the mission you want and add some photos or videos to let others know the detailed situation.
+* **發布任務**: 可以新增任務的描述、種類、地點、詳細照片或影片以及任務的金額，並發布在網路上
 
  <img src="https://github.com/jim-0712/Errand/blob/master/GIF/PostMission.gif" width="300">
  
- ### Mission Content
-* **Mission Content**: You can see the content about the mission and apply to the take the mission from the mission owner.
-* **Report system**: You can report the user by tapping the alert button and customer service executives will handle your report.
-* **Your own mission**: You will see the different layout for the on-going mission.
+ ### 任務細節頁面
+* **任務細節**: 可以到看任務的細節並且向任務發文者申請執行任務
+* **檢舉系統**: 點擊檢舉按鈕檢舉該用戶，會由後端人員幫您處理
+* **使用者介面**: 當在執行任務時，可以體驗不同的使用者介面
 
 <img src="https://github.com/jim-0712/Errand/blob/master/GIF/MissionDetail.gif" width="300"></a><img src="https://github.com/jim-0712/Errand/blob/master/GIF/TakeMission.gif" width="300"></a>
  
-### Applicant Page
-* **Applicant Page**: You can review the information of applicants who apply to take the mission.
-* **Applicant info**: You can check more information about the applicant, such as history record and average score.
-* **Remote Notification**: Applicant can receive the remote notification when mission owner decides that you take the mission.
+### 申請者頁面
+* **申請者列表**: 可以看到有哪些申請者想承接任務
+* **申請者細節**: 可以看到關於申請者更詳細的資料，例如歷史任務紀錄，以及總評分數
+* **推播**: 當申請者被接受時，在他的裝置上可以收到任務開始的推播
 
  <img src="https://github.com/jim-0712/Errand/blob/master/GIF/Requster.gif" width="300"></a><img src="https://github.com/jim-0712/Errand/blob/master/GIF/Notification.gif" width="300"></a>
  
  
- ### Review Page 
- * **Review Page**: You can review each other and have some comment on this page. You can also send a friend request to each other.
+ ### 任務評論頁面
+ * **任務評論**: 在這頁可以評論當次任務，給予星數，也可以送出好友邀請給對方
  
  <img src="https://github.com/jim-0712/Errand/blob/master/GIF/Judge.gif" width="300">
  
- ### Friends Page 
- * **Friends Page**: You can check who are your friends and start new conversations with them.
+ ### 好友頁面 
+ * **好友頁面**: 可以看到好友列表，點擊對話按鈕可以開始新的對話，也會顯示歷史對話紀錄
  
  <img src="https://github.com/jim-0712/Errand/blob/master/GIF/Friends.gif" width="300"></a><img src="https://github.com/jim-0712/Errand/blob/master/GIF/Friendslist.png" width="300"></a>
  
- ### Personal info Page 
- * **Personal info Page**: You can check your history record and edit your personal info.
+ ### 個人資料頁面
+ * **個人資料**: 可以看到個人的歷史任務紀錄、總評分數，也可以進行編輯
  
  <img src="https://github.com/jim-0712/Errand/blob/master/GIF/PersonPage.gif" width="300">
  
  
- # Library
+ # 第三方套件
 * Kingfisher
 * Crashlytics
 * IQKeyboardManagerSwift
@@ -74,11 +74,11 @@ If you have talents but nowhere to show, **ErrandBee** is a mission-based platfo
 * KMPlaceholderTextView
 
 
-# Requirements
+# 最低需求
 * iOS 13.0+
 * Xcode 11.0+
 
-# Contacts
+# 聯絡方式
 Jim Fu [jimmykingogo@gmail.com](jimmykingogo@gmail.com)
  
 
