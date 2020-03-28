@@ -364,7 +364,7 @@ class MissionListViewController: UIViewController, UIViewControllerTransitioning
     
     if status == 1 {
       postMissionBtn.isHidden = false
-      postMissionBtn.setImage(UIImage(named: "support"), for: .normal)
+      postMissionBtn.setImage(UIImage(named: "system"), for: .normal)
     } else if status == 2 {
       postMissionBtn.isHidden = true
     } else {
