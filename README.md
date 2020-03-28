@@ -3,7 +3,7 @@
 <a href="https://apps.apple.com/tw/app/errandbee/id1500517852"><img src="https://i.imgur.com/Pc1KdHw.png" height="58"></a>
 
 # **ErrandBee**
-如果你有才能確無處施展, **ErrandBee** 是一個任務平台App，讓使用者可以在任何時間、任何地點去享受幫助別人的快感 
+如果你有才能卻無處施展, **ErrandBee** 是一個任務平台App，讓使用者可以在任何時間、任何地點去享受幫助別人的快感 
 ## 特色 & 截圖
 
 ### 地圖頁面
