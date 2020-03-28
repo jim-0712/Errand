@@ -307,7 +307,6 @@ class MissionListViewController: UIViewController, UIViewControllerTransitioning
     
     searchCustom.searchBar.placeholder = "搜尋發文主"
     searchCustom.hidesNavigationBarDuringPresentation = false
-    searchCustom.searchBar.searchTextField.delegate = self
     searchCustom.searchResultsUpdater = self
     searchCustom.searchBar.sizeToFit()
     searchCustom.obscuresBackgroundDuringPresentation = false
