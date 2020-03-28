@@ -42,6 +42,7 @@ class RequesterViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    setUpTable()
     self.view.backgroundColor = UIColor.LG1
     navigationItem.leftBarButtonItem?.tintColor = .black
     navigationItem.rightBarButtonItem?.tintColor = .black
@@ -50,7 +51,6 @@ class RequesterViewController: UIViewController {
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    setUpTable()
     UserManager.shared.isRequester = true
     
     if UserManager.shared.isTourist {
@@ -66,11 +66,14 @@ class RequesterViewController: UIViewController {
       noRequesterLabel.text = ""
       fetchRequester()
     }
+    self.refreshControl.endRefreshing()
   }
   
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     UserManager.shared.isRequester = false
+    self.refreshControl.endRefreshing()
+    SwiftMes.shared.dismiss()
   }
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -88,6 +91,7 @@ class RequesterViewController: UIViewController {
   }
   
   @objc func loadData() {
+    requesterTable.isScrollEnabled = false
     fetchRequester()
   }
   
@@ -141,18 +145,37 @@ class RequesterViewController: UIViewController {
     }
   }
   
+  func stopTabBar(status: Bool) {
+    guard let tab = self.tabBarController?.tabBar.items else { return }
+    tab.forEach { tabItem in
+      tabItem.isEnabled = status
+    }
+  }
+  
   func handleRequesterData(taskInfo: [TaskInfo]) {
     
     if taskInfo.isEmpty || taskInfo[0].isComplete {
       userInfo = []
       LKProgressHUD.dismiss()
+      self.refreshControl.endRefreshing()
+      stopTabBar(status: false)
       SwiftMes.shared.showWarningMessage(body: "您當前沒有任務", seconds: 1.0)
+      DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        self.stopTabBar(status: true)
+        self.requesterTable.isScrollEnabled = true
+      }
+      
     } else if taskInfo[0].status == 1 {
       userInfo = []
       requesterTable.reloadData()
       taskinfo = taskInfo[0]
       LKProgressHUD.dismiss()
+      self.refreshControl.endRefreshing()
       SwiftMes.shared.showWarningMessage(body: "任務進行中", seconds: 1.0)
+      DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        self.stopTabBar(status: true)
+        self.requesterTable.isScrollEnabled = true
+      }
     } else if taskInfo[0].requester.isEmpty {
       userInfo = []
       taskinfo = taskInfo[0]

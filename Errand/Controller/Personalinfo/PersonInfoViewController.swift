@@ -68,7 +68,8 @@ class PersonInfoViewController: UIViewController {
   
   override func viewWillLayoutSubviews() {
     super.viewWillLayoutSubviews()
-    cornerView.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 500, y: 340, width: 1000, height: 1000)
+    self.navigationController?.navigationItem.title = "個人頁面"
+    cornerView.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 500, y: 240, width: 1000, height: 1000)
     cornerView.backgroundColor = UIColor.white
     cornerView.layer.cornerRadius = cornerView.bounds.width / 2
   }
@@ -242,7 +243,9 @@ class PersonInfoViewController: UIViewController {
         
       case .success(let data):
         
-        self.taskInfo = data[0]
+        if !data.isEmpty {
+          self.taskInfo = data[0]
+        }
         
       case .failure(let error):
         

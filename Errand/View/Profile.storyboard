@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Person Info View Controller-->
+        <!--個人頁面-->
         <scene sceneID="bwx-xy-ins">
             <objects>
                 <viewController storyboardIdentifier="PersonInfoViewController" id="YTn-iA-6s5" customClass="PersonInfoViewController" customModule="Errand" customModuleProvider="target" sceneMemberID="viewController">
@@ -126,7 +126,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="CPG-a2-GP9"/>
                     </view>
-                    <navigationItem key="navigationItem" id="A3B-ds-Ir0"/>
+                    <navigationItem key="navigationItem" title="個人頁面" id="A3B-ds-Ir0"/>
                     <connections>
                         <outlet property="backViewHeight" destination="lCL-5h-16y" id="KM0-AF-b7a"/>
                         <outlet property="btnBackgroundView" destination="fOh-5G-8uk" id="wgB-Ac-RDg"/>
