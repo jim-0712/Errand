@@ -20,6 +20,14 @@ private enum GHColor: String {
     case B1
   
     case LG2
+  
+    case DB1
+    
+    case BB1
+  
+    case LB1
+  
+    case CG1
 }
 extension UIColor {
 
@@ -32,7 +40,14 @@ extension UIColor {
     static let B1 = GHColor(.B1)
   
     static let LG2 = GHColor(.LG2)
+  
+    static let DB1 = GHColor(.DB1)
+  
+    static let BB1 = GHColor(.BB1)
+  
+    static let LB1 = GHColor(.LB1)
 
+    static let CG1 = GHColor(.CG1)
     // swiftlint:enable identifier_name
     private static func GHColor(_ color: GHColor) -> UIColor? {
         return UIColor(named: color.rawValue)

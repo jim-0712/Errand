@@ -16,11 +16,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gdj-gi-V4X">
-                                <rect key="frame" x="138" y="428" width="138" height="40"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                            </view>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="FJH-lf-wRx">
                                 <rect key="frame" x="0.0" y="358" width="414" height="40"/>
                                 <subviews>
@@ -104,7 +99,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="0.9392368988123575" blue="0.5505073139029768" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="pOK-jr-vb6" secondAttribute="bottom" constant="34" id="071-mw-Ctc"/>
                             <constraint firstItem="FJH-lf-wRx" firstAttribute="leading" secondItem="CPG-a2-GP9" secondAttribute="leading" id="1e0-tk-VUn"/>
@@ -131,7 +126,6 @@
                         <outlet property="backViewHeight" destination="lCL-5h-16y" id="KM0-AF-b7a"/>
                         <outlet property="btnBackgroundView" destination="fOh-5G-8uk" id="wgB-Ac-RDg"/>
                         <outlet property="btnStack" destination="FJH-lf-wRx" id="DrY-iY-y70"/>
-                        <outlet property="cornerView" destination="gdj-gi-V4X" id="QKn-vu-76l"/>
                         <outlet property="historyContainer" destination="pOK-jr-vb6" id="Cna-bW-1jC"/>
                         <outlet property="historyMissionBtn" destination="Ke4-fQ-gDK" id="y6o-fn-3fo"/>
                         <outlet property="personInfoBtn" destination="6In-G7-jvU" id="4cb-or-gKU"/>

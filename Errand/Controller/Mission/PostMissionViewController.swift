@@ -94,7 +94,7 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
     judge[0] = true
     navigationItem.setHidesBackButton(true, animated: true)
     navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(backToList))
-    navigationItem.leftBarButtonItem?.tintColor = .black
+    navigationItem.leftBarButtonItem?.tintColor = .white
   }
   
   @objc func backToList() {
@@ -444,6 +444,12 @@ class PostMissionViewController: UIViewController, CLLocationManagerDelegate, UI
     }
     postBtn.layer.shadowOpacity = 0.5
     postBtn.layer.shadowOffset = CGSize(width: 3, height: 3)
+    postBtn.layer.borderWidth = 1.0
+    postBtn.layer.borderColor = UIColor.BB1?.cgColor
+    fixBtn.layer.borderWidth = 1.0
+    fixBtn.layer.borderColor = UIColor.BB1?.cgColor
+    giveUpBtn.layer.borderWidth = 1.0
+    giveUpBtn.layer.borderColor = UIColor.BB1?.cgColor
   }
   
   func setUp() {
@@ -498,9 +504,9 @@ extension PostMissionViewController: UICollectionViewDelegate, UICollectionViewD
       
       cell.setUpContent(label: TaskManager.shared.taskClassified[indexPath.row + 1].title, color: TaskManager.shared.taskClassified[indexPath.row + 1].color)
       
-      cell.contentView.backgroundColor = judge[indexPath.row] ? UIColor(red: 246.9/255.0, green: 212.0/255.0, blue: 95.0/255.0, alpha: 1.0) : .white
-      cell.layer.borderWidth = judge[indexPath.row] ? 1.0 : 0.0
-      cell.layer.borderColor = judge[indexPath.row] ? UIColor.clear.cgColor : UIColor.white.cgColor
+      cell.contentView.backgroundColor = judge[indexPath.row] ? UIColor.white : UIColor.clear
+      cell.layer.borderWidth = 1.0
+      cell.layer.borderColor = UIColor.BB1?.cgColor
       
       return cell
       

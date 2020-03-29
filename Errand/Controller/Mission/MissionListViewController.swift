@@ -107,7 +107,7 @@ class MissionListViewController: UIViewController, UIViewControllerTransitioning
    
    override func viewWillDisappear(_ animated: Bool) {
      super.viewWillDisappear(animated)
-     UINavigationBar.appearance().tintColor = UIColor.G1
+//     UINavigationBar.appearance().tintColor = UIColor.white
      currentBtnSelect = false
      fetchTaskData()
    }
@@ -200,6 +200,7 @@ class MissionListViewController: UIViewController, UIViewControllerTransitioning
   }
   
   @objc func reloadTable() {
+    setUpBtn()
     if currentBtnSelect {
       fetchMissionStartData()
     } else {
@@ -267,7 +268,7 @@ class MissionListViewController: UIViewController, UIViewControllerTransitioning
   
   func setUpindicatorView() {
     self.view.addSubview(indicatorView)
-    indicatorView.backgroundColor = .G1
+    indicatorView.backgroundColor = .BB1
     indicatorView.translatesAutoresizingMaskIntoConstraints = false
     indicatorCon = indicatorView.centerXAnchor.constraint(equalTo: allMissionBtn.centerXAnchor)
     
@@ -289,17 +290,22 @@ class MissionListViewController: UIViewController, UIViewControllerTransitioning
     
     searchCustom.searchBar.isTranslucent = false
     navigationController?.navigationBar.isTranslucent = false
-    navigationController?.navigationBar.backgroundColor = .G1
+    navigationController?.navigationBar.backgroundColor = .BB1
+    searchCustom.searchBar.searchTextField.backgroundColor = .white
     
     if #available(iOS 13.0, *) {
 
        let statusBar1 =  UIView()
-       
+      let placeholder = NSAttributedString(string: "Search",
+                                           attributes: [
+                                          .foregroundColor: UIColor.white ])
+
       guard let frameS = UIApplication.shared.keyWindow?.windowScene?.statusBarManager?.statusBarFrame
         else { return }
       
+       searchCustom.searchBar.searchTextField.attributedPlaceholder = placeholder
        statusBar1.frame = frameS
-       statusBar1.backgroundColor = UIColor.G1
+       statusBar1.backgroundColor = UIColor.BB1
 
        UIApplication.shared.keyWindow?.addSubview(statusBar1)
 
@@ -369,7 +375,10 @@ class MissionListViewController: UIViewController, UIViewControllerTransitioning
       postMissionBtn.isHidden = true
     } else {
       postMissionBtn.isHidden = false
-      postMissionBtn.setImage(UIImage(named: "add-3"), for: .normal)
+      postMissionBtn.setImage(UIImage(named: "plus-2"), for: .normal)
+      postMissionBtn.backgroundColor = .white
+      postMissionBtn.layer.cornerRadius = postMissionBtn.bounds.width / 2
+      postMissionBtn.tintColor = UIColor.BB1
     }
   }
 }
@@ -455,7 +464,7 @@ extension MissionListViewController: UISearchBarDelegate {
   
   func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
     shouldShowSearchResults = true
-    self.navigationController?.navigationBar.backgroundColor = .G1
+    self.navigationController?.navigationBar.backgroundColor = .BB1
   }
   
   func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {

@@ -78,8 +78,8 @@ private enum Tab {
     case .friend:
       return UITabBarItem(
         title: nil,
-        image: UIImage.init(named: "bubble_0"),
-        selectedImage: UIImage.init(named: "bubble_1")
+        image: UIImage.init(named: "bubble_1"),
+        selectedImage: UIImage.init(named: "bubble_0")
       )
     }
   }
@@ -98,11 +98,11 @@ class TabBarViewController: UITabBarController, UITabBarControllerDelegate {
     
     viewControllers = tabs.map({ $0.controller() })
     
-    self.tabBar.tintColor = UIColor.Y1
+    self.tabBar.tintColor = UIColor.white
     
     self.tabBar.unselectedItemTintColor = .white
     
-    self.tabBar.barTintColor = UIColor.G1
+    self.tabBar.barTintColor = UIColor.BB1
     
     delegate = self
     

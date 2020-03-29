@@ -430,8 +430,11 @@ extension GoogleMapViewController: UICollectionViewDelegate, UICollectionViewDat
     
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "category", for: indexPath) as? CategoryCollectionViewCell else { return UICollectionViewCell() }
     let classified = TaskManager.shared.taskClassified
+    
     cell.setUpContent(label: classified[indexPath.row].title, color: classified[indexPath.row].color)
-    cell.contentView.backgroundColor = preventReuseCellBug[indexPath.row] ? UIColor.Y1 : UIColor.LG2
+    cell.contentView.backgroundColor = preventReuseCellBug[indexPath.row] ? UIColor.white : UIColor.CG1
+    cell.layer.borderColor = UIColor.BB1?.cgColor
+    cell.layer.borderWidth = 1.0
     return cell
   }
   

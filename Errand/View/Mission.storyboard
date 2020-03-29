@@ -9,6 +9,11 @@
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="setofont.ttf">
+            <string>SetoFont</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--任務列表-->
         <scene sceneID="UUE-aT-cxK">
@@ -81,7 +86,7 @@
                                                                 <constraint firstAttribute="height" constant="30" id="mhc-W7-3Wf"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="12"/>
-                                                            <color key="tintColor" red="0.43175899979999999" green="0.70942586659999995" blue="0.7372590899" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                            <color key="tintColor" red="0.11388272789999999" green="0.16387155649999999" blue="0.23530244829999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                             <state key="normal" title="查看詳情"/>
                                                             <connections>
                                                                 <action selector="seeDetailAction:" destination="UaD-83-Xh9" eventType="touchUpInside" id="n0W-dQ-KBO"/>
@@ -141,7 +146,8 @@
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="ieu-yZ-KMM"/>
                                     <constraint firstAttribute="width" constant="40" id="nQI-vu-N4G"/>
                                 </constraints>
-                                <state key="normal" image="add-3"/>
+                                <color key="tintColor" name="BB1"/>
+                                <state key="normal" image="plus-2"/>
                                 <connections>
                                     <action selector="postMissionBtn:" destination="IGl-we-hdX" eventType="touchUpInside" id="sMU-i8-fhj"/>
                                 </connections>
@@ -244,14 +250,16 @@
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OTW-b7-UH4">
                                 <rect key="frame" x="82" y="806" width="250" height="50"/>
-                                <color key="backgroundColor" red="0.99180322889999994" green="0.82671695950000001" blue="0.26249000430000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="250" id="VrX-F8-m8s"/>
                                     <constraint firstAttribute="height" constant="50" id="WoR-5l-e6c"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="19"/>
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" title="完成評價"/>
+                                <state key="normal" title="完成評價">
+                                    <color key="titleColor" name="BB1"/>
+                                </state>
                                 <connections>
                                     <action selector="finishJudgeAct:" destination="Kgm-Ce-nGE" eventType="touchUpInside" id="tJw-1R-3n0"/>
                                 </connections>
@@ -300,35 +308,44 @@
                                     <action selector="addFriendsBtn:" destination="Kgm-Ce-nGE" eventType="touchUpInside" id="IJg-lJ-vBW"/>
                                 </connections>
                             </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="37670" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1rV-25-by0">
-                                <rect key="frame" x="0.0" y="44" width="414" height="302"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="career" translatesAutoresizingMaskIntoConstraints="NO" id="K34-ig-ZyD">
+                                <rect key="frame" x="107" y="176" width="200" height="150"/>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Complete" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q6S-kd-H6w">
+                                <rect key="frame" x="20" y="80.5" width="374" height="65.5"/>
+                                <fontDescription key="fontDescription" name="SetoFont" family="SetoFont" pointSize="56"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.98791187999999996" green="0.8026665449" blue="0.40379369259999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" name="BB1"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="U7D-6R-BIa" firstAttribute="leading" secondItem="aXm-3b-9iR" secondAttribute="leading" constant="20" id="0UT-Zg-Len"/>
                             <constraint firstItem="e58-yU-9Fv" firstAttribute="top" secondItem="dLH-xy-3Gj" secondAttribute="bottom" constant="30" id="2hE-f6-woI"/>
                             <constraint firstItem="qEV-GR-T0C" firstAttribute="top" secondItem="e58-yU-9Fv" secondAttribute="bottom" constant="20" id="6MJ-Df-xCX"/>
                             <constraint firstItem="qEV-GR-T0C" firstAttribute="leading" secondItem="aXm-3b-9iR" secondAttribute="leading" id="6Xh-lN-h5o"/>
-                            <constraint firstItem="1rV-25-by0" firstAttribute="leading" secondItem="gtU-SM-Eq0" secondAttribute="leading" id="9Lh-5J-7y1"/>
                             <constraint firstItem="aXm-3b-9iR" firstAttribute="trailing" secondItem="U7D-6R-BIa" secondAttribute="trailing" constant="20" id="EuZ-gi-Lka"/>
-                            <constraint firstItem="1rV-25-by0" firstAttribute="top" secondItem="aXm-3b-9iR" secondAttribute="top" id="Jee-EC-kGB"/>
                             <constraint firstAttribute="bottom" secondItem="wIS-nW-tYs" secondAttribute="bottom" id="Kdb-nu-aTX"/>
+                            <constraint firstItem="wIS-nW-tYs" firstAttribute="top" secondItem="K34-ig-ZyD" secondAttribute="bottom" constant="20" id="MCc-Yd-gw5"/>
                             <constraint firstItem="dLH-xy-3Gj" firstAttribute="centerX" secondItem="aXm-3b-9iR" secondAttribute="centerX" id="Pk1-wl-TIU"/>
                             <constraint firstItem="aXm-3b-9iR" firstAttribute="trailing" secondItem="wIS-nW-tYs" secondAttribute="trailing" id="QfJ-M2-ZmL"/>
                             <constraint firstItem="OTW-b7-UH4" firstAttribute="centerX" secondItem="wIS-nW-tYs" secondAttribute="centerX" id="VLE-g3-CWi"/>
                             <constraint firstItem="OTW-b7-UH4" firstAttribute="top" secondItem="U7D-6R-BIa" secondAttribute="bottom" constant="30" id="WXU-SZ-i6y"/>
+                            <constraint firstItem="K34-ig-ZyD" firstAttribute="centerX" secondItem="aXm-3b-9iR" secondAttribute="centerX" id="Wpp-cu-CcI"/>
                             <constraint firstItem="0BS-ww-BUU" firstAttribute="centerY" secondItem="e58-yU-9Fv" secondAttribute="centerY" id="b1w-OS-9Ma"/>
                             <constraint firstItem="dLH-xy-3Gj" firstAttribute="top" secondItem="wIS-nW-tYs" secondAttribute="top" constant="40" id="dCG-v3-Vba"/>
                             <constraint firstItem="aXm-3b-9iR" firstAttribute="trailing" secondItem="e58-yU-9Fv" secondAttribute="trailing" constant="20" id="gqD-Yl-Jeh"/>
-                            <constraint firstAttribute="trailing" secondItem="1rV-25-by0" secondAttribute="trailing" id="gso-fa-mye"/>
                             <constraint firstItem="e58-yU-9Fv" firstAttribute="leading" secondItem="aXm-3b-9iR" secondAttribute="leading" constant="20" id="h4D-g4-BI0"/>
+                            <constraint firstItem="K34-ig-ZyD" firstAttribute="top" secondItem="Q6S-kd-H6w" secondAttribute="bottom" constant="30" id="j1i-eO-Fa9"/>
+                            <constraint firstItem="K34-ig-ZyD" firstAttribute="height" secondItem="gtU-SM-Eq0" secondAttribute="height" multiplier="0.167411" id="j5B-lt-y9Z"/>
                             <constraint firstItem="aXm-3b-9iR" firstAttribute="trailing" secondItem="0BS-ww-BUU" secondAttribute="trailing" constant="20" id="lfv-ma-PC6"/>
                             <constraint firstAttribute="bottom" secondItem="OTW-b7-UH4" secondAttribute="bottom" constant="40" id="maz-Bv-wXh"/>
                             <constraint firstItem="wIS-nW-tYs" firstAttribute="leading" secondItem="aXm-3b-9iR" secondAttribute="leading" id="mq2-ee-et7"/>
-                            <constraint firstItem="wIS-nW-tYs" firstAttribute="top" secondItem="1rV-25-by0" secondAttribute="bottom" id="rdW-01-CQO"/>
+                            <constraint firstItem="Q6S-kd-H6w" firstAttribute="leading" secondItem="aXm-3b-9iR" secondAttribute="leading" constant="20" id="sGe-Vw-Vlh"/>
                             <constraint firstItem="qEV-GR-T0C" firstAttribute="trailing" secondItem="aXm-3b-9iR" secondAttribute="trailing" id="sJj-s7-Bcg"/>
+                            <constraint firstItem="K34-ig-ZyD" firstAttribute="width" secondItem="gtU-SM-Eq0" secondAttribute="width" multiplier="0.483092" id="uIP-4U-lsC"/>
+                            <constraint firstItem="aXm-3b-9iR" firstAttribute="trailing" secondItem="Q6S-kd-H6w" secondAttribute="trailing" constant="20" id="vdH-Bt-9tW"/>
                             <constraint firstItem="U7D-6R-BIa" firstAttribute="top" secondItem="qEV-GR-T0C" secondAttribute="bottom" constant="20" id="zog-i8-MA3"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="aXm-3b-9iR"/>
@@ -548,8 +565,11 @@
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mhk-5s-rgX">
                                 <rect key="frame" x="57" y="792" width="300" height="50"/>
-                                <color key="backgroundColor" red="0.99180322889999994" green="0.82671695950000001" blue="0.26249000430000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="19"/>
+                                <state key="normal">
+                                    <color key="titleColor" name="BB1"/>
+                                </state>
                                 <connections>
                                     <action selector="takeMissionAct:" destination="gg9-hF-MfY" eventType="touchUpInside" id="jQZ-bl-oPr"/>
                                 </connections>
@@ -559,26 +579,28 @@
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Oda-56-REi">
                                         <rect key="frame" x="0.0" y="0.0" width="150" height="50"/>
-                                        <color key="backgroundColor" red="0.99180322889999994" green="0.82671695950000001" blue="0.26249000430000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="150" id="uVg-xS-1q1"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="19"/>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="完成任務"/>
+                                        <state key="normal" title="完成任務">
+                                            <color key="titleColor" name="BB1"/>
+                                        </state>
                                         <connections>
                                             <action selector="finishMissionAct:" destination="gg9-hF-MfY" eventType="touchUpInside" id="EJE-G0-zHP"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ylq-Xf-rUi">
                                         <rect key="frame" x="170" y="0.0" width="150" height="50"/>
-                                        <color key="backgroundColor" red="0.88201671839999995" green="0.24870911239999999" blue="0.14890477060000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="150" id="0mC-rk-rXS"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="19"/>
                                         <state key="normal" title="放棄任務">
-                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <color key="titleColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
                                             <action selector="giveUpmissionAct:" destination="gg9-hF-MfY" eventType="touchUpInside" id="lYu-LN-noJ"/>
@@ -689,13 +711,13 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k5h-WD-IXe">
-                                                    <rect key="frame" x="30" y="25" width="94" height="20"/>
-                                                    <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="14"/>
+                                                    <rect key="frame" x="30" y="24" width="94" height="22.5"/>
+                                                    <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="16"/>
                                                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E9i-N1-aQZ">
-                                                    <rect key="frame" x="15" y="27.5" width="15" height="15"/>
+                                                    <rect key="frame" x="25" y="27.5" width="15" height="15"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="15" id="FUH-FN-eeU"/>
@@ -703,18 +725,18 @@
                                                     </constraints>
                                                 </view>
                                             </subviews>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstItem="k5h-WD-IXe" firstAttribute="centerX" secondItem="c9w-FQ-E9J" secondAttribute="centerX" id="2H9-ut-cVR"/>
                                                 <constraint firstItem="E9i-N1-aQZ" firstAttribute="centerY" secondItem="k5h-WD-IXe" secondAttribute="centerY" id="QrI-pO-LRl"/>
                                                 <constraint firstItem="k5h-WD-IXe" firstAttribute="leading" secondItem="c9w-FQ-E9J" secondAttribute="leading" constant="30" id="TT1-Xt-HP5"/>
                                                 <constraint firstAttribute="trailing" secondItem="k5h-WD-IXe" secondAttribute="trailing" constant="30" id="kKP-UX-wGV"/>
-                                                <constraint firstItem="k5h-WD-IXe" firstAttribute="leading" secondItem="E9i-N1-aQZ" secondAttribute="trailing" id="pu0-ue-Go2"/>
+                                                <constraint firstItem="k5h-WD-IXe" firstAttribute="leading" secondItem="E9i-N1-aQZ" secondAttribute="trailing" constant="-10" id="pu0-ue-Go2"/>
                                                 <constraint firstItem="k5h-WD-IXe" firstAttribute="centerY" secondItem="c9w-FQ-E9J" secondAttribute="centerY" id="udh-S0-yZQ"/>
                                             </constraints>
                                         </collectionViewCellContentView>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <size key="customSize" width="154" height="70"/>
                                         <connections>
                                             <outlet property="groupColorBlock" destination="E9i-N1-aQZ" id="b3w-Do-YBF"/>
@@ -795,11 +817,11 @@
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pwr-cw-Vw6">
                                 <rect key="frame" x="80" y="792" width="254" height="50"/>
-                                <color key="backgroundColor" red="0.96438604589999999" green="0.8303309083" blue="0.37239539620000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="20"/>
                                 <inset key="imageEdgeInsets" minX="-1" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <state key="normal" title="發布">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="titleColor" name="BB1"/>
                                 </state>
                                 <connections>
                                     <action selector="postAct:" destination="aZU-mc-oHp" eventType="touchUpInside" id="Co4-tn-7Jd"/>
@@ -897,20 +919,22 @@
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MvD-m1-MfU">
                                         <rect key="frame" x="0.0" y="0.0" width="150" height="50"/>
-                                        <color key="backgroundColor" red="0.99180322889999994" green="0.82671695950000001" blue="0.26249000430000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="19"/>
                                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="修改完成"/>
+                                        <state key="normal" title="修改完成">
+                                            <color key="titleColor" name="BB1"/>
+                                        </state>
                                         <connections>
                                             <action selector="fixAct:" destination="aZU-mc-oHp" eventType="touchUpInside" id="VRq-hS-RdD"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yWz-EO-YVB">
                                         <rect key="frame" x="170" y="0.0" width="150" height="50"/>
-                                        <color key="backgroundColor" red="0.88201671839999995" green="0.24870911239999999" blue="0.14890477060000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="19"/>
                                         <state key="normal" title="放棄任務">
-                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <color key="titleColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
                                             <action selector="deleteAct:" destination="aZU-mc-oHp" eventType="touchUpInside" id="A2F-MB-ZKj"/>
@@ -1003,7 +1027,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MaA-jQ-dvF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-180" y="2354"/>
+            <point key="canvasLocation" x="-181.15942028985509" y="2353.7946428571427"/>
         </scene>
         <!--Add Location View Controller-->
         <scene sceneID="yil-5z-gdD">
@@ -1018,11 +1042,11 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jxM-FY-JVo">
-                                <rect key="frame" x="107" y="826" width="200" height="40"/>
-                                <color key="backgroundColor" name="Y1"/>
+                                <rect key="frame" x="107" y="812" width="200" height="54"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="17"/>
                                 <state key="normal" title="確認地點">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="titleColor" name="BB1"/>
                                 </state>
                                 <connections>
                                     <action selector="checkThePosition:" destination="LvE-sN-bhs" eventType="touchUpInside" id="hSS-1a-hNa"/>
@@ -1040,7 +1064,7 @@
                         <constraints>
                             <constraint firstItem="jxM-FY-JVo" firstAttribute="centerX" secondItem="njz-sq-3kI" secondAttribute="centerX" id="1uD-2g-VT5"/>
                             <constraint firstAttribute="bottom" secondItem="r77-h2-eT1" secondAttribute="bottom" id="953-fb-YQI"/>
-                            <constraint firstItem="jxM-FY-JVo" firstAttribute="height" secondItem="BJL-xi-H6e" secondAttribute="height" multiplier="0.0446429" id="BNX-yK-SAH"/>
+                            <constraint firstItem="jxM-FY-JVo" firstAttribute="height" secondItem="BJL-xi-H6e" secondAttribute="height" multiplier="0.06" id="BNX-yK-SAH"/>
                             <constraint firstItem="r77-h2-eT1" firstAttribute="leading" secondItem="njz-sq-3kI" secondAttribute="leading" id="Cv9-RO-env"/>
                             <constraint firstItem="jxM-FY-JVo" firstAttribute="width" secondItem="BJL-xi-H6e" secondAttribute="width" multiplier="0.483092" id="D7q-OP-i9C"/>
                             <constraint firstItem="fWR-Kt-8Sf" firstAttribute="centerY" secondItem="njz-sq-3kI" secondAttribute="centerY" id="MnE-9w-HYG"/>
@@ -1082,17 +1106,17 @@
         </scene>
     </scenes>
     <resources>
-        <image name="37670" width="5000" height="3000"/>
         <image name="Icons_24px_Close" width="24" height="24"/>
         <image name="Icons_24px_Close-1" width="24" height="24"/>
-        <image name="add-3" width="512" height="512"/>
         <image name="alert" width="32" height="32"/>
+        <image name="career" width="512" height="512"/>
         <image name="friend" width="512" height="512"/>
         <image name="marker" width="512" height="512"/>
         <image name="pin" width="512" height="512"/>
+        <image name="plus-2" width="512" height="512"/>
         <image name="stop" width="50" height="50"/>
-        <namedColor name="Y1">
-            <color red="1" green="0.82300001382827759" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+        <namedColor name="BB1">
+            <color red="0.11388272789999999" green="0.16387155649999999" blue="0.23529411764705882" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>

@@ -73,7 +73,7 @@ class ListTableViewCell: UITableViewCell {
     
     missionGroupLabel.text = "任務種類 : \(missionLabel)"
     
-    seeDetailBtn.layer.borderColor = UIColor.G1?.cgColor
+    seeDetailBtn.layer.borderColor = UIColor.BB1?.cgColor
     
     missionGroupImage.image = UIImage(named: missionImage)
     

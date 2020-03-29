@@ -55,6 +55,8 @@ class PersonInfoViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     UserManager.shared.isEditNameEmpty = true
+//    personInfoBtn.backgroundColor = UIColor.lightGray
+//    historyMissionBtn.backgroundColor = UIColor.lightGray
     setUpTableView()
     setUpImagePicker()
     setUpIndicatorView()
@@ -69,16 +71,10 @@ class PersonInfoViewController: UIViewController {
   override func viewWillLayoutSubviews() {
     super.viewWillLayoutSubviews()
     self.navigationController?.navigationItem.title = "個人頁面"
-    let height = UIScreen.main.bounds.height
-    cornerView.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 500, y: height * ( 240 / 812 ), width: 1000, height: 1000)
-    cornerView.backgroundColor = UIColor.white
-    cornerView.layer.cornerRadius = cornerView.bounds.width / 2
   }
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    
-    cornerView.clipsToBounds = true
     
     if UserManager.shared.isRequester {
       fetchTask()
@@ -224,14 +220,14 @@ class PersonInfoViewController: UIViewController {
     } else if !UserManager.shared.isRequester {
       settingOff = UIBarButtonItem(title: "編輯", style: .plain, target: self, action: #selector(tapSet))
       settingOn = UIBarButtonItem(image: UIImage(named: "tick-2"), style: .plain, target: self, action: #selector(tapSet))
-      settingOn.tintColor = .black
-      settingOff.tintColor = .black
+      settingOn.tintColor = .white
+      settingOff.tintColor = .white
       self.navigationItem.rightBarButtonItems = [self.settingOff]
     } else {
       navigationItem.setHidesBackButton(true, animated: true)
       NotificationCenter.default.addObserver(self, selector: #selector(backToEdit), name: Notification.Name("CompleteEdit"), object: nil)
       navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(back))
-      navigationItem.leftBarButtonItem?.tintColor = .black
+      navigationItem.leftBarButtonItem?.tintColor = .white
     }
   }
   
@@ -312,7 +308,7 @@ class PersonInfoViewController: UIViewController {
   
   func setUpIndicatorView() {
     self.view.addSubview(indicatorView)
-    indicatorView.backgroundColor = .G1
+    indicatorView.backgroundColor = .BB1
     indicatorView.translatesAutoresizingMaskIntoConstraints = false
     indicatorCon = indicatorView.centerXAnchor.constraint(equalTo: personInfoBtn.centerXAnchor)
     
@@ -369,8 +365,6 @@ extension PersonInfoViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     cell.setUpView(isRequester: isRequester, personPhoto: photo, nickName: name, email: email)
-    cell.choosePhotoBtn.isHidden = UserManager.shared.isTourist
-    cell.choosePhotoBtn.isHidden = isRequester
     cell.choosePhotoBtn.addTarget(self, action: #selector(pickImage), for: .touchUpInside)
     cell.backgroundColor = .clear
     return cell

@@ -432,7 +432,6 @@ class UserManager: NSObject {
       let uid = query.documents.first?.data()["uid"] as? String,
       let oppoBlacklist = query.documents.first?.data()["oppoBlacklist"] as? [String] else { return }
 
-
     let dataReturn = AccountInfo(email: email, nickname: nickname, noJudgeCount: noJudgeCount, task: task, minusStar: minusStar, photo: photo, report: report, blacklist: blacklist, oppoBlacklist: oppoBlacklist, onTask: onTask, fcmToken: fcmToken, status: status, about: about, taskCount: taskCount, totalStar: totalStar, uid: uid)
 
     completion(.success(dataReturn))

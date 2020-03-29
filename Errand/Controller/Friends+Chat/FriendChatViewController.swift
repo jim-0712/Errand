@@ -45,7 +45,7 @@ class FriendChatViewController: MessagesViewController {
     setUpMessage()
     navigationItem.setHidesBackButton(true, animated: true)
     navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(backToList))
-    navigationItem.leftBarButtonItem?.tintColor = .black
+    navigationItem.leftBarButtonItem?.tintColor = .white
   }
   
   @objc func backToList() {
@@ -155,7 +155,8 @@ extension FriendChatViewController: MessagesDataSource {
   
   func messageTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
     
-    return NSAttributedString(string: message.sender.displayName, attributes: [.font: UIFont.systemFont(ofSize: 12)])
+    return NSAttributedString(string: message.sender.displayName, attributes: [.font: UIFont.systemFont(ofSize: 12),
+                                                                                .foregroundColor: UIColor.white])
   }
   
   func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
@@ -189,7 +190,7 @@ extension FriendChatViewController: MessagesLayoutDelegate {
 extension FriendChatViewController: MessagesDisplayDelegate {
   
   func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
-    return isFromCurrentSender(message: message) ? UIColor.Y1 ?? .red  : .incomingMessage
+    return isFromCurrentSender(message: message) ? UIColor.BB1 ?? .red  : .incomingMessage
   }
   
   func textColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {

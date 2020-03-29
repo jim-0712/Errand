@@ -26,24 +26,42 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OWP-yr-O5k">
+                                <rect key="frame" x="10" y="491.5" width="394" height="32.5"/>
+                                <fontDescription key="fontDescription" name="PingFangTC-Regular" family="PingFang TC" pointSize="23"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="friendship" translatesAutoresizingMaskIntoConstraints="NO" id="Umg-sN-LgE">
+                                <rect key="frame" x="157" y="350" width="100" height="100"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="OWP-yr-O5k" firstAttribute="top" secondItem="q4b-OG-fTh" secondAttribute="bottom" id="9fj-NL-PoQ"/>
+                            <constraint firstItem="Umg-sN-LgE" firstAttribute="centerX" secondItem="9iv-Ph-C30" secondAttribute="centerX" id="C7k-qg-bfw"/>
                             <constraint firstItem="q4b-OG-fTh" firstAttribute="leading" secondItem="9iv-Ph-C30" secondAttribute="leading" constant="16" id="CIg-HJ-Hqx"/>
+                            <constraint firstItem="Umg-sN-LgE" firstAttribute="centerY" secondItem="9iv-Ph-C30" secondAttribute="centerY" constant="-75" id="FGx-yW-juf"/>
                             <constraint firstItem="q4b-OG-fTh" firstAttribute="centerY" secondItem="9iv-Ph-C30" secondAttribute="centerY" id="NJT-AO-NPu"/>
                             <constraint firstItem="q4b-OG-fTh" firstAttribute="centerX" secondItem="9iv-Ph-C30" secondAttribute="centerX" id="Qh5-ZO-ovw"/>
+                            <constraint firstItem="OWP-yr-O5k" firstAttribute="leading" secondItem="9iv-Ph-C30" secondAttribute="leading" constant="10" id="ZTK-cy-EIA"/>
                             <constraint firstItem="9iv-Ph-C30" firstAttribute="trailing" secondItem="q4b-OG-fTh" secondAttribute="trailing" constant="16" id="cO0-Ob-enF"/>
+                            <constraint firstItem="Umg-sN-LgE" firstAttribute="height" secondItem="fZu-d4-lYz" secondAttribute="height" multiplier="0.111607" id="cmu-SM-2LV"/>
                             <constraint firstItem="9iv-Ph-C30" firstAttribute="bottom" secondItem="8Qy-U2-vwd" secondAttribute="bottom" id="fEp-2Q-prg"/>
                             <constraint firstItem="8Qy-U2-vwd" firstAttribute="leading" secondItem="9iv-Ph-C30" secondAttribute="leading" id="idy-6B-fug"/>
                             <constraint firstItem="9iv-Ph-C30" firstAttribute="trailing" secondItem="8Qy-U2-vwd" secondAttribute="trailing" id="kEE-tS-4sY"/>
+                            <constraint firstItem="9iv-Ph-C30" firstAttribute="trailing" secondItem="OWP-yr-O5k" secondAttribute="trailing" constant="10" id="rbW-yn-xLP"/>
                             <constraint firstItem="8Qy-U2-vwd" firstAttribute="top" secondItem="9iv-Ph-C30" secondAttribute="top" id="ueK-78-Zjm"/>
+                            <constraint firstItem="Umg-sN-LgE" firstAttribute="width" secondItem="fZu-d4-lYz" secondAttribute="width" multiplier="0.241546" id="wdQ-f3-FcM"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="9iv-Ph-C30"/>
                     </view>
                     <navigationItem key="navigationItem" title="好友列表" id="qXJ-6d-Foe"/>
                     <connections>
+                        <outlet property="friendImage" destination="Umg-sN-LgE" id="1CM-ch-2hK"/>
                         <outlet property="friendListTable" destination="8Qy-U2-vwd" id="RP4-4e-gto"/>
                         <outlet property="noFreindsLabel" destination="q4b-OG-fTh" id="vgf-5T-mAC"/>
+                        <outlet property="suggestionFriendLabel" destination="OWP-yr-O5k" id="gpA-4y-zRv"/>
                         <segue destination="GVJ-pG-glb" kind="show" identifier="friendChat" id="Pmc-xG-tDy"/>
                         <segue destination="FAW-dr-Lea" kind="show" identifier="blackList" id="ZIP-Z0-lql"/>
                     </connections>
@@ -118,4 +136,7 @@
             <point key="canvasLocation" x="357.97101449275362" y="111.83035714285714"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="friendship" width="512" height="512"/>
+    </resources>
 </document>

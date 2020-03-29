@@ -139,9 +139,10 @@ class MissionDetailViewController: UIViewController {
      
      override func viewDidLoad() {
        super.viewDidLoad()
+       setBtnLAyer()
        navigationItem.setHidesBackButton(true, animated: true)
        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(backToList))
-       navigationItem.leftBarButtonItem?.tintColor = .black
+       navigationItem.leftBarButtonItem?.tintColor = .white
        
        guard detailData != nil else {
          fetchTaskData()
@@ -169,6 +170,17 @@ class MissionDetailViewController: UIViewController {
        fetchTaskOwnerPhoto()
        setUpView()
        setUpListenerToTask()
+     }
+  
+     func setBtnLAyer() {
+      
+      finishMissionBtn.layer.borderWidth = 1.0
+      finishMissionBtn.layer.borderColor = UIColor.BB1?.cgColor
+      giveUpmissionBtn.layer.borderWidth = 1.0
+      giveUpmissionBtn.layer.borderColor = UIColor.BB1?.cgColor
+      takeMissionBtn.layer.borderWidth = 1.0
+      takeMissionBtn.layer.borderColor = UIColor.BB1?.cgColor
+    
      }
      
      override func viewWillAppear(_ animated: Bool) {
@@ -427,7 +439,7 @@ class MissionDetailViewController: UIViewController {
       } else {
         finishMissionBtn.isEnabled = true
         giveUpmissionBtn.isEnabled = true
-        finishMissionBtn.backgroundColor = UIColor.Y1
+        finishMissionBtn.backgroundColor = UIColor.white
         giveUpmissionBtn.setTitle("放棄任務", for: .normal)
         finishMissionBtn.setTitle("提交任務", for: .normal)
       }
@@ -464,7 +476,7 @@ class MissionDetailViewController: UIViewController {
         takeMissionBtn.tintColor = .black
         takeMissionBtn.isEnabled = false
       } else {
-        takeMissionBtn.backgroundColor = UIColor(red: 246.0/255.0, green: 212/255.0, blue: 95/255.0, alpha: 1.0)
+      takeMissionBtn.backgroundColor = .white
         takeMissionBtn.setTitle("接受任務", for: .normal)
         takeMissionBtn.tintColor = .black
         takeMissionBtn.isEnabled = true

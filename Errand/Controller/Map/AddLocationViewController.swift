@@ -23,7 +23,7 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
     setUp()
     navigationItem.setHidesBackButton(true, animated: true)
     navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(backToList))
-    navigationItem.leftBarButtonItem?.tintColor = .black
+    navigationItem.leftBarButtonItem?.tintColor = .white
     }
   
   let myLocationManager = CLLocationManager()
@@ -79,7 +79,7 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
   }
   
   func setUp() {
-    confirmLocation.layer.cornerRadius = confirmLocation.bounds.height / 2
+    confirmLocation.layer.cornerRadius = confirmLocation.bounds.height / 3
     addLocationMap.delegate = self
     myLocationManager.delegate = self
     addLocationMap.isMyLocationEnabled = true
@@ -90,6 +90,8 @@ class AddLocationViewController: UIViewController, CLLocationManagerDelegate {
     addLocationMap.animate(to: myArrange)
     destnationLatitude = center.latitude
     destinationLongtitude = center.longitude
+    confirmLocation.layer.borderWidth = 2.0
+    confirmLocation.layer.borderColor = UIColor.BB1?.cgColor
   }
   
   func alertCome(lat: Double, long: Double) {

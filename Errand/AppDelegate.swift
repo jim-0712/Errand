@@ -58,10 +58,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate, UNUser
     
     FirebaseApp.configure()
     
-    UINavigationBar.appearance().barTintColor = .G1
+    UIApplication.shared.statusBarStyle = UIStatusBarStyle.lightContent
     
-    UINavigationBar.appearance().tintColor = .black
-    
+    UINavigationBar.appearance().barTintColor = .BB1
+//    
+    UINavigationBar.appearance().tintColor = .white
+//    
+    UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+//    
     UINavigationBar.appearance().isTranslucent = false
     
     GMSServices.provideAPIKey("AIzaSyBbTnBn0MHPMnioaL4y68Da3d41JlaSY-g")
