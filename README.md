@@ -21,28 +21,25 @@
 * **任務列表** 可以看到所有的任務，或你當前的任務
 * **發布任務**: 可以點擊加號按鈕去發布任務
 
- <img src="https://github.com/jim-0712/Errand/blob/master/GIF/MissionList.gif" width="300">
+ <img src="https://github.com/jim-0712/Errand/blob/master/GIF/list.gif" width="300">
  
  ### 發布任務頁面
 
 * **發布任務**: 可以新增任務的描述、種類、地點、詳細照片或影片以及任務的金額，並發布在網路上
 
- <img src="https://github.com/jim-0712/Errand/blob/master/GIF/PostMission.gif" width="300">
+ <img src="https://github.com/jim-0712/Errand/blob/master/GIF/post.gif" width="300">
  
  ### 任務細節頁面
 * **任務細節**: 可以到看任務的細節並且向任務發文者申請執行任務
 * **檢舉系統**: 點擊檢舉按鈕檢舉該用戶，會由後端人員幫您處理
 * **使用者介面**: 當在執行任務時，可以體驗不同的使用者介面
 
-<img src="https://github.com/jim-0712/Errand/blob/master/GIF/MissionDetail.gif" width="300"></a><img src="https://github.com/jim-0712/Errand/blob/master/GIF/TakeMission.gif" width="300"></a>
- 
+<img src="https://github.com/jim-0712/Errand/blob/master/GIF/detail.gif" width="300">
+
 ### 申請者頁面
 * **申請者列表**: 可以看到有哪些申請者想承接任務
 * **申請者細節**: 可以看到關於申請者更詳細的資料，例如歷史任務紀錄，以及總評分數
 * **推播**: 當申請者被接受時，在他的裝置上可以收到任務開始的推播
-
- <img src="https://github.com/jim-0712/Errand/blob/master/GIF/Requster.gif" width="300"></a><img src="https://github.com/jim-0712/Errand/blob/master/GIF/Notification.gif" width="300"></a>
- 
  
  ### 任務評論頁面
  * **任務評論**: 在這頁可以評論當次任務，給予星數，也可以送出好友邀請給對方
@@ -52,12 +49,12 @@
  ### 好友頁面 
  * **好友頁面**: 可以看到好友列表，點擊對話按鈕可以開始新的對話，也會顯示歷史對話紀錄
  
- <img src="https://github.com/jim-0712/Errand/blob/master/GIF/Friends.gif" width="300"></a><img src="https://github.com/jim-0712/Errand/blob/master/GIF/Friendslist.png" width="300"></a>
+ <img src="https://github.com/jim-0712/Errand/blob/master/GIF/chat.gif" width="300">
  
  ### 個人資料頁面
  * **個人資料**: 可以看到個人的歷史任務紀錄、總評分數，也可以進行編輯
  
- <img src="https://github.com/jim-0712/Errand/blob/master/GIF/PersonPage.gif" width="300">
+ <img src="https://github.com/jim-0712/Errand/blob/master/GIF/personInfo.gif" width="300">
  
  
  # 第三方套件
