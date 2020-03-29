@@ -331,6 +331,8 @@ class JudgeMissionViewController: UIViewController {
     finishJudgeBtn.layer.cornerRadius = finishJudgeBtn.bounds.height /  10
     finishJudgeBtn.layer.shadowOpacity = 0.5
     finishJudgeBtn.layer.shadowOffset = .zero
+    finishJudgeBtn.layer.borderWidth = 1.0
+    finishJudgeBtn.layer.borderColor = UIColor.BB1?.cgColor
     backView.layer.cornerRadius = backView.bounds.width / 30
     backView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
   }

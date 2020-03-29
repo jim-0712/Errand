@@ -309,10 +309,10 @@
                                 </connections>
                             </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="career" translatesAutoresizingMaskIntoConstraints="NO" id="K34-ig-ZyD">
-                                <rect key="frame" x="107" y="176" width="200" height="150"/>
+                                <rect key="frame" x="124" y="201.5" width="166" height="134.5"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Complete" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q6S-kd-H6w">
-                                <rect key="frame" x="20" y="80.5" width="374" height="65.5"/>
+                                <rect key="frame" x="20" y="126" width="374" height="65.5"/>
                                 <fontDescription key="fontDescription" name="SetoFont" family="SetoFont" pointSize="56"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -327,7 +327,7 @@
                             <constraint firstItem="qEV-GR-T0C" firstAttribute="leading" secondItem="aXm-3b-9iR" secondAttribute="leading" id="6Xh-lN-h5o"/>
                             <constraint firstItem="aXm-3b-9iR" firstAttribute="trailing" secondItem="U7D-6R-BIa" secondAttribute="trailing" constant="20" id="EuZ-gi-Lka"/>
                             <constraint firstAttribute="bottom" secondItem="wIS-nW-tYs" secondAttribute="bottom" id="Kdb-nu-aTX"/>
-                            <constraint firstItem="wIS-nW-tYs" firstAttribute="top" secondItem="K34-ig-ZyD" secondAttribute="bottom" constant="20" id="MCc-Yd-gw5"/>
+                            <constraint firstItem="wIS-nW-tYs" firstAttribute="top" secondItem="K34-ig-ZyD" secondAttribute="bottom" constant="10" id="MCc-Yd-gw5"/>
                             <constraint firstItem="dLH-xy-3Gj" firstAttribute="centerX" secondItem="aXm-3b-9iR" secondAttribute="centerX" id="Pk1-wl-TIU"/>
                             <constraint firstItem="aXm-3b-9iR" firstAttribute="trailing" secondItem="wIS-nW-tYs" secondAttribute="trailing" id="QfJ-M2-ZmL"/>
                             <constraint firstItem="OTW-b7-UH4" firstAttribute="centerX" secondItem="wIS-nW-tYs" secondAttribute="centerX" id="VLE-g3-CWi"/>
@@ -337,14 +337,14 @@
                             <constraint firstItem="dLH-xy-3Gj" firstAttribute="top" secondItem="wIS-nW-tYs" secondAttribute="top" constant="40" id="dCG-v3-Vba"/>
                             <constraint firstItem="aXm-3b-9iR" firstAttribute="trailing" secondItem="e58-yU-9Fv" secondAttribute="trailing" constant="20" id="gqD-Yl-Jeh"/>
                             <constraint firstItem="e58-yU-9Fv" firstAttribute="leading" secondItem="aXm-3b-9iR" secondAttribute="leading" constant="20" id="h4D-g4-BI0"/>
-                            <constraint firstItem="K34-ig-ZyD" firstAttribute="top" secondItem="Q6S-kd-H6w" secondAttribute="bottom" constant="30" id="j1i-eO-Fa9"/>
-                            <constraint firstItem="K34-ig-ZyD" firstAttribute="height" secondItem="gtU-SM-Eq0" secondAttribute="height" multiplier="0.167411" id="j5B-lt-y9Z"/>
+                            <constraint firstItem="K34-ig-ZyD" firstAttribute="top" secondItem="Q6S-kd-H6w" secondAttribute="bottom" constant="10" id="j1i-eO-Fa9"/>
+                            <constraint firstItem="K34-ig-ZyD" firstAttribute="height" secondItem="gtU-SM-Eq0" secondAttribute="height" multiplier="0.15" id="j5B-lt-y9Z"/>
                             <constraint firstItem="aXm-3b-9iR" firstAttribute="trailing" secondItem="0BS-ww-BUU" secondAttribute="trailing" constant="20" id="lfv-ma-PC6"/>
                             <constraint firstAttribute="bottom" secondItem="OTW-b7-UH4" secondAttribute="bottom" constant="40" id="maz-Bv-wXh"/>
                             <constraint firstItem="wIS-nW-tYs" firstAttribute="leading" secondItem="aXm-3b-9iR" secondAttribute="leading" id="mq2-ee-et7"/>
                             <constraint firstItem="Q6S-kd-H6w" firstAttribute="leading" secondItem="aXm-3b-9iR" secondAttribute="leading" constant="20" id="sGe-Vw-Vlh"/>
                             <constraint firstItem="qEV-GR-T0C" firstAttribute="trailing" secondItem="aXm-3b-9iR" secondAttribute="trailing" id="sJj-s7-Bcg"/>
-                            <constraint firstItem="K34-ig-ZyD" firstAttribute="width" secondItem="gtU-SM-Eq0" secondAttribute="width" multiplier="0.483092" id="uIP-4U-lsC"/>
+                            <constraint firstItem="K34-ig-ZyD" firstAttribute="width" secondItem="gtU-SM-Eq0" secondAttribute="width" multiplier="0.4" id="uIP-4U-lsC"/>
                             <constraint firstItem="aXm-3b-9iR" firstAttribute="trailing" secondItem="Q6S-kd-H6w" secondAttribute="trailing" constant="20" id="vdH-Bt-9tW"/>
                             <constraint firstItem="U7D-6R-BIa" firstAttribute="top" secondItem="qEV-GR-T0C" secondAttribute="bottom" constant="20" id="zog-i8-MA3"/>
                         </constraints>
@@ -1116,7 +1116,7 @@
         <image name="plus-2" width="512" height="512"/>
         <image name="stop" width="50" height="50"/>
         <namedColor name="BB1">
-            <color red="0.11388272789999999" green="0.16387155649999999" blue="0.23529411764705882" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+            <color red="0.11400000005960464" green="0.164000004529953" blue="0.23499999940395355" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
     </resources>
 </document>
