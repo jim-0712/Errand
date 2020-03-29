@@ -26,7 +26,9 @@ class FriendViewController: UIViewController {
       if friend.isEmpty {
         refreshControl.endRefreshing()
         LKProgressHUD.dismiss()
+        friendImage.isHidden = false
         noFreindsLabel.text = "您目前沒有好友"
+        suggestionFriendLabel.isHidden = false
         friendListTable.backgroundColor = .clear
       } else {
         LKProgressHUD.dismiss()
@@ -42,14 +44,23 @@ class FriendViewController: UIViewController {
   
   @IBOutlet weak var noFreindsLabel: UILabel!
   
+  @IBOutlet weak var friendImage: UIImageView!
+  
+  @IBOutlet weak var suggestionFriendLabel: UILabel!
+  
   override func viewDidLoad() {
      super.viewDidLoad()
      self.view.backgroundColor = .LG1
-     
+     suggestionFriendLabel.text = "去完成任務新增好友吧"
+      
      if UserManager.shared.isTourist {
+      friendImage.isHidden = true
+      suggestionFriendLabel.isHidden = true
        noFreindsLabel.text = "請先去個人頁登入享有好友"
        friendListTable.backgroundColor = .clear
      } else {
+      friendImage.isHidden = true
+      suggestionFriendLabel.isHidden = true
        noFreindsLabel.text = "搜尋好友中"
        setUpTable()
        getFriend()
@@ -70,6 +81,7 @@ class FriendViewController: UIViewController {
         
         if friends.count == self.friendsData.count {
           self.refreshControl.endRefreshing()
+          self.friendInfo = []
           LKProgressHUD.dismiss()
         } else {
           self.friendsData = []

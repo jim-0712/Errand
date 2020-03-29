@@ -19,15 +19,15 @@ class TaskManager {
   var taskData = [TaskInfo]()
   
   let taskClassified = [
-    TaskGroup(color: .black, title: "所有任務", image: "none"),
-    TaskGroup(color: .red, title: "搬運物品", image: "trucks"),
-    TaskGroup(color: .yellow, title: "清潔打掃", image: "broom"),
-    TaskGroup(color: .blue, title: "水電維修", image: "fix"),
-    TaskGroup(color: .lightGray, title: "科技維修", image: "tools"),
-    TaskGroup(color: .pink, title: "驅趕害蟲", image: "bug"),
-    TaskGroup(color: .lightPurple, title: "外送食物", image: "develop"),
-    TaskGroup(color: .orange, title: "交通接送", image: "drive"),
-    TaskGroup(color: .green, title: "其他種類", image: "questions")
+    TaskGroup(color: .BB1 ?? .black, title: "所有任務", image: "none"),
+    TaskGroup(color: .BB1 ?? .black, title: "搬運物品", image: "trucks"),
+    TaskGroup(color: .BB1 ?? .black, title: "清潔打掃", image: "broom"),
+    TaskGroup(color: .BB1 ?? .black, title: "水電維修", image: "fix"),
+    TaskGroup(color: .BB1 ?? .black, title: "科技維修", image: "tools"),
+    TaskGroup(color: .BB1 ?? .black, title: "驅趕害蟲", image: "bug"),
+    TaskGroup(color: .BB1 ?? .black, title: "外送食物", image: "delivery"),
+    TaskGroup(color: .BB1 ?? .black, title: "交通接送", image: "drive"),
+    TaskGroup(color: .BB1 ?? .black, title: "其他種類", image: "questions")
   ]
   
   func createMission(taskPhoto: [String], coordinate: CLLocationCoordinate2D, taskData: [Int], detail: String, fileType: [Int], completion: @escaping (Result<String, Error>) -> Void) {

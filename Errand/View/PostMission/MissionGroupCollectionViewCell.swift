@@ -22,7 +22,7 @@ class MissionGroupCollectionViewCell: UICollectionViewCell {
     
     self.layer.cornerRadius = UIScreen.main.bounds.width / 40
     
-    groupColorBlock.layer.cornerRadius = UIScreen.main.bounds.width / 40
+    groupColorBlock.layer.cornerRadius = groupColorBlock.bounds.width / 2
   }
 
 }

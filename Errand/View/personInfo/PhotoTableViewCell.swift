@@ -35,7 +35,11 @@ class PhotoTableViewCell: UITableViewCell {
     
     emailLabel.text = email
     nickNameLabel.text = nickName
-    choosePhotoBtn.isHidden = isRequester
+    if isRequester || UserManager.shared.isTourist {
+      choosePhotoBtn.isHidden = true
+    } else {
+      choosePhotoBtn.isHidden = false
+    }
     personPhotoImage.contentMode = .scaleAspectFill
     personPhotoImage.layer.cornerRadius = personPhotoImage.bounds.width / 2
     personPhotoImage.loadImage(personPhoto, placeHolder: UIImage(named: "photographer"))

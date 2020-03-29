@@ -72,7 +72,7 @@ class BlacklistViewController: UIViewController {
   func setUpNavigation() {
     navigationItem.setHidesBackButton(true, animated: true)
     navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "Icons_24px_Back02"), style: .plain, target: self, action: #selector(back))
-    navigationItem.leftBarButtonItem?.tintColor = .black
+    navigationItem.leftBarButtonItem?.tintColor = .white
   }
 
   func setUpTable() {

@@ -16,6 +16,7 @@ class RequesterViewController: UIViewController {
     didSet {
       if userInfo.isEmpty {
         LKProgressHUD.dismiss()
+        listImage.isHidden = true
         noRequesterLabel.text = "目前沒有申請者"
         refreshControl.endRefreshing()
       } else {
@@ -40,12 +41,15 @@ class RequesterViewController: UIViewController {
   
   @IBOutlet weak var requesterTable: UITableView!
   
+  @IBOutlet weak var listImage: UIImageView!
+  
   override func viewDidLoad() {
     super.viewDidLoad()
+    listImage.isHidden = true
     setUpTable()
     self.view.backgroundColor = UIColor.LG1
-    navigationItem.leftBarButtonItem?.tintColor = .black
-    navigationItem.rightBarButtonItem?.tintColor = .black
+    navigationItem.leftBarButtonItem?.tintColor = .white
+    navigationItem.rightBarButtonItem?.tintColor = .white
     NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("requester"), object: nil)
   }
   
@@ -54,15 +58,17 @@ class RequesterViewController: UIViewController {
     UserManager.shared.isRequester = true
     
     if UserManager.shared.isTourist {
-      
+      listImage.isHidden = true
       noRequesterLabel.text = "請先去個人頁登入享有功能"
       
     } else if UserManager.shared.currentUserInfo?.status == 0 {
+      listImage.isHidden = false
       noRequesterLabel.text = "當前沒有任務                                        趕快去新增任務吧"
     } else if UserManager.shared.currentUserInfo?.status == 2 {
-      
+      listImage.isHidden = true
       noRequesterLabel.text = "當前您是任務接受者"
     } else {
+      listImage.isHidden = true
       noRequesterLabel.text = ""
       fetchRequester()
     }
